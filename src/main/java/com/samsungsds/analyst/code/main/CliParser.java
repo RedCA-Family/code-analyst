@@ -31,6 +31,8 @@ public class CliParser {
 	
 	private String output = "";
 	
+	private String timeout = "120";	// second
+	
 	public CliParser(String[] args) {
 		this.args = args;
 		
@@ -49,6 +51,8 @@ public class CliParser {
 		options.addOption("o", "output", true, "specify result output file. (default : \"result-[yyyyMMddHHmmss].out\")");
 		
 		options.addOption("v", "version", false, "display version info.");
+		
+		options.addOption("t", "timeout", true, "specify internal ws timeout (default : 120 sec.)");
 	}
 	
 	public boolean parse() {
@@ -107,6 +111,10 @@ public class CliParser {
 			
 			if (cmd.hasOption("o")) {
 				output = cmd.getOptionValue("o");
+			}
+			
+			if (cmd.hasOption("t")) {
+				timeout = cmd.getOptionValue("t");
 			}
 			
 			return true;
@@ -204,5 +212,13 @@ public class CliParser {
 
 	public void setOutput(String output) {
 		this.output = output;
+	}
+
+	public String getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(String timeout) {
+		this.timeout = timeout;
 	}
 }

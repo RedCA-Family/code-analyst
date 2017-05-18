@@ -167,7 +167,7 @@ public class ResultProcessor {
 
 			for (ComplexityResult result : list) {
 				if (result.getComplexity() <= 10) {
-					continue;
+					break;
 				}
 				writer.print(++count + " = ");
 				writer.print(getStringsWithComma(result.getPath(), getString(result.getLine()), result.getMethodName(), getString(result.getComplexity())));

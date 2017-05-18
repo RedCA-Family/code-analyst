@@ -106,6 +106,9 @@ public class App {
 		sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, cli.getSrc());
 		sonar.addProperty("sonar.java.source", cli.getJavaVersion());
 		
+		// BatchWSClient timeout
+		sonar.addProperty("sonar.ws.timeout", cli.getTimeout());
+		
 		if (!cli.getLibrary().equals("")) {
 			sonar.addProperty("sonar.java.libraries", cli.getLibrary());
 		}

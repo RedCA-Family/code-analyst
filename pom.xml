@@ -47,6 +47,7 @@
 			<systemPath>${project.basedir}/lib/sonar-scanner-api-batch.jar</systemPath>
 		</dependency>
 		
+		<!-- Next dependencies will be replaced with sonar-scanner-engine-shaded --> 
 		<!-- 
 		<dependency>
 		    <groupId>org.sonarsource.sonarqube</groupId>
@@ -73,6 +74,7 @@
     		<scope>provided</scope>
 		</dependency>
 		-->
+		<!-- End of dependencies replaced  -->
 		
 		<dependency>
 		    <groupId>org.sonarsource.sonarqube</groupId>

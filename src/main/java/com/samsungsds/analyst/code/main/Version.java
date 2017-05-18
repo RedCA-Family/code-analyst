@@ -9,7 +9,7 @@ public class Version {
 	public static final String JDEPEND = "2.9.1";
 	
 	public static final String PMD_RULESET = "5.4 - 147 ruleset";
-	public static final String FINDBUGS_RULESET = "3.0.1 - 237 ruleset";
+	public static final String FINDBUGS_RULESET = "3.0.1 - 246 ruleset";
 	
 	public static void printVersionInfo() {
 		System.out.println("Code Analyst : " + CODE_ANALYST);
