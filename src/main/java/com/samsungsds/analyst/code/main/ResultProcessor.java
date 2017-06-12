@@ -67,6 +67,8 @@ public class ResultProcessor {
 		System.out.println("FindBugs 1 priority : " + getFormattedNumber(result.getFindBugsCount(1)));
 		System.out.println("FindBugs 2 priority : " + getFormattedNumber(result.getFindBugsCount(2)));
 		System.out.println("FindBugs < 3 priority : " + getFormattedNumber(result.getFindBugsCount(3) + result.getFindBugsCount(4) + result.getFindBugsCount(5)));
+		System.out.println();
+		System.out.println("Acyclic Dependencies : " + getFormattedNumber(result.getAcyclicDependencyCount()));
 		System.out.println("================================================================================");
 	}
 	
@@ -128,6 +130,8 @@ public class ResultProcessor {
 			printPmd(writer, result.getPmdList());
 			
 			printFindBugs(writer, result.getFindBugsList());
+			
+			printAcyclicDependencies(writer, result.getAcyclicDependencyList());
 			
 			writer.println(";===============================================================================");
 			
@@ -218,6 +222,24 @@ public class ResultProcessor {
 		writer.println("total = " + count);
 		writer.println();
 		writer.println();
+	}
+	
+	private static void printAcyclicDependencies(PrintWriter writer, List<String> list) {
+		writer.println("[AcyclicDependencies]");
+		
+		int count = 0;
+		synchronized (list) {
+			for (String dependency : list) {
+				writer.print(++count + " = ");
+				writer.print(dependency);
+				writer.println();
+			}
+		}
+		
+		writer.println();
+		writer.println("total = " + count);
+		writer.println();
+		writer.println();		
 	}
 	
 	public static String getStringsWithComma(String ... strings) {

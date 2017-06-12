@@ -48,6 +48,8 @@ public class MeasuredResult implements Serializable {
 	private List<FindBugsResult> findBugsList = Collections.synchronizedList(new ArrayList<>());
 	private int[] findBugsCount = new int[6];	// 0 : 전체, 1 ~ 5 (High, Normal, Low, Experimental, Ignore)
 	
+	private List<String> acyclicDependencyList = Collections.synchronizedList(new ArrayList<>());
+	
 	public static MeasuredResult getInstance() {
 		if (instance == null) {
 			synchronized (MeasuredResult.class) {
@@ -271,5 +273,17 @@ public class MeasuredResult implements Serializable {
 	
 	public List<FindBugsResult> getFindBugsList() {
 		return findBugsList;
+	}
+	
+	public void addAcyclicDependency(String acyclicDependency) {
+		acyclicDependencyList.add(acyclicDependency);
+	}
+	
+	public int getAcyclicDependencyCount() {
+		return acyclicDependencyList.size();
+	}
+	
+	public List<String> getAcyclicDependencyList() {
+		return acyclicDependencyList;
 	}
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +20,8 @@ import org.sonarsource.scanner.api.internal.InternalProperties;
 
 import com.samsungsds.analyst.code.findbugs.FindBugsAnalysis;
 import com.samsungsds.analyst.code.findbugs.FindBugsAnalysisLauncher;
+import com.samsungsds.analyst.code.jdepend.JDependAnalysis;
+import com.samsungsds.analyst.code.jdepend.JDependAnalysisLauncher;
 import com.samsungsds.analyst.code.pmd.ComplexityAnalysis;
 import com.samsungsds.analyst.code.pmd.ComplexityAnalysisLauncher;
 import com.samsungsds.analyst.code.pmd.PmdAnalysis;
@@ -28,6 +31,7 @@ import com.samsungsds.analyst.code.sonar.SonarAnalysisLauncher;
 import com.samsungsds.analyst.code.sonar.server.JettySurrogateSonarServer;
 import com.samsungsds.analyst.code.sonar.server.SurrogateSonarServer;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
+import com.samsungsds.analyst.code.util.PackageUtils;
 
 public class App {
 	private static final Logger LOGGER = LogManager.getLogger(App.class);
@@ -64,7 +68,11 @@ public class App {
     		
     		runFindBugs(cli);
     		
-    		LOGGER.info("Code Analysis ended");
+    		LOGGER.info("JDepend Analysis start...");
+    		
+    		runJDepend(cli);
+    		
+    		LOGGER.info("Code Analysis ended");    		
     		
     		processResult(cli);
     	}  
@@ -171,6 +179,22 @@ public class App {
 		}
 		
 		findBugsViolation.run();
+	}
+	
+	private void runJDepend(CliParser cli) {
+		JDependAnalysis jdepend = new JDependAnalysisLauncher();
+		
+		jdepend.setTarget(cli.getProjectBaseDir() + File.separator + cli.getBinary());
+		
+		List<String> packageList = PackageUtils.getProjectPackages(cli.getProjectBaseDir() + File.separator + cli.getBinary());
+		
+		LOGGER.debug("Target Package List");
+		for (String packageName : packageList) {
+			LOGGER.debug("- {}", packageName);
+			jdepend.addIncludePackage(packageName);
+		}
+		
+		jdepend.run();
 	}
 	
 	private void processResult(CliParser cli) {

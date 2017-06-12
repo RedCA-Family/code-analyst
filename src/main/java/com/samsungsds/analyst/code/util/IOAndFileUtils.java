@@ -18,6 +18,8 @@ import java.nio.file.StandardCopyOption;
 public class IOAndFileUtils {
 	private final static int BUFFER_SIZE = 8192;
 	
+	public final static String CR_LF = System.getProperty("line.separator");
+	
 	public static int findFreePort() {
 		try (ServerSocket socket = new ServerSocket(0)) {
 			return socket.getLocalPort();
