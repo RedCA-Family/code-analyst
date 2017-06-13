@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
@@ -81,6 +83,7 @@ public class ResultProcessor {
 			writer.println("Binary = " + cli.getBinary());
 			writer.println("Encoding = " + cli.getEncoding());
 			writer.println("JavaVersion = " + cli.getJavaVersion());
+			writer.println("Datetime = " + new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));
 			if (cli.getRuleSetFileForPMD() != null && !cli.getRuleSetFileForPMD().equals("")) {
 				writer.println("PMD = " + cli.getRuleSetFileForPMD());
 			}
