@@ -69,6 +69,11 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 
 		try {
 			FindBugs2.main(arg.toArray(new String[0]));
+		} catch (IOException ioe) {
+			if (ioe.getMessage().equals("No files to analyze could be opened")) {
+				LOGGER.warn("There are no class files to be analyzed via FindBugs");
+				return;
+			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
