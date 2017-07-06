@@ -22,6 +22,8 @@ public class MeasuredResult implements Serializable {
 	
 	private String projectDirectory;
 	
+	private MeasurementMode mode;
+	
 	private int directories = 0;
 	private int files = 0;
 	private int classes = 0;
@@ -285,5 +287,13 @@ public class MeasuredResult implements Serializable {
 	
 	public List<String> getAcyclicDependencyList() {
 		return acyclicDependencyList;
+	}
+
+	public void setMode(MeasurementMode mode) {
+		this.mode = mode;
+	}
+	
+	public MeasurementMode getMode() {
+		return mode;
 	}
 }

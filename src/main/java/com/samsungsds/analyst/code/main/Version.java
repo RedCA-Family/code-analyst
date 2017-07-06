@@ -1,7 +1,12 @@
 package com.samsungsds.analyst.code.main;
 
 public class Version {
-	public static final String CODE_ANALYST = "1.0.0";
+	//--------------------------------------------------
+	// Changelog
+	// 1.0.0 : 초기 버전
+	// 1.1.0 : 개별 Class에 대한 Complexity 측정 기능 추가
+	//--------------------------------------------------
+	public static final String CODE_ANALYST = "1.1.0";
 	public static final String SONAR_SCANNER = "2.8";
 	public static final String SONAR_SERVER = "6.2.1";
 	public static final String PMD = "5.4.6";

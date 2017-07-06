@@ -16,16 +16,21 @@ import com.samsungsds.analyst.code.findbugs.FindBugsResult;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 public class ResultProcessor {
 	protected static NumberFormat noFormatter = NumberFormat.getInstance();
 	
-	public static String getFormattedNumber(int number) {
+	protected static String getFormattedNumber(int number) {
 		return noFormatter.format(number);
 	}
 	
-	public static void printSummary(MeasuredResult result) {
+	protected static void printSeparator() {
 		System.out.println("================================================================================");
+	}
+	
+	protected static void printTitle() {
+		printSeparator();
 		//System.out.println("");
 		//System.out.println("              ██████╗ ███████╗███████╗██╗   ██╗██╗  ████████╗");
 		//System.out.println("              ██╔══██╗██╔════╝██╔════╝██║   ██║██║  ╚══██╔══╝");
@@ -40,8 +45,10 @@ public class ResultProcessor {
 		System.out.println("             |    __  ||    ___||_____  ||       ||   |___   |   |  ");
 		System.out.println("             |   |  | ||   |___  _____| ||       ||       |  |   |  ");
 		System.out.println("             |___|  |_||_______||_______||_______||_______|  |___|");  
-
-		System.out.println("================================================================================");
+		printSeparator();
+	}
+	
+	protected static void printCommon(MeasuredResult result) {
 		System.out.println("Files : " + getFormattedNumber(result.getFiles()));
 		System.out.println("Dir. : " + getFormattedNumber(result.getDirectories()));
 		System.out.println("Classes : " + getFormattedNumber(result.getClasses()));
@@ -54,26 +61,58 @@ public class ResultProcessor {
 		System.out.println("Duplicated lines : " + getFormattedNumber(result.getDuplicatedLines()));
 		System.out.println("Duplication % : " + result.getDuplicatedLinesPercent() );
 		System.out.println();
+	}
+	
+	protected static void printComplexitySummary(MeasuredResult result) {
 		System.out.println("Complexity functions : " + getFormattedNumber(result.getComplexityFunctions()));
 		System.out.println("Complexity Total : " + getFormattedNumber(result.getComplexitySum()));
 		System.out.println("Complexity Over 10(%) : " + result.getComplexityOver10Percent() + " (" + getFormattedNumber(result.getComplexityOver10()) + ")");
 		System.out.println("Complexity Over 15(%) : " + result.getComplexityOver15Percent() + " (" + getFormattedNumber(result.getComplexityOver15()) + ")");
 		System.out.println("Complexity Over 20(%) : " + result.getComplexityOver20Percent() + " (" + getFormattedNumber(result.getComplexityOver20()) + ")");
 		System.out.println();
+	}
+	
+	protected static void printPmdSummary(MeasuredResult result) {
 		System.out.println("PMD violations : " + getFormattedNumber(result.getPmdCountAll()));
 		System.out.println("PMD 1 priority : " + getFormattedNumber(result.getPmdCount(1)));
 		System.out.println("PMD 2 priority : " + getFormattedNumber(result.getPmdCount(2)));
 		System.out.println("PMD < 3 priority : " + getFormattedNumber(result.getPmdCount(3) + result.getPmdCount(4) + result.getPmdCount(5)));
 		System.out.println();
+	}
+	
+	protected static void printFindBugsSummary(MeasuredResult result) {
 		System.out.println("FindBugs bugs : " + getFormattedNumber(result.getFindBugsCountAll()));
 		System.out.println("FindBugs 1 priority : " + getFormattedNumber(result.getFindBugsCount(1)));
 		System.out.println("FindBugs 2 priority : " + getFormattedNumber(result.getFindBugsCount(2)));
 		System.out.println("FindBugs < 3 priority : " + getFormattedNumber(result.getFindBugsCount(3) + result.getFindBugsCount(4) + result.getFindBugsCount(5)));
 		System.out.println();
-		System.out.println("Acyclic Dependencies : " + getFormattedNumber(result.getAcyclicDependencyCount()));
-		System.out.println("================================================================================");
 	}
 	
+	protected static void pirntAcyclicDependSummary(MeasuredResult result) {
+		System.out.println("Acyclic Dependencies : " + getFormattedNumber(result.getAcyclicDependencyCount()));
+		System.out.println();
+	}
+	
+	protected static void printBottom() {
+		printSeparator();
+	}
+	
+	public static void printSummary(MeasuredResult result) {
+		printTitle();
+		printCommon(result);
+		
+		if (result.getMode() == MeasurementMode.DefaultMode) {
+			printComplexitySummary(result);
+			printPmdSummary(result);
+			printFindBugsSummary(result);
+			pirntAcyclicDependSummary(result);
+		} else if (result.getMode() == MeasurementMode.ComplexityMode) {
+			printComplexity(result.getComplexityList());	
+		}
+		
+		printBottom();
+	}
+
 	public static void saveResultOutputFile(File file, CliParser cli, MeasuredResult result) {
 		try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file))))) {
 			writer.println(";===============================================================================");
@@ -185,6 +224,20 @@ public class ResultProcessor {
 		writer.println("total = " + count);
 		writer.println();
 		writer.println();
+	}
+	
+	public static void printComplexity(List<ComplexityResult> list) {
+		StringBuffer buffer = new StringBuffer();
+		
+		synchronized (list) {
+			//Collections.sort(list, (r1, r2) -> (r2.getComplexity() - r1.getComplexity()));
+			
+			for (ComplexityResult result : list) {
+				buffer.append(" - ").append(result.getPath()).append(" (").append(result.getMethodName()).append(") = ");
+				buffer.append(result.getComplexity()).append(IOAndFileUtils.CR_LF);
+			}
+		}
+		System.out.println(buffer.toString());
 	}
 	
 	public static void printPmd(PrintWriter writer, List<PmdResult> list) {

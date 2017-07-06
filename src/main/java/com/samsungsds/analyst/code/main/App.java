@@ -30,6 +30,7 @@ import com.samsungsds.analyst.code.sonar.SonarAnalysis;
 import com.samsungsds.analyst.code.sonar.SonarAnalysisLauncher;
 import com.samsungsds.analyst.code.sonar.server.JettySurrogateSonarServer;
 import com.samsungsds.analyst.code.sonar.server.SurrogateSonarServer;
+import com.samsungsds.analyst.code.util.FindFileUtils;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import com.samsungsds.analyst.code.util.PackageUtils;
 
@@ -52,6 +53,8 @@ public class App {
 				return;
 			}
     		
+    		MeasuredResult.getInstance().setMode(cli.getMode());
+    		
     		LOGGER.info("Code Size Analysis start...");
     		
     		runCodeSizeAalysis(cli);
@@ -60,21 +63,27 @@ public class App {
     		
     		runComplexity(cli);
     		
-    		LOGGER.info("PMD Analysis start...");
+    		if (cli.getMode() == MeasurementMode.DefaultMode) {
+	    		LOGGER.info("PMD Analysis start...");
+	    		
+	    		runPmd(cli);
+    		}
     		
-    		runPmd(cli);
-    		
-    		LOGGER.info("FindBugs Analysis start...");
-    		
-    		runFindBugs(cli);
-    		
-    		LOGGER.info("JDepend Analysis start...");
-    		
-    		runJDepend(cli);
-    		
-    		LOGGER.info("Code Analysis ended");    		
-    		
-    		processResult(cli);
+    		if (cli.getMode() == MeasurementMode.DefaultMode) {
+	    		LOGGER.info("FindBugs Analysis start...");
+	    		
+	    		runFindBugs(cli);
+    		}
+	    	
+    		if (cli.getMode() == MeasurementMode.DefaultMode) {
+	    		LOGGER.info("JDepend Analysis start...");
+	    		
+	    		runJDepend(cli);
+    		}
+	    		
+	    	LOGGER.info("Code Analysis ended");    		
+	    		
+	    	processResult(cli);
     	}  
 	}
 	
@@ -132,7 +141,18 @@ public class App {
 	private void runComplexity(CliParser cli) {
 		ComplexityAnalysis pmdComplexity = new ComplexityAnalysisLauncher();
 		
-		pmdComplexity.addOption("-dir", cli.getProjectBaseDir() + File.separator + cli.getSrc());
+		String dir = cli.getProjectBaseDir() + File.separator + cli.getSrc();
+		if (cli.getMode() == MeasurementMode.ComplexityMode) {
+			try {
+				dir = FindFileUtils.getDirectoryWithFilenamePattern(dir, cli.getClassForCCMeasurement());
+			} catch (IOException ioe) {
+				throw new RuntimeException(ioe);
+			}
+			pmdComplexity.addOption("-dir", dir);
+			
+		} else {
+			pmdComplexity.addOption("-dir", dir);
+		}
 		
 		if (cli.isDebug()) {
 			pmdComplexity.addOption("-debug", "");
@@ -198,24 +218,26 @@ public class App {
 	}
 	
 	private void processResult(CliParser cli) {
-		File outputFile = null;
-		
-		if (cli.getOutput() == null || cli.getOutput().equals("")) {
-			SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-			String fileName = "result-" + format.format(new Date()) + ".out";
+		if (cli.getMode() == MeasurementMode.DefaultMode) {
+			File outputFile = null;
 			
-			outputFile = new File(fileName);
-		} else {
-			outputFile = new File(cli.getOutput()); 
+			if (cli.getOutput() == null || cli.getOutput().equals("")) {
+				SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+				String fileName = "result-" + format.format(new Date()) + ".out";
+				
+				outputFile = new File(fileName);
+			} else {
+				outputFile = new File(cli.getOutput()); 
+			}
+			
+			ResultProcessor.saveResultOutputFile(outputFile, cli, MeasuredResult.getInstance());
+			
+			LOGGER.info("Result file saved : {}", outputFile);
 		}
-		
-		ResultProcessor.saveResultOutputFile(outputFile, cli, MeasuredResult.getInstance());
-		
-		LOGGER.info("Result file saved : {}", outputFile);
 		
 		ResultProcessor.printSummary(MeasuredResult.getInstance());
 	}
-	
+		
     public static void main(String[] args) {
     	CliParser cli = new CliParser(args);
     	

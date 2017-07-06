@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 public class CliParser {
 	private static final Logger LOGGER = LogManager.getLogger(CliParser.class);
-	private static final String APPLICATION_JAR = "Code-Analyst-1.0.0.jar";
+	private static final String APPLICATION_JAR = "Code-Analyst-" + Version.CODE_ANALYST + ".jar";
 	
 	private String[] args = null;
 	private Options options = new Options();
@@ -33,6 +33,9 @@ public class CliParser {
 	
 	private String timeout = "120";	// second
 	
+	private MeasurementMode mode = MeasurementMode.DefaultMode;
+	private String classForCCMeasurement = "";
+	
 	public CliParser(String[] args) {
 		this.args = args;
 		
@@ -49,10 +52,10 @@ public class CliParser {
 		options.addOption("findbugs", true, "specify FindBugs ruleset(include filter) xml file.");
 		
 		options.addOption("o", "output", true, "specify result output file. (default : \"result-[yyyyMMddHHmmss].out\")");
-		
 		options.addOption("v", "version", false, "display version info.");
+		options.addOption("t", "timeout", true, "specify internal ws timeout. (default : 120 sec.)");
 		
-		options.addOption("t", "timeout", true, "specify internal ws timeout (default : 120 sec.)");
+		options.addOption("c", "complexity", true, "specify class name(glob pattern) to be measured. (Cyclomatic Complexity Measurement mode)");
 	}
 	
 	public boolean parse() {
@@ -115,6 +118,11 @@ public class CliParser {
 			
 			if (cmd.hasOption("t")) {
 				timeout = cmd.getOptionValue("t");
+			}
+			
+			if (cmd.hasOption("c")) {
+				mode = MeasurementMode.ComplexityMode;
+				classForCCMeasurement = cmd.getOptionValue("c");
 			}
 			
 			return true;
@@ -220,5 +228,13 @@ public class CliParser {
 
 	public void setTimeout(String timeout) {
 		this.timeout = timeout;
+	}
+
+	public MeasurementMode getMode() {
+		return mode;
+	}
+
+	public String getClassForCCMeasurement() {
+		return classForCCMeasurement;
 	}
 }
