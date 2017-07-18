@@ -43,6 +43,7 @@ public class MeasuredResult implements Serializable {
 	private int complexityOver10 = 0;
 	private int complexityOver15 = 0;
 	private int complexityOver20 = 0;
+	private int complexityEqualOrOver50 = 0;
 	
 	private List<PmdResult> pmdList = Collections.synchronizedList(new ArrayList<>());
 	private int[] pmdCount = new int[6];	// 0 : 전체, 1 ~ 5 (Priority)
@@ -196,6 +197,10 @@ public class MeasuredResult implements Serializable {
 	public int getComplexityOver20() {
 		return complexityOver20;
 	}
+	
+	public int getComplexityEqualOrOver50() {
+		return complexityEqualOrOver50;
+	}
 
 	public String getComplexityOver10Percent() {
 		return String.format("%.2f%%", (double) complexityOver10 / (double) complexityFunctions * 100);
@@ -207,6 +212,10 @@ public class MeasuredResult implements Serializable {
 
 	public String getComplexityOver20Percent() {
 		return String.format("%.2f%%", (double) complexityOver20 / (double) complexityFunctions * 100);
+	}
+	
+	public String getComplexityEqualOrOver50Percent() {
+		return String.format("%.2f%%", (double) complexityEqualOrOver50 / (double) complexityFunctions * 100);
 	}
 	
 	public synchronized void putPmdList(List<PmdResult> list) {

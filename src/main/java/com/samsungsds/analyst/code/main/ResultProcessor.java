@@ -69,6 +69,7 @@ public class ResultProcessor {
 		System.out.println("Complexity Over 10(%) : " + result.getComplexityOver10Percent() + " (" + getFormattedNumber(result.getComplexityOver10()) + ")");
 		System.out.println("Complexity Over 15(%) : " + result.getComplexityOver15Percent() + " (" + getFormattedNumber(result.getComplexityOver15()) + ")");
 		System.out.println("Complexity Over 20(%) : " + result.getComplexityOver20Percent() + " (" + getFormattedNumber(result.getComplexityOver20()) + ")");
+		System.out.println("Complexity Equal Or Over 50(%) : " + result.getComplexityEqualOrOver50Percent() + " (" + getFormattedNumber(result.getComplexityEqualOrOver50()) + ")");
 		System.out.println();
 	}
 	
