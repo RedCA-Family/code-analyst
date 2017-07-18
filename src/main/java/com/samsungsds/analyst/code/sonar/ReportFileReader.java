@@ -8,11 +8,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.sonar.api.utils.ZipUtils;
 import org.sonar.core.util.CloseableIterator;
+import org.sonar.scanner.protocol.output.ScannerReport;
 import org.sonar.scanner.protocol.output.ScannerReport.Component;
 import org.sonar.scanner.protocol.output.ScannerReport.Component.ComponentType;
 import org.sonar.scanner.protocol.output.ScannerReport.Duplicate;
 import org.sonar.scanner.protocol.output.ScannerReport.Metadata;
-import org.sonar.scanner.protocol.output.ScannerReport;
 import org.sonar.scanner.protocol.output.ScannerReportReader;
 
 import com.samsungsds.analyst.code.main.MeasuredResult;
@@ -48,7 +48,12 @@ public class ReportFileReader implements Closeable {
 		Component project = reader.readComponent(rootComponentRef);
 		
 		readComponent(project);
-				 
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("--------------------------------------------------------------------------------");
+			LOGGER.debug("Duplicated lines : {}{}", IOAndFileUtils.CR_LF, MeasuredResult.getInstance().getDuplicatedBlockDebugInfo());
+			LOGGER.debug("--------------------------------------------------------------------------------");
+		}	 
 	}
 	
 	protected void readComponent(Component component) {

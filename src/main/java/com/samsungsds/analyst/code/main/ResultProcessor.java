@@ -149,6 +149,7 @@ public class ResultProcessor {
 			writer.println("ComplexityOver10 = " + result.getComplexityOver10());
 			writer.println("ComplexityOver15 = " + result.getComplexityOver15());
 			writer.println("ComplexityOver20 = " + result.getComplexityOver20());
+			writer.println("ComplexityEqualOrOver50 = " + result.getComplexityEqualOrOver50());
 			writer.println();
 			writer.println("PMDViolations = " + result.getPmdCountAll());
 			writer.println("PMD1Priority = " + result.getPmdCount(1));

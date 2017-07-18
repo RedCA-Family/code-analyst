@@ -21,12 +21,24 @@ public class DuplicationResult implements Serializable {
 	
 	public DuplicationResult(String path, int startLine, int endLine, String duplicatedPath, int duplicatedStartLine, int duplicatedEndLine) {
 		this.path = path;
-		this.startLine = startLine;
-		this.endLine = endLine;
+		
+		if (startLine > endLine) {
+			this.startLine = endLine;
+			this.endLine = startLine;
+		} else {
+			this.startLine = startLine;
+			this.endLine = endLine;
+		}
 		
 		this.duplicatedPath = duplicatedPath;
-		this.duplicatedStartLine = duplicatedStartLine;
-		this.duplicatedEndLine = duplicatedEndLine;
+		if (duplicatedStartLine > duplicatedEndLine) {
+			this.duplicatedStartLine = duplicatedEndLine;
+			this.duplicatedEndLine = duplicatedStartLine;
+			
+		} else {
+			this.duplicatedStartLine = duplicatedStartLine;
+			this.duplicatedEndLine = duplicatedEndLine;
+		}
 		
 		LOGGER.debug("path : {}, {} ~ {}, duplicated path : {}, {} ~ {}", path, startLine, endLine, duplicatedPath, duplicatedStartLine, duplicatedEndLine);
 	}

@@ -3,7 +3,11 @@ package com.samsungsds.analyst.code.main;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +16,7 @@ import com.samsungsds.analyst.code.findbugs.FindBugsResult;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 public class MeasuredResult implements Serializable {
 	private static final Logger LOGGER = LogManager.getLogger(MeasuredResult.class);
@@ -36,6 +41,8 @@ public class MeasuredResult implements Serializable {
 	
 	private List<DuplicationResult> duplicationList = Collections.synchronizedList(new ArrayList<>());
 	private int duplicatedLines = 0;
+	
+	private Map<String, Set<Integer>> duplicatedBlockData = new HashMap<>();
 	
 	private List<ComplexityResult> complexityList = Collections.synchronizedList(new ArrayList<>());
 	private int complexityFunctions = 0;
@@ -146,19 +153,66 @@ public class MeasuredResult implements Serializable {
 	}
 
 	public int getDuplicatedLines() {
-		return duplicatedLines / 2;
+		return duplicatedLines;
 	}
 	
 	public String getDuplicatedLinesPercent() {
-		return String.format("%.2f%%", (double) (duplicatedLines / 2) / (double) lines * 100);
+		return String.format("%.2f%%", (double) duplicatedLines / (double) lines * 100);
 	}
 
 	public synchronized void addDuplicationResult(DuplicationResult result) {
-		this.duplicatedLines += result.getDuplicatedLine();
-		
 		duplicationList.add(result);
+
+		String path = result.getPath();
+		
+		if (duplicatedBlockData.containsKey(path)) {
+			this.duplicatedLines += getAddedDuplicatedLines(result.getStartLine(), result.getEndLine(), duplicatedBlockData.get(path));
+		} else {
+			Set<Integer> duplicatedLineNumbers = new HashSet<>();
+			
+			this.duplicatedLines += getAddedDuplicatedLines(result.getStartLine(), result.getEndLine(), duplicatedLineNumbers);
+			
+			duplicatedBlockData.put(path, duplicatedLineNumbers);
+		}
+		
+		if (!"".equals(result.getDuplicatedPath())) {
+			path = result.getDuplicatedPath();
+		}
+		
+		if (duplicatedBlockData.containsKey(path)) {
+			this.duplicatedLines += getAddedDuplicatedLines(result.getDuplicatedStartLine(), result.getDuplicatedEndLine(), duplicatedBlockData.get(path));
+		} else {			
+			Set<Integer> duplicatedLineNumbers = new HashSet<>();
+			
+			this.duplicatedLines += getAddedDuplicatedLines(result.getDuplicatedStartLine(), result.getDuplicatedEndLine(), duplicatedLineNumbers);
+			
+			duplicatedBlockData.put(path, duplicatedLineNumbers);
+		}
+	}
+
+	private int getAddedDuplicatedLines(int from, int to, Set<Integer> duplicatedLineNumbers) {
+		int beforeLines = duplicatedLineNumbers.size();
+		for (int i = from; i <= to; i++) {
+			duplicatedLineNumbers.add(i);
+		}
+		int afterLines = duplicatedLineNumbers.size();
+		
+		return (afterLines - beforeLines);
 	}
 	
+	public String getDuplicatedBlockDebugInfo() {
+		StringBuilder logMessage = new StringBuilder();
+		
+		for (String path : duplicatedBlockData.keySet()) {
+			if (logMessage.length() != 0) {
+				logMessage.append(IOAndFileUtils.CR_LF);
+			}
+			logMessage.append(" > ").append(path).append(" : ").append(duplicatedBlockData.get(path).size());
+		}
+		
+		return logMessage.toString();
+	}
+
 	public synchronized void putComplexityList(List<ComplexityResult> list) {
 		complexityList.addAll(list);
 		
