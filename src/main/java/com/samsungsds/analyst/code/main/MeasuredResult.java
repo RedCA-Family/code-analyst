@@ -175,7 +175,7 @@ public class MeasuredResult implements Serializable {
 			duplicatedBlockData.put(path, duplicatedLineNumbers);
 		}
 		
-		if (!"".equals(result.getDuplicatedPath())) {
+		if (!DuplicationResult.DUPLICATED_FILE_SAME_MARK.equals(result.getDuplicatedPath())) {
 			path = result.getDuplicatedPath();
 		}
 		

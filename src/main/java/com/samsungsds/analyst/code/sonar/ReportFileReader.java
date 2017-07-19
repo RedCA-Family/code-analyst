@@ -100,7 +100,7 @@ public class ReportFileReader implements Closeable {
 							try {
 								duplicatedPath = reader.readComponent(d.getOtherFileRef()).getPath();
 							} catch (IllegalStateException ise) {	// Unable to find report for component #...
-								duplicatedPath = "";
+								duplicatedPath = DuplicationResult.DUPLICATED_FILE_SAME_MARK;
 							}
 							DuplicationResult result = new DuplicationResult(path, startLine, endLine, duplicatedPath, d.getRange().getStartLine(), d.getRange().getEndLine());
 							

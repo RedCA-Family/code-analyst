@@ -303,11 +303,11 @@ public class ResultProcessor {
 	public static String getStringsWithComma(String ... strings) {
 		StringBuilder builder = new StringBuilder();
 		
-		for (String str : strings) {
-			if (builder.length() != 0) {
+		for (int i = 0; i < strings.length; i++) {
+			if (i != 0) {
 				builder.append(", ");
 			}
-			builder.append(str);
+			builder.append(strings[i]);
 		}
 		
 		return builder.toString();

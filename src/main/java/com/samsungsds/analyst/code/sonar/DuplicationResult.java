@@ -11,6 +11,8 @@ public class DuplicationResult implements Serializable {
 
 	private static final Logger LOGGER = LogManager.getLogger(DuplicationResult.class);
 	
+	public static final String DUPLICATED_FILE_SAME_MARK = "-";
+	
 	private String path;
 	private int startLine;
 	private int endLine;
