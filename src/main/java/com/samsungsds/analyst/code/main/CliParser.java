@@ -64,8 +64,8 @@ public class CliParser {
 		
 		options.addOption("c", "complexity", true, "specify class name(glob pattern) to be measured. (Cyclomatic Complexity Measurement mode)");
 		
-		options.addOption("include", true, "specify include pattern(Ant-style) with comma separated. (eg: com/sds/**/*.java");
-		options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java");
+		options.addOption("include", true, "specify include pattern(Ant-style) with comma separated. (eg: com/sds/**/*.java)");
+		options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)");
 	}
 	
 	public boolean parse() {
