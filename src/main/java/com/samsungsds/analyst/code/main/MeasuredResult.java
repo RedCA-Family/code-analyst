@@ -1,8 +1,11 @@
 package com.samsungsds.analyst.code.main;
 
+import java.io.File;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,7 +15,12 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
+import com.samsungsds.analyst.code.main.filter.FilePathExcludeFilter;
+import com.samsungsds.analyst.code.main.filter.FilePathFilter;
+import com.samsungsds.analyst.code.main.filter.FilePathIncludeFilter;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
@@ -25,40 +33,95 @@ public class MeasuredResult implements Serializable {
 	
 	private static MeasuredResult instance = null;
 	
+	@Expose
+	@SerializedName("target")
 	private String projectDirectory;
+	
+	@Expose
+	private String source;
+	@Expose
+	private String binary;
+	@Expose
+	private String encoding;
+	@Expose
+	private String javaVersion;
+	@Expose
+	private String dateTime;
+	@Expose
+	private String pmdRuleSetFile;
+	@Expose
+	private String findBugsRuleSetFile;
+	
+	@Expose
+	private String includes = "";
+	@Expose
+	private String excludes = "";
 	
 	private MeasurementMode mode;
 	
+	@Expose
 	private int directories = 0;
+	@Expose
 	private int files = 0;
+	@Expose
 	private int classes = 0;
+	@Expose
 	private int commentLines = 0;
+	@Expose
 	private int complexity = 0;
+	@Expose
 	private int functions = 0;
+	@Expose
 	private int lines = 0;
+	@Expose
 	private int ncloc = 0;
+	@Expose
 	private int statements = 0;
 	
+	@Expose
 	private List<DuplicationResult> duplicationList = Collections.synchronizedList(new ArrayList<>());
+	@Expose
 	private int duplicatedLines = 0;
 	
 	private Map<String, Set<Integer>> duplicatedBlockData = new HashMap<>();
 	
-	private List<ComplexityResult> complexityList = Collections.synchronizedList(new ArrayList<>());
+	// contains all method and used to check target package (include or exclude)
+	private List<ComplexityResult> allMethodList = Collections.synchronizedList(new ArrayList<>());
+	
+	@Expose
+	@SerializedName("complexityList")
+	private List<ComplexityResult> complexityListOver10 = Collections.synchronizedList(new ArrayList<>());
+	
+	@Expose
 	private int complexityFunctions = 0;
+	@Expose
+	@SerializedName("complexityTotal")
 	private int complexitySum = 0;
+	@Expose
 	private int complexityOver10 = 0;
+	@Expose
 	private int complexityOver15 = 0;
+	@Expose
 	private int complexityOver20 = 0;
+	@Expose
 	private int complexityEqualOrOver50 = 0;
 	
+	@Expose
 	private List<PmdResult> pmdList = Collections.synchronizedList(new ArrayList<>());
+	@Expose
 	private int[] pmdCount = new int[6];	// 0 : 전체, 1 ~ 5 (Priority)
 	
+	@Expose
 	private List<FindBugsResult> findBugsList = Collections.synchronizedList(new ArrayList<>());
+	@Expose
 	private int[] findBugsCount = new int[6];	// 0 : 전체, 1 ~ 5 (High, Normal, Low, Experimental, Ignore)
 	
+	@Expose
 	private List<String> acyclicDependencyList = Collections.synchronizedList(new ArrayList<>());
+	
+	private List<FilePathFilter> filePathFilterList = new ArrayList<>();
+
+	private File outputFile;
 	
 	public static MeasuredResult getInstance() {
 		if (instance == null) {
@@ -70,6 +133,24 @@ public class MeasuredResult implements Serializable {
 		}
 		
 		return instance;
+	}
+	
+	public void setProjectInfo(CliParser cli) {
+		source = cli.getSrc();
+		binary = cli.getBinary();
+		encoding = cli.getEncoding();
+		javaVersion = cli.getJavaVersion();
+		dateTime = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date());
+		if (cli.getRuleSetFileForPMD() != null && !cli.getRuleSetFileForPMD().equals("")) {
+			pmdRuleSetFile = cli.getRuleSetFileForPMD();
+		} else {
+			pmdRuleSetFile = "";
+		}
+		if (cli.getRuleSetFileForFindBugs() != null && !cli.getRuleSetFileForFindBugs().equals("")) {
+			findBugsRuleSetFile = cli.getRuleSetFileForFindBugs();
+		} else {
+			findBugsRuleSetFile = "";
+		}
 	}
 	
 	public synchronized void setProjectDirectory(String projectDirectory) {
@@ -161,9 +242,20 @@ public class MeasuredResult implements Serializable {
 	}
 
 	public synchronized void addDuplicationResult(DuplicationResult result) {
-		duplicationList.add(result);
-
 		String path = result.getPath();
+		String duplcatedPath = null;
+		
+		if (DuplicationResult.DUPLICATED_FILE_SAME_MARK.equals(result.getDuplicatedPath())) {
+			duplcatedPath = result.getPath();
+		} else {
+			duplcatedPath = result.getDuplicatedPath();
+		}
+		
+		if (haveToSkip(path) || haveToSkip(duplcatedPath)) {
+			return;
+		}
+		
+		duplicationList.add(result);
 		
 		if (duplicatedBlockData.containsKey(path)) {
 			this.duplicatedLines += getAddedDuplicatedLines(result.getStartLine(), result.getEndLine(), duplicatedBlockData.get(path));
@@ -175,18 +267,14 @@ public class MeasuredResult implements Serializable {
 			duplicatedBlockData.put(path, duplicatedLineNumbers);
 		}
 		
-		if (!DuplicationResult.DUPLICATED_FILE_SAME_MARK.equals(result.getDuplicatedPath())) {
-			path = result.getDuplicatedPath();
-		}
-		
-		if (duplicatedBlockData.containsKey(path)) {
-			this.duplicatedLines += getAddedDuplicatedLines(result.getDuplicatedStartLine(), result.getDuplicatedEndLine(), duplicatedBlockData.get(path));
+		if (duplicatedBlockData.containsKey(duplcatedPath)) {
+			this.duplicatedLines += getAddedDuplicatedLines(result.getDuplicatedStartLine(), result.getDuplicatedEndLine(), duplicatedBlockData.get(duplcatedPath));
 		} else {			
 			Set<Integer> duplicatedLineNumbers = new HashSet<>();
 			
 			this.duplicatedLines += getAddedDuplicatedLines(result.getDuplicatedStartLine(), result.getDuplicatedEndLine(), duplicatedLineNumbers);
 			
-			duplicatedBlockData.put(path, duplicatedLineNumbers);
+			duplicatedBlockData.put(duplcatedPath, duplicatedLineNumbers);
 		}
 	}
 
@@ -198,6 +286,15 @@ public class MeasuredResult implements Serializable {
 		int afterLines = duplicatedLineNumbers.size();
 		
 		return (afterLines - beforeLines);
+	}
+	
+	private boolean haveToSkip(String path) {
+		for (FilePathFilter filter : filePathFilterList) {
+			if (!filter.matched(path)) {
+				return true;
+			}	
+		}
+		return false;
 	}
 	
 	public String getDuplicatedBlockDebugInfo() {
@@ -214,9 +311,11 @@ public class MeasuredResult implements Serializable {
 	}
 
 	public synchronized void putComplexityList(List<ComplexityResult> list) {
-		complexityList.addAll(list);
-		
 		for (ComplexityResult result : list) {
+			if (haveToSkip(result.getPath())) {
+				continue;
+			}
+			
 			complexityFunctions++;
 			complexitySum += result.getComplexity();
 			
@@ -228,7 +327,11 @@ public class MeasuredResult implements Serializable {
 			} 
 			if (result.getComplexity() > 10) {
 				complexityOver10++;
-			} 
+				
+				complexityListOver10.add(result);
+			}
+			
+			allMethodList.add(result);
 		}
 	}
 	
@@ -272,14 +375,16 @@ public class MeasuredResult implements Serializable {
 		return String.format("%.2f%%", (double) complexityEqualOrOver50 / (double) complexityFunctions * 100);
 	}
 	
-	public synchronized void putPmdList(List<PmdResult> list) {
-		pmdList.addAll(list);
-		
+	public synchronized void putPmdList(List<PmdResult> list) {		
 		for (PmdResult result : list) {
+			if (haveToSkip(result.getPath())) {
+				continue;
+			}
 			pmdCount[0]++;
 			
 			pmdCount[result.getPriority()]++;
 			
+			pmdList.add(result);
 			
 			LOGGER.debug("file : {}, line : {}, priority : {}, rule : {}, desc : {}", result.getFile(), result.getLine(), result.getPriority(), result.getRule(), result.getDescription());
 		}
@@ -314,7 +419,7 @@ public class MeasuredResult implements Serializable {
 	public synchronized List<String> getPackageList() {
 		List<String> packageList = new ArrayList<>();
 		
-		for (ComplexityResult result : complexityList) {
+		for (ComplexityResult result : allMethodList) {
 			if (packageList.contains(result.getPackageName())) {
 				continue;
 			}
@@ -329,7 +434,7 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	public List<ComplexityResult> getComplexityList() {
-		return complexityList;
+		return allMethodList;
 	}
 	
 	public List<PmdResult> getPmdList() {
@@ -358,5 +463,29 @@ public class MeasuredResult implements Serializable {
 	
 	public MeasurementMode getMode() {
 		return mode;
+	}
+
+	public void setOutputFile(File file) {
+		this.outputFile = file;
+	}
+	
+	public File getOutputFile() {
+		return outputFile;
+	}
+	
+	public void setIncludeFilters(String includes) {
+		FilePathIncludeFilter filter = new FilePathIncludeFilter(includes);
+		
+		filePathFilterList.add(filter);
+		
+		this.includes = filter.getNormalizedFilterString(); 
+	}
+	
+	public void setExcludeFilters(String excludes) {
+		FilePathExcludeFilter filter = new FilePathExcludeFilter(excludes);
+		
+		filePathFilterList.add(filter);
+		
+		this.excludes = filter.getNormalizedFilterString(); 
 	}
 }

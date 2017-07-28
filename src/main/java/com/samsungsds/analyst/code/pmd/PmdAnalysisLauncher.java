@@ -1,7 +1,6 @@
 package com.samsungsds.analyst.code.pmd;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,6 @@ public class PmdAnalysisLauncher extends AbstractPmdAnalysis implements PmdAnaly
 	private static final String CODE_QUALITY_RULESET_FILE = "/statics/PMD_ruleset_SDS_Standard_20160826.xml";
 	
 	private List<String> arg = new ArrayList<>();
-	private File reportFile = null; 
 	
 	@Override
 	public void addOption(String option, String value) {
@@ -37,12 +35,7 @@ public class PmdAnalysisLauncher extends AbstractPmdAnalysis implements PmdAnaly
 		}
 		addOption("-format", "csv");
 		
-		try {
-			reportFile = File.createTempFile("pmd", ".csv");
-		} catch (IOException ex) {
-			throw new IllegalStateException(ex);
-		}
-		reportFile.deleteOnExit();
+		File reportFile = createPmdReportFile();
 		
 		addOption("-reportfile", reportFile.toString());
 		

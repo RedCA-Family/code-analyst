@@ -5,6 +5,8 @@ import java.io.Serializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.annotations.Expose;
+
 public class DuplicationResult implements Serializable {
 
 	private static final long serialVersionUID = -3351274587827246945L;
@@ -13,12 +15,18 @@ public class DuplicationResult implements Serializable {
 	
 	public static final String DUPLICATED_FILE_SAME_MARK = "-";
 	
+	@Expose
 	private String path;
+	@Expose
 	private int startLine;
+	@Expose
 	private int endLine;
 	
+	@Expose
 	private String duplicatedPath;
+	@Expose
 	private int duplicatedStartLine;
+	@Expose
 	private int duplicatedEndLine;
 	
 	public DuplicationResult(String path, int startLine, int endLine, String duplicatedPath, int duplicatedStartLine, int duplicatedEndLine) {

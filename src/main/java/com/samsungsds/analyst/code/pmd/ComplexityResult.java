@@ -9,17 +9,23 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.annotations.Expose;
+
 public class ComplexityResult implements Serializable {
 
 	private static final long serialVersionUID = 1418436775355728495L;
 
 	private static final Logger LOGGER = LogManager.getLogger(ComplexityResult.class);
 	
+	@Expose
 	private String path;
 	private String packageName;
 	private String fileName;
+	@Expose
 	private int line;
+	@Expose
 	private String methodName;
+	@Expose
 	private int complexity;
 	
 	public String getPath() {

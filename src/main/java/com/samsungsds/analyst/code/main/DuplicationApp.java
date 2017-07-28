@@ -12,6 +12,7 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.ini4j.Wini;
 
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.util.FindFileUtils;
 
 public class DuplicationApp {
 	private String outputFile;
@@ -28,6 +29,10 @@ public class DuplicationApp {
 		List<String> list = getDuplicationList();
 		
 		System.out.println("Duplicated lines : " + getDuplicatedLines(list));
+		
+		System.out.println();
+		System.out.println("Duplicated file list : ");
+		System.out.println(MeasuredResult.getInstance().getDuplicatedBlockDebugInfo());
 	}
 	
 	private void unsetDebugLevel() {
@@ -48,7 +53,7 @@ public class DuplicationApp {
 	
 	private int getDuplicatedLines(List<String> list) {
 		for (String line : list) {
-			String[] data = line.split("\\s*,\\s*");
+			String[] data = line.split(FindFileUtils.COMMA_SPLITTER);
 			
 			DuplicationResult result = null;
 			
@@ -90,12 +95,39 @@ public class DuplicationApp {
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			System.out.println("Parameter is needed...");
-			System.out.println("\tjava .. com.samsungsds.analyst.code.main.DuplicationApp \"output file\"");
+			System.out.println("\tjava .. com.samsungsds.analyst.code.main.DuplicationApp \"output file\" [-include AntStyle.java] [-exclude AntStyle.java]");
 			System.out.println();
 			return;
 		}
 		
 		DuplicationApp app = new DuplicationApp(args[0]);
+		
+		String includeFilters = "";
+		String excludeFilters = "";
+		if (args.length > 1) {
+			
+			for (int index = 1; index < args.length; index++) {
+				
+				if (args[index].equals("-include")) {
+					includeFilters = args[++index];
+				} 
+				if (args[index].equals("-exclude")) {
+					excludeFilters = args[++index];
+				}
+			}
+		}
+				
+		if (!includeFilters.equals("")) {
+			System.out.println("Include : " + includeFilters);
+		
+			MeasuredResult.getInstance().setIncludeFilters(includeFilters);;
+		}
+		
+		if (!excludeFilters.equals("")) {
+			System.out.println("Exclude : " + excludeFilters);
+			
+			MeasuredResult.getInstance().setExcludeFilters(excludeFilters);
+		}
 		
 		try {
 			app.process();

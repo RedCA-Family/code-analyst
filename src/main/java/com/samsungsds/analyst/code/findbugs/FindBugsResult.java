@@ -3,26 +3,40 @@ package com.samsungsds.analyst.code.findbugs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.annotations.Expose;
+
 import edu.umd.cs.findbugs.BugInstance;
 
 public class FindBugsResult {
 	private static final Logger LOGGER = LogManager.getLogger(FindBugsResult.class);
 	
+	@Expose
 	private String patternKey;
+	@Expose
 	private String pattern;
+	@Expose
 	private int priority;
 	private String priorityString;
 	
 	private String detailedDescription;
+	@Expose
 	private String message;
 	
+	@Expose
 	private String packageName = "";
+	@Expose
 	private String className = "";
+	@Expose
 	private String file = "";
+	@Expose
 	private String field = "";
+	@Expose
 	private String localVariable = "";
+	@Expose
 	private String method = "";
+	@Expose
 	private int startLine = 0;
+	@Expose
 	private int endLine = 0;
 	
 	public FindBugsResult() {

@@ -22,6 +22,7 @@ import com.samsungsds.analyst.code.findbugs.FindBugsAnalysis;
 import com.samsungsds.analyst.code.findbugs.FindBugsAnalysisLauncher;
 import com.samsungsds.analyst.code.jdepend.JDependAnalysis;
 import com.samsungsds.analyst.code.jdepend.JDependAnalysisLauncher;
+import com.samsungsds.analyst.code.main.result.OutputFileFormat;
 import com.samsungsds.analyst.code.pmd.ComplexityAnalysis;
 import com.samsungsds.analyst.code.pmd.ComplexityAnalysisLauncher;
 import com.samsungsds.analyst.code.pmd.PmdAnalysis;
@@ -41,7 +42,8 @@ public class App {
 	
 	protected void process(CliParser cli) {
 		if (cli.parse()) {
-    		SystemInfo.print();
+			
+			SystemInfo.print();
     		
     		File project = new File(cli.getProjectBaseDir());
     		
@@ -55,6 +57,8 @@ public class App {
     		
     		MeasuredResult.getInstance().setMode(cli.getMode());
     		
+    		processFilterString(cli);
+     		
     		LOGGER.info("Code Size Analysis start...");
     		
     		runCodeSizeAalysis(cli);
@@ -85,6 +89,20 @@ public class App {
 	    		
 	    	processResult(cli);
     	}  
+	}
+
+	private void processFilterString(CliParser cli) {
+		if (!"".equals(cli.getIncludes())) {
+			LOGGER.info("Include patterns : {}", cli.getIncludes());
+			
+			MeasuredResult.getInstance().setIncludeFilters(cli.getIncludes());
+		}
+		
+		if (!"".equals(cli.getExcludes())) {
+			LOGGER.info("Exclude patterns : {}", cli.getExcludes());
+			
+			MeasuredResult.getInstance().setExcludeFilters(cli.getExcludes());
+		}
 	}
 	
 	private void runCodeSizeAalysis(CliParser cli) {
@@ -131,6 +149,14 @@ public class App {
 		}
 		
 		sonar.addProperty("sonar.scanAllFiles", "true");
+		
+		if (!cli.getIncludes().equals("")) {
+			sonar.addProperty("sonar.inclusions", cli.getIncludes());
+		}
+		
+		if (!cli.getExcludes().equals("")) {
+			sonar.addProperty("sonar.exclusions", cli.getExcludes());
+		}
 		
 		sonar.run();
 		
@@ -208,10 +234,19 @@ public class App {
 		
 		List<String> packageList = PackageUtils.getProjectPackages(cli.getProjectBaseDir() + File.separator + cli.getBinary());
 		
+		LOGGER.debug("Package List");
+		for (String packageName : MeasuredResult.getInstance().getPackageList()) {
+			LOGGER.debug("- {}", packageName);
+		}
+		
 		LOGGER.debug("Target Package List");
 		for (String packageName : packageList) {
-			LOGGER.debug("- {}", packageName);
-			jdepend.addIncludePackage(packageName);
+			if (MeasuredResult.getInstance().getPackageList().contains(packageName)) {
+				LOGGER.debug("- {}", packageName);
+				jdepend.addIncludePackage(packageName);
+			} else {
+				LOGGER.debug("- {} : skipped...", packageName);
+			}
 		}
 		
 		jdepend.run();
@@ -223,7 +258,7 @@ public class App {
 			
 			if (cli.getOutput() == null || cli.getOutput().equals("")) {
 				SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-				String fileName = "result-" + format.format(new Date()) + ".out";
+				String fileName = "result-" + format.format(new Date()) + (cli.getFormat() == OutputFileFormat.JSON ? ".json" : ".out");
 				
 				outputFile = new File(fileName);
 			} else {
@@ -231,8 +266,6 @@ public class App {
 			}
 			
 			ResultProcessor.saveResultOutputFile(outputFile, cli, MeasuredResult.getInstance());
-			
-			LOGGER.info("Result file saved : {}", outputFile);
 		}
 		
 		ResultProcessor.printSummary(MeasuredResult.getInstance());

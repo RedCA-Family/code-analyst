@@ -2,18 +2,24 @@ package com.samsungsds.analyst.code.pmd;
 
 import java.io.File;
 
+import com.google.gson.annotations.Expose;
 import com.samsungsds.analyst.code.main.MeasuredResult;
 
 public class PmdResult {
 	private int problem;
 	private String packageName;
 	private String file;
+	@Expose
 	private int priority;
+	@Expose
 	private int line;
+	@Expose
 	private String description;
 	private String ruleSet;
+	@Expose
 	private String rule;
 	
+	@Expose
 	private String path;
 	
 	public static String getConvertedFilePath(String filePath) {

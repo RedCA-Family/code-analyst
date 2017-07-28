@@ -11,6 +11,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.samsungsds.analyst.code.main.result.OutputFileFormat;
+
 public class CliParser {
 	private static final Logger LOGGER = LogManager.getLogger(CliParser.class);
 	private static final String APPLICATION_JAR = "Code-Analyst-" + Version.CODE_ANALYST + ".jar";
@@ -30,11 +32,15 @@ public class CliParser {
 	private String ruleSetFileForFindBugs = "";
 	
 	private String output = "";
+	private OutputFileFormat format = OutputFileFormat.JSON;
 	
 	private String timeout = "120";	// second
 	
 	private MeasurementMode mode = MeasurementMode.DefaultMode;
 	private String classForCCMeasurement = "";
+	
+	private String includes = "";
+	private String excludes = "";
 	
 	public CliParser(String[] args) {
 		this.args = args;
@@ -51,11 +57,15 @@ public class CliParser {
 		options.addOption("pmd", true, "specify PMD ruleset xml file.");
 		options.addOption("findbugs", true, "specify FindBugs ruleset(include filter) xml file.");
 		
-		options.addOption("o", "output", true, "specify result output file. (default : \"result-[yyyyMMddHHmmss].out\")");
+		options.addOption("o", "output", true, "specify result output file. (default : \"result-[yyyyMMddHHmmss].[out|json]\")");
+		options.addOption("f", "format", true, "specify result output file format(json, text, none). (default : json)");
 		options.addOption("v", "version", false, "display version info.");
 		options.addOption("t", "timeout", true, "specify internal ws timeout. (default : 120 sec.)");
 		
 		options.addOption("c", "complexity", true, "specify class name(glob pattern) to be measured. (Cyclomatic Complexity Measurement mode)");
+		
+		options.addOption("include", true, "specify include pattern(Ant-style) with comma separated. (eg: com/sds/**/*.java");
+		options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java");
 	}
 	
 	public boolean parse() {
@@ -116,6 +126,18 @@ public class CliParser {
 				output = cmd.getOptionValue("o");
 			}
 			
+			if (cmd.hasOption("f")) { 
+				String formatValue = cmd.getOptionValue("f");
+				
+				if (formatValue.equalsIgnoreCase("text") || formatValue.equalsIgnoreCase("json") || formatValue.equalsIgnoreCase("none")) {
+					format = OutputFileFormat.valueOf(formatValue.toUpperCase());
+				} else {
+					System.out.println("Option Error : 'format' option's value has to be 'json', 'text' or 'none'");
+					help();
+					return false;
+				}
+			}
+			
 			if (cmd.hasOption("t")) {
 				timeout = cmd.getOptionValue("t");
 			}
@@ -125,6 +147,14 @@ public class CliParser {
 				classForCCMeasurement = cmd.getOptionValue("c");
 			}
 			
+			if (cmd.hasOption("include")) {
+				includes = cmd.getOptionValue("include");
+			}
+			
+			if (cmd.hasOption("exclude")) {
+				excludes = cmd.getOptionValue("exclude");
+			}
+			
 			return true;
 		} catch (ParseException pe) {
 			LOGGER.error("Failed to parse command line", pe);
@@ -132,7 +162,7 @@ public class CliParser {
 			return false;
 		}
 	}
-	
+
 	private void help() {
 		HelpFormatter formatter = new HelpFormatter();
 		
@@ -236,5 +266,17 @@ public class CliParser {
 
 	public String getClassForCCMeasurement() {
 		return classForCCMeasurement;
+	}
+
+	public OutputFileFormat getFormat() {
+		return format;
+	}
+
+	public String getIncludes() {
+		return includes;
+	}
+
+	public String getExcludes() {
+		return excludes;
 	}
 }

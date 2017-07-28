@@ -35,7 +35,6 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 	
 	@Override
 	public void addOption(String option, String value) {
-		
 		arg.add(option);
 		
 		if (value != null && !value.equals("")) {

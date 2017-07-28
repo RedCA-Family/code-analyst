@@ -14,6 +14,19 @@ import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 public abstract class AbstractPmdAnalysis  {
 	
+	protected File createPmdReportFile() {
+		File reportFile = null;
+		
+		try {
+			reportFile = File.createTempFile("pmd", ".csv");
+		} catch (IOException ex) {
+			throw new IllegalStateException(ex);
+		}
+		reportFile.deleteOnExit();
+		
+		return reportFile;
+	}
+	
 	protected File saveRuleSetFile(String ruleResourceName) {
 		return IOAndFileUtils.saveResourceFile(ruleResourceName, "ruleset", ".xml");
 	}

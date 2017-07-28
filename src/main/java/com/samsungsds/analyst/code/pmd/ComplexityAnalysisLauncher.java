@@ -1,7 +1,6 @@
 package com.samsungsds.analyst.code.pmd;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +16,7 @@ public class ComplexityAnalysisLauncher extends AbstractPmdAnalysis implements C
 	
 	private static final String COMPLEXITY_RULESET_FILE = "/statics/PMD_ruleset_complexity.xml";
 	
-	private List<String> arg = new ArrayList<>();
-	private File reportFile = null; 
+	private List<String> arg = new ArrayList<>(); 
 	
 	@Override
 	public void addOption(String option, String value) {
@@ -36,12 +34,7 @@ public class ComplexityAnalysisLauncher extends AbstractPmdAnalysis implements C
 		addOption("-format", "csv");
 		addOption("-showsuppressed", "");
 		
-		try {
-			reportFile = File.createTempFile("pmd", ".csv");
-		} catch (IOException ex) {
-			throw new IllegalStateException(ex);
-		}
-		reportFile.deleteOnExit();
+		File reportFile = createPmdReportFile();
 		
 		addOption("-reportfile", reportFile.toString());
 		
@@ -55,4 +48,5 @@ public class ComplexityAnalysisLauncher extends AbstractPmdAnalysis implements C
 		
 		MeasuredResult.getInstance().putComplexityList(complexitList);
 	}
+
 }

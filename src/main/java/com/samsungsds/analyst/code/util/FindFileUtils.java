@@ -17,6 +17,8 @@ import org.apache.logging.log4j.Logger;
 public class FindFileUtils {
 	private static final Logger LOGGER = LogManager.getLogger(FindFileUtils.class);
 	
+	public static final String COMMA_SPLITTER = "\\s*,\\s*";
+	
 	public static class Finder extends SimpleFileVisitor<Path> {
 		private String path;
 		
@@ -69,18 +71,18 @@ public class FindFileUtils {
 		}
 	}
 	
-    public static String getDirectoryWithFilenamePattern(String startDirectory, String pattern) throws IOException {
+	public static String getDirectoryWithFilenamePattern(String startDirectory, String pattern) throws IOException {
 
-            Path startingDir = Paths.get(startDirectory);
+		Path startingDir = Paths.get(startDirectory);
 
-            Finder finder = new Finder("**" + File.separator + pattern + ".java");
-            Files.walkFileTree(startingDir, finder);
-            finder.done();
-            
-            if (finder.path == null) {
-            	throw new IOException("No files : " + pattern);
-            }
-            
-            return finder.path;
-        }
+		Finder finder = new Finder("**" + File.separator + pattern + ".java");
+		Files.walkFileTree(startingDir, finder);
+		finder.done();
+
+		if (finder.path == null) {
+			throw new IOException("No files : " + pattern);
+		}
+
+		return finder.path;
+	}
 }
