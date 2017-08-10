@@ -88,6 +88,11 @@ public class ResultProcessor {
 		System.out.println();
 	}
 	
+	protected static void printFindSecBugsSummary(MeasuredResult result) {
+		System.out.println("FindSecBugs bugs : " + getFormattedNumber(result.getFindSecBugsCountAll()));
+		System.out.println();
+	}
+	
 	protected static void pirntAcyclicDependSummary(MeasuredResult result) {
 		System.out.println("Acyclic Dependencies : " + getFormattedNumber(result.getAcyclicDependencyCount()));
 		System.out.println();
@@ -105,6 +110,7 @@ public class ResultProcessor {
 			printComplexitySummary(result);
 			printPmdSummary(result);
 			printFindBugsSummary(result);
+			printFindSecBugsSummary(result);
 			pirntAcyclicDependSummary(result);
 		} else if (result.getMode() == MeasurementMode.ComplexityMode) {
 			printComplexity(result.getComplexityList());	

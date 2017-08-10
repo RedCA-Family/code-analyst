@@ -34,6 +34,11 @@ public class JsonOutputFile extends AbstractOutputFile {
 	protected void writeFindBugs(List<FindBugsResult> findBugsList) {
 		// no-op	
 	}
+	
+	@Override
+	protected void writeFindSecBugs(List<FindBugsResult> findSecBugsList) {
+		// no-op	
+	}
 
 	@Override
 	protected void writePmd(List<PmdResult> pmdList) {

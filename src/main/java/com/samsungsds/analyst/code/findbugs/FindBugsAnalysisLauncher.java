@@ -100,7 +100,7 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 		return list;
 	}
 
-	private String getTargetPackages() {
+	protected String getTargetPackages() {
 		StringBuilder builder = new StringBuilder();
 		
 		for (String packageName : MeasuredResult.getInstance().getPackageList()) {
@@ -115,5 +115,13 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 		LOGGER.debug("target packages : {}", builder.toString());
 		
 		return builder.toString();
+	}
+	
+	protected List<String> getArg() {
+		return arg;
+	}
+	
+	protected String getTargetDirectory() {
+		return targetDirectory;
 	}
 }

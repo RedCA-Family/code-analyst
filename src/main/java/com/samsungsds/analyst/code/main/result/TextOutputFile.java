@@ -85,6 +85,8 @@ public class TextOutputFile extends AbstractOutputFile {
 		writer.println("FindBugs4Priority = " + result.getFindBugsCount(4));
 		writer.println("FindBugs5Priority = " + result.getFindBugsCount(5));
 		writer.println();
+		writer.println("FindSecBugs = " + result.getFindSecBugsCountAll());
+		writer.println();
 		writer.println();
 	}
 
@@ -156,7 +158,16 @@ public class TextOutputFile extends AbstractOutputFile {
 
 	@Override
 	protected void writeFindBugs(List<FindBugsResult> list) {
-		writer.println("[FindBugs]");
+		writeFindBugsAndFindSecBugs(list, "FindBugs");
+	}
+	
+	@Override
+	protected void writeFindSecBugs(List<FindBugsResult> list) {
+		writeFindBugsAndFindSecBugs(list, "FindSecBugs");
+	}
+	
+	private void writeFindBugsAndFindSecBugs(List<FindBugsResult> list, String title) {
+		writer.println("[" + title + "]");
 		writer.println("; package, file, start line, end line, pattern key, pattern, priority, class, field, local var, method, message");
 		
 		int count = 0;

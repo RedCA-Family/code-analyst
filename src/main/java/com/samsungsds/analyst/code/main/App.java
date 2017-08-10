@@ -20,6 +20,7 @@ import org.sonarsource.scanner.api.internal.InternalProperties;
 
 import com.samsungsds.analyst.code.findbugs.FindBugsAnalysis;
 import com.samsungsds.analyst.code.findbugs.FindBugsAnalysisLauncher;
+import com.samsungsds.analyst.code.findbugs.FindSecBugsAnalysisLauncher;
 import com.samsungsds.analyst.code.jdepend.JDependAnalysis;
 import com.samsungsds.analyst.code.jdepend.JDependAnalysisLauncher;
 import com.samsungsds.analyst.code.main.result.OutputFileFormat;
@@ -77,6 +78,12 @@ public class App {
 	    		LOGGER.info("FindBugs Analysis start...");
 	    		
 	    		runFindBugs(cli);
+    		}
+    		
+    		if (cli.getMode() == MeasurementMode.DefaultMode) {
+	    		LOGGER.info("FindSecBugs Analysis start...");
+	    		
+	    		runFindSecBugs(cli);
     		}
 	    	
     		if (cli.getMode() == MeasurementMode.DefaultMode) {
@@ -222,6 +229,18 @@ public class App {
 		
 		if (cli.getRuleSetFileForFindBugs() != null && !cli.getRuleSetFileForFindBugs().equals("")) {
 			findBugsViolation.addOption("-include", cli.getRuleSetFileForFindBugs());
+		}
+		
+		findBugsViolation.run();
+	}
+	
+	private void runFindSecBugs(CliParser cli) {
+		FindBugsAnalysis findBugsViolation = new FindSecBugsAnalysisLauncher();
+		
+		findBugsViolation.setTarget(cli.getProjectBaseDir() + File.separator + cli.getBinary());
+		
+		if (cli.isDebug()) {
+			System.setProperty("findbugs.debug", "true");
 		}
 		
 		findBugsViolation.run();

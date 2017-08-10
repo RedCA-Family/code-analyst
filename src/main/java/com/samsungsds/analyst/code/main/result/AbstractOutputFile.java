@@ -57,6 +57,8 @@ public abstract class AbstractOutputFile {
 			
 			writeFindBugs(result.getFindBugsList());
 			
+			writeFindSecBugs(result.getFindSecBugsList());
+			
 			writeAcyclicDependencies(result.getAcyclicDependencyList());
 			
 			writeSeparator();
@@ -77,6 +79,8 @@ public abstract class AbstractOutputFile {
 	protected abstract void writeAcyclicDependencies(List<String> acyclicDependencyList);
 
 	protected abstract void writeFindBugs(List<FindBugsResult> findBugsList);
+	
+	protected abstract void writeFindSecBugs(List<FindBugsResult> findSecBugsList);
 
 	protected abstract void writePmd(List<PmdResult> pmdList);
 

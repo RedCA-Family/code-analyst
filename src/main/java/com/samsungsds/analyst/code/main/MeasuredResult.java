@@ -117,6 +117,11 @@ public class MeasuredResult implements Serializable {
 	private int[] findBugsCount = new int[6];	// 0 : 전체, 1 ~ 5 (High, Normal, Low, Experimental, Ignore)
 	
 	@Expose
+	private List<FindBugsResult> findSecBugsList = Collections.synchronizedList(new ArrayList<>());
+	@Expose
+	private int[] findSecBugsCount = new int[6];	// 0 : 전체, 1 ~ 5 (High, Normal, Low, Experimental, Ignore)
+	
+	@Expose
 	private List<String> acyclicDependencyList = Collections.synchronizedList(new ArrayList<>());
 	
 	private List<FilePathFilter> filePathFilterList = new ArrayList<>();
@@ -416,6 +421,24 @@ public class MeasuredResult implements Serializable {
 		return findBugsCount[priority];
 	}
 	
+	public synchronized void putFindSecBugsList(List<FindBugsResult> list) {
+		findSecBugsList.addAll(list);
+		
+		for (FindBugsResult result : list) {
+			findSecBugsCount[0]++;
+			
+			findSecBugsCount[result.getPriority()]++;
+		}
+	}
+	
+	public int getFindSecBugsCountAll() {
+		return findSecBugsCount[0];
+	}
+	
+	public int getFindSecBugsCount(int priority) {
+		return findSecBugsCount[priority];
+	}
+	
 	public synchronized List<String> getPackageList() {
 		List<String> packageList = new ArrayList<>();
 		
@@ -443,6 +466,10 @@ public class MeasuredResult implements Serializable {
 	
 	public List<FindBugsResult> getFindBugsList() {
 		return findBugsList;
+	}
+	
+	public List<FindBugsResult> getFindSecBugsList() {
+		return findSecBugsList;
 	}
 	
 	public void addAcyclicDependency(String acyclicDependency) {
