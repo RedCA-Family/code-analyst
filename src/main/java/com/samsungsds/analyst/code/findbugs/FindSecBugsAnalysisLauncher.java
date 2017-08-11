@@ -32,7 +32,7 @@ public class FindSecBugsAnalysisLauncher extends FindBugsAnalysisLauncher {
 		} catch (IOException ex) {
 			throw new IllegalStateException(ex);
 		}
-		//reportFile.deleteOnExit();
+		reportFile.deleteOnExit();
 		
 		addOption("-output", reportFile.toString());
 		

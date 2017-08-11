@@ -32,8 +32,7 @@ public class FindFileUtils {
 
 		// Compares the glob pattern against the file or directory name.
 		void find(Path file) {
-			Path name = file.getFileName();
-			if (name != null && matcher.matches(name)) {
+			if (file != null && matcher.matches(file)) {
 				numMatches++;
 				LOGGER.info("Found file : {}", file);
 				path = file.toString();
@@ -75,7 +74,12 @@ public class FindFileUtils {
 
 		Path startingDir = Paths.get(startDirectory);
 
-		Finder finder = new Finder("**" + File.separator + pattern + ".java");
+		Finder finder = null;
+		if (File.separator.equals("\\")) {
+			finder = new Finder("**\\\\" + pattern + ".java");
+		} else {
+			finder = new Finder("**/" + pattern + ".java");
+		}
 		Files.walkFileTree(startingDir, finder);
 		finder.done();
 

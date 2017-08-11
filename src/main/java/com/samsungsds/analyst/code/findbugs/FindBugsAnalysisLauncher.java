@@ -55,7 +55,7 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 		} catch (IOException ex) {
 			throw new IllegalStateException(ex);
 		}
-		//reportFile.deleteOnExit();
+		reportFile.deleteOnExit();
 		
 		addOption("-output", reportFile.toString());
 		

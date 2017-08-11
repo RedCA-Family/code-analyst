@@ -11,16 +11,14 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.annotations.Expose;
 
-public class ComplexityResult implements Serializable {
-
-	private static final long serialVersionUID = 1418436775355728495L;
+public class ComplexityResult extends TargetPackageResult implements Serializable {
+	
+	private static final long serialVersionUID = -7950142386018690241L;
 
 	private static final Logger LOGGER = LogManager.getLogger(ComplexityResult.class);
 	
 	@Expose
 	private String path;
-	private String packageName;
-	private String fileName;
 	@Expose
 	private int line;
 	@Expose
@@ -32,14 +30,6 @@ public class ComplexityResult implements Serializable {
 		return path;
 	}
 	
-	public String getPackageName() {
-		return packageName;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
 	public int getLine() {
 		return line;
 	}

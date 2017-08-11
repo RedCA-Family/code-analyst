@@ -46,6 +46,8 @@ public class TextOutputFile extends AbstractOutputFile {
 		if (!"".equals(cli.getExcludes())) {
 			writer.println("excludes = " + cli.getExcludes());
 		}
+		writer.println("mode = " + result.getIndividualModeString());
+		writer.println("version = " + result.getVersion());
 		writer.println();
 		writer.println();
 	}
@@ -53,40 +55,56 @@ public class TextOutputFile extends AbstractOutputFile {
 	@Override
 	protected void writeSummary(MeasuredResult result) {
 		writer.println("[Summary]");
-		writer.println("Files = " + result.getFiles());
-		writer.println("Directories = " + result.getDirectories());
-		writer.println("Classes = " + result.getClasses());
-		writer.println("Functions = " + result.getFunctions());
-		writer.println("lines = " + result.getLines());
-		writer.println("CommentLines = " + result.getCommentLines());
-		writer.println("Ncloc = " + result.getNcloc());
-		writer.println("Statements = " + result.getStatements());
-		writer.println();
-		writer.println("DuplicatedLines = " + result.getDuplicatedLines());
-		writer.println();
-		writer.println("ComplexityFunctions = " + result.getComplexityFunctions());
-		writer.println("ComplexityTotal = " + result.getComplexitySum());
-		writer.println("ComplexityOver10 = " + result.getComplexityOver10());
-		writer.println("ComplexityOver15 = " + result.getComplexityOver15());
-		writer.println("ComplexityOver20 = " + result.getComplexityOver20());
-		writer.println("ComplexityEqualOrOver50 = " + result.getComplexityEqualOrOver50());
-		writer.println();
-		writer.println("PMDViolations = " + result.getPmdCountAll());
-		writer.println("PMD1Priority = " + result.getPmdCount(1));
-		writer.println("PMD2Priority = " + result.getPmdCount(2));
-		writer.println("PMD3Priority = " + result.getPmdCount(3));
-		writer.println("PMD4Priority = " + result.getPmdCount(4));
-		writer.println("PMD5Priority = " + result.getPmdCount(5));
-		writer.println();
-		writer.println("FindBugsBugs = " + result.getFindBugsCountAll());
-		writer.println("FindBugs1Priority = " + result.getFindBugsCount(1));
-		writer.println("FindBugs2Priority = " + result.getFindBugsCount(2));
-		writer.println("FindBugs3Priority = " + result.getFindBugsCount(3));
-		writer.println("FindBugs4Priority = " + result.getFindBugsCount(4));
-		writer.println("FindBugs5Priority = " + result.getFindBugsCount(5));
-		writer.println();
-		writer.println("FindSecBugs = " + result.getFindSecBugsCountAll());
-		writer.println();
+		if (result.getIndividualMode().isCodeSize()) {
+			writer.println("Files = " + result.getFiles());
+			writer.println("Directories = " + result.getDirectories());
+			writer.println("Classes = " + result.getClasses());
+			writer.println("Functions = " + result.getFunctions());
+			writer.println("lines = " + result.getLines());
+			writer.println("CommentLines = " + result.getCommentLines());
+			writer.println("Ncloc = " + result.getNcloc());
+			writer.println("Statements = " + result.getStatements());
+			writer.println();
+		}
+		if (result.getIndividualMode().isDuplication()) {
+			writer.println("DuplicatedLines = " + result.getDuplicatedLines());
+			writer.println();
+		}
+		if (result.getIndividualMode().isComplexity()) {
+			writer.println("ComplexityFunctions = " + result.getComplexityFunctions());
+			writer.println("ComplexityTotal = " + result.getComplexitySum());
+			writer.println("ComplexityOver10 = " + result.getComplexityOver10());
+			writer.println("ComplexityOver15 = " + result.getComplexityOver15());
+			writer.println("ComplexityOver20 = " + result.getComplexityOver20());
+			writer.println("ComplexityEqualOrOver50 = " + result.getComplexityEqualOrOver50());
+			writer.println();
+		}
+		if (result.getIndividualMode().isPmd()) {
+			writer.println("PMDViolations = " + result.getPmdCountAll());
+			writer.println("PMD1Priority = " + result.getPmdCount(1));
+			writer.println("PMD2Priority = " + result.getPmdCount(2));
+			writer.println("PMD3Priority = " + result.getPmdCount(3));
+			writer.println("PMD4Priority = " + result.getPmdCount(4));
+			writer.println("PMD5Priority = " + result.getPmdCount(5));
+			writer.println();
+		}
+		if (result.getIndividualMode().isFindBugs()) {
+			writer.println("FindBugsBugs = " + result.getFindBugsCountAll());
+			writer.println("FindBugs1Priority = " + result.getFindBugsCount(1));
+			writer.println("FindBugs2Priority = " + result.getFindBugsCount(2));
+			writer.println("FindBugs3Priority = " + result.getFindBugsCount(3));
+			writer.println("FindBugs4Priority = " + result.getFindBugsCount(4));
+			writer.println("FindBugs5Priority = " + result.getFindBugsCount(5));
+			writer.println();
+		}
+		if (result.getIndividualMode().isFindSecBugs()) {
+			writer.println("FindSecBugs = " + result.getFindSecBugsCountAll());
+			writer.println();
+		}
+		if (result.getIndividualMode().isDependency()) {
+			writer.println("AcyclicDependecies = " + result.getAcyclicDependencyCount());
+			writer.println();
+		}
 		writer.println();
 	}
 

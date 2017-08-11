@@ -47,55 +47,70 @@ public class ResultProcessor {
 	}
 	
 	protected static void printCommon(MeasuredResult result) {
-		System.out.println("Files : " + getFormattedNumber(result.getFiles()));
-		System.out.println("Dir. : " + getFormattedNumber(result.getDirectories()));
-		System.out.println("Classes : " + getFormattedNumber(result.getClasses()));
-		System.out.println("Functions : " + getFormattedNumber(result.getFunctions()));
-		System.out.println("lines : " + getFormattedNumber(result.getLines()));
-		System.out.println("Comment Lines : " + getFormattedNumber(result.getCommentLines()));
-		System.out.println("Ncloc : " + getFormattedNumber(result.getNcloc()));
-		System.out.println("Statements : " + getFormattedNumber(result.getStatements()));
-		System.out.println();
-		System.out.println("Duplicated lines : " + getFormattedNumber(result.getDuplicatedLines()));
-		System.out.println("Duplication % : " + result.getDuplicatedLinesPercent() );
-		System.out.println();
+		if (result.getIndividualMode().isCodeSize()) {
+			System.out.println("Files : " + getFormattedNumber(result.getFiles()));
+			System.out.println("Dir. : " + getFormattedNumber(result.getDirectories()));
+			System.out.println("Classes : " + getFormattedNumber(result.getClasses()));
+			System.out.println("Functions : " + getFormattedNumber(result.getFunctions()));
+			System.out.println("lines : " + getFormattedNumber(result.getLines()));
+			System.out.println("Comment Lines : " + getFormattedNumber(result.getCommentLines()));
+			System.out.println("Ncloc : " + getFormattedNumber(result.getNcloc()));
+			System.out.println("Statements : " + getFormattedNumber(result.getStatements()));
+			System.out.println();
+		}
+		
+		if (result.getIndividualMode().isDuplication()) {
+			System.out.println("Duplicated lines : " + getFormattedNumber(result.getDuplicatedLines()));
+			System.out.println("Duplication % : " + result.getDuplicatedLinesPercent() );
+			System.out.println();
+		}
 	}
 	
 	protected static void printComplexitySummary(MeasuredResult result) {
-		System.out.println("Complexity functions : " + getFormattedNumber(result.getComplexityFunctions()));
-		System.out.println("Complexity Total : " + getFormattedNumber(result.getComplexitySum()));
-		System.out.println("Complexity Over 10(%) : " + result.getComplexityOver10Percent() + " (" + getFormattedNumber(result.getComplexityOver10()) + ")");
-		System.out.println("Complexity Over 15(%) : " + result.getComplexityOver15Percent() + " (" + getFormattedNumber(result.getComplexityOver15()) + ")");
-		System.out.println("Complexity Over 20(%) : " + result.getComplexityOver20Percent() + " (" + getFormattedNumber(result.getComplexityOver20()) + ")");
-		System.out.println("Complexity Equal Or Over 50(%) : " + result.getComplexityEqualOrOver50Percent() + " (" + getFormattedNumber(result.getComplexityEqualOrOver50()) + ")");
-		System.out.println("- The complexity is calculated by PMD's Modified Cyclomatic Complexity method");
-		System.out.println();
+		if (result.getIndividualMode().isComplexity()) {
+			System.out.println("Complexity functions : " + getFormattedNumber(result.getComplexityFunctions()));
+			System.out.println("Complexity Total : " + getFormattedNumber(result.getComplexitySum()));
+			System.out.println("Complexity Over 10(%) : " + result.getComplexityOver10Percent() + " (" + getFormattedNumber(result.getComplexityOver10()) + ")");
+			System.out.println("Complexity Over 15(%) : " + result.getComplexityOver15Percent() + " (" + getFormattedNumber(result.getComplexityOver15()) + ")");
+			System.out.println("Complexity Over 20(%) : " + result.getComplexityOver20Percent() + " (" + getFormattedNumber(result.getComplexityOver20()) + ")");
+			System.out.println("Complexity Equal Or Over 50(%) : " + result.getComplexityEqualOrOver50Percent() + " (" + getFormattedNumber(result.getComplexityEqualOrOver50()) + ")");
+			System.out.println("- The complexity is calculated by PMD's Modified Cyclomatic Complexity method");
+			System.out.println();
+		}
 	}
 	
 	protected static void printPmdSummary(MeasuredResult result) {
-		System.out.println("PMD violations : " + getFormattedNumber(result.getPmdCountAll()));
-		System.out.println("PMD 1 priority : " + getFormattedNumber(result.getPmdCount(1)));
-		System.out.println("PMD 2 priority : " + getFormattedNumber(result.getPmdCount(2)));
-		System.out.println("PMD < 3 priority : " + getFormattedNumber(result.getPmdCount(3) + result.getPmdCount(4) + result.getPmdCount(5)));
-		System.out.println();
+		if (result.getIndividualMode().isPmd()) {
+			System.out.println("PMD violations : " + getFormattedNumber(result.getPmdCountAll()));
+			System.out.println("PMD 1 priority : " + getFormattedNumber(result.getPmdCount(1)));
+			System.out.println("PMD 2 priority : " + getFormattedNumber(result.getPmdCount(2)));
+			System.out.println("PMD < 3 priority : " + getFormattedNumber(result.getPmdCount(3) + result.getPmdCount(4) + result.getPmdCount(5)));
+			System.out.println();
+		}
 	}
 	
 	protected static void printFindBugsSummary(MeasuredResult result) {
-		System.out.println("FindBugs bugs : " + getFormattedNumber(result.getFindBugsCountAll()));
-		System.out.println("FindBugs 1 priority : " + getFormattedNumber(result.getFindBugsCount(1)));
-		System.out.println("FindBugs 2 priority : " + getFormattedNumber(result.getFindBugsCount(2)));
-		System.out.println("FindBugs < 3 priority : " + getFormattedNumber(result.getFindBugsCount(3) + result.getFindBugsCount(4) + result.getFindBugsCount(5)));
-		System.out.println();
+		if (result.getIndividualMode().isFindBugs()) {
+			System.out.println("FindBugs bugs : " + getFormattedNumber(result.getFindBugsCountAll()));
+			System.out.println("FindBugs 1 priority : " + getFormattedNumber(result.getFindBugsCount(1)));
+			System.out.println("FindBugs 2 priority : " + getFormattedNumber(result.getFindBugsCount(2)));
+			System.out.println("FindBugs < 3 priority : " + getFormattedNumber(result.getFindBugsCount(3) + result.getFindBugsCount(4) + result.getFindBugsCount(5)));
+			System.out.println();
+		}
 	}
 	
 	protected static void printFindSecBugsSummary(MeasuredResult result) {
-		System.out.println("FindSecBugs bugs : " + getFormattedNumber(result.getFindSecBugsCountAll()));
-		System.out.println();
+		if (result.getIndividualMode().isFindSecBugs()) {
+			System.out.println("FindSecBugs bugs : " + getFormattedNumber(result.getFindSecBugsCountAll()));
+			System.out.println();
+		}
 	}
 	
 	protected static void pirntAcyclicDependSummary(MeasuredResult result) {
-		System.out.println("Acyclic Dependencies : " + getFormattedNumber(result.getAcyclicDependencyCount()));
-		System.out.println();
+		if (result.getIndividualMode().isDependency()) {
+			System.out.println("Acyclic Dependencies : " + getFormattedNumber(result.getAcyclicDependencyCount()));
+			System.out.println();
+		}
 	}
 	
 	protected static void printBottom() {
@@ -113,7 +128,7 @@ public class ResultProcessor {
 			printFindSecBugsSummary(result);
 			pirntAcyclicDependSummary(result);
 		} else if (result.getMode() == MeasurementMode.ComplexityMode) {
-			printComplexity(result.getComplexityList());	
+			printComplexity(result.getComplexityAllList());	
 		}
 		
 		printBottom();

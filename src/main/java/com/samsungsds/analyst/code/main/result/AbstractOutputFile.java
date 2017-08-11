@@ -49,17 +49,29 @@ public abstract class AbstractOutputFile {
 			
 			writeSummary(result);
 			
-			writeDuplication(result.getDulicationList());
+			if (result.getIndividualMode().isDuplication()) {
+				writeDuplication(result.getDulicationList());
+			}
 			
-			writeComplexity(result.getComplexityList());
+			if (result.getIndividualMode().isComplexity()) {
+				writeComplexity(result.getComplexityList());
+			}
 			
-			writePmd(result.getPmdList());
+			if (result.getIndividualMode().isPmd()) {
+				writePmd(result.getPmdList());
+			}
 			
-			writeFindBugs(result.getFindBugsList());
+			if (result.getIndividualMode().isFindBugs()) {
+				writeFindBugs(result.getFindBugsList());
+			}
 			
-			writeFindSecBugs(result.getFindSecBugsList());
+			if (result.getIndividualMode().isFindSecBugs()) {
+				writeFindSecBugs(result.getFindSecBugsList());
+			}
 			
-			writeAcyclicDependencies(result.getAcyclicDependencyList());
+			if (result.getIndividualMode().isDependency()) {
+				writeAcyclicDependencies(result.getAcyclicDependencyList());
+			}
 			
 			writeSeparator();
 			

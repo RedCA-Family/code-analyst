@@ -25,6 +25,7 @@ import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
+import com.samsungsds.analyst.code.util.PackageUtils;
 
 public class MeasuredResult implements Serializable {
 	private static final Logger LOGGER = LogManager.getLogger(MeasuredResult.class);
@@ -60,6 +61,15 @@ public class MeasuredResult implements Serializable {
 	private MeasurementMode mode;
 	
 	@Expose
+	@SerializedName("mode")
+	private String individualModeString ="all";
+	
+	private IndividualMode individualMode;
+	
+	@Expose
+	private String version = Version.CODE_ANALYST.substring(0, Version.CODE_ANALYST.lastIndexOf("."));
+	
+	@Expose
 	private int directories = 0;
 	@Expose
 	private int files = 0;
@@ -85,8 +95,11 @@ public class MeasuredResult implements Serializable {
 	
 	private Map<String, Set<Integer>> duplicatedBlockData = new HashMap<>();
 	
-	// contains all method and used to check target package (include or exclude)
+	// contains all method for complexity mode
 	private List<ComplexityResult> allMethodList = Collections.synchronizedList(new ArrayList<>());
+	
+	// used to check target package (include or exclude)
+	private List<String> packageList = Collections.synchronizedList(new ArrayList<>());
 	
 	@Expose
 	@SerializedName("complexityList")
@@ -321,19 +334,21 @@ public class MeasuredResult implements Serializable {
 				continue;
 			}
 			
-			complexityFunctions++;
-			complexitySum += result.getComplexity();
-			
-			if (result.getComplexity() > 20) {
-				complexityOver20++;
-			} 
-			if (result.getComplexity() > 15) {
-				complexityOver15++;
-			} 
-			if (result.getComplexity() > 10) {
-				complexityOver10++;
+			if (individualMode.isComplexity()) {
+				complexityFunctions++;
+				complexitySum += result.getComplexity();
 				
-				complexityListOver10.add(result);
+				if (result.getComplexity() > 20) {
+					complexityOver20++;
+				} 
+				if (result.getComplexity() > 15) {
+					complexityOver15++;
+				} 
+				if (result.getComplexity() > 10) {
+					complexityOver10++;
+					
+					complexityListOver10.add(result);
+				}
 			}
 			
 			allMethodList.add(result);
@@ -404,12 +419,15 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	public synchronized void putFindBugsList(List<FindBugsResult> list) {
-		findBugsList.addAll(list);
-		
 		for (FindBugsResult result : list) {
+			if (haveToSkip(result.getPackageName().replaceAll("\\.", "/") + "/" + result.getFile())) {
+				continue;
+			}
 			findBugsCount[0]++;
 			
 			findBugsCount[result.getPriority()]++;
+			
+			findBugsList.add(result);
 		}
 	}
 	
@@ -422,12 +440,15 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	public synchronized void putFindSecBugsList(List<FindBugsResult> list) {
-		findSecBugsList.addAll(list);
-		
 		for (FindBugsResult result : list) {
+			if (haveToSkip(result.getPackageName().replaceAll("\\.", "/") + "/" + result.getFile())) {
+				continue;
+			}
 			findSecBugsCount[0]++;
 			
 			findSecBugsCount[result.getPriority()]++;
+			
+			findSecBugsList.add(result);
 		}
 	}
 	
@@ -440,14 +461,27 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	public synchronized List<String> getPackageList() {
-		List<String> packageList = new ArrayList<>();
-		
-		for (ComplexityResult result : allMethodList) {
-			if (packageList.contains(result.getPackageName())) {
-				continue;
+		if (packageList.size() == 0) {
+			LOGGER.info("Get target packages");
+			
+			List<String> allPackages = PackageUtils.getProjectPackages(projectDirectory + File.separator + binary);
+			
+			for (String sourcePackage : allPackages) {
+				if (haveToSkip(sourcePackage.replaceAll("\\.", "/") + "/*.java")) {
+					continue;
+				}
+				packageList.add(sourcePackage);
 			}
-			packageList.add(result.getPackageName());
-		}
+			
+			/*
+			for (ComplexityResult result : allMethodList) {
+				if (packageList.contains(result.getPackageName())) {
+					continue;
+				}
+				packageList.add(result.getPackageName());
+			}
+			*/
+		}		
 		
 		return packageList;
 	}
@@ -456,8 +490,12 @@ public class MeasuredResult implements Serializable {
 		return duplicationList;
 	}
 	
-	public List<ComplexityResult> getComplexityList() {
+	public List<ComplexityResult> getComplexityAllList() {
 		return allMethodList;
+	}
+	
+	public List<ComplexityResult> getComplexityList() {
+		return complexityListOver10;
 	}
 	
 	public List<PmdResult> getPmdList() {
@@ -514,5 +552,25 @@ public class MeasuredResult implements Serializable {
 		filePathFilterList.add(filter);
 		
 		this.excludes = filter.getNormalizedFilterString(); 
+	}
+
+	public String getIndividualModeString() {
+		return individualModeString;
+	}
+
+	public void setIndividualModeString(String individualMode) {
+		this.individualModeString = individualMode;
+	}
+
+	public void setIndividualMode(IndividualMode individualMode) {
+		this.individualMode = individualMode;
+	}
+
+	public IndividualMode getIndividualMode() {
+		return individualMode;
+	}
+
+	public String getVersion() {
+		return version;
 	}
 }

@@ -24,20 +24,23 @@ public class PackageUtils {
 			return path.isDirectory() || path.getName().endsWith(".class");
 		});
 		
-		if (files.length == 0) {
+		if (files == null || files.length == 0) {
 			return;
 		}
 
 		int directoryCount = getNumberOfDirectories(files);
 		
-		if (directoryCount == 0) {
+		if (directoryCount == 0) {	// has java files..
 			list.add(subPackage.replaceAll("\\\\", "/").replaceAll("/", "."));
-		} else if (directoryCount == files.length) {
+		} else if (directoryCount == files.length) {	// has only directories
 			for (File dir : files) {
 				addProjectPackages(list, baseDir, subPackage.equals("") ? dir.getName() : subPackage + File.separator + dir.getName());
 			}
-		} else {
+		} else {	// has java files and directories
 			list.add(subPackage.replaceAll("\\\\", "/").replaceAll("/", "."));
+			for (File dir : files) {
+				addProjectPackages(list, baseDir, subPackage.equals("") ? dir.getName() : subPackage + File.separator + dir.getName());
+			}
 		}
 	}
 

@@ -62,7 +62,7 @@ public class JsonOutputFile extends AbstractOutputFile {
 
 	@Override
 	protected void writeProjectInfo(CliParser cli, MeasuredResult result) {
-		result.setProjectInfo(cli);
+		// no-op
 	}
 
 	@Override

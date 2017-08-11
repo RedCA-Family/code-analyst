@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.samsungsds.analyst.code.main.result.OutputFileFormat;
+import com.samsungsds.analyst.code.util.FindFileUtils;
 
 public class CliParser {
 	private static final Logger LOGGER = LogManager.getLogger(CliParser.class);
@@ -32,7 +33,7 @@ public class CliParser {
 	private String ruleSetFileForFindBugs = "";
 	
 	private String output = "";
-	private OutputFileFormat format = OutputFileFormat.JSON;
+	private OutputFileFormat format = OutputFileFormat.TEXT;
 	
 	private String timeout = "120";	// second
 	
@@ -41,6 +42,8 @@ public class CliParser {
 	
 	private String includes = "";
 	private String excludes = "";
+	
+	private IndividualMode individualMode = new IndividualMode();
 	
 	public CliParser(String[] args) {
 		this.args = args;
@@ -58,7 +61,7 @@ public class CliParser {
 		options.addOption("findbugs", true, "specify FindBugs ruleset(include filter) xml file.");
 		
 		options.addOption("o", "output", true, "specify result output file. (default : \"result-[yyyyMMddHHmmss].[out|json]\")");
-		options.addOption("f", "format", true, "specify result output file format(json, text, none). (default : json)");
+		options.addOption("f", "format", true, "specify result output file format(json, text, none). (default : text)");
 		options.addOption("v", "version", false, "display version info.");
 		options.addOption("t", "timeout", true, "specify internal ws timeout. (default : 120 sec.)");
 		
@@ -66,6 +69,8 @@ public class CliParser {
 		
 		options.addOption("include", true, "specify include pattern(Ant-style) with comma separated. (eg: com/sds/**/*.java)");
 		options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)");
+		
+		options.addOption("m", "mode", true, "specify analysis items with comma separated. (code-size,duplication,complexity,pmd,findbugs,findsecbugs,dependency)");
 	}
 	
 	public boolean parse() {
@@ -155,11 +160,56 @@ public class CliParser {
 				excludes = cmd.getOptionValue("exclude");
 			}
 			
+			if (cmd.hasOption("m")) {
+				if (cmd.hasOption("c")) {
+					System.out.println("Option Error : 'mode' option and 'complexity' can not be specified together");
+					help();
+					return false;
+				}				
+				String[] modes = cmd.getOptionValue("m").split(FindFileUtils.COMMA_SPLITTER);
+				
+				try {
+					parseIndividualMode(modes);
+				} catch (IllegalArgumentException iae) {
+					System.out.println("Option Error : " + iae.getMessage());
+					help();
+					return false;
+				}
+				
+				MeasuredResult.getInstance().setIndividualModeString(cmd.getOptionValue("m"));
+			} else {
+				individualMode.setAll();
+			}
+			
+			MeasuredResult.getInstance().setIndividualMode(individualMode);
+			
 			return true;
 		} catch (ParseException pe) {
 			LOGGER.error("Failed to parse command line", pe);
 			help();
 			return false;
+		}
+	}
+
+	private void parseIndividualMode(String[] modes) {
+		for (String mode : modes) {
+			if (mode.equalsIgnoreCase("code-size") || mode.equalsIgnoreCase("codesize")) {
+				individualMode.setCodeSize(true);
+			} else if (mode.equalsIgnoreCase("duplication")) {
+				individualMode.setDuplication(true);
+			} else if (mode.equalsIgnoreCase("complexity")) {
+				individualMode.setComplexity(true);
+			} else if (mode.equalsIgnoreCase("pmd")) {
+				individualMode.setPmd(true);
+			} else if (mode.equalsIgnoreCase("findbugs")) {
+				individualMode.setFindBugs(true);
+			} else if (mode.equalsIgnoreCase("findsecbugs")) {
+				individualMode.setFindSecBugs(true);
+			} else if (mode.equalsIgnoreCase("dependency")) {
+				individualMode.setDependency(true);
+			} else {
+				throw new IllegalArgumentException("'mode' option can only have 'code-size', 'duplication', 'complexity', 'pmd', 'findbugs', 'findsecbugs' and 'dependency'");
+			}
 		}
 	}
 
@@ -278,5 +328,9 @@ public class CliParser {
 
 	public String getExcludes() {
 		return excludes;
+	}
+	
+	public IndividualMode getIndividualMode() {
+		return individualMode;
 	}
 }

@@ -56,40 +56,76 @@ public class App {
 				return;
 			}
     		
+    		MeasuredResult.getInstance().setProjectInfo(cli);
+    		
     		MeasuredResult.getInstance().setMode(cli.getMode());
     		
     		processFilterString(cli);
+    		
+    		if (cli.isDebug()) {
+    			LOGGER.info("Debugging enabled");
+    		} else {
+    			LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+    			Configuration conf = ctx.getConfiguration();
+    			conf.getLoggerConfig("com.samsungsds.analyst.code").setLevel(Level.INFO);
+    			conf.getLoggerConfig("org.sonar").setLevel(Level.INFO);
+    			ctx.updateLoggers(conf);
+    		}
      		
-    		LOGGER.info("Code Size Analysis start...");
-    		
-    		runCodeSizeAalysis(cli);
-    		
-    		LOGGER.info("Complexity Analysis start...");
-    		
-    		runComplexity(cli);
-    		
-    		if (cli.getMode() == MeasurementMode.DefaultMode) {
-	    		LOGGER.info("PMD Analysis start...");
-	    		
-	    		runPmd(cli);
-    		}
-    		
-    		if (cli.getMode() == MeasurementMode.DefaultMode) {
-	    		LOGGER.info("FindBugs Analysis start...");
-	    		
-	    		runFindBugs(cli);
-    		}
-    		
-    		if (cli.getMode() == MeasurementMode.DefaultMode) {
-	    		LOGGER.info("FindSecBugs Analysis start...");
-	    		
-	    		runFindSecBugs(cli);
-    		}
-	    	
-    		if (cli.getMode() == MeasurementMode.DefaultMode) {
-	    		LOGGER.info("JDepend Analysis start...");
-	    		
-	    		runJDepend(cli);
+    		if (cli.getMode() == MeasurementMode.ComplexityMode) {
+    			LOGGER.info("Code Size Analysis start...");
+        		
+    			runCodeSizeAalysis(cli);
+    			
+    			LOGGER.info("Complexity Analysis start...");
+        		
+    			runComplexity(cli);
+    			
+    		} else {
+    			
+    			if (cli.getIndividualMode().isCodeSize() && cli.getIndividualMode().isDuplication()) {
+        			LOGGER.info("Code Size & Duplication Analysis start...");
+        		
+        			runCodeSizeAalysis(cli);
+        		} else if (cli.getIndividualMode().isCodeSize()) {
+        			LOGGER.info("Code Size Analysis start...");
+            		
+        			runCodeSizeAalysis(cli);
+        		} else if (cli.getIndividualMode().isDuplication()) {
+        			LOGGER.info("Duplication Analysis start...");
+            		
+        			runCodeSizeAalysis(cli);
+        		}
+        		
+        		if (cli.getIndividualMode().isComplexity()) {
+        			LOGGER.info("Complexity Analysis start...");
+        		
+        			runComplexity(cli);
+        		}
+        		
+        		if (cli.getIndividualMode().isPmd()) {
+    	    		LOGGER.info("PMD Analysis start...");
+    	    		
+    	    		runPmd(cli);
+        		}
+        		
+        		if (cli.getIndividualMode().isFindBugs()) {
+        			LOGGER.info("FindBugs Analysis start...");
+    	    		
+    	    		runFindBugs(cli);
+        		}
+        		
+        		if (cli.getIndividualMode().isFindSecBugs()) {
+    	    		LOGGER.info("FindSecBugs Analysis start...");
+    	    		
+    	    		runFindSecBugs(cli);
+        		}
+    	    	
+        		if (cli.getIndividualMode().isDependency()) {
+    	    		LOGGER.info("JDepend Analysis start...");
+    	    		
+    	    		runJDepend(cli);
+        		}
     		}
 	    		
 	    	LOGGER.info("Code Analysis ended");    		
@@ -122,12 +158,6 @@ public class App {
 		
 		if (cli.isDebug()) {
 			sonar.addProperty(SONAR_VERBOSE, "true");
-		} else {
-			LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-			Configuration conf = ctx.getConfiguration();
-			conf.getLoggerConfig("com.samsungsds.analyst.code").setLevel(Level.INFO);
-			conf.getLoggerConfig("org.sonar").setLevel(Level.INFO);
-			ctx.updateLoggers(conf);
 		}
 		
 		sonar.addProperty(ScannerProperties.HOST_URL, "http://localhost:" + port);
