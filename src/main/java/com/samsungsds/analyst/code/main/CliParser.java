@@ -45,6 +45,8 @@ public class CliParser {
 	
 	private IndividualMode individualMode = new IndividualMode();
 	
+	private String errorMessage = "";
+	
 	public CliParser(String[] args) {
 		this.args = args;
 		
@@ -137,7 +139,8 @@ public class CliParser {
 				if (formatValue.equalsIgnoreCase("text") || formatValue.equalsIgnoreCase("json") || formatValue.equalsIgnoreCase("none")) {
 					format = OutputFileFormat.valueOf(formatValue.toUpperCase());
 				} else {
-					System.out.println("Option Error : 'format' option's value has to be 'json', 'text' or 'none'");
+					errorMessage = "Option Error : 'format' option's value has to be 'json', 'text' or 'none'";
+					System.out.println(errorMessage);
 					help();
 					return false;
 				}
@@ -162,7 +165,8 @@ public class CliParser {
 			
 			if (cmd.hasOption("m")) {
 				if (cmd.hasOption("c")) {
-					System.out.println("Option Error : 'mode' option and 'complexity' can not be specified together");
+					errorMessage = "Option Error : 'mode' option and 'complexity' can not be specified together";
+					System.out.println(errorMessage);
 					help();
 					return false;
 				}				
@@ -171,7 +175,8 @@ public class CliParser {
 				try {
 					parseIndividualMode(modes);
 				} catch (IllegalArgumentException iae) {
-					System.out.println("Option Error : " + iae.getMessage());
+					errorMessage = "Option Error : " + iae.getMessage();
+					System.out.println(errorMessage);
 					help();
 					return false;
 				}
@@ -185,7 +190,8 @@ public class CliParser {
 			
 			return true;
 		} catch (ParseException pe) {
-			LOGGER.error("Failed to parse command line", pe);
+			errorMessage = "Failed to parse command line";
+			LOGGER.error(errorMessage, pe);
 			help();
 			return false;
 		}
@@ -332,5 +338,9 @@ public class CliParser {
 	
 	public IndividualMode getIndividualMode() {
 		return individualMode;
+	}
+	
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 }

@@ -9,6 +9,7 @@ public class Version {
 	// 1.2.0 : File path filter 적용, JSON 출력 추가
 	// 1.3.0 : FindSecBugs 점검 추가, 각 점검 개별 호출 옵션 지원, 각종 오류 수정
 	// 1.3.1 : Complexity Mode 상에 출력 방식 변경 (source link 지원)
+	// 1.4.0 : API 추가
 	//--------------------------------------------------
 	public static final String CODE_ANALYST = "1.3.1";
 	public static final String SONAR_SCANNER = "2.8";

@@ -3,6 +3,7 @@ package com.samsungsds.analyst.code.main;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,11 @@ import org.sonarsource.scanner.api.ScannerApiVersion;
 import org.sonarsource.scanner.api.ScannerProperties;
 import org.sonarsource.scanner.api.internal.InternalProperties;
 
+import com.samsungsds.analyst.code.api.AnalysisMode;
+import com.samsungsds.analyst.code.api.AnalysisProgress;
+import com.samsungsds.analyst.code.api.ProgressEvent;
+import com.samsungsds.analyst.code.api.ProgressObserver;
+import com.samsungsds.analyst.code.api.impl.AnalysisProgressMonitor;
 import com.samsungsds.analyst.code.findbugs.FindBugsAnalysis;
 import com.samsungsds.analyst.code.findbugs.FindBugsAnalysisLauncher;
 import com.samsungsds.analyst.code.findbugs.FindSecBugsAnalysisLauncher;
@@ -41,7 +47,14 @@ public class App {
 	
 	private static final String SONAR_VERBOSE = "sonar.verbose";
 	
-	protected void process(CliParser cli) {
+	private List<ProgressObserver> observerList = new ArrayList<>();
+	
+	private AnalysisProgressMonitor progressMonitor;
+	
+	private boolean parsingError = false;
+	private String parsingErrorMessage = "";
+	
+	public void process(CliParser cli) {
 		if (cli.parse()) {
 			
 			SystemInfo.print();
@@ -70,6 +83,21 @@ public class App {
     			conf.getLoggerConfig("com.samsungsds.analyst.code").setLevel(Level.INFO);
     			conf.getLoggerConfig("org.sonar").setLevel(Level.INFO);
     			ctx.updateLoggers(conf);
+    		}
+    		
+    		if (cli.getMode() == MeasurementMode.ComplexityMode) {
+    			AnalysisMode analysisMode = new AnalysisMode();
+    			
+    			analysisMode.setCodeSize(true);
+    			analysisMode.setComplexity(true);
+    			
+				progressMonitor = new AnalysisProgressMonitor(analysisMode);	
+    		} else {
+    			progressMonitor = new AnalysisProgressMonitor(cli.getIndividualMode());
+    		}
+    		
+    		if (progressMonitor != null) {
+    			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.PREPARE_COMPLETE));
     		}
      		
     		if (cli.getMode() == MeasurementMode.ComplexityMode) {
@@ -131,7 +159,10 @@ public class App {
 	    	LOGGER.info("Code Analysis ended");    		
 	    		
 	    	processResult(cli);
-    	}  
+    	} else {
+    		parsingError = true;
+    		parsingErrorMessage = cli.getErrorMessage();
+    	}
 	}
 
 	private void processFilterString(CliParser cli) {
@@ -196,9 +227,17 @@ public class App {
 		}
 		
 		sonar.run();
+
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.CODE_SIZE_COMPLETE));
+		}
 		
 		LOGGER.info("Surrogate Sonar Server stoping...");
 		server.stop();
+		
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.DUPLICATION_COMPLETE));
+		}
 	}
 
 	private void runComplexity(CliParser cli) {
@@ -226,6 +265,10 @@ public class App {
 		pmdComplexity.addOption("-language", "java");
 		
 		pmdComplexity.run();
+		
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.COMPLEXITY_COMPLETE));
+		}
 	}
 	
 	private void runPmd(CliParser cli) {
@@ -246,6 +289,10 @@ public class App {
 		}
 		
 		pmdViolation.run();
+		
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.PMD_COMPLETE));
+		}
 	}
 	
 	private void runFindBugs(CliParser cli) {
@@ -262,6 +309,10 @@ public class App {
 		}
 		
 		findBugsViolation.run();
+		
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.FINDBUGS_COMPLETE));
+		}
 	}
 	
 	private void runFindSecBugs(CliParser cli) {
@@ -274,6 +325,10 @@ public class App {
 		}
 		
 		findBugsViolation.run();
+		
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.FINDSECBUGS_COMPLETE));
+		}
 	}
 	
 	private void runJDepend(CliParser cli) {
@@ -299,6 +354,10 @@ public class App {
 		}
 		
 		jdepend.run();
+		
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.DEPENDENCY_COMPLETE));
+		}
 	}
 	
 	private void processResult(CliParser cli) {
@@ -319,6 +378,36 @@ public class App {
 		
 		ResultProcessor.printSummary(MeasuredResult.getInstance());
 	}
+	
+	public void cleanup() {
+		IOAndFileUtils.deleteDirectory(new File(".sonar"));
+		
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.FINAL_COMPLETE));
+		}
+	}
+	
+	public void addProgressObserver(ProgressObserver observer) {
+		observerList.add(observer);
+	}
+
+	public void removeProgressObserver(ProgressObserver observer) {
+		observerList.remove(observer);
+	}
+	
+	protected void notifyObservers(AnalysisProgress progress) {
+		for (ProgressObserver observer : observerList) {
+			observer.informProgress(progress);
+		}
+	}
+	
+	public boolean hasParsingError() {
+		return parsingError;
+	}
+	
+	public String getParsingErrorMessage() {
+		return parsingErrorMessage;
+	}
 		
     public static void main(String[] args) {
     	CliParser cli = new CliParser(args);
@@ -330,7 +419,7 @@ public class App {
     	} catch (Throwable ex) {
     		LOGGER.error("Error", ex);
     	} finally {
-    		IOAndFileUtils.deleteDirectory(new File(".sonar"));
+    		app.cleanup();
     		System.exit(0);
     	}
     }
