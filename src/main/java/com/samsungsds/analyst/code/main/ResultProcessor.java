@@ -141,8 +141,13 @@ public class ResultProcessor {
 			//Collections.sort(list, (r1, r2) -> (r2.getComplexity() - r1.getComplexity()));
 			
 			for (ComplexityResult result : list) {
-				buffer.append(" - ").append(result.getPath()).append(" (").append(result.getMethodName()).append(") = ");
-				buffer.append(result.getComplexity()).append(IOAndFileUtils.CR_LF);
+				if (buffer.length() == 0) {
+					buffer.append("* File : ").append(result.getPath()).append(IOAndFileUtils.CR_LF);
+				}
+				buffer.append(" - ").append(result.getPackageName()).append(".").append(result.getFileName().replaceAll("\\.java", ""));
+				buffer.append(".").append(result.getMethodName());
+				buffer.append("(").append(result.getFileName()).append(":").append(result.getLine()).append(")");
+				buffer.append(" = ").append(result.getComplexity()).append(IOAndFileUtils.CR_LF);
 			}
 		}
 		System.out.println(buffer.toString());
