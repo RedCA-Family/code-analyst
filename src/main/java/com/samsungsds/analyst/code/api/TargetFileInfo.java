@@ -4,22 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TargetFileInfo {
-	private String packageName;
 	private boolean includeSubPackage = true;
 	private List<String> fileList = new ArrayList<>();
-	
-	public TargetFileInfo(String packageName) {
-		this.packageName = packageName;
-	}
-	
-	public String getPackageName() {
-		return packageName;
-	}
-	
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
-	
+		
 	public boolean isIncludeSubPackage() {
 		return includeSubPackage;
 	}
@@ -28,8 +15,16 @@ public class TargetFileInfo {
 		this.includeSubPackage = includeSubPackage;
 	}
 	
-	public void addFile(String file) {
-		fileList.add(file);
+	public void addPackage(String packageName) {
+		if (includeSubPackage) {
+			fileList.add(packageName + "/**/*.java"); 
+		} else {
+			fileList.add(packageName + "/*.java");
+		}
+	}
+	
+	public void addFile(String packageName, String file) {
+		fileList.add(packageName + "/" + file);
 	}
 	
 	public String[] getFiles() {

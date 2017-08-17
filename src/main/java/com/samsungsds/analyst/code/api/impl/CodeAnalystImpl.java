@@ -148,28 +148,13 @@ public class CodeAnalystImpl implements CodeAnalyst {
 	}
 	
 	private String getIncludeString(TargetFileInfo targetFile) {
-		String packageString = targetFile.getPackageName().replaceAll("\\.", "/");
-		
-		if (targetFile.getFiles().length == 0) {
-			String suffix = null;
-			if (targetFile.isIncludeSubPackage()) {
-				suffix = "/**/*.java"; 
-			} else {
-				suffix = "/*.java";
-			}
-			
-			LOGGER.info("Target file patterns : {}", packageString + suffix);
-			
-			return packageString + suffix;
-		} 
-		
 		StringBuilder builder = new StringBuilder();
 		
 		for (String file : targetFile.getFiles()) {
 			if (builder.length() != 0) {
 				builder.append(",");
 			}
-			builder.append(packageString).append("/").append(file);
+			builder.append(file.replaceAll("\\.java", "").replaceAll("\\.", "/") + ".java");
 		}
 		
 		LOGGER.info("Target file patterns : {}", builder.toString());

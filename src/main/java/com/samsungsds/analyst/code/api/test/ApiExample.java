@@ -48,9 +48,16 @@ public class ApiExample {
 		
 		argument.setExclude("JDepend.java,com/samsungsds/analyst/code/main/filter/*.java");
 		
-		TargetFileInfo targetFile = new TargetFileInfo("com.samsungsds.analyst.code.main");
-		targetFile.addFile("MeasuredResult.java");
-		targetFile.addFile("ResultProcessor.java");
+		TargetFileInfo targetFile = new TargetFileInfo();
+		
+		// addPackage() 또는 addFile()로 점검 대상 지정 (or 조건으로 처리됨) 
+		// - addPackage()는 선택된 패키지의 소스 전체
+		// - addFile()은 선택된 소스
+		
+		//targetFile.addPackage("com.samsungsds.analyst.code.main");	// include sub-packages
+		
+		targetFile.addFile("com.samsungsds.analyst.code.main", "MeasuredResult.java");
+		targetFile.addFile("com.samsungsds.analyst.code.main", "ResultProcessor.java");
 		
 		File temp = new File(TEMP_DIRECTORY);
 		if (!temp.exists()) {
