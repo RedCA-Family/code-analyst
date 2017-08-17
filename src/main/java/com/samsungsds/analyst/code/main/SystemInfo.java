@@ -9,7 +9,7 @@ public class SystemInfo {
 	protected static String java() {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("JRE : ");
+		sb.append("[JRE : ");
 		sb.append("Java ");
 		sb.append(System.getProperty("java.version"));
 		sb.append(" ");
@@ -20,6 +20,7 @@ public class SystemInfo {
 		if ("32".equals(bits) || "64".equals(bits)) {
 			sb.append(" (").append(bits).append("-bit)");
 		}
+		sb.append("]");
 
 		return sb.toString();
 	}
@@ -27,12 +28,13 @@ public class SystemInfo {
 	protected static String os() {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("OS : ");
+		sb.append("[OS : ");
 		sb.append(System.getProperty("os.name"));
 		sb.append(" ");
 		sb.append(System.getProperty("os.version"));
 		sb.append(" ");
 		sb.append(System.getProperty("os.arch"));
+		sb.append("]");
 
 		return sb.toString();
 	}

@@ -43,7 +43,7 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		
 		String[] arguments = getArguments(where, argument, targetFile);
 
-		LOGGER.info("Arguments : {}", getArgumentsString(arguments));
+		System.out.println("* Arguments : " + getArgumentsString(arguments));
 		
 		CliParser cli = new CliParser(arguments);
     	
@@ -74,17 +74,17 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		
 		for (int i = 0; i < arguments.length; i++) {
 			if (i == 0) {
-				builder.append(checkSpace(arguments[i]));
+				builder.append(checkSpaceOrAsterisk(arguments[i]));
 			} else {
-				builder.append(" ").append(checkSpace(arguments[i]));
+				builder.append(" ").append(checkSpaceOrAsterisk(arguments[i]));
 			}
 		}
 		
 		return builder.toString();
 	}
 
-	private String checkSpace(String string) {
-		if (string.contains(" ")) {
+	private String checkSpaceOrAsterisk(String string) {
+		if (string.contains(" ") || string.contains("*")) {
 			return "\"" + string + "\"";
 		}
 		
@@ -157,7 +157,7 @@ public class CodeAnalystImpl implements CodeAnalyst {
 			builder.append(file.replaceAll("\\.java", "").replaceAll("\\.", "/") + ".java");
 		}
 		
-		LOGGER.info("Target file patterns : {}", builder.toString());
+		System.out.println("* Target file patterns : " + builder.toString());
 		
 		return builder.toString();
 	}
@@ -178,7 +178,7 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		}
 		
 		if (isNotValidated(argument.getBinary())) {
-			throw new IllegalArgumentException("Source directory is needed...");
+			throw new IllegalArgumentException("Binary directory is needed...");
 		}
 		
 		if (argument.getMode() == null) {
