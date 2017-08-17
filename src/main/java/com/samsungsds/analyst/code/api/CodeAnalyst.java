@@ -4,5 +4,5 @@ public interface CodeAnalyst {
 	void addProgressObserver(ProgressObserver observer);
 	void deleteProgressObserver(ProgressObserver observer);
 	
-	String analyze(String where, ArgumentInfo argument);
+	String analyze(String where, ArgumentInfo argument, TargetFileInfo targetFile);
 }

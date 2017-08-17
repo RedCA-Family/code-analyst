@@ -11,7 +11,7 @@ public class Version {
 	// 1.3.1 : Complexity Mode 상에 출력 방식 변경 (source link 지원)
 	// 1.4.0 : API 추가
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "1.3.1";
+	public static final String CODE_ANALYST = "1.4.0";
 	public static final String SONAR_SCANNER = "2.8";
 	public static final String SONAR_SERVER = "6.2.1";
 	public static final String PMD = "5.4.6";

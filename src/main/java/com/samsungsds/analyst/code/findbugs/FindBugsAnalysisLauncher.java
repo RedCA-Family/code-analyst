@@ -112,7 +112,7 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 			// Replace .* with .- to also analyze all subpackages.
 		}
 		
-		LOGGER.debug("target packages : {}", builder.toString());
+		LOGGER.info("target packages : {}", builder.toString());
 		
 		return builder.toString();
 	}

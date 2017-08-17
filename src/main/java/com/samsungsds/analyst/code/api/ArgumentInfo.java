@@ -10,7 +10,6 @@ public class ArgumentInfo {
 	private String pmdRuleFile;				// PMD ruleset xml file (if omitted, SDS Standard Ruleset used)
 	private String findBugsRuleFile;		// Findbugs ruleset xml file (if omitted, SDS Standard Ruleset used)
 	private int timeout = 10 * 60;			// 10 minutes
-	private String include;					// include pattern(Ant-style) with comma separated. (eg: com/sds/**/*.java)
 	private String exclude;					// exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)
 	
 	private AnalysisMode mode;				// code-size,duplication,complexity,pmd,findbugs,findsecbugs,dependency
@@ -85,14 +84,6 @@ public class ArgumentInfo {
 
 	public void setTimeout(int timeout) {
 		this.timeout = timeout;
-	}
-
-	public String getInclude() {
-		return include;
-	}
-
-	public void setInclude(String include) {
-		this.include = include;
 	}
 
 	public String getExclude() {

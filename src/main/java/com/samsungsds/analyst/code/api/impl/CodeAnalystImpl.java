@@ -15,6 +15,7 @@ import com.samsungsds.analyst.code.api.AnalysisProgress;
 import com.samsungsds.analyst.code.api.ArgumentInfo;
 import com.samsungsds.analyst.code.api.CodeAnalyst;
 import com.samsungsds.analyst.code.api.ProgressObserver;
+import com.samsungsds.analyst.code.api.TargetFileInfo;
 import com.samsungsds.analyst.code.main.App;
 import com.samsungsds.analyst.code.main.CliParser;
 
@@ -36,11 +37,11 @@ public class CodeAnalystImpl implements CodeAnalyst {
 	}
 
 	@Override
-	public String analyze(String where, ArgumentInfo argument) {
+	public String analyze(String where, ArgumentInfo argument, TargetFileInfo targetFile) {
 		
 		checkDirectoryAndArgument(where, argument);
 		
-		String[] arguments = getArguments(where, argument);
+		String[] arguments = getArguments(where, argument, targetFile);
 
 		LOGGER.info("Arguments : {}", getArgumentsString(arguments));
 		
@@ -90,7 +91,7 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		return string;
 	}
 
-	private String[] getArguments(String where, ArgumentInfo argument) {
+	private String[] getArguments(String where, ArgumentInfo argument, TargetFileInfo targetFile) {
 		List<String> argumentList = new ArrayList<>();
 		
 		argumentList.add("--project");
@@ -131,10 +132,9 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		argumentList.add("--timeout");
 		argumentList.add(Integer.toString(argument.getTimeout()));
 		
-		if (isValidated(argument.getInclude())) {
-			argumentList.add("-include");
-			argumentList.add(argument.getInclude());
-		} 
+		argumentList.add("-include");
+		argumentList.add(getIncludeString(targetFile));
+		 
 		
 		if (isValidated(argument.getExclude())) {
 			argumentList.add("-exclude");
@@ -147,6 +147,36 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		return argumentList.toArray(new String[0]);
 	}
 	
+	private String getIncludeString(TargetFileInfo targetFile) {
+		String packageString = targetFile.getPackageName().replaceAll("\\.", "/");
+		
+		if (targetFile.getFiles().length == 0) {
+			String suffix = null;
+			if (targetFile.isIncludeSubPackage()) {
+				suffix = "/**/*.java"; 
+			} else {
+				suffix = "/*.java";
+			}
+			
+			LOGGER.info("Target file patterns : {}", packageString + suffix);
+			
+			return packageString + suffix;
+		} 
+		
+		StringBuilder builder = new StringBuilder();
+		
+		for (String file : targetFile.getFiles()) {
+			if (builder.length() != 0) {
+				builder.append(",");
+			}
+			builder.append(packageString).append("/").append(file);
+		}
+		
+		LOGGER.info("Target file patterns : {}", builder.toString());
+		
+		return builder.toString();
+	}
+
 	private void checkDirectoryAndArgument(String where, ArgumentInfo argument) {
 		File dir = new File(where);
 		

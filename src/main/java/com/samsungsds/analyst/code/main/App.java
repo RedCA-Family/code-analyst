@@ -219,11 +219,11 @@ public class App {
 		sonar.addProperty("sonar.scanAllFiles", "true");
 		
 		if (!cli.getIncludes().equals("")) {
-			sonar.addProperty("sonar.inclusions", cli.getIncludes());
+			sonar.addProperty("sonar.inclusions", MeasuredResult.getInstance().getIncludes());
 		}
 		
 		if (!cli.getExcludes().equals("")) {
-			sonar.addProperty("sonar.exclusions", cli.getExcludes());
+			sonar.addProperty("sonar.exclusions", MeasuredResult.getInstance().getExcludes());
 		}
 		
 		sonar.run();
@@ -408,7 +408,7 @@ public class App {
 	public String getParsingErrorMessage() {
 		return parsingErrorMessage;
 	}
-		
+			
     public static void main(String[] args) {
     	CliParser cli = new CliParser(args);
     	

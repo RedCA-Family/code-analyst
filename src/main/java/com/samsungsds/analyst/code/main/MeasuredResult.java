@@ -307,8 +307,12 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	private boolean haveToSkip(String path) {
+		return haveToSkip(path, false);
+	}
+	
+	private boolean haveToSkip(String path, boolean withoutFilename) {
 		for (FilePathFilter filter : filePathFilterList) {
-			if (!filter.matched(path)) {
+			if (!filter.matched(path, withoutFilename)) {
 				return true;
 			}	
 		}
@@ -467,7 +471,7 @@ public class MeasuredResult implements Serializable {
 			List<String> allPackages = PackageUtils.getProjectPackages(projectDirectory + File.separator + binary);
 			
 			for (String sourcePackage : allPackages) {
-				if (haveToSkip(sourcePackage.replaceAll("\\.", "/") + "/*.java")) {
+				if (haveToSkip(sourcePackage.replaceAll("\\.", "/") + "/*.java", true)) {
 					continue;
 				}
 				packageList.add(sourcePackage);
@@ -572,5 +576,13 @@ public class MeasuredResult implements Serializable {
 
 	public String getVersion() {
 		return version;
+	}
+	
+	public String getIncludes() {
+		return includes;
+	}
+	
+	public String getExcludes() {
+		return excludes;
 	}
 }

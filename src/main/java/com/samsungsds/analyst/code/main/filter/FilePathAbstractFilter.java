@@ -69,5 +69,10 @@ public abstract class FilePathAbstractFilter implements FilePathFilter {
 	public abstract String getFilterName();
 
 	@Override
-	public abstract boolean matched(String filePath);
+	public abstract boolean matched(String filePath, boolean withoutFilename);
+	
+	@Override
+	public boolean matched(String filePath) {
+		return matched(filePath, false);
+	}
 }
