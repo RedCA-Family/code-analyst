@@ -380,6 +380,8 @@ public class App {
 	}
 	
 	public void cleanup() {
+		MeasuredResult.getInstance().clear();
+		
 		IOAndFileUtils.deleteDirectory(new File(".sonar"));
 		
 		if (progressMonitor != null) {

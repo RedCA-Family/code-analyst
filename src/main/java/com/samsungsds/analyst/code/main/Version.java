@@ -10,8 +10,9 @@ public class Version {
 	// 1.3.0 : FindSecBugs 점검 추가, 각 점검 개별 호출 옵션 지원, 각종 오류 수정
 	// 1.3.1 : Complexity Mode 상에 출력 방식 변경 (source link 지원)
 	// 1.4.0 : API 추가
+	// 1.4.1 : 다중 호출 시 문제 보완
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "1.4.0";
+	public static final String CODE_ANALYST = "1.4.1";
 	public static final String SONAR_SCANNER = "2.8";
 	public static final String SONAR_SERVER = "6.2.1";
 	public static final String PMD = "5.4.6";

@@ -110,15 +110,15 @@ public class IOAndFileUtils {
 	
 	public static File saveResourceFile(String resource, String prefix, String suffix) {
 	
-		File ruleSetFile;
+		File file;
 		try {
-			ruleSetFile = File.createTempFile(prefix, suffix);
+			file = File.createTempFile(prefix, suffix);
 		} catch (IOException ex) {
 			throw new IllegalStateException(ex);
 		}
-		ruleSetFile.deleteOnExit();
+		file.deleteOnExit();
 
-		try (OutputStream outStream = new BufferedOutputStream(new FileOutputStream(ruleSetFile))) {
+		try (OutputStream outStream = new BufferedOutputStream(new FileOutputStream(file))) {
 			IOAndFileUtils.write(outStream, resource);
 		} catch (FileNotFoundException ex) {
 			throw new IllegalStateException(ex);
@@ -126,6 +126,6 @@ public class IOAndFileUtils {
 			throw new IllegalStateException(ex);
 		}
 
-		return ruleSetFile;
+		return file;
 	}
 }

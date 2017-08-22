@@ -18,11 +18,15 @@ public class FindSecBugsAnalysisLauncher extends FindBugsAnalysisLauncher {
 	private static final String PLUGIN_FILE = "/statics/findsecbugs-plugin-1.7.1.jar";
 	private static final String BUG_SEC_RULESET_FILE = "/statics/FindSecBugs.xml";
 	
+	private static boolean firstRun = true;
+	
 	private File reportFile = null;
 	
 	@Override
 	public void run() {
-		addOption("-pluginList", IOAndFileUtils.saveResourceFile(PLUGIN_FILE, "plugin", ".jar").toString());
+		if (firstRun) {
+			addOption("-pluginList", IOAndFileUtils.saveResourceFile(PLUGIN_FILE, "plugin", ".jar").toString());
+		}
 		addOption("-include", IOAndFileUtils.saveResourceFile(BUG_SEC_RULESET_FILE, "include", ".xml").toString());
 		
 		addOption("-xml", "");
@@ -57,5 +61,7 @@ public class FindSecBugsAnalysisLauncher extends FindBugsAnalysisLauncher {
 		List<FindBugsResult> resultList = parseXML(reportFile);
 		
 		MeasuredResult.getInstance().putFindSecBugsList(resultList);
+		
+		firstRun = false;
 	}
 }

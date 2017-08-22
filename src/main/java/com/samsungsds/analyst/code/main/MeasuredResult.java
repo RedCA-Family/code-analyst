@@ -585,4 +585,51 @@ public class MeasuredResult implements Serializable {
 	public String getExcludes() {
 		return excludes;
 	}
+	
+	public void clear() {
+		directories = 0;
+		files = 0;
+		classes = 0;
+		commentLines = 0;
+		complexity = 0;
+		functions = 0;
+		lines = 0;
+		ncloc = 0;
+		statements = 0;
+		
+		duplicationList.clear();
+		duplicatedLines = 0;
+		duplicatedBlockData.clear();
+		
+		allMethodList.clear();
+		packageList.clear();
+		
+		complexityListOver10.clear();
+		
+		complexityFunctions = 0;
+		complexitySum = 0;
+		complexityOver10 = 0;
+		complexityOver15 = 0;
+		complexityOver20 = 0;
+		complexityEqualOrOver50 = 0;
+		
+		pmdList.clear();
+		for (int i = 0; i < pmdCount.length; i++) {
+			pmdCount[i] = 0;
+		}
+		
+		findBugsList.clear();
+		for (int i = 0; i < findBugsCount.length; i++) {
+			findBugsCount[i] = 0;
+		}
+		
+		findSecBugsList.clear();
+		for (int i = 0; i < findSecBugsCount.length; i++) {
+			findSecBugsCount[i] = 0;
+		}
+		
+		acyclicDependencyList.clear();
+		
+		filePathFilterList.clear();
+	}
 }
