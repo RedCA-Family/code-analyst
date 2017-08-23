@@ -7,8 +7,8 @@ import java.text.NumberFormat;
 import com.samsungsds.analyst.code.api.AnalysisMode;
 import com.samsungsds.analyst.code.api.ArgumentInfo;
 import com.samsungsds.analyst.code.api.CodeAnalyst;
+import com.samsungsds.analyst.code.api.CodeAnalystFactory;
 import com.samsungsds.analyst.code.api.TargetFileInfo;
-import com.samsungsds.analyst.code.api.impl.CodeAnalystImpl;
 
 public class ApiExample {
 	private static final String TEMP_DIRECTORY = "C:\\Temp";
@@ -16,7 +16,7 @@ public class ApiExample {
 	private static final NumberFormat numberFormatter = NumberFormat.getInstance();
 
 	public static void main(String[] args) {
-		CodeAnalyst analyst = new CodeAnalystImpl();
+		CodeAnalyst analyst = CodeAnalystFactory.create();
 		
 		analyst.addProgressObserver(progress -> {
 			System.out.println("++++++++++++++++++++++++++++++++++++++++");
@@ -35,13 +35,16 @@ public class ApiExample {
 		argument.setSrc("src");
 		argument.setBinary("target\\classes");
 		
+		argument.setEncoding("UTF-8");	// default
+		argument.setJavaVersion("1.8");	// default
+		
 		AnalysisMode mode = new AnalysisMode();
 		mode.setCodeSize(true);
 		mode.setDuplication(true);
 		mode.setComplexity(true);
 		mode.setPmd(true);
 		mode.setFindBugs(true);
-		mode.setFindSecBugs(false);
+		mode.setFindSecBugs(true);
 		mode.setDependency(true);
 		
 		argument.setMode(mode);
@@ -56,8 +59,8 @@ public class ApiExample {
 		
 		//targetFile.addPackage("com.samsungsds.analyst.code.main");	// include sub-packages
 		
-		targetFile.addFile("com.samsungsds.analyst.code.main", "MeasuredResult.java");
-		targetFile.addFile("com.samsungsds.analyst.code.main", "ResultProcessor.java");
+		//targetFile.addFile("com.samsungsds.analyst.code.main", "MeasuredResult.java");
+		//targetFile.addFile("com.samsungsds.analyst.code.main", "ResultProcessor.java");
 		
 		File temp = new File(TEMP_DIRECTORY);
 		if (!temp.exists()) {

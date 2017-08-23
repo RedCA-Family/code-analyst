@@ -157,7 +157,7 @@ public class TextOutputFile extends AbstractOutputFile {
 	@Override
 	protected void writePmd(List<PmdResult> list) {
 		writer.println("[PMD]");
-		writer.println("; path, line, rule, priority,  description");
+		writer.println("; path, line, rule, priority, description");
 		
 		int count = 0;
 		synchronized (list) {
