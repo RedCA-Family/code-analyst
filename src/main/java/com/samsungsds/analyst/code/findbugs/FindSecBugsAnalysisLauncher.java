@@ -23,7 +23,7 @@ public class FindSecBugsAnalysisLauncher extends FindBugsAnalysisLauncher {
 	private File reportFile = null;
 	
 	@Override
-	public void run() {
+	public void run(String instanceKey) {
 		if (firstRun) {
 			addOption("-pluginList", IOAndFileUtils.saveResourceFile(PLUGIN_FILE, "plugin", ".jar").toString());
 		}
@@ -42,7 +42,7 @@ public class FindSecBugsAnalysisLauncher extends FindBugsAnalysisLauncher {
 		
 		LOGGER.debug("FindSecBugs Result File : {}", reportFile.toString());
 		
-		addOption("-onlyAnalyze", getTargetPackages());
+		addOption("-onlyAnalyze", getTargetPackages(instanceKey));
 		addOption("-nested:false", "");
 		
 		addOption(getTargetDirectory(), "");
@@ -60,7 +60,7 @@ public class FindSecBugsAnalysisLauncher extends FindBugsAnalysisLauncher {
 		
 		List<FindBugsResult> resultList = parseXML(reportFile);
 		
-		MeasuredResult.getInstance().putFindSecBugsList(resultList);
+		MeasuredResult.getInstance(instanceKey).putFindSecBugsList(resultList);
 		
 		firstRun = false;
 	}

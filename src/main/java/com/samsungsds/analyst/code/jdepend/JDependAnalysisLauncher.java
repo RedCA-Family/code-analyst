@@ -39,7 +39,7 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 	}
 
 	@Override
-	public void run() {
+	public void run(String instanceKey) {
 		
 		try {
 			analyzer.addDirectory(directory);
@@ -55,7 +55,7 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 		
 		ResultIncludeFilter filter = getResultIncludeFilter();
 		
-		checkResult(packageList, filter);
+		checkResult(packageList, filter, instanceKey);
 	}
 
 	public ResultIncludeFilter getResultIncludeFilter() {
@@ -68,7 +68,7 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 		return filter;
 	}
 
-	public void checkResult(ArrayList<JavaPackage> packageList, ResultIncludeFilter filter) {
+	public void checkResult(ArrayList<JavaPackage> packageList, ResultIncludeFilter filter, String instanceKey) {
 		List<JavaPackage> list = new ArrayList<>();
 		
 		LOGGER.info("Acyclic Dependencies:");
@@ -90,6 +90,7 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 	        
 			StringBuilder print = new StringBuilder();
 			
+			int countOfProjectPackages = 0;
 	        for (JavaPackage pkg : list) {
 	            i++;
 
@@ -99,16 +100,27 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 	                LOGGER.info("{}|", tab());
 	            } else {
 	                if (pkg.getName().equals(cyclePackageName)) {
-	                    print.append(" |-> " + pkg.getName());
-	                    LOGGER.info("{}|-> {}", tab(), pkg.getName());
+	                	print.append(" |-> " + pkg.getName());
+	                	if (filter.include(pkg.getName())) {
+	                		LOGGER.info("{}|-> {}", tab(), pkg.getName());
+	                		countOfProjectPackages++;
+	                	} else {
+	                		LOGGER.info("{}|-> {} (skip)", tab(), pkg.getName());
+	                	}
 	                } else {
 	                	print.append(" | " + pkg.getName());
-	                	LOGGER.info("{}|   {}", tab(), pkg.getName());
+	                	if (filter.include(pkg.getName())) {
+	                		LOGGER.info("{}|   {}", tab(), pkg.getName());
+	                	} else {
+	                		LOGGER.info("{}|   {} (skip)", tab(), pkg.getName());
+	                	}
 	                }
 	            }
 	        }
 	        
-	        MeasuredResult.getInstance().addAcyclicDependency(print.toString());
+	        if (countOfProjectPackages > 0) { 
+	        	MeasuredResult.getInstance(instanceKey).addAcyclicDependency(print.toString());
+	        }
 	        
 	        list.clear();
         }

@@ -63,15 +63,15 @@ public class App {
     		
     		try {
 				LOGGER.info("Project Directory : {}", project.getCanonicalPath());
-				MeasuredResult.getInstance().setProjectDirectory(project.getCanonicalPath());
+				MeasuredResult.getInstance(cli.getInstanceKey()).setProjectDirectory(project.getCanonicalPath());
 			} catch (IOException ex) {
 				LOGGER.error("Project Directory Error : {}", cli.getProjectBaseDir());
 				return;
 			}
     		
-    		MeasuredResult.getInstance().setProjectInfo(cli);
+    		MeasuredResult.getInstance(cli.getInstanceKey()).setProjectInfo(cli);
     		
-    		MeasuredResult.getInstance().setMode(cli.getMode());
+    		MeasuredResult.getInstance(cli.getInstanceKey()).setMode(cli.getMode());
     		
     		processFilterString(cli);
     		
@@ -169,13 +169,13 @@ public class App {
 		if (!"".equals(cli.getIncludes())) {
 			LOGGER.info("Include patterns : {}", cli.getIncludes());
 			
-			MeasuredResult.getInstance().setIncludeFilters(cli.getIncludes());
+			MeasuredResult.getInstance(cli.getInstanceKey()).setIncludeFilters(cli.getIncludes());
 		}
 		
 		if (!"".equals(cli.getExcludes())) {
 			LOGGER.info("Exclude patterns : {}", cli.getExcludes());
 			
-			MeasuredResult.getInstance().setExcludeFilters(cli.getExcludes());
+			MeasuredResult.getInstance(cli.getInstanceKey()).setExcludeFilters(cli.getExcludes());
 		}
 	}
 	
@@ -219,14 +219,14 @@ public class App {
 		sonar.addProperty("sonar.scanAllFiles", "true");
 		
 		if (!cli.getIncludes().equals("")) {
-			sonar.addProperty("sonar.inclusions", MeasuredResult.getInstance().getIncludes());
+			sonar.addProperty("sonar.inclusions", MeasuredResult.getInstance(cli.getInstanceKey()).getIncludes());
 		}
 		
 		if (!cli.getExcludes().equals("")) {
-			sonar.addProperty("sonar.exclusions", MeasuredResult.getInstance().getExcludes());
+			sonar.addProperty("sonar.exclusions", MeasuredResult.getInstance(cli.getInstanceKey()).getExcludes());
 		}
 		
-		sonar.run();
+		sonar.run(cli.getInstanceKey());
 
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.CODE_SIZE_COMPLETE));
@@ -264,7 +264,7 @@ public class App {
 		pmdComplexity.addOption("-version", cli.getJavaVersion());
 		pmdComplexity.addOption("-language", "java");
 		
-		pmdComplexity.run();
+		pmdComplexity.run(cli.getInstanceKey());
 		
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.COMPLEXITY_COMPLETE));
@@ -288,7 +288,7 @@ public class App {
 			pmdViolation.addOption("-rulesets", cli.getRuleSetFileForPMD());
 		}
 		
-		pmdViolation.run();
+		pmdViolation.run(cli.getInstanceKey());
 		
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.PMD_COMPLETE));
@@ -308,7 +308,7 @@ public class App {
 			findBugsViolation.addOption("-include", cli.getRuleSetFileForFindBugs());
 		}
 		
-		findBugsViolation.run();
+		findBugsViolation.run(cli.getInstanceKey());
 		
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.FINDBUGS_COMPLETE));
@@ -324,7 +324,7 @@ public class App {
 			System.setProperty("findbugs.debug", "true");
 		}
 		
-		findBugsViolation.run();
+		findBugsViolation.run(cli.getInstanceKey());
 		
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.FINDSECBUGS_COMPLETE));
@@ -339,21 +339,21 @@ public class App {
 		List<String> packageList = PackageUtils.getProjectPackages(cli.getProjectBaseDir() + File.separator + cli.getBinary());
 		
 		LOGGER.debug("Package List");
-		for (String packageName : MeasuredResult.getInstance().getPackageList()) {
+		for (String packageName : MeasuredResult.getInstance(cli.getInstanceKey()).getPackageList()) {
 			LOGGER.debug("- {}", packageName);
 		}
 		
-		LOGGER.debug("Target Package List");
+		LOGGER.info("Target Package List");
 		for (String packageName : packageList) {
-			if (MeasuredResult.getInstance().getPackageList().contains(packageName)) {
-				LOGGER.debug("- {}", packageName);
+			if (MeasuredResult.getInstance(cli.getInstanceKey()).getPackageList().contains(packageName)) {
+				LOGGER.info("- {}", packageName);
 				jdepend.addIncludePackage(packageName);
 			} else {
-				LOGGER.debug("- {} : skipped...", packageName);
+				LOGGER.info("- {} : skipped...", packageName);
 			}
 		}
 		
-		jdepend.run();
+		jdepend.run(cli.getInstanceKey());
 		
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.DEPENDENCY_COMPLETE));
@@ -373,14 +373,14 @@ public class App {
 				outputFile = new File(cli.getOutput()); 
 			}
 			
-			ResultProcessor.saveResultOutputFile(outputFile, cli, MeasuredResult.getInstance());
+			ResultProcessor.saveResultOutputFile(outputFile, cli, MeasuredResult.getInstance(cli.getInstanceKey()));
 		}
 		
-		ResultProcessor.printSummary(MeasuredResult.getInstance());
+		ResultProcessor.printSummary(MeasuredResult.getInstance(cli.getInstanceKey()));
 	}
 	
-	public void cleanup() {
-		MeasuredResult.getInstance().clear();
+	public void cleanup(String instanceKey) {
+		MeasuredResult.getInstance(instanceKey).clear();
 		
 		IOAndFileUtils.deleteDirectory(new File(".sonar"));
 		
@@ -414,6 +414,10 @@ public class App {
     public static void main(String[] args) {
     	CliParser cli = new CliParser(args);
     	
+    	String instanceKey = App.class.getName();
+    	
+    	cli.setInstanceKey(instanceKey);
+    	
     	App app = new App();
     	
     	try {
@@ -421,7 +425,7 @@ public class App {
     	} catch (Throwable ex) {
     		LOGGER.error("Error", ex);
     	} finally {
-    		app.cleanup();
+    		app.cleanup(instanceKey);
     		System.exit(0);
     	}
     }

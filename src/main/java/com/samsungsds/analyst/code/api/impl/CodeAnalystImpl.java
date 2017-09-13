@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,6 +47,10 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		System.out.println("* Arguments : " + getArgumentsString(arguments));
 		
 		CliParser cli = new CliParser(arguments);
+		
+		cli.setInstanceKey(getUniqueId());
+		
+		LOGGER.info("Instance Key : {}", cli.getInstanceKey());
     	
     	App app = new App();
     	
@@ -59,7 +64,7 @@ public class CodeAnalystImpl implements CodeAnalyst {
     		LOGGER.error("Error", ex);
     		throw ex;
     	} finally {
-    		app.cleanup();
+    		app.cleanup(cli.getInstanceKey());
     	}
     	
     	if (app.hasParsingError()) {
@@ -68,7 +73,11 @@ public class CodeAnalystImpl implements CodeAnalyst {
     		return outputFilePath;
     	}
 	}
-	
+
+	private String getUniqueId() {
+		return UUID.randomUUID().toString().toUpperCase();
+	}
+
 	private String getArgumentsString(String[] arguments) {
 		StringBuilder builder = new StringBuilder();
 		

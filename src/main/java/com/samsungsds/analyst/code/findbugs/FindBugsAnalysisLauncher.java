@@ -43,7 +43,7 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 	}
 	
 	@Override
-	public void run() {
+	public void run(String instanceKey) {
 		
 		if (!arg.contains("-include")) {
 			addOption("-include", IOAndFileUtils.saveResourceFile(BUG_RULESET_FILE, "include", ".xml").toString());
@@ -61,7 +61,7 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 		
 		LOGGER.debug("FindBugs Result File : {}", reportFile.toString());
 		
-		addOption("-onlyAnalyze", getTargetPackages());
+		addOption("-onlyAnalyze", getTargetPackages(instanceKey));
 		addOption("-nested:false", "");
 		
 		addOption(targetDirectory, "");
@@ -79,7 +79,7 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 		
 		List<FindBugsResult> resultList = parseXML(reportFile);
 		
-		MeasuredResult.getInstance().putFindBugsList(resultList);
+		MeasuredResult.getInstance(instanceKey).putFindBugsList(resultList);
 	}
 	
 	protected List<FindBugsResult> parseXML(File reportFile) {
@@ -100,10 +100,10 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 		return list;
 	}
 
-	protected String getTargetPackages() {
+	protected String getTargetPackages(String instanceKey) {
 		StringBuilder builder = new StringBuilder();
 		
-		for (String packageName : MeasuredResult.getInstance().getPackageList()) {
+		for (String packageName : MeasuredResult.getInstance(instanceKey).getPackageList()) {
 			if (builder.length() != 0) {
 				builder.append(",");
 			}

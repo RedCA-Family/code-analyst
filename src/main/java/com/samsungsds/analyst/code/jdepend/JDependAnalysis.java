@@ -5,5 +5,5 @@ public interface JDependAnalysis {
 	
 	void setTarget(String directory);
 	
-	void run();
+	void run(String instanceKey);
 }

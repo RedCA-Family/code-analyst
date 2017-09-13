@@ -32,7 +32,7 @@ public class MeasuredResult implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static MeasuredResult instance = null;
+	private static Map<String, MeasuredResult> instances = new HashMap<>();
 	
 	@Expose
 	@SerializedName("target")
@@ -77,8 +77,6 @@ public class MeasuredResult implements Serializable {
 	private int classes = 0;
 	@Expose
 	private int commentLines = 0;
-	@Expose
-	private int complexity = 0;
 	@Expose
 	private int functions = 0;
 	@Expose
@@ -141,16 +139,16 @@ public class MeasuredResult implements Serializable {
 
 	private File outputFile;
 	
-	public static MeasuredResult getInstance() {
-		if (instance == null) {
+	public static MeasuredResult getInstance(String instanceKey) {
+		if (!instances.containsKey(instanceKey)) {
 			synchronized (MeasuredResult.class) {
-				if (instance == null) {
-					instance = new MeasuredResult();
+				if (!instances.containsKey(instanceKey)) {
+					instances.put(instanceKey, new MeasuredResult());
 				}
 			}
 		}
 		
-		return instance;
+		return instances.get(instanceKey);
 	}
 	
 	public void setProjectInfo(CliParser cli) {
@@ -209,14 +207,6 @@ public class MeasuredResult implements Serializable {
 	
 	public synchronized void addCommentLines(int commentLines) {
 		this.commentLines += commentLines;
-	}
-	
-	public int getComplexity() {
-		return complexity;
-	}
-	
-	public synchronized void addComplexity(int complexity) {
-		this.complexity += complexity;
 	}
 	
 	public int getFunctions() {
@@ -342,6 +332,9 @@ public class MeasuredResult implements Serializable {
 				complexityFunctions++;
 				complexitySum += result.getComplexity();
 				
+				if (result.getComplexity() >= 50) {
+					complexityEqualOrOver50++;
+				}
 				if (result.getComplexity() > 20) {
 					complexityOver20++;
 				} 
@@ -591,7 +584,6 @@ public class MeasuredResult implements Serializable {
 		files = 0;
 		classes = 0;
 		commentLines = 0;
-		complexity = 0;
 		functions = 0;
 		lines = 0;
 		ncloc = 0;

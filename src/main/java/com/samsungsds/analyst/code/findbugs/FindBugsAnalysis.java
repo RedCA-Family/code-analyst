@@ -5,5 +5,5 @@ public interface FindBugsAnalysis {
 	
 	void setTarget(String directory);
 	
-	void run();
+	void run(String instanceKey);
 }

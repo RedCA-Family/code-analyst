@@ -28,7 +28,7 @@ public class ComplexityAnalysisLauncher extends AbstractPmdAnalysis implements C
 	}
 	
 	@Override
-	public void run() {
+	public void run(String instanceKey) {
 		
 		addOption("-rulesets", saveRuleSetFile(COMPLEXITY_RULESET_FILE).toString());
 		addOption("-format", "csv");
@@ -42,11 +42,11 @@ public class ComplexityAnalysisLauncher extends AbstractPmdAnalysis implements C
 
 		PMD.run(arg.toArray(new String[0]));
 		
-		List<PmdResult> resultList = parseCSV(reportFile);
+		List<PmdResult> resultList = parseCSV(reportFile, instanceKey);
 		
 		List<ComplexityResult> complexitList = ComplexityResult.convertComplexitResult(resultList);
 		
-		MeasuredResult.getInstance().putComplexityList(complexitList);
+		MeasuredResult.getInstance(instanceKey).putComplexityList(complexitList);
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.sonar.api.CoreProperties;
 import org.sonarsource.scanner.api.internal.batch.BatchIsolatedLauncher;
 import org.sonarsource.scanner.api.internal.batch.IsolatedLauncher;
 import org.sonarsource.scanner.api.internal.batch.LogOutput;
@@ -24,7 +25,13 @@ public class SonarAnalysisLauncher implements SonarAnalysis {
 		globalProperties.setProperty(key, value);
 	}
 	
-	public void run() {
+	@Override
+	public void run(String instanceKey) {
+		
+		String projectKey = globalProperties.getProperty(CoreProperties.PROJECT_KEY_PROPERTY);
+		
+		globalProperties.setProperty(CoreProperties.PROJECT_KEY_PROPERTY, projectKey + ":" + instanceKey);
+		
 		IsolatedLauncher launcher = new BatchIsolatedLauncher();
 		
 		launcher.start(globalProperties, (formattedMessage, level) -> logOutput.log(formattedMessage, LogOutput.Level.valueOf(level.name())));

@@ -16,6 +16,7 @@ import com.samsungsds.analyst.code.util.FindFileUtils;
 
 public class DuplicationApp {
 	private String outputFile;
+	private static final String INSTANCE_KEY = DuplicationApp.class.getName();
 
 	public DuplicationApp(String outputFile) {
 		this.outputFile = outputFile;
@@ -32,7 +33,7 @@ public class DuplicationApp {
 		
 		System.out.println();
 		System.out.println("Duplicated file list : ");
-		System.out.println(MeasuredResult.getInstance().getDuplicatedBlockDebugInfo());
+		System.out.println(MeasuredResult.getInstance(INSTANCE_KEY).getDuplicatedBlockDebugInfo());
 	}
 	
 	private void unsetDebugLevel() {
@@ -68,10 +69,10 @@ public class DuplicationApp {
 				continue;
 			}
 			
-			MeasuredResult.getInstance().addDuplicationResult(result);
+			MeasuredResult.getInstance(INSTANCE_KEY).addDuplicationResult(result);
 		}
 		
-		return MeasuredResult.getInstance().getDuplicatedLines();
+		return MeasuredResult.getInstance(INSTANCE_KEY).getDuplicatedLines();
 	}
 
 	private List<String> getDuplicationList() {
@@ -116,17 +117,17 @@ public class DuplicationApp {
 				}
 			}
 		}
-				
+		
 		if (!includeFilters.equals("")) {
 			System.out.println("Include : " + includeFilters);
 		
-			MeasuredResult.getInstance().setIncludeFilters(includeFilters);;
+			MeasuredResult.getInstance(INSTANCE_KEY).setIncludeFilters(includeFilters);;
 		}
 		
 		if (!excludeFilters.equals("")) {
 			System.out.println("Exclude : " + excludeFilters);
 			
-			MeasuredResult.getInstance().setExcludeFilters(excludeFilters);
+			MeasuredResult.getInstance(INSTANCE_KEY).setExcludeFilters(excludeFilters);
 		}
 		
 		try {

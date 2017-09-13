@@ -47,6 +47,8 @@ public class CliParser {
 	
 	private String errorMessage = "";
 	
+	private String instanceKey = "";
+	
 	public CliParser(String[] args) {
 		this.args = args;
 		
@@ -181,12 +183,12 @@ public class CliParser {
 					return false;
 				}
 				
-				MeasuredResult.getInstance().setIndividualModeString(cmd.getOptionValue("m"));
+				MeasuredResult.getInstance(getInstanceKey()).setIndividualModeString(cmd.getOptionValue("m"));
 			} else {
 				individualMode.setAll();
 			}
 			
-			MeasuredResult.getInstance().setIndividualMode(individualMode);
+			MeasuredResult.getInstance(getInstanceKey()).setIndividualMode(individualMode);
 			
 			return true;
 		} catch (ParseException pe) {
@@ -342,5 +344,16 @@ public class CliParser {
 	
 	public String getErrorMessage() {
 		return errorMessage;
+	}
+
+	public String getInstanceKey() {
+		if ("".equals(instanceKey)) {
+			LOGGER.warn("No instance key!!!");
+		}
+		return instanceKey;
+	}
+
+	public void setInstanceKey(String instanceKey) {
+		this.instanceKey = instanceKey;
 	}
 }

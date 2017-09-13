@@ -32,9 +32,12 @@ public class ReportFileReader implements Closeable {
 	private File toDir = new File(".tmp");
 	
 	private ScannerReportReader reader = null;
+
+	private String instanceKey;
 	
-	public ReportFileReader(File zipFile) {
+	public ReportFileReader(File zipFile, String instanceKey) {
 		this.zipFile = zipFile;
+		this.instanceKey = instanceKey;
 	}
 	
 	public void read() throws IOException {
@@ -51,7 +54,7 @@ public class ReportFileReader implements Closeable {
 
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("--------------------------------------------------------------------------------");
-			LOGGER.debug("Duplicated lines : {}{}", IOAndFileUtils.CR_LF, MeasuredResult.getInstance().getDuplicatedBlockDebugInfo());
+			LOGGER.debug("Duplicated lines : {}{}", IOAndFileUtils.CR_LF, MeasuredResult.getInstance(instanceKey).getDuplicatedBlockDebugInfo());
 			LOGGER.debug("--------------------------------------------------------------------------------");
 		}	 
 	}
@@ -60,26 +63,26 @@ public class ReportFileReader implements Closeable {
 		LOGGER.debug("Component : {}", component.getPath());
 		
 		if (component.getType().equals(ComponentType.DIRECTORY)) {
-			MeasuredResult.getInstance().addDirectories(1);
+			MeasuredResult.getInstance(instanceKey).addDirectories(1);
 		} else if (component.getType().equals(ComponentType.FILE)) {
-			MeasuredResult.getInstance().addFiles(1);
+			MeasuredResult.getInstance(instanceKey).addFiles(1);
 
 			try (CloseableIterator<ScannerReport.Measure> it = reader.readComponentMeasures(component.getRef())) {
 				while (it.hasNext()) {
 					ScannerReport.Measure measure = it.next();
 
 					if (measure.getMetricKey().equals(METRIC_CLASSES)) {
-						MeasuredResult.getInstance().addClasses(measure.getIntValue().getValue());
+						MeasuredResult.getInstance(instanceKey).addClasses(measure.getIntValue().getValue());
 					} else if (measure.getMetricKey().equals(METRIC_COMMENT_LINES)) {
-						MeasuredResult.getInstance().addCommentLines(measure.getIntValue().getValue());
+						MeasuredResult.getInstance(instanceKey).addCommentLines(measure.getIntValue().getValue());
 					} else if (measure.getMetricKey().equals(METRIC_FUNCTIONS)) {
-						MeasuredResult.getInstance().addFunctions(measure.getIntValue().getValue());
+						MeasuredResult.getInstance(instanceKey).addFunctions(measure.getIntValue().getValue());
 					} else if (measure.getMetricKey().equals(METRIC_LINES)) {
-						MeasuredResult.getInstance().addLines(measure.getIntValue().getValue());
+						MeasuredResult.getInstance(instanceKey).addLines(measure.getIntValue().getValue());
 					} else if (measure.getMetricKey().equals(METRIC_NCLOC)) {
-						MeasuredResult.getInstance().addNcloc(measure.getIntValue().getValue());
+						MeasuredResult.getInstance(instanceKey).addNcloc(measure.getIntValue().getValue());
 					} else if (measure.getMetricKey().equals(METRIC_STATEMENTS)) {
-						MeasuredResult.getInstance().addStatements(measure.getIntValue().getValue());
+						MeasuredResult.getInstance(instanceKey).addStatements(measure.getIntValue().getValue());
 					}
 				}
 			} catch (Exception e) {
@@ -104,7 +107,7 @@ public class ReportFileReader implements Closeable {
 							}
 							DuplicationResult result = new DuplicationResult(path, startLine, endLine, duplicatedPath, d.getRange().getStartLine(), d.getRange().getEndLine());
 							
-							MeasuredResult.getInstance().addDuplicationResult(result);
+							MeasuredResult.getInstance(instanceKey).addDuplicationResult(result);
 						}						
 					}
 				} catch (Exception e) {

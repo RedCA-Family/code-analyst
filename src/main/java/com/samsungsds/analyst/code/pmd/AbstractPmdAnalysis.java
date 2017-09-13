@@ -31,7 +31,7 @@ public abstract class AbstractPmdAnalysis  {
 		return IOAndFileUtils.saveResourceFile(ruleResourceName, "ruleset", ".xml");
 	}
 	
-	protected List<PmdResult> parseCSV(File reportFile) {
+	protected List<PmdResult> parseCSV(File reportFile, String instanceKey) {
 		List<PmdResult> list = new ArrayList<>();
 		
 		try {
@@ -48,7 +48,7 @@ public abstract class AbstractPmdAnalysis  {
 			    String ruleSet = record.get("Rule set");
 			    String rule = record.get("Rule");
 			    
-			    PmdResult result = new PmdResult(problem,packageName, file, priority, line, description, ruleSet, rule);
+			    PmdResult result = new PmdResult(problem,packageName, file, priority, line, description, ruleSet, rule, instanceKey);
 			    
 			    list.add(result);			    
 			}

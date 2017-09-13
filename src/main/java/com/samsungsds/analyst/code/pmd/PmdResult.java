@@ -22,10 +22,10 @@ public class PmdResult {
 	@Expose
 	private String path;
 	
-	public static String getConvertedFilePath(String filePath) {
+	public static String getConvertedFilePath(String filePath, String instanceKey) {
 		String path = filePath.replaceAll("\\\\", "/");
 		
-		String project = MeasuredResult.getInstance().getProjectDirectory().replaceAll("\\\\", "/");
+		String project = MeasuredResult.getInstance(instanceKey).getProjectDirectory().replaceAll("\\\\", "/");
 		
 		if (!project.endsWith("/")) {
 			project += "/";
@@ -49,7 +49,7 @@ public class PmdResult {
 		return fileName;
 	}
 	
-	public PmdResult(String problem, String packageName, String file, String priority, String line, String description, String ruleSet, String rule) {
+	public PmdResult(String problem, String packageName, String file, String priority, String line, String description, String ruleSet, String rule, String instanceKey) {
 		this.problem = Integer.parseInt(problem);
 		this.packageName = packageName;
 		this.file = getConvertedFileName(file);
@@ -59,7 +59,7 @@ public class PmdResult {
 		this.ruleSet = ruleSet;
 		this.rule = rule;
 		
-		this.path = getConvertedFilePath(file);
+		this.path = getConvertedFilePath(file, instanceKey);
 	}
 	
 

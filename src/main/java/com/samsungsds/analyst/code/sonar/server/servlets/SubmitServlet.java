@@ -33,6 +33,12 @@ public class SubmitServlet extends HttpServlet {
 		if (isMultipart) {
 			LOGGER.info("Multipart...");
 		}
+		
+		String projectKey = request.getParameter("projectKey");
+		LOGGER.info("Project Key : {}", projectKey);
+		
+		String[] keys = projectKey.split(":");
+		String instanceKey = keys[1];		
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 
@@ -52,7 +58,7 @@ public class SubmitServlet extends HttpServlet {
 				// Write the file
 				fi.write(file);
 				
-				try (ReportFileReader reader = new ReportFileReader(file)) {
+				try (ReportFileReader reader = new ReportFileReader(file, instanceKey)) {
 					reader.read();	
 				} 
 				

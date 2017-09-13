@@ -28,7 +28,7 @@ public class PmdAnalysisLauncher extends AbstractPmdAnalysis implements PmdAnaly
 	}
 	
 	@Override
-	public void run() {
+	public void run(String instanceKey) {
 		
 		if (!arg.contains("-rulesets")) {
 			addOption("-rulesets", saveRuleSetFile(CODE_QUALITY_RULESET_FILE).toString());
@@ -43,8 +43,8 @@ public class PmdAnalysisLauncher extends AbstractPmdAnalysis implements PmdAnaly
 		
 		PMD.run(arg.toArray(new String[0]));
 		
-		List<PmdResult> resultList = parseCSV(reportFile);
+		List<PmdResult> resultList = parseCSV(reportFile, instanceKey);
 		
-		MeasuredResult.getInstance().putPmdList(resultList);
+		MeasuredResult.getInstance(instanceKey).putPmdList(resultList);
 	}
 }
