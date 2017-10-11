@@ -345,6 +345,11 @@ public class App {
 		
 		LOGGER.info("Target Package List");
 		for (String packageName : packageList) {
+			if (packageName.equals("")) {
+				LOGGER.warn("The project has class(es) with no package... JDepend can't check with no package class(es)");
+				MeasuredResult.getInstance(cli.getInstanceKey()).setWithDefaultPackageClasses(true);
+				continue;
+			}
 			if (MeasuredResult.getInstance(cli.getInstanceKey()).getPackageList().contains(packageName)) {
 				LOGGER.info("- {}", packageName);
 				jdepend.addIncludePackage(packageName);

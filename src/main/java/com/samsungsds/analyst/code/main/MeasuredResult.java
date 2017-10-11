@@ -139,6 +139,8 @@ public class MeasuredResult implements Serializable {
 
 	private File outputFile;
 	
+	private boolean withDefaultPackageClasses = false;
+	
 	public static MeasuredResult getInstance(String instanceKey) {
 		if (!instances.containsKey(instanceKey)) {
 			synchronized (MeasuredResult.class) {
@@ -578,7 +580,15 @@ public class MeasuredResult implements Serializable {
 	public String getExcludes() {
 		return excludes;
 	}
-	
+
+	public boolean isWithDefaultPackageClasses() {
+		return withDefaultPackageClasses;
+	}
+
+	public void setWithDefaultPackageClasses(boolean withDefaultPackageClasses) {
+		this.withDefaultPackageClasses = withDefaultPackageClasses;
+	}
+
 	public void clear() {
 		directories = 0;
 		files = 0;
@@ -623,5 +633,7 @@ public class MeasuredResult implements Serializable {
 		acyclicDependencyList.clear();
 		
 		filePathFilterList.clear();
+		
+		withDefaultPackageClasses = false;
 	}
 }

@@ -106,10 +106,18 @@ public class ResultProcessor {
 		}
 	}
 	
-	protected static void pirntAcyclicDependSummary(MeasuredResult result) {
+	protected static void printAcyclicDependSummary(MeasuredResult result) {
 		if (result.getIndividualMode().isDependency()) {
 			System.out.println("Acyclic Dependencies : " + getFormattedNumber(result.getAcyclicDependencyCount()));
 			System.out.println();
+		}
+	}
+	
+	protected static void printWarning(MeasuredResult result) {
+		if (result.isWithDefaultPackageClasses()) {
+			System.out.print("* This project has classes with no package.");
+			System.out.println(" In this case, some analysis of these classes is not possible.");
+			System.out.println(" - FindBugs, FindSecBugs, and Acyclic Dependencies");
 		}
 	}
 	
@@ -126,14 +134,16 @@ public class ResultProcessor {
 			printPmdSummary(result);
 			printFindBugsSummary(result);
 			printFindSecBugsSummary(result);
-			pirntAcyclicDependSummary(result);
+			printAcyclicDependSummary(result);
 		} else if (result.getMode() == MeasurementMode.ComplexityMode) {
 			printComplexity(result.getComplexityAllList());	
 		}
 		
+		
+		printWarning(result);
 		printBottom();
 	}
-	
+
 	protected static void printComplexity(List<ComplexityResult> list) {
 		StringBuffer buffer = new StringBuffer();
 		

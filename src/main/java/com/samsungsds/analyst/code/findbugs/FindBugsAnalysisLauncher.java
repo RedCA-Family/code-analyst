@@ -104,6 +104,12 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 		StringBuilder builder = new StringBuilder();
 		
 		for (String packageName : MeasuredResult.getInstance(instanceKey).getPackageList()) {
+			if (packageName.equals("")) {
+				LOGGER.warn("The project has class(es) with no package... FindBugs/FindSecBugs can't check with no package class(es)");
+				MeasuredResult.getInstance(instanceKey).setWithDefaultPackageClasses(true);
+				continue;
+			}
+			
 			if (builder.length() != 0) {
 				builder.append(",");
 			}
