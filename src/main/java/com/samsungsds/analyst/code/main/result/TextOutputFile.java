@@ -118,7 +118,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			for (DuplicationResult result : list) {
 				writer.print(++count + " = ");
 				writer.print(getStringsWithComma(result.getPath(), getString(result.getStartLine()), getString(result.getEndLine())));
-				writer.print(", ");
+				writer.print(",");
 				writer.print(getStringsWithComma(result.getDuplicatedPath(), getString(result.getDuplicatedStartLine()), getString(result.getDuplicatedEndLine())));
 				writer.println();
 			}

@@ -67,7 +67,7 @@ public class MeasuredResult implements Serializable {
 	private IndividualMode individualMode;
 	
 	@Expose
-	private String version = Version.CODE_ANALYST.substring(0, Version.CODE_ANALYST.lastIndexOf("."));
+	private String version = Version.DOCUMENT_VERSION;
 	
 	@Expose
 	private int directories = 0;

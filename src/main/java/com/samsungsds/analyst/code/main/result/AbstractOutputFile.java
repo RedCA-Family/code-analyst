@@ -30,7 +30,7 @@ public abstract class AbstractOutputFile {
 		
 		for (int i = 0; i < strings.length; i++) {
 			if (i != 0) {
-				builder.append(", ");
+				builder.append(",");
 			}
 			builder.append(CSVUtil.getCSVStyleString(strings[i]));
 		}

@@ -15,6 +15,7 @@ import org.sonar.scanner.protocol.output.ScannerReport.Duplicate;
 import org.sonar.scanner.protocol.output.ScannerReport.Metadata;
 import org.sonar.scanner.protocol.output.ScannerReportReader;
 
+import com.google.common.io.Files;
 import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
@@ -29,7 +30,7 @@ public class ReportFileReader implements Closeable {
 	private static final String METRIC_STATEMENTS = "statements";
 	
 	private File zipFile = null;
-	private File toDir = new File(".tmp");
+	private File toDir = Files.createTempDir();
 	
 	private ScannerReportReader reader = null;
 
