@@ -1,13 +1,19 @@
 package com.samsungsds.analyst.code.findbugs;
 
+import java.io.Serializable;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.annotations.Expose;
+import com.samsungsds.analyst.code.util.CSVFileResult;
 
 import edu.umd.cs.findbugs.BugInstance;
 
-public class FindBugsResult {
+public class FindBugsResult implements Serializable, CSVFileResult {
+	
+	private static final long serialVersionUID = 4683955564828835719L;
+
 	private static final Logger LOGGER = LogManager.getLogger(FindBugsResult.class);
 	
 	@Expose
@@ -40,7 +46,51 @@ public class FindBugsResult {
 	private int endLine = 0;
 	
 	public FindBugsResult() {
-		// no-op
+		// default constructor (CSV)
+		// column : package, file, start line, end line, pattern key, pattern, priority, class, field, local var, method, message
+	}
+	
+	@Override
+	public int getColumnSize() {
+		return 12;
+	}
+
+	@Override
+	public String getDataIn(int columnIndex) {
+		switch (columnIndex) {
+		case 0 : return packageName;
+		case 1 : return file;
+		case 2 : return String.valueOf(startLine);
+		case 3 : return String.valueOf(endLine);
+		case 4 : return patternKey;
+		case 5 : return pattern;
+		case 6 : return String.valueOf(priority);
+		case 7 : return className;
+		case 8 : return field;
+		case 9 : return localVariable;
+		case 10 : return method;
+		case 11 : return message;
+		default : throw new IndexOutOfBoundsException("Index: " + columnIndex);
+		}
+	}
+
+	@Override
+	public void setDataIn(int columnIndex, String data) {
+		switch (columnIndex) {
+		case 0 : packageName = data; break;
+		case 1 : file = data; break;
+		case 2 : startLine = Integer.parseInt(data); break;
+		case 3 : endLine = Integer.parseInt(data); break;
+		case 4 : patternKey = data; break;
+		case 5 : pattern = data; break;
+		case 6 : priority = Integer.parseInt(data); break;
+		case 7 : className = data; break;
+		case 8 : field = data; break;
+		case 9 : localVariable = data; break;
+		case 10 : method = data; break;
+		case 11 : message = data; break;
+		default : throw new IndexOutOfBoundsException("Index: " + columnIndex);
+		}
 	}
 	
 	public FindBugsResult(BugInstance instance) {

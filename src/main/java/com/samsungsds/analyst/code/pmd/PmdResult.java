@@ -1,11 +1,16 @@
 package com.samsungsds.analyst.code.pmd;
 
 import java.io.File;
+import java.io.Serializable;
 
 import com.google.gson.annotations.Expose;
 import com.samsungsds.analyst.code.main.MeasuredResult;
+import com.samsungsds.analyst.code.util.CSVFileResult;
 
-public class PmdResult {
+public class PmdResult implements Serializable, CSVFileResult {
+	
+	private static final long serialVersionUID = -7225402070361848065L;
+	
 	private int problem;
 	private String packageName;
 	private String file;
@@ -21,6 +26,44 @@ public class PmdResult {
 	
 	@Expose
 	private String path;
+	
+	public PmdResult() {
+		// default constructor (CSV)
+		// column : path, line, rule, priority, description
+		problem = 0;
+		packageName = "";
+		file = "";
+		ruleSet = "";
+	}
+	
+	@Override
+	public int getColumnSize() {
+		return 5;
+	}
+
+	@Override
+	public String getDataIn(int columnIndex) {
+		switch (columnIndex) {
+		case 0 : return path;
+		case 1 : return String.valueOf(line);
+		case 2 : return rule;
+		case 3 : return String.valueOf(priority);
+		case 4 : return description;
+		default : throw new IndexOutOfBoundsException("Index: " + columnIndex);
+		}
+	}
+
+	@Override
+	public void setDataIn(int columnIndex, String data) {
+		switch (columnIndex) {
+		case 0 : path = data; break;
+		case 1 : line = Integer.parseInt(data); break;
+		case 2 : rule = data; break;
+		case 3 : priority = Integer.parseInt(data); break;
+		case 4 : description = data; break;
+		default : throw new IndexOutOfBoundsException("Index: " + columnIndex);
+		}
+	}
 	
 	public static String getConvertedFilePath(String filePath, String instanceKey) {
 		String path = filePath.replaceAll("\\\\", "/");

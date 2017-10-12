@@ -58,6 +58,18 @@ public class App {
 		if (cli.parse()) {
 			
 			SystemInfo.print();
+			
+			MeasuredResult.getInstance(cli.getInstanceKey()).initialize(cli.isDetailAnalysis());
+			
+			if (!cli.getAnalysisMode().equals(Constants.DEFAULT_ANALYSIS_MODE)) {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setIndividualModeString(cli.getAnalysisMode());
+			}
+			
+			MeasuredResult.getInstance(cli.getInstanceKey()).setIndividualMode(cli.getIndividualMode());
+			
+			if (cli.isDetailAnalysis()) {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setDetailAnalysis(true);
+			}
     		
     		File project = new File(cli.getProjectBaseDir());
     		
@@ -392,6 +404,8 @@ public class App {
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.FINAL_COMPLETE));
 		}
+		
+		MeasuredResult.removeInstance(instanceKey);
 	}
 	
 	public void addProgressObserver(ProgressObserver observer) {

@@ -10,10 +10,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.annotations.Expose;
+import com.samsungsds.analyst.code.util.CSVFileResult;
 
-public class ComplexityResult extends TargetPackageResult implements Serializable {
-	
-	private static final long serialVersionUID = -7950142386018690241L;
+public class ComplexityResult extends TargetPackageResult implements Serializable, CSVFileResult {
+
+	private static final long serialVersionUID = -8409553726959660496L;
 
 	private static final Logger LOGGER = LogManager.getLogger(ComplexityResult.class);
 	
@@ -25,6 +26,33 @@ public class ComplexityResult extends TargetPackageResult implements Serializabl
 	private String methodName;
 	@Expose
 	private int complexity;
+	
+	@Override
+	public int getColumnSize() {
+		return 4;
+	}
+
+	@Override
+	public String getDataIn(int columnIndex) {
+		switch (columnIndex) {
+		case 0 : return path;
+		case 1 : return String.valueOf(line);
+		case 2 : return methodName;
+		case 3 : return String.valueOf(complexity);
+		default : throw new IndexOutOfBoundsException("Index: " + columnIndex);
+		}
+	}
+
+	@Override
+	public void setDataIn(int columnIndex, String data) {
+		switch (columnIndex) {
+		case 0 : path = data; break;
+		case 1 : line = Integer.parseInt(data); break;
+		case 2 : methodName = data; break;
+		case 3 : complexity = Integer.parseInt(data); break;
+		default : throw new IndexOutOfBoundsException("Index: " + columnIndex);
+		}
+	}
 	
 	public String getPath() {
 		return path;

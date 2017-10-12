@@ -94,7 +94,10 @@ public class ResultProcessor {
 			System.out.println("FindBugs bugs : " + getFormattedNumber(result.getFindBugsCountAll()));
 			System.out.println("FindBugs 1 priority : " + getFormattedNumber(result.getFindBugsCount(1)));
 			System.out.println("FindBugs 2 priority : " + getFormattedNumber(result.getFindBugsCount(2)));
-			System.out.println("FindBugs < 3 priority : " + getFormattedNumber(result.getFindBugsCount(3) + result.getFindBugsCount(4) + result.getFindBugsCount(5)));
+			System.out.println("FindBugs 3 priority : " + getFormattedNumber(result.getFindBugsCount(3)));
+			if (result.getFindBugsCount(4) + result.getFindBugsCount(5) > 0) {
+				System.out.println("FindBugs < 4 priority : " + getFormattedNumber(result.getFindBugsCount(4) + result.getFindBugsCount(5)));
+			}
 			System.out.println();
 		}
 	}

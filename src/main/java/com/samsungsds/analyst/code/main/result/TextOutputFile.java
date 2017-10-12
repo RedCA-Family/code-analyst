@@ -133,14 +133,14 @@ public class TextOutputFile extends AbstractOutputFile {
 	protected void writeComplexity(List<ComplexityResult> list) {
 		writer.println("[Complexity]");
 		writer.println("; path, line, method, complexity");
-		writer.println("; only 10 over methods"); 
+		writer.println("; only 20 over methods"); 
 
 		int count = 0;
 		synchronized (list) {
 			Collections.sort(list, (r1, r2) -> (r2.getComplexity() - r1.getComplexity()));
 
 			for (ComplexityResult result : list) {
-				if (result.getComplexity() <= 10) {
+				if (result.getComplexity() <= 20) {
 					break;
 				}
 				writer.print(++count + " = ");

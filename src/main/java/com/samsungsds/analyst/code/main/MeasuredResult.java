@@ -1,6 +1,7 @@
 package com.samsungsds.analyst.code.main;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,16 +15,20 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.sonar.core.util.stream.Collectors;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
+import com.samsungsds.analyst.code.jdepend.JDependResult;
 import com.samsungsds.analyst.code.main.filter.FilePathExcludeFilter;
 import com.samsungsds.analyst.code.main.filter.FilePathFilter;
 import com.samsungsds.analyst.code.main.filter.FilePathIncludeFilter;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.util.CSVFileCollectionList;
+import com.samsungsds.analyst.code.util.CSVFileResult;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import com.samsungsds.analyst.code.util.PackageUtils;
 
@@ -62,7 +67,7 @@ public class MeasuredResult implements Serializable {
 	
 	@Expose
 	@SerializedName("mode")
-	private String individualModeString ="all";
+	private String individualModeString = Constants.DEFAULT_ANALYSIS_MODE;
 	
 	private IndividualMode individualMode;
 	
@@ -87,7 +92,8 @@ public class MeasuredResult implements Serializable {
 	private int statements = 0;
 	
 	@Expose
-	private List<DuplicationResult> duplicationList = Collections.synchronizedList(new ArrayList<>());
+	private List<DuplicationResult> duplicationList = null;
+	
 	@Expose
 	private int duplicatedLines = 0;
 	
@@ -101,7 +107,7 @@ public class MeasuredResult implements Serializable {
 	
 	@Expose
 	@SerializedName("complexityList")
-	private List<ComplexityResult> complexityListOver10 = Collections.synchronizedList(new ArrayList<>());
+	private List<ComplexityResult> complexityListOver20 = null;
 	
 	@Expose
 	private int complexityFunctions = 0;
@@ -118,28 +124,32 @@ public class MeasuredResult implements Serializable {
 	private int complexityEqualOrOver50 = 0;
 	
 	@Expose
-	private List<PmdResult> pmdList = Collections.synchronizedList(new ArrayList<>());
+	private List<PmdResult> pmdList = null;
 	@Expose
 	private int[] pmdCount = new int[6];	// 0 : 전체, 1 ~ 5 (Priority)
 	
 	@Expose
-	private List<FindBugsResult> findBugsList = Collections.synchronizedList(new ArrayList<>());
+	private List<FindBugsResult> findBugsList = null;
 	@Expose
 	private int[] findBugsCount = new int[6];	// 0 : 전체, 1 ~ 5 (High, Normal, Low, Experimental, Ignore)
 	
 	@Expose
-	private List<FindBugsResult> findSecBugsList = Collections.synchronizedList(new ArrayList<>());
+	private List<FindBugsResult> findSecBugsList = null;
 	@Expose
 	private int[] findSecBugsCount = new int[6];	// 0 : 전체, 1 ~ 5 (High, Normal, Low, Experimental, Ignore)
 	
 	@Expose
-	private List<String> acyclicDependencyList = Collections.synchronizedList(new ArrayList<>());
+	private List<JDependResult> acyclicDependencyList = null;
 	
 	private List<FilePathFilter> filePathFilterList = new ArrayList<>();
 
 	private File outputFile;
 	
 	private boolean withDefaultPackageClasses = false;
+	
+	private boolean detailAnalysis = false;
+	
+	private List<CSVFileCollectionList<?>> closeTargetList = new ArrayList<>();
 	
 	public static MeasuredResult getInstance(String instanceKey) {
 		if (!instances.containsKey(instanceKey)) {
@@ -151,6 +161,42 @@ public class MeasuredResult implements Serializable {
 		}
 		
 		return instances.get(instanceKey);
+	}
+	
+	public static void removeInstance(String instanceKey) {
+		if (instances.containsKey(instanceKey)) {
+			synchronized (MeasuredResult.class) {
+				if (instances.containsKey(instanceKey)) {
+					instances.remove(instanceKey);
+				}
+			}
+		}
+	}
+	
+	public void initialize(boolean detailAnalysis) {
+		if (detailAnalysis) {
+			duplicationList = Collections.synchronizedList(new ArrayList<>());
+			complexityListOver20 = Collections.synchronizedList(new ArrayList<>());
+			pmdList = Collections.synchronizedList(new ArrayList<>());
+			findBugsList = Collections.synchronizedList(new ArrayList<>());
+			findSecBugsList = Collections.synchronizedList(new ArrayList<>());
+			acyclicDependencyList = Collections.synchronizedList(new ArrayList<>());
+		} else {
+			duplicationList = makeCSVFileCollectionList(DuplicationResult.class, this);
+			complexityListOver20 = makeCSVFileCollectionList(ComplexityResult.class, this);
+			pmdList = makeCSVFileCollectionList(PmdResult.class, this);
+			findBugsList = makeCSVFileCollectionList(FindBugsResult.class, this);
+			findSecBugsList = makeCSVFileCollectionList(FindBugsResult.class, this);
+			acyclicDependencyList = makeCSVFileCollectionList(JDependResult.class, this);
+		}
+	}
+	
+	public static <T extends CSVFileResult> List<T> makeCSVFileCollectionList(Class<T> clazz, MeasuredResult target) {
+		
+		CSVFileCollectionList<T> list = new CSVFileCollectionList<T>(clazz);
+		target.closeTargetList.add(list);
+		
+		return Collections.synchronizedList(list);
 	}
 	
 	public void setProjectInfo(CliParser cli) {
@@ -339,14 +385,14 @@ public class MeasuredResult implements Serializable {
 				}
 				if (result.getComplexity() > 20) {
 					complexityOver20++;
+					
+					complexityListOver20.add(result);
 				} 
 				if (result.getComplexity() > 15) {
 					complexityOver15++;
 				} 
 				if (result.getComplexity() > 10) {
 					complexityOver10++;
-					
-					complexityListOver10.add(result);
 				}
 			}
 			
@@ -494,7 +540,7 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	public List<ComplexityResult> getComplexityList() {
-		return complexityListOver10;
+		return complexityListOver20;
 	}
 	
 	public List<PmdResult> getPmdList() {
@@ -510,7 +556,7 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	public void addAcyclicDependency(String acyclicDependency) {
-		acyclicDependencyList.add(acyclicDependency);
+		acyclicDependencyList.add(new JDependResult(acyclicDependency));
 	}
 	
 	public int getAcyclicDependencyCount() {
@@ -518,7 +564,7 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	public List<String> getAcyclicDependencyList() {
-		return acyclicDependencyList;
+		return acyclicDependencyList.stream().map(s -> s.getAcyclicDependecies()).collect(Collectors.toList());
 	}
 
 	public void setMode(MeasurementMode mode) {
@@ -589,6 +635,14 @@ public class MeasuredResult implements Serializable {
 		this.withDefaultPackageClasses = withDefaultPackageClasses;
 	}
 
+	public boolean isDetailAnalysis() {
+		return detailAnalysis;
+	}
+
+	public void setDetailAnalysis(boolean detailAnalysis) {
+		this.detailAnalysis = detailAnalysis;
+	}
+
 	public void clear() {
 		directories = 0;
 		files = 0;
@@ -599,14 +653,11 @@ public class MeasuredResult implements Serializable {
 		ncloc = 0;
 		statements = 0;
 		
-		duplicationList.clear();
 		duplicatedLines = 0;
 		duplicatedBlockData.clear();
 		
 		allMethodList.clear();
 		packageList.clear();
-		
-		complexityListOver10.clear();
 		
 		complexityFunctions = 0;
 		complexitySum = 0;
@@ -615,25 +666,39 @@ public class MeasuredResult implements Serializable {
 		complexityOver20 = 0;
 		complexityEqualOrOver50 = 0;
 		
-		pmdList.clear();
 		for (int i = 0; i < pmdCount.length; i++) {
 			pmdCount[i] = 0;
 		}
 		
-		findBugsList.clear();
 		for (int i = 0; i < findBugsCount.length; i++) {
 			findBugsCount[i] = 0;
 		}
 		
-		findSecBugsList.clear();
 		for (int i = 0; i < findSecBugsCount.length; i++) {
 			findSecBugsCount[i] = 0;
 		}
 		
-		acyclicDependencyList.clear();
-		
 		filePathFilterList.clear();
 		
 		withDefaultPackageClasses = false;
+		
+		detailAnalysis = false;
+		
+		if (detailAnalysis) {
+			duplicationList.clear();
+			complexityListOver20.clear();
+			pmdList.clear();
+			findBugsList.clear();
+			findSecBugsList.clear();
+			acyclicDependencyList.clear();
+		} else {
+			for (CSVFileCollectionList<?> list : closeTargetList) {
+				try {
+					list.close();
+				} catch (IOException ex) {
+					LOGGER.warn("CSVFileCollectionList close IOException : " + ex.getMessage());
+				}
+			}
+		}
 	}
 }

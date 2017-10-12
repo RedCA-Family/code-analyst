@@ -13,9 +13,12 @@ public class Version {
 	// 1.4.1 : 다중 호출 시 문제 보완
 	// 1.4.2 : API CodeAnalyst Factory 추가
 	// 1.4.3 : CSV 형식 문자 처리 (목록 부분), 여러 instance 호출 가능
-	// 1.4.4 : CSV Excel 형식 지원 ("," 뒤 공백 제거), Mac 임시 디렉토리 생성 권한 오류 조치, default package class를 갖는 경우 Warning 표시
+	// 1.4.4 : CSV Excel 형식 지원 ("," 뒤 공백 제거), Mac 임시 디렉토리 생성 권한 오류 조치, 
+	//         default package class를 갖는 경우 Warning 표시
+	// 1.5.0 : 세부 분석 옵션 추가, MeasuredResult instance remove 호출 (GC), 복잡도 목록 대상 변경 (10 -> 20), 
+	//         기존 out 파일 재실행 기능 추가
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "1.4.4";
+	public static final String CODE_ANALYST = "1.5.0";
 	public static final String DOCUMENT_VERSION = "1.4";
 	public static final String SONAR_SCANNER = "2.8";
 	public static final String SONAR_SERVER = "6.2.1";
