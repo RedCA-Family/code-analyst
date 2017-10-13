@@ -163,9 +163,17 @@ public class CSVFileCollectionList<E extends CSVFileResult> implements List<E>, 
                 throw new NoSuchElementException();
             }
             
-            cursor = i + 1;       
+            E e = getElementInstance();
             
-            E e;
+            cursor = i + 1;       
+			
+			lastRet = i;
+            
+            return e;
+        }
+
+		private E getElementInstance() {
+			E e;
 			try {
 				e = clazz.newInstance();
 			} catch (InstantiationException | IllegalAccessException ex) {
@@ -182,11 +190,8 @@ public class CSVFileCollectionList<E extends CSVFileResult> implements List<E>, 
 			} catch (IOException ex) {
 				throw new RuntimeException(ex);
 			}
-			
-			lastRet = i;
-            
-            return e;
-        }
+			return e;
+		}
     }
 	
 	private class ListItr extends Itr implements ListIterator<E> {
@@ -223,6 +228,7 @@ public class CSVFileCollectionList<E extends CSVFileResult> implements List<E>, 
         	if (lastRet < 0) {
                 throw new IllegalStateException();
         	}
+        	
         	elementData[lastRet] = e;
         }
 
