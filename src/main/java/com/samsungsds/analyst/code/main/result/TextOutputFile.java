@@ -9,15 +9,17 @@ import java.util.List;
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
 import com.samsungsds.analyst.code.main.CliParser;
 import com.samsungsds.analyst.code.main.MeasuredResult;
+import com.samsungsds.analyst.code.main.detailed.Duplication;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
 
 public class TextOutputFile extends AbstractOutputFile {
+	private MeasuredResult result;
 
 	@Override
 	protected void open(MeasuredResult result) {
-		// no-op
+		this.result = result;
 	}
 	
 	@Override
@@ -47,7 +49,11 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("excludes = " + cli.getExcludes());
 		}
 		writer.println("mode = " + result.getIndividualModeString());
+		if (result.isDetailAnalysis()) {
+			writer.println("detailAnalysis = true");
+		}
 		writer.println("version = " + result.getVersion());
+		writer.println("engineVersion = " + result.getEngineVersion());
 		writer.println();
 		writer.println();
 	}
@@ -120,6 +126,32 @@ public class TextOutputFile extends AbstractOutputFile {
 				writer.print(getStringsWithComma(result.getPath(), getString(result.getStartLine()), getString(result.getEndLine())));
 				writer.print(",");
 				writer.print(getStringsWithComma(result.getDuplicatedPath(), getString(result.getDuplicatedStartLine()), getString(result.getDuplicatedEndLine())));
+				writer.println();
+			}
+		}
+		writer.println();
+		writer.println("total = " + count);
+		writer.println();
+		writer.println();
+		
+		if (result.isDetailAnalysis()) {
+			writeTopDuplication(result.getTopDuplicationList());
+		}
+	}
+
+	private void writeTopDuplication(List<Duplication> topDuplicationList) {
+		writer.println("[TopDuplication]");
+		writer.println("; path, start line, end line, count, total duplicated lines");
+		
+		int count = 0;
+		synchronized (topDuplicationList) {
+			for (Duplication result : topDuplicationList) {
+				writer.print(++count + " = ");
+				writer.print(getStringsWithComma(result.getPath(), getString(result.getStartLine()), getString(result.getEndLine())));
+				writer.print(",");
+				writer.print(result.getCount());
+				writer.print(",");
+				writer.print(result.getTotalDuplicatedLines());
 				writer.println();
 			}
 		}

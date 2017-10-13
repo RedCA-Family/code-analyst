@@ -85,7 +85,7 @@ public class CliParser {
 		options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occured, use JVM '-Xmx' option like '-Xmx1024m')");
 		
 		options.addOption("r", "rerun", true, "specify previous output file to rerun with same options. "
-				+ "('project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', and 'mode')");
+				+ "('project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', and 'analysis')");
 	}
 
 	public boolean parse() {
@@ -245,10 +245,16 @@ public class CliParser {
 		excludes = getCheckedString(ini, "Project", "excludes", true);
 		
 		String mode = getCheckedString(ini, "Project", "mode");
-		
 		if (!mode.equals(Constants.DEFAULT_ANALYSIS_MODE)) {
 			settingAnalysisMode(mode);
 		}
+		
+		String analysis = getCheckedString(ini, "Project", "detailAnalysis", true);
+		
+		if (analysis.equals("true")) {
+			detailAnalysis = true;
+		}
+
 		
 		LOGGER.info("Rerun with following options");
 		LOGGER.info(" - project : {}", projectBaseDir);
@@ -270,6 +276,9 @@ public class CliParser {
 		}
 		if (!mode.equals(Constants.DEFAULT_ANALYSIS_MODE)) {
 			LOGGER.info(" - mode : {}", mode);
+		}
+		if (analysis.equals("true")) {
+			LOGGER.info(" - detailAnalysis = true");
 		}
 	}
 	

@@ -21,6 +21,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
 import com.samsungsds.analyst.code.jdepend.JDependResult;
+import com.samsungsds.analyst.code.main.detailed.Duplication;
+import com.samsungsds.analyst.code.main.detailed.DuplicationDetailAnalyst;
 import com.samsungsds.analyst.code.main.filter.FilePathExcludeFilter;
 import com.samsungsds.analyst.code.main.filter.FilePathFilter;
 import com.samsungsds.analyst.code.main.filter.FilePathIncludeFilter;
@@ -69,10 +71,15 @@ public class MeasuredResult implements Serializable {
 	@SerializedName("mode")
 	private String individualModeString = Constants.DEFAULT_ANALYSIS_MODE;
 	
+	@Expose
+	private boolean detailAnalysis = false;
+	
 	private IndividualMode individualMode;
 	
 	@Expose
 	private String version = Version.DOCUMENT_VERSION;
+	@Expose
+	private String engineVersion = Version.CODE_ANALYST;
 	
 	@Expose
 	private int directories = 0;
@@ -98,6 +105,11 @@ public class MeasuredResult implements Serializable {
 	private int duplicatedLines = 0;
 	
 	private Map<String, Set<Integer>> duplicatedBlockData = new HashMap<>();
+	
+	private DuplicationDetailAnalyst duplicationDetailAnalyst = new DuplicationDetailAnalyst();
+	
+	@Expose
+	private List<Duplication> topDuplicationList = null;
 	
 	// contains all method for complexity mode
 	private List<ComplexityResult> allMethodList = Collections.synchronizedList(new ArrayList<>());
@@ -147,8 +159,6 @@ public class MeasuredResult implements Serializable {
 	
 	private boolean withDefaultPackageClasses = false;
 	
-	private boolean detailAnalysis = false;
-	
 	private List<CSVFileCollectionList<?>> closeTargetList = new ArrayList<>();
 	
 	public static MeasuredResult getInstance(String instanceKey) {
@@ -174,6 +184,8 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	public void initialize(boolean detailAnalysis) {
+		this.detailAnalysis = detailAnalysis;
+		
 		if (detailAnalysis) {
 			duplicationList = Collections.synchronizedList(new ArrayList<>());
 			complexityListOver20 = Collections.synchronizedList(new ArrayList<>());
@@ -331,6 +343,10 @@ public class MeasuredResult implements Serializable {
 			this.duplicatedLines += getAddedDuplicatedLines(result.getDuplicatedStartLine(), result.getDuplicatedEndLine(), duplicatedLineNumbers);
 			
 			duplicatedBlockData.put(duplcatedPath, duplicatedLineNumbers);
+		}
+		
+		if (detailAnalysis) {
+			duplicationDetailAnalyst.add(result);
 		}
 	}
 
@@ -532,7 +548,19 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	public List<DuplicationResult> getDulicationList() {
+		if (topDuplicationList == null) {
+			topDuplicationList = duplicationDetailAnalyst.getTopList();
+		}
+		
 		return duplicationList;
+	}
+	
+	public List<Duplication> getTopDuplicationList() {
+		if (detailAnalysis) {
+			return topDuplicationList;
+		} else {
+			throw new IllegalStateException("getTopDUplicationList() can be called only detailed analysis mode.");
+		}
 	}
 	
 	public List<ComplexityResult> getComplexityAllList() {
@@ -619,6 +647,10 @@ public class MeasuredResult implements Serializable {
 		return version;
 	}
 	
+	public String getEngineVersion() {
+		return engineVersion;
+	}
+	
 	public String getIncludes() {
 		return includes;
 	}
@@ -637,10 +669,6 @@ public class MeasuredResult implements Serializable {
 
 	public boolean isDetailAnalysis() {
 		return detailAnalysis;
-	}
-
-	public void setDetailAnalysis(boolean detailAnalysis) {
-		this.detailAnalysis = detailAnalysis;
 	}
 
 	public void clear() {

@@ -19,7 +19,7 @@ public class Version {
 	//         기존 out 파일 재실행 기능 추가
 	//--------------------------------------------------
 	public static final String CODE_ANALYST = "1.5.0";
-	public static final String DOCUMENT_VERSION = "1.4";
+	public static final String DOCUMENT_VERSION = "1.5";
 	public static final String SONAR_SCANNER = "2.8";
 	public static final String SONAR_SERVER = "6.2.1";
 	public static final String PMD = "5.4.6";

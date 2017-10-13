@@ -1,11 +1,19 @@
 package com.samsungsds.analyst.code.main.result;
 
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.reflect.TypeToken;
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
+import com.samsungsds.analyst.code.jdepend.JDependResult;
 import com.samsungsds.analyst.code.main.CliParser;
 import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
@@ -68,11 +76,29 @@ public class JsonOutputFile extends AbstractOutputFile {
 	@Override
 	protected void close(PrintWriter writer) {
 		final GsonBuilder builder = new GsonBuilder();
-	    builder.excludeFieldsWithoutExposeAnnotation();
-	    final Gson gson = builder.create();
-	    
-	    String json = gson.toJson(result);
-	    
-	    writer.print(json);
+		
+		Type jdependListType = new TypeToken<List<JDependResult>>() {}.getType(); 
+		JsonSerializer<List<JDependResult>> serializer = new JsonSerializer<List<JDependResult>>() {
+	        @Override
+			public JsonElement serialize(List<JDependResult> src, Type typeOfSrc, JsonSerializationContext context) {
+				JsonArray json = new JsonArray();
+
+				for (JDependResult jdepend : src) {
+					JsonElement element = new JsonPrimitive(jdepend.getAcyclicDependecies());
+					json.add(element);
+				}
+
+				return json;
+			}
+		};
+
+		builder.registerTypeAdapter(jdependListType, serializer);
+
+		builder.excludeFieldsWithoutExposeAnnotation();
+		final Gson gson = builder.create();
+
+		String json = gson.toJson(result);
+
+		writer.print(json);
 	}
 }

@@ -5,7 +5,6 @@ import java.io.Serializable;
 import com.samsungsds.analyst.code.util.CSVFileResult;
 
 public class JDependResult implements Serializable, CSVFileResult {
-	
 	private static final long serialVersionUID = -6859698000616986124L;
 	
 	private String acyclicDependecies;
@@ -46,5 +45,10 @@ public class JDependResult implements Serializable, CSVFileResult {
 
 	public void setAcyclicDependecies(String acyclicDependecies) {
 		this.acyclicDependecies = acyclicDependecies;
+	}
+
+	@Override
+	public String toString() {
+		return acyclicDependecies;
 	}
 }
