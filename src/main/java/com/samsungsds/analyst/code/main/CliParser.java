@@ -54,6 +54,8 @@ public class CliParser {
 	private String instanceKey = "";
 
 	private boolean detailAnalysis = false;
+	
+	private boolean seperatedOutput = false;
 
 	public CliParser(String[] args) {
 		this.args = args;
@@ -85,7 +87,10 @@ public class CliParser {
 		options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occured, use JVM '-Xmx' option like '-Xmx1024m')");
 		
 		options.addOption("r", "rerun", true, "specify previous output file to rerun with same options. "
-				+ "('project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', and 'analysis')");
+				+ "('project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', 'analysis', and 'seperated')");
+		
+		options.addOption("seperated", false, "specify seperated output mode.");
+		
 	}
 
 	public boolean parse() {
@@ -196,6 +201,10 @@ public class CliParser {
 				setDetailAnalysis(true);
 			}
 			
+			if (cmd.hasOption("seperated")) {
+				setSeperatedOutput(true);
+			}
+			
 			if (cmd.hasOption("r")) {
 				getOptionsFromOutFile(cmd.getOptionValue("r"));
 			}
@@ -254,7 +263,12 @@ public class CliParser {
 		if (analysis.equals("true")) {
 			detailAnalysis = true;
 		}
-
+		
+		String seperated = getCheckedString(ini, "Project", "seperatedOutput", true);
+		
+		if (seperated.equals("true")) {
+			seperatedOutput = true;
+		}
 		
 		LOGGER.info("Rerun with following options");
 		LOGGER.info(" - project : {}", projectBaseDir);
@@ -279,6 +293,9 @@ public class CliParser {
 		}
 		if (analysis.equals("true")) {
 			LOGGER.info(" - detailAnalysis = true");
+		}
+		if (seperated.equals("true")) {
+			LOGGER.info(" - seperatedOutput = true");
 		}
 	}
 	
@@ -468,5 +485,13 @@ public class CliParser {
 
 	public void setDetailAnalysis(boolean detailAnalysis) {
 		this.detailAnalysis = detailAnalysis;
+	}
+
+	public boolean isSeperatedOutput() {
+		return seperatedOutput;
+	}
+
+	public void setSeperatedOutput(boolean seperatedOutput) {
+		this.seperatedOutput = seperatedOutput;
 	}
 }

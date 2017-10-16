@@ -42,6 +42,14 @@ public class CSVFileCollectionList<E extends CSVFileResult> implements List<E>, 
 		createFile();
 		openWriter();
 	}
+	
+	public boolean isTypeOf(Class<?> typeClass) {
+		if (clazz.getName().equals(typeClass.getName())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	private void createFile() {
 		try {

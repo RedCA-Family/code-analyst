@@ -74,6 +74,9 @@ public class MeasuredResult implements Serializable {
 	@Expose
 	private boolean detailAnalysis = false;
 	
+	@Expose
+	private boolean seperatedOutput = false;
+	
 	private IndividualMode individualMode;
 	
 	@Expose
@@ -183,8 +186,9 @@ public class MeasuredResult implements Serializable {
 		}
 	}
 	
-	public void initialize(boolean detailAnalysis) {
+	public void initialize(boolean detailAnalysis, boolean seperatedOutput) {
 		this.detailAnalysis = detailAnalysis;
+		this.seperatedOutput = seperatedOutput;
 		
 		if (detailAnalysis) {
 			duplicationList = Collections.synchronizedList(new ArrayList<>());
@@ -671,6 +675,38 @@ public class MeasuredResult implements Serializable {
 		return detailAnalysis;
 	}
 
+	public boolean isSeperatedOutput() {
+		return seperatedOutput;
+	}
+	
+	public void clearSeperatedList() {
+		if (detailAnalysis) {
+			duplicationList.clear();
+			complexityListOver20.clear();
+			pmdList.clear();
+			findBugsList.clear();
+			findSecBugsList.clear();
+		} else {
+			for (CSVFileCollectionList<?> list : closeTargetList) {
+				if (list.isTypeOf(JDependResult.class)) {
+					continue;
+				}
+				
+				try {
+					list.close();
+				} catch (IOException ex) {
+					LOGGER.warn("CSVFileCollectionList close IOException : " + ex.getMessage());
+				}
+			}
+			
+			duplicationList = null;
+			complexityListOver20 = null;
+			pmdList = null;
+			findBugsList = null;
+			findSecBugsList = null;
+		}
+	}
+
 	public void clear() {
 		directories = 0;
 		files = 0;
@@ -711,6 +747,7 @@ public class MeasuredResult implements Serializable {
 		withDefaultPackageClasses = false;
 		
 		detailAnalysis = false;
+		seperatedOutput = false;
 		
 		if (detailAnalysis) {
 			duplicationList.clear();
@@ -727,6 +764,9 @@ public class MeasuredResult implements Serializable {
 					LOGGER.warn("CSVFileCollectionList close IOException : " + ex.getMessage());
 				}
 			}
+			
+			duplicationList = null;
+			
 		}
 	}
 }

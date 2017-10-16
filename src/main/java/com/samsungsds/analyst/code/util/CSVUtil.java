@@ -53,4 +53,21 @@ public class CSVUtil {
 	private static boolean checkCharactersToEscape(char nextChar) {
 		return (nextChar == DEFAULT_QUOTE_CHARACTER || nextChar == DEFAULT_ESCAPE_CHARACTER);
 	}
+	
+	public static String getString(int number) {
+		return Integer.toString(number);
+	}
+	
+	public static String getStringsWithComma(String... strings) {
+		StringBuilder builder = new StringBuilder();
+		
+		for (int i = 0; i < strings.length; i++) {
+			if (i != 0) {
+				builder.append(",");
+			}
+			builder.append(CSVUtil.getCSVStyleString(strings[i]));
+		}
+		
+		return builder.toString();
+	}
 }

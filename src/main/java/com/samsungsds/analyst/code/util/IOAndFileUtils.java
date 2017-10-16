@@ -128,4 +128,16 @@ public class IOAndFileUtils {
 
 		return file;
 	}
+	
+	public static String getFilenameWithoutExt(File file) {
+		String outputFile;
+		try {
+			outputFile = file.getCanonicalPath();
+		} catch (IOException ioe) {
+			throw new RuntimeException(ioe);
+		}
+		
+		String csvFile = outputFile.substring(0, outputFile.lastIndexOf("."));
+		return csvFile;
+	}
 }

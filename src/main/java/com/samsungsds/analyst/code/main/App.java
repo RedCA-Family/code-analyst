@@ -59,7 +59,7 @@ public class App {
 			
 			SystemInfo.print();
 			
-			MeasuredResult.getInstance(cli.getInstanceKey()).initialize(cli.isDetailAnalysis());
+			MeasuredResult.getInstance(cli.getInstanceKey()).initialize(cli.isDetailAnalysis(), cli.isSeperatedOutput());
 			if (cli.isDetailAnalysis()) {
 				LOGGER.info("Detail Analysis mode...");
 			}
@@ -67,7 +67,7 @@ public class App {
 			if (!cli.getAnalysisMode().equals(Constants.DEFAULT_ANALYSIS_MODE)) {
 				MeasuredResult.getInstance(cli.getInstanceKey()).setIndividualModeString(cli.getAnalysisMode());
 			}
-			
+						
 			MeasuredResult.getInstance(cli.getInstanceKey()).setIndividualMode(cli.getIndividualMode());
     		
     		File project = new File(cli.getProjectBaseDir());

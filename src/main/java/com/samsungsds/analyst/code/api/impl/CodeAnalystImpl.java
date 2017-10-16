@@ -16,9 +16,11 @@ import com.samsungsds.analyst.code.api.AnalysisProgress;
 import com.samsungsds.analyst.code.api.ArgumentInfo;
 import com.samsungsds.analyst.code.api.CodeAnalyst;
 import com.samsungsds.analyst.code.api.ProgressObserver;
+import com.samsungsds.analyst.code.api.ResultInfo;
 import com.samsungsds.analyst.code.api.TargetFileInfo;
 import com.samsungsds.analyst.code.main.App;
 import com.samsungsds.analyst.code.main.CliParser;
+import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 public class CodeAnalystImpl implements CodeAnalyst {
 	private static final Logger LOGGER = LogManager.getLogger(CodeAnalystImpl.class);
@@ -39,12 +41,20 @@ public class CodeAnalystImpl implements CodeAnalyst {
 
 	@Override
 	public String analyze(String where, ArgumentInfo argument, TargetFileInfo targetFile) {
-		
+		return analyze(where, argument, targetFile, false);
+	}
+	
+	public String analyze(String where, ArgumentInfo argument, TargetFileInfo targetFile, boolean withSeperatedOutput) {
 		checkDirectoryAndArgument(where, argument);
 		
-		String[] arguments = getArguments(where, argument, targetFile);
+		String[] arguments = getArguments(where, argument, targetFile, withSeperatedOutput);
 
 		System.out.println("* Arguments : " + getArgumentsString(arguments));
+		
+		if (withSeperatedOutput) {
+			System.out.println(" - with seperated output option");
+			
+		}
 		
 		CliParser cli = new CliParser(arguments);
 		
@@ -100,7 +110,7 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		return string;
 	}
 
-	private String[] getArguments(String where, ArgumentInfo argument, TargetFileInfo targetFile) {
+	private String[] getArguments(String where, ArgumentInfo argument, TargetFileInfo targetFile, boolean withSeperatedOutput) {
 		List<String> argumentList = new ArrayList<>();
 		
 		argumentList.add("--project");
@@ -152,6 +162,10 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		
 		argumentList.add("--mode");
 		argumentList.add(getModeParameter(argument.getMode()));
+		
+		if (withSeperatedOutput) {
+			argumentList.add("-seperated");
+		}
 		
 		return argumentList.toArray(new String[0]);
 	}
@@ -271,5 +285,23 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		}
 		
 		return false;
+	}
+
+	@Override
+	public ResultInfo analyzeWithSeperatedResult(String where, ArgumentInfo argument, TargetFileInfo targetFile) {
+		String resultFile = analyze(where, argument, targetFile, true);
+		
+		ResultInfo info = new ResultInfo();
+		info.setOutputFile(resultFile);
+		
+		String fileWithoutExt = IOAndFileUtils.getFilenameWithoutExt(new File(resultFile));
+		
+		info.setDuplicationFile(fileWithoutExt + "-duplication.json");
+		info.setComplexityFile(fileWithoutExt + "-complexity.json");
+		info.setPmdFile(fileWithoutExt + "-pmd.json");
+		info.setFindBugsFile(fileWithoutExt + "-findbugs.json");
+		info.setFindSecBugsFile(fileWithoutExt + "-findsecbugs.json");
+		
+		return info;
 	}
 }

@@ -16,28 +16,10 @@ import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
-import com.samsungsds.analyst.code.util.CSVUtil;
 
 public abstract class AbstractOutputFile {
 	protected PrintWriter writer;
 	
-	public String getString(int number) {
-		return Integer.toString(number);
-	}
-	
-	public String getStringsWithComma(String... strings) {
-		StringBuilder builder = new StringBuilder();
-		
-		for (int i = 0; i < strings.length; i++) {
-			if (i != 0) {
-				builder.append(",");
-			}
-			builder.append(CSVUtil.getCSVStyleString(strings[i]));
-		}
-		
-		return builder.toString();
-	}
-
 	public void process(File file, CliParser cli, MeasuredResult result) {
 		try {
 			writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file))));

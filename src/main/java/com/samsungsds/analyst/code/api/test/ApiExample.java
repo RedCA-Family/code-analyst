@@ -8,6 +8,7 @@ import com.samsungsds.analyst.code.api.AnalysisMode;
 import com.samsungsds.analyst.code.api.ArgumentInfo;
 import com.samsungsds.analyst.code.api.CodeAnalyst;
 import com.samsungsds.analyst.code.api.CodeAnalystFactory;
+import com.samsungsds.analyst.code.api.ResultInfo;
 import com.samsungsds.analyst.code.api.TargetFileInfo;
 
 public class ApiExample {
@@ -67,8 +68,12 @@ public class ApiExample {
 			temp.mkdirs();
 		}
 		
-		String resultFile = analyst.analyze(TEMP_DIRECTORY, argument, targetFile);
+		//String resultFile = analyst.analyze(TEMP_DIRECTORY, argument, targetFile);
 		
-		System.out.println("Result File : " + resultFile);
+		//System.out.println("Result File : " + resultFile);
+		
+		ResultInfo result = analyst.analyzeWithSeperatedResult(TEMP_DIRECTORY, argument, targetFile);
+		
+		System.out.println("Result File : " + result.getOutputFile());
 	}
 }

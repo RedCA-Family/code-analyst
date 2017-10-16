@@ -1,5 +1,7 @@
 package com.samsungsds.analyst.code.main.result;
 
+import static com.samsungsds.analyst.code.util.CSVUtil.*;
+
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -15,11 +17,15 @@ import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
 
 public class TextOutputFile extends AbstractOutputFile {
-	private MeasuredResult result;
+	MeasuredResult result;
+	
+	CSVSeperatedOutput csvOutput;
 
 	@Override
 	protected void open(MeasuredResult result) {
 		this.result = result;
+		
+		csvOutput =  new CSVSeperatedOutput(result);
 	}
 	
 	@Override
@@ -51,6 +57,9 @@ public class TextOutputFile extends AbstractOutputFile {
 		writer.println("mode = " + result.getIndividualModeString());
 		if (result.isDetailAnalysis()) {
 			writer.println("detailAnalysis = true");
+		}
+		if (result.isSeperatedOutput()) {
+			writer.println("seperatedOutput = true");
 		}
 		writer.println("version = " + result.getVersion());
 		writer.println("engineVersion = " + result.getEngineVersion());
@@ -116,23 +125,27 @@ public class TextOutputFile extends AbstractOutputFile {
 
 	@Override
 	protected void writeDuplication(List<DuplicationResult> list) {
-		writer.println("[Duplication]");
-		writer.println("; path, start line, end line, duplicated path, duplicated start line, duplicated end line");
-		
-		int count = 0;
-		synchronized (list) {
-			for (DuplicationResult result : list) {
-				writer.print(++count + " = ");
-				writer.print(getStringsWithComma(result.getPath(), getString(result.getStartLine()), getString(result.getEndLine())));
-				writer.print(",");
-				writer.print(getStringsWithComma(result.getDuplicatedPath(), getString(result.getDuplicatedStartLine()), getString(result.getDuplicatedEndLine())));
-				writer.println();
+		if (result.isSeperatedOutput()) {
+			csvOutput.writeDuplication(list);
+		} else {
+			writer.println("[Duplication]");
+			writer.println("; path, start line, end line, duplicated path, duplicated start line, duplicated end line");
+			
+			int count = 0;
+			synchronized (list) {
+				for (DuplicationResult result : list) {
+					writer.print(++count + " = ");
+					writer.print(getStringsWithComma(result.getPath(), getString(result.getStartLine()), getString(result.getEndLine())));
+					writer.print(",");
+					writer.print(getStringsWithComma(result.getDuplicatedPath(), getString(result.getDuplicatedStartLine()), getString(result.getDuplicatedEndLine())));
+					writer.println();
+				}
 			}
+			writer.println();
+			writer.println("total = " + count);
+			writer.println();
+			writer.println();
 		}
-		writer.println();
-		writer.println("total = " + count);
-		writer.println();
-		writer.println();
 		
 		if (result.isDetailAnalysis()) {
 			writeTopDuplication(result.getTopDuplicationList());
@@ -163,6 +176,11 @@ public class TextOutputFile extends AbstractOutputFile {
 
 	@Override
 	protected void writeComplexity(List<ComplexityResult> list) {
+		if (result.isSeperatedOutput()) {
+			csvOutput.writeComplexity(list);
+			return;
+		}
+		
 		writer.println("[Complexity]");
 		writer.println("; path, line, method, complexity");
 		writer.println("; only 20 over methods"); 
@@ -188,6 +206,11 @@ public class TextOutputFile extends AbstractOutputFile {
 
 	@Override
 	protected void writePmd(List<PmdResult> list) {
+		if (result.isSeperatedOutput()) {
+			csvOutput.writePmd(list);
+			return;
+		}
+		
 		writer.println("[PMD]");
 		writer.println("; path, line, rule, priority, description");
 		
@@ -217,6 +240,10 @@ public class TextOutputFile extends AbstractOutputFile {
 	}
 	
 	private void writeFindBugsAndFindSecBugs(List<FindBugsResult> list, String title) {
+		if (result.isSeperatedOutput()) {
+			csvOutput.writeFindBugsAndFindSecBugs(list, title);
+			return;
+		}
 		writer.println("[" + title + "]");
 		writer.println("; package, file, start line, end line, pattern key, pattern, priority, class, field, local var, method, message");
 		
@@ -255,7 +282,7 @@ public class TextOutputFile extends AbstractOutputFile {
 		writer.println();
 		writer.println();
 	}
-	
+
 	@Override
 	protected void close(PrintWriter writer) {
 		// no-op

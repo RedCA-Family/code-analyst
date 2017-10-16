@@ -5,4 +5,6 @@ public interface CodeAnalyst {
 	void deleteProgressObserver(ProgressObserver observer);
 	
 	String analyze(String where, ArgumentInfo argument, TargetFileInfo targetFile);
+	
+	ResultInfo analyzeWithSeperatedResult(String where, ArgumentInfo argument, TargetFileInfo targetFile);
 }
