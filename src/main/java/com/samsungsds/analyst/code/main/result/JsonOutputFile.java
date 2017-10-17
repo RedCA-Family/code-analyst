@@ -51,37 +51,47 @@ public class JsonOutputFile extends AbstractOutputFile {
 
 	@Override
 	protected void writeFindBugs(List<FindBugsResult> findBugsList) {
-		String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-findbugs.json";
-		
-		writeListToJson(findBugsList, "findBugsList", jsonFile);
+		if (result.isSeperatedOutput()) {
+			String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-findbugs.json";
+			
+			writeListToJson(findBugsList, "findBugsList", jsonFile);
+		}
 	}
 	
 	@Override
 	protected void writeFindSecBugs(List<FindBugsResult> findSecBugsList) {
-		String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-findsecbugs.json";
+		if (result.isSeperatedOutput()) {
+			String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-findsecbugs.json";
 		
-		writeListToJson(findSecBugsList, "findSecBugsList", jsonFile);
+			writeListToJson(findSecBugsList, "findSecBugsList", jsonFile);
+		}
 	}
 
 	@Override
 	protected void writePmd(List<PmdResult> pmdList) {
-		String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-pmd.json";
+		if (result.isSeperatedOutput()) {
+			String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-pmd.json";
 		
-		writeListToJson(pmdList, "pmdList", jsonFile);
+			writeListToJson(pmdList, "pmdList", jsonFile);
+		}
 	}
 
 	@Override
 	protected void writeComplexity(List<ComplexityResult> complexityList) {
-		String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-complexity.json";
+		if (result.isSeperatedOutput()) {
+			String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-complexity.json";
 		
-		writeListToJson(complexityList, "complexityList", jsonFile);
+			writeListToJson(complexityList, "complexityList", jsonFile);
+		}
 	}	
 
 	@Override
 	protected void writeDuplication(List<DuplicationResult> dulicationList) {
-		String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-duplication.json";
+		if (result.isSeperatedOutput()) {
+			String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-duplication.json";
 		
-		writeListToJson(dulicationList, "duplicationList", jsonFile);
+			writeListToJson(dulicationList, "duplicationList", jsonFile);
+		}
 	}
 
 	@Override
@@ -96,7 +106,6 @@ public class JsonOutputFile extends AbstractOutputFile {
 
 	@Override
 	protected void close(PrintWriter writer) {
-		
 		if (result.isSeperatedOutput()) {
 			result.clearSeperatedList();
 		}

@@ -552,11 +552,15 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	public List<DuplicationResult> getDulicationList() {
+		processTopDuplicationList();
+		
+		return duplicationList;
+	}
+
+	private void processTopDuplicationList() {
 		if (topDuplicationList == null) {
 			topDuplicationList = duplicationDetailAnalyst.getTopList();
 		}
-		
-		return duplicationList;
 	}
 	
 	public List<Duplication> getTopDuplicationList() {

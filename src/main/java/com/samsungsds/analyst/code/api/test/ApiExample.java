@@ -8,7 +8,6 @@ import com.samsungsds.analyst.code.api.AnalysisMode;
 import com.samsungsds.analyst.code.api.ArgumentInfo;
 import com.samsungsds.analyst.code.api.CodeAnalyst;
 import com.samsungsds.analyst.code.api.CodeAnalystFactory;
-import com.samsungsds.analyst.code.api.ResultInfo;
 import com.samsungsds.analyst.code.api.TargetFileInfo;
 
 public class ApiExample {
@@ -58,7 +57,7 @@ public class ApiExample {
 		// - addPackage()는 선택된 패키지의 소스 전체
 		// - addFile()은 선택된 소스
 		
-		//targetFile.addPackage("com.samsungsds.analyst.code.main");	// include sub-packages
+		targetFile.addPackage("com.samsungsds.analyst.code.main");	// include sub-packages
 		
 		//targetFile.addFile("com.samsungsds.analyst.code.main", "MeasuredResult.java");
 		//targetFile.addFile("com.samsungsds.analyst.code.main", "ResultProcessor.java");
@@ -68,12 +67,12 @@ public class ApiExample {
 			temp.mkdirs();
 		}
 		
-		//String resultFile = analyst.analyze(TEMP_DIRECTORY, argument, targetFile);
+		String resultFile = analyst.analyze(TEMP_DIRECTORY, argument, targetFile);
 		
-		//System.out.println("Result File : " + resultFile);
+		System.out.println("Result File : " + resultFile);
 		
-		ResultInfo result = analyst.analyzeWithSeperatedResult(TEMP_DIRECTORY, argument, targetFile);
+		//ResultInfo result = analyst.analyzeWithSeperatedResult(TEMP_DIRECTORY, argument, targetFile);
 		
-		System.out.println("Result File : " + result.getOutputFile());
+		//System.out.println("Result File : " + result.getOutputFile());
 	}
 }
