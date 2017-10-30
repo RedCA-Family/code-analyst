@@ -104,7 +104,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println();
 		}
 		if (result.getIndividualMode().isFindBugs()) {
-			writer.println("FindBugsBugs = " + result.getFindBugsCountAll());
+			writer.println("FindBugs = " + result.getFindBugsCountAll());
 			writer.println("FindBugs1Priority = " + result.getFindBugsCount(1));
 			writer.println("FindBugs2Priority = " + result.getFindBugsCount(2));
 			writer.println("FindBugs3Priority = " + result.getFindBugsCount(3));

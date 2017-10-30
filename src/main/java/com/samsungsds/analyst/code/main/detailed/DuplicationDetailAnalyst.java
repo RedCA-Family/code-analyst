@@ -2,8 +2,10 @@ package com.samsungsds.analyst.code.main.detailed;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
@@ -11,8 +13,12 @@ import com.samsungsds.analyst.code.sonar.DuplicationResult;
 public class DuplicationDetailAnalyst {
 	public static final int TOP = 10;
 	private Map<Duplication, Pair> duplicationData = new HashMap<>();
+	private Set<DuplicationResult> haveToSkipData = new HashSet<>();
 	
 	public void add(DuplicationResult duplication) {
+		if (haveToSkipData.contains(duplication)) {
+			return;
+		}
 		Duplication data = new Duplication(duplication.getPath(), duplication.getStartLine(), duplication.getEndLine());
 		
 		int duplicatedLines = duplication.getDuplicatedEndLine() - duplication.getDuplicatedStartLine() + 1;
@@ -24,6 +30,30 @@ public class DuplicationDetailAnalyst {
 			pair.addTotalLines(duplicatedLines);
 			pair.addCount(1);
 		}
+		
+		// 중복된 데이터 처리 (duplicated lines을 minus로 등록)
+		String duplicatedPath = duplication.getDuplicatedPath();
+		
+		if (duplicatedPath.equals(DuplicationResult.DUPLICATED_FILE_SAME_MARK)) {
+			duplicatedPath = duplication.getPath();
+		}
+		
+		data = new Duplication(duplicatedPath, duplication.getDuplicatedStartLine(), duplication.getDuplicatedEndLine());
+		
+		duplicatedLines = duplication.getEndLine() - duplication.getStartLine() + 1;
+
+		if (duplicationData.get(data) == null) {
+			duplicationData.put(data, new Pair(-duplicatedLines, -1));
+		} else {
+			Pair pair = duplicationData.get(data);
+			pair.addTotalLines(-duplicatedLines);
+			pair.addCount(-1);
+		}
+		
+		haveToSkipData.add(
+				new DuplicationResult(duplicatedPath, duplication.getDuplicatedStartLine(), duplication.getDuplicatedEndLine(), 
+						duplication.getPath(), duplication.getStartLine(), duplication.getEndLine())
+		);
 	}
 	
 	public List<Duplication> getTopList() {
@@ -36,6 +66,11 @@ public class DuplicationDetailAnalyst {
 		
 		for (int i = 0; i < TOP && i < sortedList.size(); i++) {
 			int index = sortedList.size() - i - 1;
+			
+			if (sortedList.get(index).getValue().getTotalLines() <= 0) {
+				break;
+			}
+			
 			Duplication duplication = sortedList.get(index).getKey();
 			
 			Duplication newDuplication = new Duplication(duplication.getPath(), duplication.getStartLine(), duplication.getEndLine());
@@ -79,5 +114,4 @@ class Pair implements Comparable<Pair> {
 	public int compareTo(Pair o) {
 		return this.totalLines - o.totalLines;
 	}
-
 }

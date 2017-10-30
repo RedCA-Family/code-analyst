@@ -117,4 +117,64 @@ public class DuplicationResult implements Serializable, CSVFileResult {
 	public int getDuplicatedLine() {
 		return endLine - startLine + 1;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		result = prime * result + startLine;
+		result = prime * result + endLine;
+		result = prime * result + ((duplicatedPath == null) ? 0 : duplicatedPath.hashCode());
+		result = prime * result + duplicatedStartLine;
+		result = prime * result + duplicatedEndLine;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		
+		DuplicationResult other = (DuplicationResult) obj;
+		
+		if (path == null) {
+			if (other.path != null) {
+				return false;
+			}
+		} else if (!path.equals(other.path)) {
+			return false;
+		}
+		if (startLine != other.startLine) {
+			return false;
+		}
+		if (endLine != other.endLine) {
+			return false;
+		}
+		
+		if (duplicatedPath == null) {
+			if (other.duplicatedPath != null) {
+				return false;
+			}
+		} else if (!duplicatedPath.equals(other.duplicatedPath)) {
+			return false;
+		}
+		if (duplicatedStartLine != other.duplicatedStartLine) {
+			return false;
+		}
+		if (duplicatedEndLine != other.duplicatedEndLine) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
 }

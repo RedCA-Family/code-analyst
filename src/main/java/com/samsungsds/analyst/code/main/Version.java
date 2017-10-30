@@ -18,8 +18,9 @@ public class Version {
 	// 1.5.0 : 세부 분석 옵션 추가, MeasuredResult instance remove 호출 (GC), 복잡도 목록 대상 변경 (10 -> 20), 
 	//         기존 out 파일 재실행 기능 추가, 결과 파일 분리 옵션 추가 (API 포함)
 	// 1.5.1 : seperated mode가 아닌 경우에도 분리된 json 저장 오류 수정
+	// 1.5.2 : 복잡도 Top 10 분석 개선
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "1.5.1";
+	public static final String CODE_ANALYST = "1.5.2";
 	public static final String DOCUMENT_VERSION = "1.5";
 	public static final String SONAR_SCANNER = "2.8";
 	public static final String SONAR_SERVER = "6.2.1";

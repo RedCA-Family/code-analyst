@@ -72,7 +72,7 @@ public class DuplicationDetailAnalystTest {
 				new DuplicationResult("Source H", 1, 10, "Source I", 1, 80),
 				new DuplicationResult("Source I", 1, 10, "Source J", 1, 90),
 				new DuplicationResult("Source J", 1, 10, "Source K", 1, 100),
-				new DuplicationResult("Source K", 1, 10, "Source L", 1, 110),
+				new DuplicationResult("Source K", 1, 10, "Source L", 1, 110)
 		};
 		
 		// act
@@ -86,7 +86,37 @@ public class DuplicationDetailAnalystTest {
 		assertEquals(10, result.size());
 		assertEquals(110, result.get(0).getTotalDuplicatedLines());
 		assertEquals(100, result.get(1).getTotalDuplicatedLines());
-		assertEquals(20, result.get(9).getTotalDuplicatedLines());
+		assertEquals(10, result.get(9).getTotalDuplicatedLines());
+	}
+	
+	@Test
+	public void testForTop10List() {
+		// arrange
+		DuplicationResult[] list = new DuplicationResult[] {
+				new DuplicationResult("Source A", 10, 20, "Source A", 30, 40),
+				new DuplicationResult("Source A", 10, 30, "Source B", 20, 40),
+				new DuplicationResult("Source A", 10, 20, "Source C", 10, 20),
+				new DuplicationResult("Source A", 10, 20, "Source C", 30, 40),
+				new DuplicationResult("Source C", 10, 20, "Source C", 30, 40),
+				
+				new DuplicationResult("Source A", 30, 40, "Source A", 10, 20),
+				new DuplicationResult("Source B", 20, 40, "Source A", 10, 30),
+				new DuplicationResult("Source C", 10, 20, "Source A", 10, 20),
+				new DuplicationResult("Source C", 30, 40, "Source A", 10, 20),
+				new DuplicationResult("Source C", 30, 40, "Source C", 10, 20)
+		};
+		
+		// act
+		for (DuplicationResult duplication : list) {
+			detailAnalyst.add(duplication);
+		}
+		
+		List<Duplication> result = detailAnalyst.getTopList();
+
+		// assert
+		assertEquals(2, result.size());
+		assertEquals(33, result.get(0).getTotalDuplicatedLines());
+		assertEquals(21, result.get(1).getTotalDuplicatedLines());
 	}
 
 }
