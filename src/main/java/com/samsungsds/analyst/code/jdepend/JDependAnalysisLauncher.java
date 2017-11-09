@@ -14,6 +14,7 @@ import com.samsungsds.analyst.code.jdepend.framework.JDepend;
 import com.samsungsds.analyst.code.jdepend.framework.JavaPackage;
 import com.samsungsds.analyst.code.jdepend.framework.PackageComparator;
 import com.samsungsds.analyst.code.main.MeasuredResult;
+import com.samsungsds.analyst.code.main.detailed.MartinMetricsAnalyst;
 
 public class JDependAnalysisLauncher implements JDependAnalysis {
 	private static final Logger LOGGER = LogManager.getLogger(JDependAnalysisLauncher.class);
@@ -21,6 +22,8 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 	private final JDepend analyzer = new JDepend();
 	private final NumberFormat formatter = NumberFormat.getInstance();
 	private final List<String> includePackageList = new ArrayList<>();
+	
+	private final MartinMetricsAnalyst martinMetrics = new MartinMetricsAnalyst();
 	
 	private String directory = null;
 	
@@ -77,6 +80,10 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 				continue;
 			}
 			
+			if (MeasuredResult.getInstance(instanceKey).isDetailAnalysis()) {
+				martinMetrics.addPackageInfo(jPackage);
+			}
+						
 	        jPackage.collectCycle(list);
 
 	        if (!jPackage.containsCycle()) {
@@ -124,6 +131,10 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 	        
 	        list.clear();
         }
+		
+		if (MeasuredResult.getInstance(instanceKey).isDetailAnalysis()) {
+			MeasuredResult.getInstance(instanceKey).setTopMartinMetrics(martinMetrics.getMartinMetricsList());
+		}
 	}
 	
 	protected String tab() {

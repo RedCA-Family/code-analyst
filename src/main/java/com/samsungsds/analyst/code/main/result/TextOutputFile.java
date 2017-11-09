@@ -12,6 +12,8 @@ import com.samsungsds.analyst.code.findbugs.FindBugsResult;
 import com.samsungsds.analyst.code.main.CliParser;
 import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.main.detailed.Duplication;
+import com.samsungsds.analyst.code.main.detailed.Inspection;
+import com.samsungsds.analyst.code.main.detailed.MartinMetrics;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
@@ -227,11 +229,40 @@ public class TextOutputFile extends AbstractOutputFile {
 		writer.println("total = " + count);
 		writer.println();
 		writer.println();
+		
+		if (result.isDetailAnalysis()) {
+			writeTopInspection(result.getTopPmdList(), "TopPmdList");
+		}
+	}
+
+	private void writeTopInspection(List<Inspection> topList, String topName) {
+		writer.println("[" + topName + "]");
+		writer.println("; rule, count");
+		
+		int count = 0;
+		synchronized (topList) {
+			for (Inspection result : topList) {
+				writer.print(++count + " = ");
+				writer.print(getStringsWithComma(result.getRule()));
+				writer.print(",");
+				writer.print(result.getCount());
+				writer.println();
+			}
+		}
+		writer.println();
+		writer.println("total = " + count);
+		writer.println();
+		writer.println();
+		
 	}
 
 	@Override
 	protected void writeFindBugs(List<FindBugsResult> list) {
 		writeFindBugsAndFindSecBugs(list, "FindBugs");
+		
+		if (result.isDetailAnalysis()) {
+			writeTopInspection(result.getTopFindBugsList(), "TopFindBugsList");
+		}
 	}
 	
 	@Override
@@ -277,6 +308,38 @@ public class TextOutputFile extends AbstractOutputFile {
 			}
 		}
 		
+		writer.println();
+		writer.println("total = " + count);
+		writer.println();
+		writer.println();
+		
+		if (result.isDetailAnalysis()) {
+			writeTopMartinMetrics(result.getTopMartinMetrics());
+		}
+	}
+
+	private void writeTopMartinMetrics(List<MartinMetrics> topMartinMetrics) {
+		writer.println("[TopMartinMetrics]");
+		writer.println("; package, Ca, Ce, A, I, D");
+		
+		int count = 0;
+		synchronized (topMartinMetrics) {
+			for (MartinMetrics result : topMartinMetrics) {
+				writer.print(++count + " = ");
+				writer.print(result.getPackageName());
+				writer.print(",");
+				writer.print(result.getAfferentCoupling());
+				writer.print(",");
+				writer.print(result.getEfferentCoupling());
+				writer.print(",");
+				writer.print(result.getAbstractness());
+				writer.print(",");
+				writer.print(result.getInstability());
+				writer.print(",");
+				writer.print(result.getDistance());
+				writer.println();
+			}
+		}
 		writer.println();
 		writer.println("total = " + count);
 		writer.println();

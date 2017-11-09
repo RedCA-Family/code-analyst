@@ -23,6 +23,9 @@ import com.samsungsds.analyst.code.findbugs.FindBugsResult;
 import com.samsungsds.analyst.code.jdepend.JDependResult;
 import com.samsungsds.analyst.code.main.detailed.Duplication;
 import com.samsungsds.analyst.code.main.detailed.DuplicationDetailAnalyst;
+import com.samsungsds.analyst.code.main.detailed.Inspection;
+import com.samsungsds.analyst.code.main.detailed.InspectionDetailAnalyst;
+import com.samsungsds.analyst.code.main.detailed.MartinMetrics;
 import com.samsungsds.analyst.code.main.filter.FilePathExcludeFilter;
 import com.samsungsds.analyst.code.main.filter.FilePathFilter;
 import com.samsungsds.analyst.code.main.filter.FilePathIncludeFilter;
@@ -163,6 +166,17 @@ public class MeasuredResult implements Serializable {
 	private boolean withDefaultPackageClasses = false;
 	
 	private List<CSVFileCollectionList<?>> closeTargetList = new ArrayList<>();
+	
+	@Expose
+	private List<MartinMetrics> topMartinMetricsList = null;
+	
+	private InspectionDetailAnalyst inspectionDetailAnalyst = new InspectionDetailAnalyst();
+	
+	@Expose
+	private List<Inspection> topPmdList = null;
+	
+	@Expose
+	private List<Inspection> topFindBugsList = null;
 	
 	public static MeasuredResult getInstance(String instanceKey) {
 		if (!instances.containsKey(instanceKey)) {
@@ -471,6 +485,10 @@ public class MeasuredResult implements Serializable {
 			
 			pmdList.add(result);
 			
+			if (detailAnalysis) {
+				inspectionDetailAnalyst.add(result);
+			}
+			
 			LOGGER.debug("file : {}, line : {}, priority : {}, rule : {}, desc : {}", result.getFile(), result.getLine(), result.getPriority(), result.getRule(), result.getDescription());
 		}
 	}
@@ -493,6 +511,10 @@ public class MeasuredResult implements Serializable {
 			findBugsCount[result.getPriority()]++;
 			
 			findBugsList.add(result);
+			
+			if (detailAnalysis) {
+				inspectionDetailAnalyst.add(result);
+			}
 		}
 	}
 	
@@ -580,13 +602,45 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	public List<PmdResult> getPmdList() {
+		processTopPmdList();
+		
 		return pmdList;
 	}
 	
+	private void processTopPmdList() {
+		if (topPmdList == null) {
+			topPmdList = inspectionDetailAnalyst.getTopPmdList();
+		}	
+	}
+	
+	public List<Inspection> getTopPmdList() {
+		if (detailAnalysis) {
+			return topPmdList;
+		} else {
+			throw new IllegalStateException("getTopPmdList() can be called only detailed analysis mode.");
+		}
+	}
+
 	public List<FindBugsResult> getFindBugsList() {
+		processtopFindBugsList();
+		
 		return findBugsList;
 	}
 	
+	private void processtopFindBugsList() {
+		if (topFindBugsList == null) {
+			topFindBugsList = inspectionDetailAnalyst.getTopFindBugsList();
+		}	
+	}
+	
+	public List<Inspection> getTopFindBugsList() {
+		if (detailAnalysis) {
+			return topFindBugsList;
+		} else {
+			throw new IllegalStateException("getTopFindBugsList() can be called only detailed analysis mode.");
+		}
+	}
+
 	public List<FindBugsResult> getFindSecBugsList() {
 		return findSecBugsList;
 	}
@@ -710,6 +764,14 @@ public class MeasuredResult implements Serializable {
 			findSecBugsList = null;
 		}
 	}
+	
+	public void setTopMartinMetrics(List<MartinMetrics> topMartinMetricsList) {
+		this.topMartinMetricsList = topMartinMetricsList; 
+	}
+	
+	public List<MartinMetrics> getTopMartinMetrics() {
+		return topMartinMetricsList;
+	}
 
 	public void clear() {
 		directories = 0;
@@ -772,5 +834,10 @@ public class MeasuredResult implements Serializable {
 			duplicationList = null;
 			
 		}
+		
+		topDuplicationList = null;
+		topPmdList = null;
+		topFindBugsList = null;
 	}
+	
 }
