@@ -210,25 +210,24 @@ public class TextOutputFile extends AbstractOutputFile {
 	protected void writePmd(List<PmdResult> list) {
 		if (result.isSeperatedOutput()) {
 			csvOutput.writePmd(list);
-			return;
-		}
-		
-		writer.println("[PMD]");
-		writer.println("; path, line, rule, priority, description");
-		
-		int count = 0;
-		synchronized (list) {
-			for (PmdResult result : list) {
-				writer.print(++count + " = ");
-				writer.print(getStringsWithComma(result.getPath(), getString(result.getLine()), result.getRule(), getString(result.getPriority()), result.getDescription()));
-				writer.println();
+		} else {
+			writer.println("[PMD]");
+			writer.println("; path, line, rule, priority, description");
+			
+			int count = 0;
+			synchronized (list) {
+				for (PmdResult result : list) {
+					writer.print(++count + " = ");
+					writer.print(getStringsWithComma(result.getPath(), getString(result.getLine()), result.getRule(), getString(result.getPriority()), result.getDescription()));
+					writer.println();
+				}
 			}
+			
+			writer.println();
+			writer.println("total = " + count);
+			writer.println();
+			writer.println();
 		}
-		
-		writer.println();
-		writer.println("total = " + count);
-		writer.println();
-		writer.println();
 		
 		if (result.isDetailAnalysis()) {
 			writeTopInspection(result.getTopPmdList(), "TopPmdList");

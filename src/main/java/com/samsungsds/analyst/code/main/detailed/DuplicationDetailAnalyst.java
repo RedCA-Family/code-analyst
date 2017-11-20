@@ -13,10 +13,12 @@ import com.samsungsds.analyst.code.sonar.DuplicationResult;
 public class DuplicationDetailAnalyst {
 	public static final int TOP = 10;
 	private Map<Duplication, Pair> duplicationData = new HashMap<>();
-	private Set<DuplicationResult> haveToSkipData = new HashSet<>();
+	private Set<DuplicationCheck> haveToSkipData = new HashSet<>();
 	
 	public void add(DuplicationResult duplication) {
-		if (haveToSkipData.contains(duplication)) {
+		DuplicationCheck check = DuplicationCheck.createFrom(duplication);
+		
+		if (haveToSkipData.contains(check)) {
 			return;
 		}
 		Duplication data = new Duplication(duplication.getPath(), duplication.getStartLine(), duplication.getEndLine());
@@ -50,10 +52,7 @@ public class DuplicationDetailAnalyst {
 			pair.addCount(-1);
 		}
 		
-		haveToSkipData.add(
-				new DuplicationResult(duplicatedPath, duplication.getDuplicatedStartLine(), duplication.getDuplicatedEndLine(), 
-						duplication.getPath(), duplication.getStartLine(), duplication.getEndLine())
-		);
+		haveToSkipData.add(new DuplicationCheck(duplicatedPath, duplication.getDuplicatedStartLine(), duplication.getDuplicatedEndLine()));
 	}
 	
 	public List<Duplication> getTopList() {

@@ -19,7 +19,7 @@ public class Version {
 	//         기존 out 파일 재실행 기능 추가, 결과 파일 분리 옵션 추가 (API 포함)
 	// 1.5.1 : seperated mode가 아닌 경우에도 분리된 json 저장 오류 수정
 	// 1.5.2 : 복잡도 Top 10 분석 개선
-	// 1.5.3 : Martin metrics 측정 추가, Inspection(PMD, FindBugs)에 대한 Top 10 측정 추가
+	// 1.5.3 : Martin metrics 측정 추가, Inspection(PMD, FindBugs)에 대한 Top 10 측정 추가, Duplication Top 10 수정
 	//--------------------------------------------------
 	public static final String CODE_ANALYST = "1.5.3";
 	public static final String DOCUMENT_VERSION = "1.5";
