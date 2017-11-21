@@ -34,7 +34,7 @@ public class DuplicationDetailAnalystTest {
 		
 		// assert
 		assertEquals(1, result.size());
-		assertEquals(60, result.get(0).getTotalDuplicatedLines());
+		assertEquals(20, result.get(0).getTotalDuplicatedLines());
 	}
 	
 	@Test
@@ -54,8 +54,8 @@ public class DuplicationDetailAnalystTest {
 		
 		// assert
 		assertEquals(2, result.size());
-		assertEquals(20, result.get(0).getTotalDuplicatedLines());
-		assertEquals(20, result.get(1).getTotalDuplicatedLines());
+		assertEquals(10, result.get(0).getTotalDuplicatedLines());
+		assertEquals(10, result.get(1).getTotalDuplicatedLines());
 	}
 	
 	@Test
@@ -84,9 +84,9 @@ public class DuplicationDetailAnalystTest {
 		
 		// assert
 		assertEquals(10, result.size());
-		assertEquals(220, result.get(0).getTotalDuplicatedLines());
-		assertEquals(200, result.get(1).getTotalDuplicatedLines());
-		assertEquals(20, result.get(9).getTotalDuplicatedLines());
+		assertEquals(110, result.get(0).getTotalDuplicatedLines());
+		assertEquals(100, result.get(1).getTotalDuplicatedLines());
+		assertEquals(10, result.get(9).getTotalDuplicatedLines());
 	}
 	
 	@Test
@@ -115,8 +115,8 @@ public class DuplicationDetailAnalystTest {
 
 		// assert
 		assertEquals(2, result.size());
-		assertEquals(132, result.get(0).getTotalDuplicatedLines());
-		assertEquals(42, result.get(1).getTotalDuplicatedLines());
+		assertEquals(33, result.get(0).getTotalDuplicatedLines());
+		assertEquals(21, result.get(1).getTotalDuplicatedLines());
 	}
 
 }
