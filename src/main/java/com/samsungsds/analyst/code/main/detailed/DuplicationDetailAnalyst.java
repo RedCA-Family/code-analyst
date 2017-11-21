@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,10 @@ public class DuplicationDetailAnalyst {
 	public List<Duplication> getTopList() {
 		List<Duplication> result = new ArrayList<>(TOP);
 		
+		for (Entry<Duplication, Pair> entry : duplicationData.entrySet()) {            
+			entry.getValue().calcuateTotalLines();
+        }
+		
 		List<Map.Entry<Duplication,Pair>> sortedList = 
 		duplicationData.entrySet().stream()
 			.sorted(Map.Entry.comparingByValue())
@@ -107,6 +112,10 @@ class Pair implements Comparable<Pair> {
 	
 	public void addCount(int count) {
 		this.count += count;
+	}
+	
+	public void calcuateTotalLines() {
+		this.totalLines *= (count + 1);
 	}
 
 	@Override
