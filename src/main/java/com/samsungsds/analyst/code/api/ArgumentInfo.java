@@ -14,6 +14,8 @@ public class ArgumentInfo {
 	
 	private AnalysisMode mode;				// code-size,duplication,complexity,pmd,findbugs,findsecbugs,dependency
 
+	private boolean detailAnalysis = false;	// Detail Analysis mode
+
 	public String getProject() {
 		return project;
 	}
@@ -100,5 +102,13 @@ public class ArgumentInfo {
 
 	public void setMode(AnalysisMode mode) {
 		this.mode = mode;
+	}
+
+	public boolean isDetailAnalysis() {
+		return detailAnalysis;
+	}
+
+	public void setDetailAnalysis(boolean detailAnalysis) {
+		this.detailAnalysis = detailAnalysis;
 	}
 }
