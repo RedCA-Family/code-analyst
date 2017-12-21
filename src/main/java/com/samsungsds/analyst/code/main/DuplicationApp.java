@@ -121,7 +121,7 @@ public class DuplicationApp {
 		if (!includeFilters.equals("")) {
 			System.out.println("Include : " + includeFilters);
 		
-			MeasuredResult.getInstance(INSTANCE_KEY).setIncludeFilters(includeFilters);;
+			MeasuredResult.getInstance(INSTANCE_KEY).setIncludeFilters(includeFilters);
 		}
 		
 		if (!excludeFilters.equals("")) {

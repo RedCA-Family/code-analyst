@@ -166,6 +166,10 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		if (withSeperatedOutput) {
 			argumentList.add("-seperated");
 		}
+
+		if (argument.isDetailAnalysis()) {
+			argumentList.add("--analysis");
+		}
 		
 		return argumentList.toArray(new String[0]);
 	}
