@@ -18,12 +18,15 @@ public class JettySurrogateSonarServerTest {
 	private JettySurrogateSonarServer server;
 	private int port;
 	
+	final String PREFIX = "http://localhost:";
+	
 	@Before public void 
 	init() {
 		server = new JettySurrogateSonarServer();
+		port = server.startAndReturnPort();
 	}
 	
-	private String[] allServletPathsToBeChecked() {
+	private String[] servletPaths() {
 		return new String[] {
 				"/batch/global",
 				"/deploy/plugins/index.txt",
@@ -32,17 +35,15 @@ public class JettySurrogateSonarServerTest {
 				"/api/rules/search.protobuf?qprofile=java-sonar-way",
 				"/api/rules/list.protobuf",
 				"/batch/project.protobuf",
-				"/batch/issues.protobuf"
+				"/batch/issues.protobuf",
 		}; 
 	}
 	
 	@Test public void 
-	sholud_all_servlet_response_ok_when_server_is_running() throws IOException {
-		String prefix = "http://localhost:";
-		port = server.startAndReturnPort();
-		
-		for (String path : allServletPathsToBeChecked()) {
-			URL url = new URL(prefix+port+path);
+	sholud_servlets_response_ok_when_server_is_running() throws IOException {
+
+		for (String path : servletPaths()) {
+			URL url = new URL(PREFIX+port+path);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			
 			assertThat(conn.getResponseCode(), is(HttpServletResponse.SC_OK));
@@ -53,14 +54,23 @@ public class JettySurrogateSonarServerTest {
 		server.stop();
 	}
 	
+	@Test public void
+	should_SubmitServlet_reponse_ok_when_server_is_running() throws IOException {
+		
+		String path = "/api/ce/submit";
+		URL url = new URL(PREFIX+port+ path);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("POST");
+		
+		assertThat(conn.getResponseCode(), is(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
+	}
+	
 	@Test(expected = ConnectException.class) public void 
 	should_throw_connectException_when_server_was_stopped() throws IOException {
-		String prefix = "http://localhost:";
-		port = server.startAndReturnPort();
 		
 		server.stop();
 		
-		URL url = new URL(prefix+port+ allServletPathsToBeChecked()[0]);
+		URL url = new URL(PREFIX+port+ servletPaths()[0]);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		
 		conn.getResponseCode();
