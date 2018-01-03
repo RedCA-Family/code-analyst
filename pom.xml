@@ -158,16 +158,6 @@
 		</dependency>
 		-->
 
-		<!--
-		<dependency>
-			<groupId>org.ucdetector</groupId>
-			<artifactId>ucdetector</artifactId>
-			<version>2.0.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/org.ucdetector_2.0.0.jar</systemPath>
-		</dependency>
-		-->
-		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -183,7 +173,7 @@
    </dependencies>
     
     <build>
-    	<finalName>${jarName}-${project.version}</finalName>
+    	<finalName>${jarName}-${project.version}-without-dependencies</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -200,6 +190,7 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.0.0</version>
 				<configuration>
+					<finalName>${jarName}-${project.version}</finalName>
 					<archive>
 						<manifest>
 							<!-- addClasspath>true</addClasspath-->
@@ -209,7 +200,6 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
-
 				</configuration>
 				<executions>
 					<execution>
@@ -231,7 +221,6 @@
             			<phase>package</phase>
             			<configuration>
 	              			<tasks>
-  								<move file="${project.basedir}/target/${jarName}-${project.version}.jar" tofile="${project.basedir}/target/${jarName}-${project.version}-jar-without-dependencies.jar"/>
   								<move file="${project.basedir}/target/${jarName}-${project.version}-jar-with-dependencies.jar" tofile="${project.basedir}/target/${jarName}-${project.version}.jar"/>
   								
   								<jar destfile="${project.basedir}/target/${jarName}-${project.version}.jar" update="true">

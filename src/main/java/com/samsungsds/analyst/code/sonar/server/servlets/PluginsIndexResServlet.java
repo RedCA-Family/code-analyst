@@ -16,7 +16,7 @@ public class PluginsIndexResServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Declare response encoding and types
-		response.setContentType("atext/plain; charset=utf-8");
+		response.setContentType("text/plain; charset=utf-8");
 
 		// Declare response status code
 		response.setStatus(HttpServletResponse.SC_OK);
