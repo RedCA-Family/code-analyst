@@ -38,6 +38,8 @@ import com.samsungsds.analyst.code.sonar.SonarAnalysis;
 import com.samsungsds.analyst.code.sonar.SonarAnalysisLauncher;
 import com.samsungsds.analyst.code.sonar.server.JettySurrogateSonarServer;
 import com.samsungsds.analyst.code.sonar.server.SurrogateSonarServer;
+import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtAnalysis;
+import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtAnalysisLauncher;
 import com.samsungsds.analyst.code.util.FindFileUtils;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import com.samsungsds.analyst.code.util.PackageUtils;
@@ -167,6 +169,9 @@ public class App {
         		}
     		}
 	    		
+    		LOGGER.info("TechnicalDebt Analysis start...");
+    		runTechnicalDebt(cli);
+    		
 	    	LOGGER.info("Code Analysis ended");    		
 	    		
 	    	processResult(cli);
@@ -375,7 +380,13 @@ public class App {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.DEPENDENCY_COMPLETE));
 		}
 	}
-	
+
+	private void runTechnicalDebt(CliParser cli) {
+		TechnicalDebtAnalysis technicalDebt = new TechnicalDebtAnalysisLauncher();
+		
+		technicalDebt.run(cli.getInstanceKey());
+	}
+
 	private void processResult(CliParser cli) {
 		if (cli.getMode() == MeasurementMode.DefaultMode) {
 			File outputFile = null;

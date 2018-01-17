@@ -32,6 +32,7 @@ import com.samsungsds.analyst.code.main.filter.FilePathIncludeFilter;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtResult;
 import com.samsungsds.analyst.code.util.CSVFileCollectionList;
 import com.samsungsds.analyst.code.util.CSVFileResult;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
@@ -178,6 +179,9 @@ public class MeasuredResult implements Serializable {
 	@Expose
 	private List<Inspection> topFindBugsList = null;
 	
+	@Expose
+	private TechnicalDebtResult technicalDebtResult = null;
+
 	public static MeasuredResult getInstance(String instanceKey) {
 		if (!instances.containsKey(instanceKey)) {
 			synchronized (MeasuredResult.class) {
@@ -773,6 +777,14 @@ public class MeasuredResult implements Serializable {
 		return topMartinMetricsList;
 	}
 
+	public void setTechnicalDebtResult(TechnicalDebtResult technicalDebtResult) {
+		this.technicalDebtResult = technicalDebtResult;
+	}
+
+	public TechnicalDebtResult getTechnicalDebt() {
+		return technicalDebtResult;
+	}
+
 	public void clear() {
 		directories = 0;
 		files = 0;
@@ -838,6 +850,7 @@ public class MeasuredResult implements Serializable {
 		topDuplicationList = null;
 		topPmdList = null;
 		topFindBugsList = null;
+		technicalDebtResult = null;
 	}
 	
 }

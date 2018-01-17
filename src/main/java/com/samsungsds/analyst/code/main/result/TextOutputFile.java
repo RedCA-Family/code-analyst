@@ -122,6 +122,12 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("AcyclicDependecies = " + result.getAcyclicDependencyCount());
 			writer.println();
 		}
+		writer.println("TechnicalDebt = " + result.getTechnicalDebt().getTechnicalDebt());
+		writer.println("TechnicalDebt(Duplication) = " + result.getTechnicalDebt().getDuplicationDebt());
+		writer.println("TechnicalDebt(Violation) = " + result.getTechnicalDebt().getViolationDebt());
+		writer.println("TechnicalDebt(Complexity) = " + result.getTechnicalDebt().getComplexityDebt());
+		writer.println("TechnicalDebt(AcyclicDependency) = " + result.getTechnicalDebt().getAcyclicDependencyDebt());
+		writer.println();
 		writer.println();
 	}
 

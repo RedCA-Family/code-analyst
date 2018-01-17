@@ -115,7 +115,12 @@ public class ResultProcessor {
 			System.out.println();
 		}
 	}
-	
+
+	private static void printTechnicalDebtSummary(MeasuredResult result) {
+		System.out.println("Technical Debt : " + result.getTechnicalDebt().getTechnicalDebt());
+		System.out.println();
+	}
+
 	protected static void printWarning(MeasuredResult result) {
 		if (result.isWithDefaultPackageClasses()) {
 			System.out.print("* This project has classes with no package.");
@@ -138,6 +143,7 @@ public class ResultProcessor {
 			printFindBugsSummary(result);
 			printFindSecBugsSummary(result);
 			printAcyclicDependSummary(result);
+			printTechnicalDebtSummary(result);
 		} else if (result.getMode() == MeasurementMode.ComplexityMode) {
 			printComplexity(result.getComplexityAllList());	
 		}
