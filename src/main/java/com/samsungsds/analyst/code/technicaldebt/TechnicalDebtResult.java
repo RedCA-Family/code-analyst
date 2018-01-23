@@ -1,16 +1,21 @@
 package com.samsungsds.analyst.code.technicaldebt;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.annotations.Expose;
-import com.samsungsds.analyst.code.util.CSVFileResult;
 
-public class TechnicalDebtResult implements Serializable, CSVFileResult {
+public class TechnicalDebtResult implements Serializable {
 
 	private static final long serialVersionUID = -1903833121825373419L;
 
+	private static final Logger LOGGER = LogManager.getLogger(TechnicalDebtResult.class);
+
 	@Expose
-	private double technicalDebt;
+	private double totalDebt;
 
 	@Expose
 	private double duplicationDebt;
@@ -24,76 +29,34 @@ public class TechnicalDebtResult implements Serializable, CSVFileResult {
 	@Expose
 	private double acyclicDependencyDebt;
 
-	public TechnicalDebtResult() {
-		// default constructor (CSV)
-		// column : technicalDebt, duplicationDebt, violationDebt, complexityDebt, acyclicDependencyDebt
-		technicalDebt = 0;
-		duplicationDebt = 0;
-		violationDebt = 0;
-		complexityDebt = 0;
-		acyclicDependencyDebt = 0;
+	public TechnicalDebtResult(double duplicationDebt, double violationDebt, double complexityDebt, double acyclicDependencyDebt) {
+		this.duplicationDebt = roundDecimal(duplicationDebt);
+		this.violationDebt = roundDecimal(violationDebt);
+		this.complexityDebt = roundDecimal(complexityDebt);
+		this.acyclicDependencyDebt = roundDecimal(acyclicDependencyDebt);
+		calculateTotalDebt();
 	}
 
-	@Override
-	public int getColumnSize() {
-		return 5;
+	private void calculateTotalDebt() {
+		totalDebt += duplicationDebt;
+		totalDebt += violationDebt;
+		totalDebt += complexityDebt;
+		totalDebt += acyclicDependencyDebt;
+		totalDebt = roundDecimal(totalDebt);
+		LOGGER.info("TechnicalDebt(total): " + totalDebt);
 	}
 
-	@Override
-	public String getDataIn(int columnIndex) {
-		switch (columnIndex) {
-		case 0:
-			return String.valueOf(technicalDebt);
-		case 1:
-			return String.valueOf(duplicationDebt);
-		case 2:
-			return String.valueOf(violationDebt);
-		case 3:
-			return String.valueOf(complexityDebt);
-		case 4:
-			return String.valueOf(acyclicDependencyDebt);
-		default:
-			throw new IndexOutOfBoundsException("Index: " + columnIndex);
-		}
+	private double roundDecimal(double decimal) {
+		DecimalFormat decimalFormat = new DecimalFormat("0.##");
+		return Double.parseDouble(decimalFormat.format(decimal));
 	}
 
-	@Override
-	public void setDataIn(int columnIndex, String data) {
-		switch (columnIndex) {
-		case 0:
-			technicalDebt = Double.parseDouble(data);
-			break;
-		case 1:
-			duplicationDebt = Double.parseDouble(data);
-			break;
-		case 2:
-			violationDebt = Double.parseDouble(data);
-			break;
-		case 3:
-			complexityDebt = Double.parseDouble(data);
-			break;
-		case 4:
-			acyclicDependencyDebt = Double.parseDouble(data);
-			break;
-		default:
-			throw new IndexOutOfBoundsException("Index: " + columnIndex);
-		}
+	public double getTotalDebt() {
+		return totalDebt;
 	}
 
-	public TechnicalDebtResult(double technicalDebt, double duplicationDebt, double violationDebt, double complexityDebt, double acyclicDependencyDebt) {
-		this.technicalDebt = technicalDebt;
-		this.duplicationDebt = duplicationDebt;
-		this.violationDebt = violationDebt;
-		this.complexityDebt = complexityDebt;
-		this.acyclicDependencyDebt = acyclicDependencyDebt;
-	}
-
-	public double getTechnicalDebt() {
-		return technicalDebt;
-	}
-
-	public void setTechnicalDebt(double technicalDebt) {
-		this.technicalDebt = technicalDebt;
+	public void setTotalDebt(double totalDebt) {
+		this.totalDebt = totalDebt;
 	}
 
 	public double getDuplicationDebt() {

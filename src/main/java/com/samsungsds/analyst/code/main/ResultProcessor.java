@@ -117,7 +117,7 @@ public class ResultProcessor {
 	}
 
 	private static void printTechnicalDebtSummary(MeasuredResult result) {
-		System.out.println("Technical Debt : " + result.getTechnicalDebt().getTechnicalDebt());
+		System.out.println("Technical Debt : " + result.getTechnicalDebt().getTotalDebt() + "MH");
 		System.out.println();
 	}
 

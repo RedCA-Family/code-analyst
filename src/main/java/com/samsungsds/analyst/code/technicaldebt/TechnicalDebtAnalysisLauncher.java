@@ -1,7 +1,6 @@
 package com.samsungsds.analyst.code.technicaldebt;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +35,6 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 
 	private final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();;
 	private MeasuredResult measuredResult;
-	private double technicalDebt;
 	private double duplicationDebt;
 	private double violationDebt;
 	private double complexityDebt;
@@ -46,7 +44,7 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 	public void run(String instanceKey) {
 		measuredResult = MeasuredResult.getInstance(instanceKey);
 		calculateTechnicalDebt();
-		measuredResult.setTechnicalDebtResult(new TechnicalDebtResult(technicalDebt, duplicationDebt, violationDebt, complexityDebt, acyclicDependencyDebt));
+		measuredResult.setTechnicalDebtResult(new TechnicalDebtResult(duplicationDebt, violationDebt, complexityDebt, acyclicDependencyDebt));
 	}
 
 	private void calculateTechnicalDebt() {
@@ -54,12 +52,11 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 		calculateViolationDebt();
 		calculateComplexityDebt();
 		calculateAcyclicDependencyDebt();
-		calculateTotalDebt();
 	}
 
 	private void calculateDuplicationDebt() {
-		duplicationDebt = roundDecimal(measuredResult.getDulicationList().size() * COST_TO_FIX_ONE_BLOCK);
-		LOGGER.info("TechnicalDebt(duplication): " + duplicationDebt);
+		duplicationDebt = measuredResult.getDulicationList().size() * COST_TO_FIX_ONE_BLOCK;
+		LOGGER.info("Calculated Duplication Debt: " + duplicationDebt);
 	}
 
 	private void calculateViolationDebt() {
@@ -67,7 +64,7 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 		violationDebt += calculatePmdDebt();
 		violationDebt += calculateFindBugsDebt();
 		violationDebt += calculateFindSecBugsDebt();
-		LOGGER.info("TechnicalDebt(violation): " + violationDebt);
+		LOGGER.info("Calculated Violation Debt: " + violationDebt);
 	}
 
 	private void effortXMLParse() {
@@ -93,7 +90,7 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 		for (PmdResult pmdResult : measuredResult.getPmdList()) {
 			result += pmdEffortMap.get(pmdResult.getRule());
 		}
-		return roundDecimal(result);
+		return result;
 	}
 
 	private double calculateFindBugsDebt() {
@@ -101,35 +98,21 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 		for (FindBugsResult findBugsResult : measuredResult.getFindBugsList()) {
 			result += findBugsEffortMap.get(findBugsResult.getPatternKey());
 		}
-		return roundDecimal(result);
+		return result;
 	}
 
 	private double calculateFindSecBugsDebt() {
-		return roundDecimal(measuredResult.getFindSecBugsCountAll() * COST_TO_FIX_ONE_VULNERABILITY_ISSUE);
+		return measuredResult.getFindSecBugsCountAll() * COST_TO_FIX_ONE_VULNERABILITY_ISSUE;
 	}
 
 	private void calculateComplexityDebt() {
-		complexityDebt = roundDecimal(measuredResult.getComplexityOver20() * COST_TO_SPLIT_A_METHOD);
-		LOGGER.info("TechnicalDebt(complexity): " + complexityDebt);
+		complexityDebt = measuredResult.getComplexityOver20() * COST_TO_SPLIT_A_METHOD;
+		LOGGER.info("Calculated Complexity Debt: " + complexityDebt);
 	}
 
 	private void calculateAcyclicDependencyDebt() {
-		acyclicDependencyDebt = roundDecimal(measuredResult.getAcyclicDependencyCount() * COST_TO_CUT_AN_EDGE_BETWEEN_TWO_FILES);
-		LOGGER.info("TechnicalDebt(acyclicDependency): " + acyclicDependencyDebt);
-	}
-
-	private void calculateTotalDebt() {
-		technicalDebt += duplicationDebt;
-		technicalDebt += violationDebt;
-		technicalDebt += complexityDebt;
-		technicalDebt += acyclicDependencyDebt;
-		technicalDebt = roundDecimal(technicalDebt);
-		LOGGER.debug("TechnicalDebt(total): " + technicalDebt);
-	}
-
-	private double roundDecimal(double decimal) {
-		DecimalFormat decimalFormat = new DecimalFormat("0.##");
-		return Double.parseDouble(decimalFormat.format(decimal));
+		acyclicDependencyDebt = measuredResult.getAcyclicDependencyCount() * COST_TO_CUT_AN_EDGE_BETWEEN_TWO_FILES;
+		LOGGER.info("Calculated AcyclicDependency Debt: " + acyclicDependencyDebt);
 	}
 
 }
