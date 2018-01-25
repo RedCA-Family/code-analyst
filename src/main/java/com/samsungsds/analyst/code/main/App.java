@@ -40,6 +40,8 @@ import com.samsungsds.analyst.code.sonar.server.JettySurrogateSonarServer;
 import com.samsungsds.analyst.code.sonar.server.SurrogateSonarServer;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeAnalysis;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeAnalysisLauncher;
+import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtAnalysis;
+import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtAnalysisLauncher;
 import com.samsungsds.analyst.code.util.FindFileUtils;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import com.samsungsds.analyst.code.util.PackageUtils;
@@ -124,49 +126,49 @@ public class App {
     			
     		} else {
     			
-//    			if (cli.getIndividualMode().isCodeSize() && cli.getIndividualMode().isDuplication()) {
-//        			LOGGER.info("Code Size & Duplication Analysis start...");
-//        		
-//        			runCodeSizeAalysis(cli);
-//        		} else if (cli.getIndividualMode().isCodeSize()) {
-//        			LOGGER.info("Code Size Analysis start...");
-//            		
-//        			runCodeSizeAalysis(cli);
-//        		} else if (cli.getIndividualMode().isDuplication()) {
-//        			LOGGER.info("Duplication Analysis start...");
-//            		
-//        			runCodeSizeAalysis(cli);
-//        		}
-//        		
-//        		if (cli.getIndividualMode().isComplexity()) {
-//        			LOGGER.info("Complexity Analysis start...");
-//        		
-//        			runComplexity(cli);
-//        		}
-//        		
-//        		if (cli.getIndividualMode().isPmd()) {
-//    	    		LOGGER.info("PMD Analysis start...");
-//    	    		
-//    	    		runPmd(cli);
-//        		}
-//        		
-//        		if (cli.getIndividualMode().isFindBugs()) {
-//        			LOGGER.info("FindBugs Analysis start...");
-//    	    		
-//    	    		runFindBugs(cli);
-//        		}
-//        		
-//        		if (cli.getIndividualMode().isFindSecBugs()) {
-//    	    		LOGGER.info("FindSecBugs Analysis start...");
-//    	    		
-//    	    		runFindSecBugs(cli);
-//        		}
-//    	    	
-//        		if (cli.getIndividualMode().isDependency()) {
-//    	    		LOGGER.info("UnusedCode Analysis start...");
-//    	    		
-//    	    		runJDepend(cli);
-//        		}
+    			if (cli.getIndividualMode().isCodeSize() && cli.getIndividualMode().isDuplication()) {
+        			LOGGER.info("Code Size & Duplication Analysis start...");
+        		
+        			runCodeSizeAalysis(cli);
+        		} else if (cli.getIndividualMode().isCodeSize()) {
+        			LOGGER.info("Code Size Analysis start...");
+            		
+        			runCodeSizeAalysis(cli);
+        		} else if (cli.getIndividualMode().isDuplication()) {
+        			LOGGER.info("Duplication Analysis start...");
+            		
+        			runCodeSizeAalysis(cli);
+        		}
+        		
+        		if (cli.getIndividualMode().isComplexity()) {
+        			LOGGER.info("Complexity Analysis start...");
+        		
+        			runComplexity(cli);
+        		}
+        		
+        		if (cli.getIndividualMode().isPmd()) {
+    	    		LOGGER.info("PMD Analysis start...");
+    	    		
+    	    		runPmd(cli);
+        		}
+        		
+        		if (cli.getIndividualMode().isFindBugs()) {
+        			LOGGER.info("FindBugs Analysis start...");
+    	    		
+    	    		runFindBugs(cli);
+        		}
+        		
+        		if (cli.getIndividualMode().isFindSecBugs()) {
+    	    		LOGGER.info("FindSecBugs Analysis start...");
+    	    		
+    	    		runFindSecBugs(cli);
+        		}
+    	    	
+        		if (cli.getIndividualMode().isDependency()) {
+    	    		LOGGER.info("JDepend Analysis start...");
+    	    		
+    	    		runJDepend(cli);
+        		}
         		
         		if (cli.getIndividualMode().isUnusedCode()) {
     				LOGGER.info("UnusedCode Analysis start...");
@@ -175,6 +177,9 @@ public class App {
         		}
     		}
 	    		
+    		LOGGER.info("TechnicalDebt Analysis start...");
+    		runTechnicalDebt(cli);
+    		
 	    	LOGGER.info("Code Analysis ended");    		
 	    		
 	    	processResult(cli);
@@ -383,7 +388,7 @@ public class App {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.DEPENDENCY_COMPLETE));
 		}
 	}
-	
+
 	private void runUnusedCode(CliParser cli) {
 		UnusedCodeAnalysis unusedCodeViolation = new UnusedCodeAnalysisLauncher();
 		
@@ -392,7 +397,13 @@ public class App {
 		
 		unusedCodeViolation.run(cli.getInstanceKey());
 	}
-	
+
+	private void runTechnicalDebt(CliParser cli) {
+		TechnicalDebtAnalysis technicalDebt = new TechnicalDebtAnalysisLauncher();
+		
+		technicalDebt.run(cli.getInstanceKey());
+	}
+
 	private void processResult(CliParser cli) {
 		if (cli.getMode() == MeasurementMode.DefaultMode) {
 			File outputFile = null;

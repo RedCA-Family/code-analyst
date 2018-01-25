@@ -33,6 +33,7 @@ import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
+import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtResult;
 import com.samsungsds.analyst.code.util.CSVFileCollectionList;
 import com.samsungsds.analyst.code.util.CSVFileResult;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
@@ -182,6 +183,9 @@ public class MeasuredResult implements Serializable {
 	@Expose
 	private List<UnusedCodeResult> unusedCodeList = null;
 	
+	@Expose
+	private TechnicalDebtResult technicalDebtResult = null;
+
 	public static MeasuredResult getInstance(String instanceKey) {
 		if (!instances.containsKey(instanceKey)) {
 			synchronized (MeasuredResult.class) {
@@ -774,6 +778,7 @@ public class MeasuredResult implements Serializable {
 			pmdList = null;
 			findBugsList = null;
 			findSecBugsList = null;
+			unusedCodeList = null;
 		}
 	}
 	
@@ -783,6 +788,14 @@ public class MeasuredResult implements Serializable {
 	
 	public List<MartinMetrics> getTopMartinMetrics() {
 		return topMartinMetricsList;
+	}
+
+	public void setTechnicalDebtResult(TechnicalDebtResult technicalDebtResult) {
+		this.technicalDebtResult = technicalDebtResult;
+	}
+
+	public TechnicalDebtResult getTechnicalDebt() {
+		return technicalDebtResult;
 	}
 
 	public void clear() {
@@ -850,6 +863,8 @@ public class MeasuredResult implements Serializable {
 		topDuplicationList = null;
 		topPmdList = null;
 		topFindBugsList = null;
+		technicalDebtResult = null;
+		unusedCodeList = null;
 	}
 	
 }

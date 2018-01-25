@@ -115,14 +115,19 @@ public class ResultProcessor {
 			System.out.println();
 		}
 	}
-	
+
 	protected static void printUnusedCodeSummary(MeasuredResult result) {
 		if (result.getIndividualMode().isUnusedCode()) {
 			System.out.println("UnusedCode : " + getFormattedNumber(result.getUnusedCodeList().size()));
 			System.out.println();
 		}
 	}
-	
+
+	private static void printTechnicalDebtSummary(MeasuredResult result) {
+		System.out.println("Technical Debt : " + result.getTechnicalDebt().getTotalDebt() + "MH");
+		System.out.println();
+	}
+
 	protected static void printWarning(MeasuredResult result) {
 		if (result.isWithDefaultPackageClasses()) {
 			System.out.print("* This project has classes with no package.");
@@ -146,6 +151,7 @@ public class ResultProcessor {
 			printFindSecBugsSummary(result);
 			printAcyclicDependSummary(result);
 			printUnusedCodeSummary(result);
+			printTechnicalDebtSummary(result);
 		} else if (result.getMode() == MeasurementMode.ComplexityMode) {
 			printComplexity(result.getComplexityAllList());	
 		}
