@@ -12,5 +12,6 @@ public class IndividualMode extends AnalysisMode {
 		setFindBugs(true);
 		setFindSecBugs(true);
 		setDependency(true);
+		setUnusedCode(true);
 	}
 }

@@ -116,6 +116,13 @@ public class ResultProcessor {
 		}
 	}
 	
+	protected static void printUnusedCodeSummary(MeasuredResult result) {
+		if (result.getIndividualMode().isUnusedCode()) {
+			System.out.println("UnusedCode : " + getFormattedNumber(result.getUnusedCodeList().size()));
+			System.out.println();
+		}
+	}
+	
 	protected static void printWarning(MeasuredResult result) {
 		if (result.isWithDefaultPackageClasses()) {
 			System.out.print("* This project has classes with no package.");
@@ -138,6 +145,7 @@ public class ResultProcessor {
 			printFindBugsSummary(result);
 			printFindSecBugsSummary(result);
 			printAcyclicDependSummary(result);
+			printUnusedCodeSummary(result);
 		} else if (result.getMode() == MeasurementMode.ComplexityMode) {
 			printComplexity(result.getComplexityAllList());	
 		}

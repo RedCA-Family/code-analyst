@@ -17,6 +17,7 @@ import com.samsungsds.analyst.code.main.detailed.MartinMetrics;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 
 public class TextOutputFile extends AbstractOutputFile {
 	MeasuredResult result;
@@ -122,6 +123,11 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("AcyclicDependecies = " + result.getAcyclicDependencyCount());
 			writer.println();
 		}
+		if (result.getIndividualMode().isUnusedCode()) {
+			writer.println("UnusedCode =" + result.getUnusedCodeList().size());
+			writer.println();
+		}
+		
 		writer.println();
 	}
 
@@ -234,6 +240,31 @@ public class TextOutputFile extends AbstractOutputFile {
 		}
 	}
 
+
+	@Override
+	protected void writeUnusedCode(List<UnusedCodeResult> list) {
+		if (result.isSeperatedOutput()) {
+//			csvOutput.writePmd(list);
+		} else {
+			writer.println("[Unused Code]");
+			writer.println("; type, package, class, line, name, description");
+			
+			int count = 0;
+			synchronized (list) {
+				for (UnusedCodeResult result : list) {
+					writer.print(++count + " = ");
+					writer.print(getStringsWithComma(result.getType(), result.getPackageName(), result.getClassName(), getString(result.getLine()), result.getName(), result.getDescription()));
+					writer.println();
+				}
+			}
+			
+			writer.println();
+			writer.println("total = " + count);
+			writer.println();
+			writer.println();
+		}
+	}
+	
 	private void writeTopInspection(List<Inspection> topList, String topName) {
 		writer.println("[" + topName + "]");
 		writer.println("; rule, count");
@@ -344,7 +375,7 @@ public class TextOutputFile extends AbstractOutputFile {
 		writer.println();
 		writer.println();
 	}
-
+	
 	@Override
 	protected void close(PrintWriter writer) {
 		// no-op

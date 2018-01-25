@@ -8,6 +8,7 @@ public class AnalysisMode {
 	private boolean findBugs = false;
 	private boolean findSecBugs = false;
 	private boolean dependency = false;
+	private boolean unusedCode = false;
 	
 	public boolean isCodeSize() {
 		return codeSize;
@@ -63,5 +64,13 @@ public class AnalysisMode {
 	
 	public void setDependency(boolean dependency) {
 		this.dependency = dependency;
+	}
+
+	public boolean isUnusedCode() {
+		return unusedCode;
+	}
+
+	public void setUnusedCode(boolean unusedCode) {
+		this.unusedCode = unusedCode;
 	}
 }

@@ -16,6 +16,7 @@ import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 
 public abstract class AbstractOutputFile {
 	protected PrintWriter writer;
@@ -56,6 +57,10 @@ public abstract class AbstractOutputFile {
 				writeAcyclicDependencies(result.getAcyclicDependencyList());
 			}
 			
+			if (result.getIndividualMode().isUnusedCode()) {
+				writeUnusedCode(result.getUnusedCodeList());
+			}
+			
 			writeSeparator();
 			
 			close(writer);
@@ -82,6 +87,8 @@ public abstract class AbstractOutputFile {
 	protected abstract void writeComplexity(List<ComplexityResult> complexityList);
 
 	protected abstract void writeDuplication(List<DuplicationResult> dulicationList);
+	
+	protected abstract void writeUnusedCode(List<UnusedCodeResult> unusedCodeList);
 
 	protected abstract void writeSummary(MeasuredResult result);
 

@@ -32,6 +32,7 @@ import com.samsungsds.analyst.code.main.filter.FilePathIncludeFilter;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import com.samsungsds.analyst.code.util.CSVFileCollectionList;
 import com.samsungsds.analyst.code.util.CSVFileResult;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
@@ -177,6 +178,9 @@ public class MeasuredResult implements Serializable {
 	
 	@Expose
 	private List<Inspection> topFindBugsList = null;
+	
+	@Expose
+	private List<UnusedCodeResult> unusedCodeList = null;
 	
 	public static MeasuredResult getInstance(String instanceKey) {
 		if (!instances.containsKey(instanceKey)) {
@@ -378,11 +382,11 @@ public class MeasuredResult implements Serializable {
 		return (afterLines - beforeLines);
 	}
 	
-	private boolean haveToSkip(String path) {
+	public boolean haveToSkip(String path) {
 		return haveToSkip(path, false);
 	}
 	
-	private boolean haveToSkip(String path, boolean withoutFilename) {
+	public boolean haveToSkip(String path, boolean withoutFilename) {
 		for (FilePathFilter filter : filePathFilterList) {
 			if (!filter.matched(path, withoutFilename)) {
 				return true;
@@ -643,6 +647,14 @@ public class MeasuredResult implements Serializable {
 
 	public List<FindBugsResult> getFindSecBugsList() {
 		return findSecBugsList;
+	}
+	
+	public void putUnusedCodeList(List<UnusedCodeResult> unusedCodeResultList) {
+		this.unusedCodeList = unusedCodeResultList;
+	}
+	
+	public List<UnusedCodeResult> getUnusedCodeList() {
+		return this.unusedCodeList;
 	}
 	
 	public void addAcyclicDependency(String acyclicDependency) {

@@ -27,6 +27,7 @@ import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 public class JsonOutputFile extends AbstractOutputFile {
@@ -94,6 +95,16 @@ public class JsonOutputFile extends AbstractOutputFile {
 		}
 	}
 
+	@Override
+	protected void writeUnusedCode(List<UnusedCodeResult> unusedCodeList) {
+		if (result.isSeperatedOutput()) {
+			String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-unusedCode.json";
+			
+			writeListToJson(unusedCodeList, "unusedList", jsonFile);
+		}
+		
+	}
+	
 	@Override
 	protected void writeSummary(MeasuredResult result) {
 		// no-op
