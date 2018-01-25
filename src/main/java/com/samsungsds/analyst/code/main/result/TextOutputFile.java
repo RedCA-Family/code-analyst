@@ -123,14 +123,11 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("AcyclicDependecies = " + result.getAcyclicDependencyCount());
 			writer.println();
 		}
-<<<<<<< HEAD
 		if (result.getIndividualMode().isUnusedCode()) {
 			writer.println("UnusedCode =" + result.getUnusedCodeList().size());
 			writer.println();
 		}
 		
-=======
->>>>>>> branch 'master' of http://70.121.224.117/raba/raba/code-analyst.git
 		writer.println("TechnicalDebt(Total) = " + result.getTechnicalDebt().getTotalDebt() + "MH");
 		writer.println("TechnicalDebt(Duplication) = " + result.getTechnicalDebt().getDuplicationDebt() + "MH");
 		writer.println("TechnicalDebt(Violation) = " + result.getTechnicalDebt().getViolationDebt() + "MH");

@@ -38,13 +38,10 @@ import com.samsungsds.analyst.code.sonar.SonarAnalysis;
 import com.samsungsds.analyst.code.sonar.SonarAnalysisLauncher;
 import com.samsungsds.analyst.code.sonar.server.JettySurrogateSonarServer;
 import com.samsungsds.analyst.code.sonar.server.SurrogateSonarServer;
-<<<<<<< HEAD
-import com.samsungsds.analyst.code.unusedcode.UnusedCodeAnalysis;
-import com.samsungsds.analyst.code.unusedcode.UnusedCodeAnalysisLauncher;
-=======
->>>>>>> branch 'master' of http://70.121.224.117/raba/raba/code-analyst.git
 import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtAnalysis;
 import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtAnalysisLauncher;
+import com.samsungsds.analyst.code.unusedcode.UnusedCodeAnalysis;
+import com.samsungsds.analyst.code.unusedcode.UnusedCodeAnalysisLauncher;
 import com.samsungsds.analyst.code.util.FindFileUtils;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import com.samsungsds.analyst.code.util.PackageUtils;
@@ -392,7 +389,6 @@ public class App {
 		}
 	}
 
-<<<<<<< HEAD
 	private void runUnusedCode(CliParser cli) {
 		UnusedCodeAnalysis unusedCodeViolation = new UnusedCodeAnalysisLauncher();
 		
@@ -402,8 +398,6 @@ public class App {
 		unusedCodeViolation.run(cli.getInstanceKey());
 	}
 
-=======
->>>>>>> branch 'master' of http://70.121.224.117/raba/raba/code-analyst.git
 	private void runTechnicalDebt(CliParser cli) {
 		TechnicalDebtAnalysis technicalDebt = new TechnicalDebtAnalysisLauncher();
 		

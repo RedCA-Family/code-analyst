@@ -10,10 +10,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.asm.Type;
 
 import com.samsungsds.analyst.code.main.MeasuredResult;
-import com.samsungsds.analyst.code.main.filter.FilePathIncludeFilter;
 import com.samsungsds.analyst.code.unusedcode.type.CAMethod;
 
 public class UnusedCodeAnalysisLauncherTest {
@@ -162,28 +160,4 @@ public class UnusedCodeAnalysisLauncherTest {
 		String[] expected = {"int", "java.lang.String"};
 		assertThat(method.getParameterTypes(), is(expected));
 	}
-	
-	@Test public void
-	test() {
-		
-//		String[] args = null;
-//		
-//		for (String string : args) {
-//			System.out.println(string);
-//		}
-//		String src = "./src";
-//		String binary = "./target/classes";
-//		
-//		unusedCodeAnalysisLauncher.setTargetSrc(src);
-//		unusedCodeAnalysisLauncher.setTargetBinary(binary);
-//		
-//		unusedCodeAnalysisLauncher.run(testInstanceKey);
-		
-//		String desc = "[Ljava/lang/String;";
-//		
-//		Type type = Type.getType(desc);
-//		System.out.println(type.getClassName());
-		
-	}
-	
 }

@@ -32,10 +32,7 @@ import com.samsungsds.analyst.code.main.filter.FilePathIncludeFilter;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
-<<<<<<< HEAD
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
-=======
->>>>>>> branch 'master' of http://70.121.224.117/raba/raba/code-analyst.git
 import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtResult;
 import com.samsungsds.analyst.code.util.CSVFileCollectionList;
 import com.samsungsds.analyst.code.util.CSVFileResult;
@@ -184,12 +181,9 @@ public class MeasuredResult implements Serializable {
 	private List<Inspection> topFindBugsList = null;
 	
 	@Expose
-<<<<<<< HEAD
 	private List<UnusedCodeResult> unusedCodeList = null;
 	
 	@Expose
-=======
->>>>>>> branch 'master' of http://70.121.224.117/raba/raba/code-analyst.git
 	private TechnicalDebtResult technicalDebtResult = null;
 
 	public static MeasuredResult getInstance(String instanceKey) {
@@ -870,10 +864,7 @@ public class MeasuredResult implements Serializable {
 		topPmdList = null;
 		topFindBugsList = null;
 		technicalDebtResult = null;
-<<<<<<< HEAD
 		unusedCodeList = null;
-=======
->>>>>>> branch 'master' of http://70.121.224.117/raba/raba/code-analyst.git
 	}
 	
 }
