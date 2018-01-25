@@ -116,6 +116,7 @@ public class ResultProcessor {
 		}
 	}
 
+<<<<<<< HEAD
 	protected static void printUnusedCodeSummary(MeasuredResult result) {
 		if (result.getIndividualMode().isUnusedCode()) {
 			System.out.println("UnusedCode : " + getFormattedNumber(result.getUnusedCodeList().size()));
@@ -123,6 +124,8 @@ public class ResultProcessor {
 		}
 	}
 
+=======
+>>>>>>> branch 'master' of http://70.121.224.117/raba/raba/code-analyst.git
 	private static void printTechnicalDebtSummary(MeasuredResult result) {
 		System.out.println("Technical Debt : " + result.getTechnicalDebt().getTotalDebt() + "MH");
 		System.out.println();
@@ -150,7 +153,10 @@ public class ResultProcessor {
 			printFindBugsSummary(result);
 			printFindSecBugsSummary(result);
 			printAcyclicDependSummary(result);
+<<<<<<< HEAD
 			printUnusedCodeSummary(result);
+=======
+>>>>>>> branch 'master' of http://70.121.224.117/raba/raba/code-analyst.git
 			printTechnicalDebtSummary(result);
 		} else if (result.getMode() == MeasurementMode.ComplexityMode) {
 			printComplexity(result.getComplexityAllList());	
