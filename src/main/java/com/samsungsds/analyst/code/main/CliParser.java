@@ -333,6 +333,8 @@ public class CliParser {
 				individualMode.setFindSecBugs(true);
 			} else if (mode.equalsIgnoreCase("dependency")) {
 				individualMode.setDependency(true);
+			} else if (mode.equalsIgnoreCase("unusedCode")){
+				individualMode.setUnusedCode(true);
 			} else {
 				throw new IllegalArgumentException("'mode' option can only have 'code-size', 'duplication', 'complexity', 'pmd', 'findbugs', 'findsecbugs' and 'dependency'");
 			}
