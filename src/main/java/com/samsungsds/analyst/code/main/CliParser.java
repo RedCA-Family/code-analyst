@@ -82,7 +82,7 @@ public class CliParser {
 		options.addOption("include", true, "specify include pattern(Ant-style) with comma separated. (eg: com/sds/**/*.java)");
 		options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)");
 
-		options.addOption("m", "mode", true, "specify analysis items with comma separated. (code-size,duplication,complexity,pmd,findbugs,findsecbugs,dependency)");
+		options.addOption("m", "mode", true, "specify analysis items with comma separated. (code-size,duplication,complexity,pmd,findbugs,findsecbugs,dependency,unusedcode)");
 
 		options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occured, use JVM '-Xmx' option like '-Xmx1024m')");
 		
@@ -333,10 +333,10 @@ public class CliParser {
 				individualMode.setFindSecBugs(true);
 			} else if (mode.equalsIgnoreCase("dependency")) {
 				individualMode.setDependency(true);
-			} else if (mode.equalsIgnoreCase("unusedCode")){
+			} else if (mode.equalsIgnoreCase("unusedcode")){
 				individualMode.setUnusedCode(true);
 			} else {
-				throw new IllegalArgumentException("'mode' option can only have 'code-size', 'duplication', 'complexity', 'pmd', 'findbugs', 'findsecbugs' and 'dependency'");
+				throw new IllegalArgumentException("'mode' option can only have 'code-size', 'duplication', 'complexity', 'pmd', 'findbugs', 'findsecbugs', 'unusedcode' and 'dependency'");
 			}
 		}
 	}

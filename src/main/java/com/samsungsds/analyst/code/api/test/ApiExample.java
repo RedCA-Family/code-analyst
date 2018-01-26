@@ -33,23 +33,24 @@ public class ApiExample {
 			return;
 		}
 		argument.setSrc("src");
-		argument.setBinary("target\\classes");
+		argument.setBinary("target/classes");
 		
 		argument.setEncoding("UTF-8");	// default
 		argument.setJavaVersion("1.8");	// default
 		
 		AnalysisMode mode = new AnalysisMode();
-		mode.setCodeSize(true);
-		mode.setDuplication(true);
-		mode.setComplexity(true);
-		mode.setPmd(true);
-		mode.setFindBugs(true);
-		mode.setFindSecBugs(true);
-		mode.setDependency(true);
+//		mode.setCodeSize(true);
+//		mode.setDuplication(true);
+//		mode.setComplexity(true);
+//		mode.setPmd(true);
+//		mode.setFindBugs(true);
+//		mode.setFindSecBugs(true);
+//		mode.setDependency(true);
+		mode.setUnusedCode(true);
 		
 		argument.setMode(mode);
 		
-		argument.setExclude("JDepend.java,com/samsungsds/analyst/code/main/filter/*.java");
+//		argument.setExclude("com/samsungsds/analyst/code/main/filter/*");
 		
 		TargetFileInfo targetFile = new TargetFileInfo();
 		
@@ -57,7 +58,7 @@ public class ApiExample {
 		// - addPackage()는 선택된 패키지의 소스 전체
 		// - addFile()은 선택된 소스
 		
-		targetFile.addPackage("com.samsungsds.analyst.code.main");	// include sub-packages
+//		targetFile.addPackage("com.samsungsds.analyst.code.main");	// include sub-packages
 		
 		//targetFile.addFile("com.samsungsds.analyst.code.main", "MeasuredResult.java");
 		//targetFile.addFile("com.samsungsds.analyst.code.main", "ResultProcessor.java");

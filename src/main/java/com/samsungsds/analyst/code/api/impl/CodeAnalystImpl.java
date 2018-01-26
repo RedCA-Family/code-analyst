@@ -259,6 +259,10 @@ public class CodeAnalystImpl implements CodeAnalyst {
 			addAnalysisItem(parameter, "dependency");
 		}
 		
+		if (mode.isUnusedCode()) {
+			addAnalysisItem(parameter, "unusedcode");
+		}
+		
 		return parameter.toString();
 	}
 

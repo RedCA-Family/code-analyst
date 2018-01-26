@@ -185,12 +185,12 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		boolean isDefaultPackage = className.indexOf(".") == -1;
 		if(isDefaultPackage) {
 			rootPackage = "default";
-			sourceRootFolderPath = sourceFolderPathOfDefaultPackage();
-			classRootFolderPath = this.targetBinary.replaceAll("/", "\\\\");
+			sourceRootFolderPath = sourceFolderPathOfDefaultPackage(this.targetSrc).replaceAll("/", "\\\\");;
+			classRootFolderPath = sourceFolderPathOfDefaultPackage(this.targetBinary).replaceAll("/", "\\\\");;
 		} else {
 			rootPackage = className.substring(0, className.indexOf("."));
-			sourceRootFolderPath = sourceFolerPathOf(rootPackage);
-			classRootFolderPath = this.targetBinary.substring(0, this.targetBinary.indexOf(rootPackage)-1).replaceAll("/", "\\\\");
+			sourceRootFolderPath = targetFolerPath(this.targetSrc, rootPackage).replaceAll("/", "\\\\");
+			classRootFolderPath = targetFolerPath(this.targetBinary, rootPackage).replaceAll("/", "\\\\");;
 		}
 	}
 	
@@ -199,8 +199,8 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		return new File(sourceFilePath);
 	}
 	
-	private String sourceFolderPathOfDefaultPackage() {
-		String sourceDir = this.targetSrc;
+	private String sourceFolderPathOfDefaultPackage(String targetDir) {
+		String sourceDir = targetDir;
 		
 		File f = new File(sourceDir);
 		Queue<File> waitingQueue = new LinkedList<>();
@@ -211,7 +211,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 				if(sub.isDirectory()) {
 					waitingQueue.offer(sub);
 				} else {
-					if(sub.getPath().indexOf(".java") > -1) {
+					if(sub.getPath().indexOf(".java") > -1 || sub.getPath().indexOf(".class") > -1) {
 						return sub.getParent();
 					}
 				}
@@ -221,10 +221,10 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		throw new IllegalArgumentException("the source file path of default package doesn't exist in "+sourceDir);
 	}
 	
-	private String sourceFolerPathOf(String rootPackage) {
-		String sourceDir = this.targetSrc;
+	private String targetFolerPath(String searchDir, String targetPackage) {
+		String sourceDir = searchDir;
 		if(sourceDir.indexOf(rootPackage) > -1) {
-			return sourceDir;
+			return sourceDir.substring(0, sourceDir.indexOf(rootPackage)-1);
 		}
 		
 		File f = new File(sourceDir);
