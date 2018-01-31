@@ -22,9 +22,9 @@ public class Version {
 	// 1.5.3 : Martin metrics 측정 추가, Inspection(PMD, FindBugs)에 대한 Top 10 측정 추가, Duplication Top 10 수정
 	// 1.5.4 : API 변경 (세부 분석 옵션 추가)
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "1.5.3";
+	public static final String CODE_ANALYST = "2.0-beta";
 	public static final String DOCUMENT_VERSION = "1.5";
-	public static final String SONAR_SCANNER = "2.8";
+	public static final String SONAR_SCANNER = "2.10.0.1189";
 	public static final String SONAR_SERVER = "6.2.1";
 	public static final String PMD = "5.4.6";
 	public static final String FINDBUGS = "3.0.1";
@@ -49,6 +49,6 @@ public class Version {
 		System.out.println("  - FindBugs : " + FINDBUGS_RULESET);
 		System.out.println("  - FindSecBugs : " + FINDSECBUGS_RULESET);
 		System.out.println();
-		System.out.println("Copyright(c) 2017 By Samsung SDS (SW Technology Lab.)");
+		System.out.println("Copyright(c) 2018 By Samsung SDS (Code Quality Group)");
 	}
 }

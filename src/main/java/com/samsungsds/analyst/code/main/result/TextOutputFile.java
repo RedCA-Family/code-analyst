@@ -1,6 +1,7 @@
 package com.samsungsds.analyst.code.main.result;
 
-import static com.samsungsds.analyst.code.util.CSVUtil.*;
+import static com.samsungsds.analyst.code.util.CSVUtil.getString;
+import static com.samsungsds.analyst.code.util.CSVUtil.getStringsWithComma;
 
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -17,6 +18,8 @@ import com.samsungsds.analyst.code.main.detailed.MartinMetrics;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.sonar.WebResourceResult;
+import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 
 public class TextOutputFile extends AbstractOutputFile {
 	MeasuredResult result;
@@ -118,10 +121,24 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("FindSecBugs = " + result.getFindSecBugsCountAll());
 			writer.println();
 		}
+		if (result.getIndividualMode().isWebResource()) {
+			writer.println("WebResource = " + result.getWebResourceCountAll());
+			writer.println("WebResource1Priority = " + result.getWebResourceCount(1));
+			writer.println("WebResource2Priority = " + result.getWebResourceCount(2));
+			writer.println("WebResource3Priority = " + result.getWebResourceCount(3));
+			writer.println("WebResource4Priority = " + result.getWebResourceCount(4));
+			writer.println("WebResource5Priority = " + result.getWebResourceCount(5));
+			writer.println();
+		}
 		if (result.getIndividualMode().isDependency()) {
 			writer.println("AcyclicDependecies = " + result.getAcyclicDependencyCount());
 			writer.println();
 		}
+		if (result.getIndividualMode().isUnusedCode()) {
+			writer.println("UnusedCode =" + result.getUnusedCodeList().size());
+			writer.println();
+		}
+		
 		writer.println("TechnicalDebt(Total) = " + result.getTechnicalDebt().getTotalDebt() + "MH");
 		writer.println("TechnicalDebt(Duplication) = " + result.getTechnicalDebt().getDuplicationDebt() + "MH");
 		writer.println("TechnicalDebt(Violation) = " + result.getTechnicalDebt().getViolationDebt() + "MH");
@@ -240,6 +257,31 @@ public class TextOutputFile extends AbstractOutputFile {
 		}
 	}
 
+
+	@Override
+	protected void writeUnusedCode(List<UnusedCodeResult> list) {
+		if (result.isSeperatedOutput()) {
+//			csvOutput.writePmd(list);
+		} else {
+			writer.println("[Unused Code]");
+			writer.println("; type, package, class, line, name, description");
+			
+			int count = 0;
+			synchronized (list) {
+				for (UnusedCodeResult result : list) {
+					writer.print(++count + " = ");
+					writer.print(getStringsWithComma(result.getType(), result.getPackageName(), result.getClassName(), getString(result.getLine()), result.getName(), result.getDescription()));
+					writer.println();
+				}
+			}
+			
+			writer.println();
+			writer.println("total = " + count);
+			writer.println();
+			writer.println();
+		}
+	}
+	
 	private void writeTopInspection(List<Inspection> topList, String topName) {
 		writer.println("[" + topName + "]");
 		writer.println("; rule, count");
@@ -298,6 +340,30 @@ public class TextOutputFile extends AbstractOutputFile {
 		writer.println("total = " + count);
 		writer.println();
 		writer.println();
+	}
+
+	@Override
+	protected void writeWebResource(List<WebResourceResult> webResourceList) {
+		if (result.isSeperatedOutput()) {
+			csvOutput.writeWebResource(webResourceList);
+		} else {
+			writer.println("[WebResource]");
+			writer.println("; path, rule, message, priority, start line, start offset, end line, end offset");
+			
+			int count = 0;
+			synchronized (webResourceList) {
+				for (WebResourceResult result : webResourceList) {
+					writer.print(++count + " = ");
+					writer.print(getStringsWithComma(getStringsWithComma(result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()), getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset()))));
+					writer.println();
+				}
+			}
+			
+			writer.println();
+			writer.println("total = " + count);
+			writer.println();
+			writer.println();
+		}
 	}
 
 	@Override

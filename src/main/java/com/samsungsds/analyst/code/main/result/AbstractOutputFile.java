@@ -16,6 +16,8 @@ import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.sonar.WebResourceResult;
+import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 
 public abstract class AbstractOutputFile {
 	protected PrintWriter writer;
@@ -52,8 +54,16 @@ public abstract class AbstractOutputFile {
 				writeFindSecBugs(result.getFindSecBugsList());
 			}
 			
+			if (result.getIndividualMode().isWebResource()) {
+				writeWebResource(result.getWebResourceList());
+			}
+			
 			if (result.getIndividualMode().isDependency()) {
 				writeAcyclicDependencies(result.getAcyclicDependencyList());
+			}
+			
+			if (result.getIndividualMode().isUnusedCode()) {
+				writeUnusedCode(result.getUnusedCodeList());
 			}
 			
 			writeSeparator();
@@ -73,6 +83,8 @@ public abstract class AbstractOutputFile {
 
 	protected abstract void writeAcyclicDependencies(List<String> acyclicDependencyList);
 
+	protected abstract void writeWebResource(List<WebResourceResult> webResourceList);
+
 	protected abstract void writeFindBugs(List<FindBugsResult> findBugsList);
 	
 	protected abstract void writeFindSecBugs(List<FindBugsResult> findSecBugsList);
@@ -82,6 +94,8 @@ public abstract class AbstractOutputFile {
 	protected abstract void writeComplexity(List<ComplexityResult> complexityList);
 
 	protected abstract void writeDuplication(List<DuplicationResult> dulicationList);
+	
+	protected abstract void writeUnusedCode(List<UnusedCodeResult> unusedCodeList);
 
 	protected abstract void writeSummary(MeasuredResult result);
 

@@ -35,19 +35,38 @@ public class QualityProfilesServlet extends HttpServlet {
 		if (url.equals("/api/qualityprofiles/search.protobuf")) {
 			resourceName = "/statics/search.protobuf";
 		} else if (url.equals("/api/rules/search.protobuf")) {
-			if (queryString.contains("qprofile=cs-sonar-way")) {
-				resourceName = "/statics/cs-sonar-way.protobuf"; 
-			} else if (queryString.contains("qprofile=java-sonar-way")) {
-				resourceName = "/statics/java-sonar-way.protobuf"; 
-			} else if (queryString.contains("qprofile=js-sonar-way")) {
-				resourceName = "/statics/js-sonar-way.protobuf"; 
-			}	
+			if (queryString.contains("qprofile=AWEgcpHElIthtMf8fR6x")) {
+				resourceName = "/statics/AWEgcpHElIthtMf8fR6x.protobuf";
+			} else if (queryString.contains("qprofile=AWEgcpQtlIthtMf8fSCR")) {
+				resourceName = "/statics/AWEgcpQtlIthtMf8fSCR.protobuf";
+			} else if (queryString.contains("qprofile=AWEmUh5aAmOaUaoeB5Tf")) {
+				resourceName = "/statics/AWEmUh5aAmOaUaoeB5Tf.protobuf";
+			} else if (queryString.contains("qprofile=AWEgcpZ4lIthtMf8fSH3")) {
+				resourceName = "/statics/AWEgcpZ4lIthtMf8fSH3.protobuf";
+			} else if (queryString.contains("qprofile=AWEgcpWvlIthtMf8fSG4")) {
+				resourceName = "/statics/AWEgcpWvlIthtMf8fSG4.protobuf";
+			} else if (queryString.contains("qprofile=AWEgcpjplIthtMf8fSNd")) {
+				resourceName = "/statics/AWEgcpjplIthtMf8fSNd.protobuf";
+			} else if (queryString.contains("qprofile=AWEgcpnxlIthtMf8fSPc")) {
+				resourceName = "/statics/AWEgcpnxlIthtMf8fSPc.protobuf";
+			} else if (queryString.contains("qprofile=AWEgcpyRlIthtMf8fSSN")) {
+				resourceName = "/statics/AWEgcpyRlIthtMf8fSSN.protobuf";
+			} else if (queryString.contains("qprofile=AWEgcp25lIthtMf8fSTR")) {
+				resourceName = "/statics/AWEgcp25lIthtMf8fSTR.protobuf";
+			}
+//			if (queryString.contains("qprofile=cs-sonar-way")) {
+//				resourceName = "/statics/cs-sonar-way.protobuf"; 
+//			} else if (queryString.contains("qprofile=java-sonar-way")) {
+//				resourceName = "/statics/java-sonar-way.protobuf"; 
+//			} else if (queryString.contains("qprofile=js-sonar-way")) {
+//				resourceName = "/statics/js-sonar-way.protobuf"; 
+//			}	
 		} else if (url.equals("/api/rules/list.protobuf")) {
 			resourceName = "/statics/list.protobuf";
 		} else if (url.equals("/batch/project.protobuf")) {
 			resourceName = "/statics/project.protobuf";
-		} else if (url.equals("/batch/issues.protobuf")) {
-			resourceName = "/statics/issues.protobuf";
+//		} else if (url.equals("/batch/issues.protobuf")) {
+//			resourceName = "/statics/issues.protobuf";
 		}
 		
 		if (resourceName == null) {

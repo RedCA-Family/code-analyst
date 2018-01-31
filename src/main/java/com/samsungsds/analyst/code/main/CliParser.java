@@ -82,7 +82,7 @@ public class CliParser {
 		options.addOption("include", true, "specify include pattern(Ant-style) with comma separated. (eg: com/sds/**/*.java)");
 		options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)");
 
-		options.addOption("m", "mode", true, "specify analysis items with comma separated. (code-size,duplication,complexity,pmd,findbugs,findsecbugs,dependency)");
+		options.addOption("m", "mode", true, "specify analysis items with comma separated. (code-size,duplication,complexity,pmd,findbugs,findsecbugs,webresource,dependency,unusedcode)");
 
 		options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occured, use JVM '-Xmx' option like '-Xmx1024m')");
 		

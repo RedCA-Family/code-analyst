@@ -15,7 +15,6 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.sonar.api.CoreProperties;
 import org.sonar.api.batch.bootstrap.ProjectDefinition;
 import org.sonarsource.scanner.api.ScanProperties;
-import org.sonarsource.scanner.api.ScannerApiVersion;
 import org.sonarsource.scanner.api.ScannerProperties;
 import org.sonarsource.scanner.api.internal.InternalProperties;
 
@@ -40,6 +39,8 @@ import com.samsungsds.analyst.code.sonar.server.JettySurrogateSonarServer;
 import com.samsungsds.analyst.code.sonar.server.SurrogateSonarServer;
 import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtAnalysis;
 import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtAnalysisLauncher;
+import com.samsungsds.analyst.code.unusedcode.UnusedCodeAnalysis;
+import com.samsungsds.analyst.code.unusedcode.UnusedCodeAnalysisLauncher;
 import com.samsungsds.analyst.code.util.FindFileUtils;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import com.samsungsds.analyst.code.util.PackageUtils;
@@ -167,6 +168,12 @@ public class App {
     	    		
     	    		runJDepend(cli);
         		}
+        		
+        		if (cli.getIndividualMode().isUnusedCode()) {
+    				LOGGER.info("UnusedCode Analysis start...");
+    	    		
+    	    		runUnusedCode(cli);
+        		}
     		}
 	    		
     		LOGGER.info("TechnicalDebt Analysis start...");
@@ -210,9 +217,10 @@ public class App {
 		sonar.addProperty(ScannerProperties.HOST_URL, "http://localhost:" + port);
 		
 		sonar.addProperty(InternalProperties.SCANNER_APP, "SonarQubeScanner");
-		sonar.addProperty(InternalProperties.SCANNER_APP_VERSION, ScannerApiVersion.version());
+		// sonar-scanner-api 버전업(2.8 -> 2.10) 후 api버전기능 삭제로 주석처리함
+		/*sonar.addProperty(InternalProperties.SCANNER_APP_VERSION, ScannerApiVersion.version());
 		
-		LOGGER.debug("Sonar Scanner Version : {}", ScannerApiVersion.version());
+		LOGGER.debug("Sonar Scanner Version : {}", ScannerApiVersion.version());*/
 		
 		sonar.addProperty(ScanProperties.PROJECT_SOURCE_ENCODING, cli.getEncoding());
 		
@@ -222,6 +230,7 @@ public class App {
 		sonar.addProperty(CoreProperties.PROJECT_KEY_PROPERTY, "local");
 		
 		sonar.addProperty("sonar.projectBaseDir", cli.getProjectBaseDir());
+		sonar.addProperty("sonar.java.binaries", cli.getBinary());
 		sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, cli.getSrc());
 		sonar.addProperty("sonar.java.source", cli.getJavaVersion());
 		
@@ -379,6 +388,15 @@ public class App {
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.DEPENDENCY_COMPLETE));
 		}
+	}
+
+	private void runUnusedCode(CliParser cli) {
+		UnusedCodeAnalysis unusedCodeViolation = new UnusedCodeAnalysisLauncher();
+		
+		unusedCodeViolation.setTargetBinary(cli.getProjectBaseDir() + File.separator + cli.getBinary());
+		unusedCodeViolation.setTargetSrc(cli.getProjectBaseDir() + File.separator + cli.getSrc());
+		
+		unusedCodeViolation.run(cli.getInstanceKey());
 	}
 
 	private void runTechnicalDebt(CliParser cli) {

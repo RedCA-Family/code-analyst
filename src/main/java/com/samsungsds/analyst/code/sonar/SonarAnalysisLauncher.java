@@ -1,6 +1,7 @@
 package com.samsungsds.analyst.code.sonar;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,33 +13,35 @@ import org.sonarsource.scanner.api.internal.batch.LogOutput;
 public class SonarAnalysisLauncher implements SonarAnalysis {
 	private static final Logger LOGGER = LogManager.getLogger(SonarAnalysisLauncher.class);
 	
-	private final Properties globalProperties = new Properties();
+	private final Map<String, String> globalProperties = new HashMap<>();
 	private final LogOutput logOutput = new DefaultLogOutput();
 	
 	public SonarAnalysisLauncher(String projectBaseDir) {
-		globalProperties.setProperty("sonar.projectBaseDir", projectBaseDir);
+		globalProperties.put("sonar.projectBaseDir", projectBaseDir);
 		
 		// sonar.projectKey, sonar.sources
 	}
 	
 	public void addProperty(String key, String value) {
-		globalProperties.setProperty(key, value);
+		globalProperties.put(key, value);
 	}
 	
 	@Override
 	public void run(String instanceKey) {
 		
-		String projectKey = globalProperties.getProperty(CoreProperties.PROJECT_KEY_PROPERTY);
+		String projectKey = globalProperties.get(CoreProperties.PROJECT_KEY_PROPERTY);
 		
-		globalProperties.setProperty(CoreProperties.PROJECT_KEY_PROPERTY, projectKey + ":" + instanceKey);
+		globalProperties.put(CoreProperties.PROJECT_KEY_PROPERTY, projectKey + ":" + instanceKey);
 		
 		IsolatedLauncher launcher = new BatchIsolatedLauncher();
 		
-		launcher.start(globalProperties, (formattedMessage, level) -> logOutput.log(formattedMessage, LogOutput.Level.valueOf(level.name())));
+		launcher.execute(globalProperties, (formattedMessage, level) -> logOutput.log(formattedMessage, LogOutput.Level.valueOf(level.name())));
 		
-		launcher.execute(globalProperties);
-		
-		launcher.stop();
+//		launcher.start(globalProperties, (formattedMessage, level) -> logOutput.log(formattedMessage, LogOutput.Level.valueOf(level.name())));
+//		
+//		launcher.execute(globalProperties);
+//		
+//		launcher.stop();
 	}
 
 	class DefaultLogOutput implements LogOutput {

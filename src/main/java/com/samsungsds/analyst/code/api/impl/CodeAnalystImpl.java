@@ -254,9 +254,17 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		if (mode.isFindSecBugs()) {
 			addAnalysisItem(parameter, "findsecbugs");
 		}
+
+		if (mode.isWebResource()) {
+			addAnalysisItem(parameter, "webresource");
+		}
 		
 		if (mode.isDependency()) {
 			addAnalysisItem(parameter, "dependency");
+		}
+		
+		if (mode.isUnusedCode()) {
+			addAnalysisItem(parameter, "unusedcode");
 		}
 		
 		return parameter.toString();

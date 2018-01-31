@@ -27,14 +27,6 @@ public abstract class FilePathAbstractFilter implements FilePathFilter {
 				ret = "**/" + ret;
 			}
 			
-			if (ret.endsWith("**")) {
-				ret = ret + "/*.java";
-			} else if (ret.endsWith(".java")) {
-				
-			} else {
-				ret = ret + ".java";
-			}
-			
 			this.filters[i] = ret;
 		}
 	}

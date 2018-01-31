@@ -108,10 +108,29 @@ public class ResultProcessor {
 			System.out.println();
 		}
 	}
-	
+
+	private static void printWebResourceSummary(MeasuredResult result) {
+		if (result.getIndividualMode().isWebResource()) {
+			System.out.println("WebResource violations : " + getFormattedNumber(result.getWebResourceCountAll()));
+			System.out.println("WebResource 1 priority : " + getFormattedNumber(result.getWebResourceCount(1)));
+			System.out.println("WebResource 2 priority : " + getFormattedNumber(result.getWebResourceCount(2)));
+			System.out.println("WebResource 3 priority : " + getFormattedNumber(result.getWebResourceCount(3)));
+			System.out.println("WebResource 4 priority : " + getFormattedNumber(result.getWebResourceCount(4)));
+			System.out.println("WebResource 5 priority : " + getFormattedNumber(result.getWebResourceCount(5)));
+			System.out.println();
+		}
+	}
+
 	protected static void printAcyclicDependSummary(MeasuredResult result) {
 		if (result.getIndividualMode().isDependency()) {
 			System.out.println("Acyclic Dependencies : " + getFormattedNumber(result.getAcyclicDependencyCount()));
+			System.out.println();
+		}
+	}
+
+	protected static void printUnusedCodeSummary(MeasuredResult result) {
+		if (result.getIndividualMode().isUnusedCode()) {
+			System.out.println("UnusedCode : " + getFormattedNumber(result.getUnusedCodeList().size()));
 			System.out.println();
 		}
 	}
@@ -142,7 +161,9 @@ public class ResultProcessor {
 			printPmdSummary(result);
 			printFindBugsSummary(result);
 			printFindSecBugsSummary(result);
+			printWebResourceSummary(result);
 			printAcyclicDependSummary(result);
+			printUnusedCodeSummary(result);
 			printTechnicalDebtSummary(result);
 		} else if (result.getMode() == MeasurementMode.ComplexityMode) {
 			printComplexity(result.getComplexityAllList());	

@@ -33,19 +33,20 @@ public class ApiExample {
 			return;
 		}
 		argument.setSrc("src");
-		argument.setBinary("target\\classes");
+		argument.setBinary("target/classes");
 		
 		argument.setEncoding("UTF-8");	// default
 		argument.setJavaVersion("1.8");	// default
 		
 		AnalysisMode mode = new AnalysisMode();
-		mode.setCodeSize(true);
-		mode.setDuplication(true);
-		mode.setComplexity(true);
-		mode.setPmd(true);
-		mode.setFindBugs(true);
-		mode.setFindSecBugs(true);
-		mode.setDependency(true);
+//		mode.setCodeSize(true);
+//		mode.setDuplication(true);
+//		mode.setComplexity(true);
+//		mode.setPmd(true);
+//		mode.setFindBugs(true);
+//		mode.setFindSecBugs(true);
+//		mode.setDependency(true);
+		mode.setUnusedCode(true);
 		
 		argument.setMode(mode);
 		

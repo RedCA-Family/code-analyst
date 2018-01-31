@@ -1,6 +1,7 @@
 package com.samsungsds.analyst.code.main.result;
 
-import static com.samsungsds.analyst.code.util.CSVUtil.*;
+import static com.samsungsds.analyst.code.util.CSVUtil.getString;
+import static com.samsungsds.analyst.code.util.CSVUtil.getStringsWithComma;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -18,6 +19,7 @@ import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.sonar.WebResourceResult;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 public class CSVSeperatedOutput {
@@ -122,4 +124,26 @@ public class CSVSeperatedOutput {
 		
 		LOGGER.info("Result seperated file saved : {}", csvFile);
 	}
+
+	public void writeWebResource(List<WebResourceResult> list) {
+		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-WebResource.csv";
+		
+		try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
+			csvWriter.println("No,Path,Rule,Message,Priority,Start line,Start offset,End line,End offset");
+			
+			int count = 0;
+			synchronized (list) {
+				for (WebResourceResult result : list) {
+					csvWriter.print(++count + ",");
+					csvWriter.print(getStringsWithComma(result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()), getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset())));
+					csvWriter.println();
+				}
+			}
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
+		
+		LOGGER.info("Result seperated file saved : {}", csvFile);
+	}
+
 }

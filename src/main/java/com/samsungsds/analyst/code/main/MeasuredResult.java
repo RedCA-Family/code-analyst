@@ -15,7 +15,7 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.sonar.core.util.stream.Collectors;
+import org.sonar.core.util.stream.MoreCollectors;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -32,6 +32,8 @@ import com.samsungsds.analyst.code.main.filter.FilePathIncludeFilter;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.sonar.WebResourceResult;
+import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtResult;
 import com.samsungsds.analyst.code.util.CSVFileCollectionList;
 import com.samsungsds.analyst.code.util.CSVFileResult;
@@ -158,6 +160,11 @@ public class MeasuredResult implements Serializable {
 	private int[] findSecBugsCount = new int[6];	// 0 : 전체, 1 ~ 5 (High, Normal, Low, Experimental, Ignore)
 	
 	@Expose
+	private List<WebResourceResult> webResourceList = null;
+	@Expose
+	private int[] webResourceCount = new int[6];	// 0 : 전체, 1 ~ 5 (Priority)
+	
+	@Expose
 	private List<JDependResult> acyclicDependencyList = null;
 	
 	private List<FilePathFilter> filePathFilterList = new ArrayList<>();
@@ -178,6 +185,9 @@ public class MeasuredResult implements Serializable {
 	
 	@Expose
 	private List<Inspection> topFindBugsList = null;
+	
+	@Expose
+	private List<UnusedCodeResult> unusedCodeList = null;
 	
 	@Expose
 	private TechnicalDebtResult technicalDebtResult = null;
@@ -214,6 +224,7 @@ public class MeasuredResult implements Serializable {
 			pmdList = Collections.synchronizedList(new ArrayList<>());
 			findBugsList = Collections.synchronizedList(new ArrayList<>());
 			findSecBugsList = Collections.synchronizedList(new ArrayList<>());
+			webResourceList = Collections.synchronizedList(new ArrayList<>());
 			acyclicDependencyList = Collections.synchronizedList(new ArrayList<>());
 		} else {
 			duplicationList = makeCSVFileCollectionList(DuplicationResult.class, this);
@@ -221,6 +232,7 @@ public class MeasuredResult implements Serializable {
 			pmdList = makeCSVFileCollectionList(PmdResult.class, this);
 			findBugsList = makeCSVFileCollectionList(FindBugsResult.class, this);
 			findSecBugsList = makeCSVFileCollectionList(FindBugsResult.class, this);
+			webResourceList = makeCSVFileCollectionList(WebResourceResult.class, this);
 			acyclicDependencyList = makeCSVFileCollectionList(JDependResult.class, this);
 		}
 	}
@@ -382,11 +394,11 @@ public class MeasuredResult implements Serializable {
 		return (afterLines - beforeLines);
 	}
 	
-	private boolean haveToSkip(String path) {
+	public boolean haveToSkip(String path) {
 		return haveToSkip(path, false);
 	}
 	
-	private boolean haveToSkip(String path, boolean withoutFilename) {
+	public boolean haveToSkip(String path, boolean withoutFilename) {
 		for (FilePathFilter filter : filePathFilterList) {
 			if (!filter.matched(path, withoutFilename)) {
 				return true;
@@ -648,7 +660,33 @@ public class MeasuredResult implements Serializable {
 	public List<FindBugsResult> getFindSecBugsList() {
 		return findSecBugsList;
 	}
+
+	public List<WebResourceResult> getWebResourceList() {
+		return webResourceList;
+	}
+
+	public void addWebResourceResult(WebResourceResult webResourceResult) {
+		webResourceList.add(webResourceResult);
+		webResourceCount[0]++;
+		webResourceCount[webResourceResult.getSeverity()]++;
+	}
+
+	public int getWebResourceCountAll() {
+		return webResourceCount[0];
+	}
+
+	public int getWebResourceCount(int priority) {
+		return webResourceCount[priority];
+	}
+
+	public void putUnusedCodeList(List<UnusedCodeResult> unusedCodeResultList) {
+		this.unusedCodeList = unusedCodeResultList;
+	}
 	
+	public List<UnusedCodeResult> getUnusedCodeList() {
+		return this.unusedCodeList;
+	}
+
 	public void addAcyclicDependency(String acyclicDependency) {
 		acyclicDependencyList.add(new JDependResult(acyclicDependency));
 	}
@@ -658,7 +696,7 @@ public class MeasuredResult implements Serializable {
 	}
 	
 	public List<String> getAcyclicDependencyList() {
-		return acyclicDependencyList.stream().map(s -> s.getAcyclicDependecies()).collect(Collectors.toList());
+		return acyclicDependencyList.stream().map(s -> s.getAcyclicDependecies()).collect(MoreCollectors.toList());
 	}
 
 	public void setMode(MeasurementMode mode) {
@@ -748,6 +786,7 @@ public class MeasuredResult implements Serializable {
 			pmdList.clear();
 			findBugsList.clear();
 			findSecBugsList.clear();
+			webResourceList.clear();
 		} else {
 			for (CSVFileCollectionList<?> list : closeTargetList) {
 				if (list.isTypeOf(JDependResult.class)) {
@@ -766,6 +805,8 @@ public class MeasuredResult implements Serializable {
 			pmdList = null;
 			findBugsList = null;
 			findSecBugsList = null;
+			webResourceList = null;
+			unusedCodeList = null;
 		}
 	}
 	
@@ -819,7 +860,11 @@ public class MeasuredResult implements Serializable {
 		for (int i = 0; i < findSecBugsCount.length; i++) {
 			findSecBugsCount[i] = 0;
 		}
-		
+
+		for (int i = 0; i < webResourceCount.length; i++) {
+			webResourceCount[i] = 0;
+		}
+
 		filePathFilterList.clear();
 		
 		withDefaultPackageClasses = false;
@@ -833,6 +878,7 @@ public class MeasuredResult implements Serializable {
 			pmdList.clear();
 			findBugsList.clear();
 			findSecBugsList.clear();
+			webResourceList.clear();
 			acyclicDependencyList.clear();
 		} else {
 			for (CSVFileCollectionList<?> list : closeTargetList) {
@@ -851,6 +897,7 @@ public class MeasuredResult implements Serializable {
 		topPmdList = null;
 		topFindBugsList = null;
 		technicalDebtResult = null;
+		unusedCodeList = null;
 	}
-	
+
 }

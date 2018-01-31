@@ -1,0 +1,211 @@
+
+5
+%sonaranalyzer-cs.nuget.packageVersion
+6.7.1.4347(
+3
+(sonar.authenticator.ignoreStartupFailurefalse(
+H
+sonar.editions.jsonUrl,https://update.sonarsource.org/editions.json(
+'
+sonar.cs.ignoreHeaderCommentstrue(
+/
+sonar.typescript.file.suffixes
+.ts
+.tsx(
+6
+$sonar.javascript.jQueryObjectAliases
+$
+ jQuery(
+
+email.fromName	SonarQube(
+#
+sonar.sonarcloud.enabledfalse(
+)
+sonar.python.xunit.skipDetailsfalse(
+B
+9sonar.dbcleaner.weeksBeforeKeepingOnlyAnalysesWithVersion104(
+$
+sonar.forceAuthenticationfalse(
+!
+sonar.notifications.delay60(
+ 
+sonar.flex.file.suffixesas(
+8
+sonaranalyzer-cs.ruleNamespaceSonarAnalyzer.CSharp(
+
+email.smtp_port.secured25(
+C
+sonar.python.xunit.reportPath xunit-reports/xunit-result-*.xml(
+7
+sonar.web.file.suffixes.html,.xhtml,.rhtml,.shtml(
+C
+8sonar.builtInQualityProfiles.disableNotificationOnUpdatefalse(
+s
+sonar.javascript.globalsU
+angular
+goog
+google
+
+OpenLayers
+d3
+dojo
+dojox
+dijit
+Backbone
+moment
+casper(
+>
+6sonar.dbcleaner.hoursBeforeKeepingOnlyOneSnapshotByDay24(
+ 
+sonar.telemetry.enabletrue(
+M
+sonar.javascript.exclusions,
+**/node_modules/**
+**/bower_components/**(
+0
+%sonar.organizations.createPersonalOrgfalse(
+D
+sonar.telemetry.url+https://telemetry.sonarsource.com/sonarqube(
+(
+sonar.dbcleaner.cleanDirectorytrue(
+2
+'sonar.onboardingTutorial.showToNewUsersfalse(
+J
+sonar.jacoco.reportPaths,
+target/jacoco.exec
+ target/jacoco-it.exec(
+"
+sonar.cpd.cross_projectfalse(
+
+
+email.fromnoreply@nowhere(
+
+sonar.typescript.nodenode(
+>
+7sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByWeek4(
+'
+sonar.leak.periodprevious_version(
+
+email.prefix[SONARQUBE](
+J
+"sonar.python.coverage.itReportPath"coverage-reports/it-coverage-*.xml(
+&
+sonaranalyzer-cs.pluginKeycsharp(
+T
+'sonar.python.coverage.overallReportPath'coverage-reports/overall-coverage-*.xml(
+/
+%sonar.javascript.ignoreHeaderCommentstrue(
+6
+.sonar.dbcleaner.daysBeforeDeletingClosedIssues30(
+@
+8sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByMonth52(
+g
+sonar.lf.gravatarServerUrlGhttps://secure.gravatar.com/avatar/{EMAIL_MD5}.jpg?s={SIZE}&d=identicon(
+-
+"sonar.telemetry.frequencyInSeconds21600(
+E
+#sonaranalyzer-cs.staticResourceNameSonarAnalyzer-6.7.1.4347.zip(
+>
+5sonar.notifications.runningDelayBeforeReportingStatus600(
+:
+ sonaranalyzer-cs.nuget.packageIdSonarAnalyzer.CSharp(
+Ê
+sonar.javascript.environments¦
+amd
+ applescript
+	 atomtest
+ browser
+	 commonjs
+ couch
+
+ embertest
+ greasemonkey
+ jasmine
+ jest
+ jquery
+ meteor
+ mocha
+ mongo
+ nashorn
+ node
+
+ phantomjs
+ prototypejs
+ protractor
+ qunit
+ rhino
+ serviceworker
+ shared-node-browser
+ shelljs
+ webextensions
+ worker
+ wsh
+ yui(
+'
+sonar.authenticator.downcasefalse(
+
+sonar.scm.disabledfalse(
+E
+ sonar.python.coverage.reportPathcoverage-reports/coverage-*.xml(
+%
+sonar.updatecenter.activatetrue(
+M
+sonar.typescript.exclusions,
+**/node_modules/**
+**/bower_components/**(
+5
+sonaranalyzer-cs.analyzerIdSonarAnalyzer.CSharp(
+ 
+sonar.pmd.generateXmlfalse(
+.
+#sonar.organizations.anyoneCanCreatefalse(
+4
+sonar.technicalDebt.ratingGrid0.05,0.1,0.2,0.5(
++
+#sonar.technicalDebt.developmentCost30(
+"
+sonar.lf.enableGravatarfalse(
+€
+sonar.preview.excludePlugins^
+
+devcockpit
+	pdfreport
+
+governance
+ldap
+authaad
+
+authgithub
+authbitbucket
+googleanalytics(
+.
+sonaranalyzer-cs.pluginVersion
+6.7.1.4347(
+"
+sonar.python.file.suffixespy(
+2
+'sonar.python.coverage.forceZeroCoveragefalse(
+!
+sonar.cs.file.suffixes
+.cs(
+5
+sonar.javascript.file.suffixes
+.js
+.jsx
+.vue(
++
+sonar.java.file.suffixes
+.java
+.jav(
+9
+sonar.php.file.suffixesphp,php3,php4,php5,phtml,inc(
++
+sonar.xml.file.suffixes.xml,.xsd,.xsl(
+8
+/sonar.dbcleaner.weeksBeforeDeletingAllSnapshots260(
+S
+sonar.updatecenter.url7https://update.sonarsource.org/update-center.properties(
+%
+sonar.core.idAWEgck8olIthtMf8fRgY
+0
+sonar.core.startTime2018-01-25T13:24:55+0900

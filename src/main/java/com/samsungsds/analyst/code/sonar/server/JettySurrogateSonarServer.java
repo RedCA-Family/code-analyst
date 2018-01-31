@@ -14,10 +14,11 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ShutdownHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 
-import com.samsungsds.analyst.code.sonar.server.servlets.GlobalSettingsResServlet;
 import com.samsungsds.analyst.code.sonar.server.servlets.JarDownloadServlet;
-import com.samsungsds.analyst.code.sonar.server.servlets.PluginsIndexResServlet;
+import com.samsungsds.analyst.code.sonar.server.servlets.MetricsResServlet;
+import com.samsungsds.analyst.code.sonar.server.servlets.PluginInstalledResServlet;
 import com.samsungsds.analyst.code.sonar.server.servlets.QualityProfilesServlet;
+import com.samsungsds.analyst.code.sonar.server.servlets.SettingValuesResServlet;
 import com.samsungsds.analyst.code.sonar.server.servlets.SubmitServlet;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
@@ -42,14 +43,17 @@ public class JettySurrogateSonarServer implements SurrogateSonarServer {
 		
 		ServletHandler handler = new ServletHandler();
 				
-        handler.addServletWithMapping(GlobalSettingsResServlet.class, "/batch/global");
-        handler.addServletWithMapping(PluginsIndexResServlet.class, "/deploy/plugins/index.txt");
+//        handler.addServletWithMapping(GlobalSettingsResServlet.class, "/batch/global");
+        handler.addServletWithMapping(SettingValuesResServlet.class, "/api/settings/values.protobuf");
+//        handler.addServletWithMapping(PluginsIndexResServlet.class, "/deploy/plugins/index.txt");
+        handler.addServletWithMapping(PluginInstalledResServlet.class, "/api/plugins/installed");
+        handler.addServletWithMapping(MetricsResServlet.class, "/api/metrics/search");
         handler.addServletWithMapping(JarDownloadServlet.class, "/deploy/plugins/*");
         handler.addServletWithMapping(QualityProfilesServlet.class, "/api/qualityprofiles/search.protobuf");
         handler.addServletWithMapping(QualityProfilesServlet.class, "/api/rules/search.protobuf");
         handler.addServletWithMapping(QualityProfilesServlet.class, "/api/rules/list.protobuf");
         handler.addServletWithMapping(QualityProfilesServlet.class, "/batch/project.protobuf");
-        handler.addServletWithMapping(QualityProfilesServlet.class, "/batch/issues.protobuf");
+//        handler.addServletWithMapping(QualityProfilesServlet.class, "/batch/issues.protobuf");
         
         handler.addServletWithMapping(SubmitServlet.class, "/api/ce/submit");
         
