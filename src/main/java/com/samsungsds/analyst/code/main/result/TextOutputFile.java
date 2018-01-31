@@ -416,7 +416,7 @@ public class TextOutputFile extends AbstractOutputFile {
 		writer.println();
 		writer.println();
 	}
-
+	
 	@Override
 	protected void close(PrintWriter writer) {
 		// no-op
