@@ -190,6 +190,23 @@ public class MeasuredResult implements Serializable {
 	private List<UnusedCodeResult> unusedCodeList = null;
 	
 	@Expose
+	private int ucTotalClassCount = 0;
+	@Expose
+	private int ucTotalMethodCount = 0;
+	@Expose
+	private int ucTotalFieldCount = 0;
+	@Expose
+	private int ucTotalConstantCount = 0;
+	@Expose
+	private int unusedClassCount = 0;
+	@Expose
+	private int unusedMethodCount = 0;
+	@Expose
+	private int unusedFieldCount = 0;
+	@Expose
+	private int unusedConstantCount = 0;
+	
+	@Expose
 	private TechnicalDebtResult technicalDebtResult = null;
 
 	public static MeasuredResult getInstance(String instanceKey) {
@@ -685,6 +702,70 @@ public class MeasuredResult implements Serializable {
 	
 	public List<UnusedCodeResult> getUnusedCodeList() {
 		return this.unusedCodeList;
+	}
+
+	public int getUcTotalClassCount() {
+		return ucTotalClassCount;
+	}
+
+	public void setUcTotalClassCount(int ucTotalClassCount) {
+		this.ucTotalClassCount = ucTotalClassCount;
+	}
+
+	public int getUcTotalMethodCount() {
+		return ucTotalMethodCount;
+	}
+
+	public void setUcTotalMethodCount(int ucTotalMethodCount) {
+		this.ucTotalMethodCount = ucTotalMethodCount;
+	}
+
+	public int getUcTotalFieldCount() {
+		return ucTotalFieldCount;
+	}
+
+	public void setUcTotalFieldCount(int ucTotalFieldCount) {
+		this.ucTotalFieldCount = ucTotalFieldCount;
+	}
+
+	public int getUcTotalConstantCount() {
+		return ucTotalConstantCount;
+	}
+
+	public void setUcTotalConstantCount(int ucTotalConstantCount) {
+		this.ucTotalConstantCount = ucTotalConstantCount;
+	}
+
+	public int getUnusedClassCount() {
+		return unusedClassCount;
+	}
+
+	public void setUnusedClassCount(int unusedClassCount) {
+		this.unusedClassCount = unusedClassCount;
+	}
+
+	public int getUnusedMethodCount() {
+		return unusedMethodCount;
+	}
+
+	public void setUnusedMethodCount(int unusedMethodCount) {
+		this.unusedMethodCount = unusedMethodCount;
+	}
+
+	public int getUnusedFieldCount() {
+		return unusedFieldCount;
+	}
+
+	public void setUnusedFieldCount(int unusedFieldCount) {
+		this.unusedFieldCount = unusedFieldCount;
+	}
+
+	public int getUnusedConstantCount() {
+		return unusedConstantCount;
+	}
+
+	public void setUnusedConstantCount(int unusedConstantCount) {
+		this.unusedConstantCount = unusedConstantCount;
 	}
 
 	public void addAcyclicDependency(String acyclicDependency) {

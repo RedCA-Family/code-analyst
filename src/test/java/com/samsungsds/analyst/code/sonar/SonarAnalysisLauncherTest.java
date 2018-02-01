@@ -53,7 +53,6 @@ public class SonarAnalysisLauncherTest {
 		
 		sonar.addProperty(ScannerProperties.HOST_URL, "http://localhost:"+port);
 		sonar.addProperty(InternalProperties.SCANNER_APP, "SonarQubeScanner");
-		sonar.addProperty(InternalProperties.SCANNER_APP_VERSION, "2.10");
 		sonar.addProperty(ScanProperties.PROJECT_SOURCE_ENCODING, cli.getEncoding());
 		sonar.addProperty(CoreProperties.ANALYSIS_MODE, CoreProperties.ANALYSIS_MODE_PUBLISH);
 		

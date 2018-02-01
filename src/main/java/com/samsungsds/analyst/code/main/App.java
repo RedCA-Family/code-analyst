@@ -217,10 +217,6 @@ public class App {
 		sonar.addProperty(ScannerProperties.HOST_URL, "http://localhost:" + port);
 		
 		sonar.addProperty(InternalProperties.SCANNER_APP, "SonarQubeScanner");
-		// sonar-scanner-api 버전업(2.8 -> 2.10) 후 api버전기능 삭제로 주석처리함
-		/*sonar.addProperty(InternalProperties.SCANNER_APP_VERSION, ScannerApiVersion.version());
-		
-		LOGGER.debug("Sonar Scanner Version : {}", ScannerApiVersion.version());*/
 		
 		sonar.addProperty(ScanProperties.PROJECT_SOURCE_ENCODING, cli.getEncoding());
 		

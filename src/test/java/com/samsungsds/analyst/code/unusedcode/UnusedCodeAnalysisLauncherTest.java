@@ -6,7 +6,6 @@ import static org.mockito.Mockito.spy;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -53,15 +52,7 @@ public class UnusedCodeAnalysisLauncherTest {
 		
 		unusedCodeAnalysisLauncher.run(testInstanceKey);
 		
-		int actualUnusedFieldCount = 0;
-		List<UnusedCodeResult> unusedCodeList = measuredResult.getUnusedCodeList();
-		for (UnusedCodeResult unusedCodeResult : unusedCodeList) {
-			if(unusedCodeResult.getType().equals(UnusedCodeAnalysisLauncher.UNUSED_CODE_TYPE_FIELD)) {
-				actualUnusedFieldCount++;
-			}
-		}
-		
-		assertThat(actualUnusedFieldCount, is(2));
+		assertThat(measuredResult.getUnusedFieldCount(), is(2));
 	}
 	
 	@Test public void
@@ -74,15 +65,7 @@ public class UnusedCodeAnalysisLauncherTest {
 		
 		unusedCodeAnalysisLauncher.run(testInstanceKey);
 		
-		int actualUnusedMethodCount = 0;
-		List<UnusedCodeResult> unusedCodeList = measuredResult.getUnusedCodeList();
-		for (UnusedCodeResult unusedCodeResult : unusedCodeList) {
-			if(unusedCodeResult.getType().equals(UnusedCodeAnalysisLauncher.UNUSED_CODE_TYPE_METHOD)) {
-				actualUnusedMethodCount++;
-			}
-		}
-		
-		assertThat(actualUnusedMethodCount, is(3));
+		assertThat(measuredResult.getUnusedMethodCount(), is(3));
 	}
 	
 	@Test public void
@@ -95,15 +78,7 @@ public class UnusedCodeAnalysisLauncherTest {
 		
 		unusedCodeAnalysisLauncher.run(testInstanceKey);
 		
-		int actualUnusedConstantCount = 0;
-		List<UnusedCodeResult> unusedCodeList = measuredResult.getUnusedCodeList();
-		for (UnusedCodeResult unusedCodeResult : unusedCodeList) {
-			if(unusedCodeResult.getType().equals(UnusedCodeAnalysisLauncher.UNUSED_CODE_TYPE_CONSTANT)) {
-				actualUnusedConstantCount++;
-			}
-		}
-		
-		assertThat(actualUnusedConstantCount, is(1));
+		assertThat(measuredResult.getUnusedConstantCount(), is(1));
 	}
 	
 	@Test public void
@@ -116,19 +91,11 @@ public class UnusedCodeAnalysisLauncherTest {
 		
 		unusedCodeAnalysisLauncher.run(testInstanceKey);
 		
-		int actualUnusedClassCount = 0;
-		List<UnusedCodeResult> unusedCodeList = measuredResult.getUnusedCodeList();
-		for (UnusedCodeResult unusedCodeResult : unusedCodeList) {
-			if(unusedCodeResult.getType().equals(UnusedCodeAnalysisLauncher.UNUSED_CODE_TYPE_CLASS)) {
-				actualUnusedClassCount++;
-			}
-		}
-		
-		assertThat(actualUnusedClassCount, is(1));
+		assertThat(measuredResult.getUnusedClassCount(), is(1));
 	}
 	
 	@Test public void
-	should_detect_1_unused_field_when_lancher_analysis_unusedcode_package_with_filter() {
+	should_detect_1_unused_constant_when_lancher_analysis_unusedcode_package_with_filter() {
 		String src = "./src";
 		String binary = "./target/classes/com/samsungsds/analyst/code/unusedcode";
 		
@@ -139,15 +106,7 @@ public class UnusedCodeAnalysisLauncherTest {
 
 		unusedCodeAnalysisLauncher.run(testInstanceKey);
 		
-		int actualUnusedCount = 0;
-		List<UnusedCodeResult> unusedCodeList = measuredResult.getUnusedCodeList();
-		for (UnusedCodeResult unusedCodeResult : unusedCodeList) {
-			if(unusedCodeResult.getType().equals(UnusedCodeAnalysisLauncher.UNUSED_CODE_TYPE_CONSTANT)) {
-				actualUnusedCount++;
-			}
-		}
-		
-		assertThat(actualUnusedCount, is(1));
+		assertThat(measuredResult.getUnusedConstantCount(), is(1));
 	}
 	
 	@Test public void

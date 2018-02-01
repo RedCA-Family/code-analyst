@@ -99,10 +99,22 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		}
 		
 		
-		Collection<CAField> unusedFields = CollectionUtils.subtract(visitResult.getFields(), visitResult.getUsedFields());
-		Collection<CAMethod> unusedMethods = CollectionUtils.subtract(visitResult.getMethods(), visitResult.getUsedMethods());
-		Collection<CAConstant> unusedConstants = CollectionUtils.subtract(visitResult.getContants(), visitResult.getUsedConstants());
+		//set total count per type
+		measuredResult.setUcTotalClassCount(visitResult.getClasses().size());
+		measuredResult.setUcTotalMethodCount(visitResult.getMethods().size());
+		measuredResult.setUcTotalFieldCount(visitResult.getFields().size());
+		measuredResult.setUcTotalConstantCount(visitResult.getContants().size());
+		
 		Collection<CAClass> unusedClasses = CollectionUtils.subtract(visitResult.getClasses(), visitResult.getUsedClasses());
+		Collection<CAMethod> unusedMethods = CollectionUtils.subtract(visitResult.getMethods(), visitResult.getUsedMethods());
+		Collection<CAField> unusedFields = CollectionUtils.subtract(visitResult.getFields(), visitResult.getUsedFields());
+		Collection<CAConstant> unusedConstants = CollectionUtils.subtract(visitResult.getContants(), visitResult.getUsedConstants());
+		
+		//set unused count per type
+		measuredResult.setUnusedClassCount(unusedClasses.size());
+		measuredResult.setUnusedMethodCount(unusedMethods.size());
+		measuredResult.setUnusedFieldCount(unusedFields.size());
+		measuredResult.setUnusedConstantCount(unusedConstants.size());
 		
 		List<UnusedCodeResult> resultList = new ArrayList<>();
 		for(CAClass caClass : unusedClasses) {
@@ -119,6 +131,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		
 		for(CAMethod caMethod : unusedMethods) {
 			if(isNotExistInSource(caMethod)) {
+				measuredResult.setUnusedMethodCount(measuredResult.getUnusedMethodCount() - 1);
 				continue;
 			}
 			
@@ -136,6 +149,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		
 		for (CAField caField : unusedFields) {
 			if(isNotExistInSource(caField)) {
+				measuredResult.setUnusedFieldCount(measuredResult.getUnusedFieldCount() - 1);
 				continue;
 			}
 			
@@ -153,6 +167,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		
 		for (CAConstant caConstant : unusedConstants) {
 			if(isNotExistInSource(caConstant)) {
+				measuredResult.setUnusedConstantCount(measuredResult.getUnusedConstantCount() - 1);
 				continue;
 			}
 			
