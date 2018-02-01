@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 @SuppressWarnings("serial")
+@Deprecated
 public class PluginsIndexResServlet extends HttpServlet {
 
 	@Override
