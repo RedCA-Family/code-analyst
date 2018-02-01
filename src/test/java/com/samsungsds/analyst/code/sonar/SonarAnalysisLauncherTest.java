@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.sonar.api.CoreProperties;
 import org.sonar.api.batch.bootstrap.ProjectDefinition;
 import org.sonarsource.scanner.api.ScanProperties;
-import org.sonarsource.scanner.api.ScannerApiVersion;
 import org.sonarsource.scanner.api.ScannerProperties;
 import org.sonarsource.scanner.api.internal.InternalProperties;
 
@@ -54,7 +53,6 @@ public class SonarAnalysisLauncherTest {
 		
 		sonar.addProperty(ScannerProperties.HOST_URL, "http://localhost:"+port);
 		sonar.addProperty(InternalProperties.SCANNER_APP, "SonarQubeScanner");
-		sonar.addProperty(InternalProperties.SCANNER_APP_VERSION, ScannerApiVersion.version());
 		sonar.addProperty(ScanProperties.PROJECT_SOURCE_ENCODING, cli.getEncoding());
 		sonar.addProperty(CoreProperties.ANALYSIS_MODE, CoreProperties.ANALYSIS_MODE_PUBLISH);
 		
