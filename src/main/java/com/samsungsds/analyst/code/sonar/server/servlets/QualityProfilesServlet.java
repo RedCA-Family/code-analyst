@@ -54,19 +54,10 @@ public class QualityProfilesServlet extends HttpServlet {
 			} else if (queryString.contains("qprofile=AWEgcp25lIthtMf8fSTR")) {
 				resourceName = "/statics/AWEgcp25lIthtMf8fSTR.protobuf";
 			}
-//			if (queryString.contains("qprofile=cs-sonar-way")) {
-//				resourceName = "/statics/cs-sonar-way.protobuf";
-//			} else if (queryString.contains("qprofile=java-sonar-way")) {
-//				resourceName = "/statics/java-sonar-way.protobuf";
-//			} else if (queryString.contains("qprofile=js-sonar-way")) {
-//				resourceName = "/statics/js-sonar-way.protobuf";
-//			}
 		} else if (url.equals("/api/rules/list.protobuf")) {
 			resourceName = "/statics/list.protobuf";
 		} else if (url.equals("/batch/project.protobuf")) {
 			resourceName = "/statics/project.protobuf";
-//		} else if (url.equals("/batch/issues.protobuf")) {
-//			resourceName = "/statics/issues.protobuf";
 		}
 		
 		if (resourceName == null) {

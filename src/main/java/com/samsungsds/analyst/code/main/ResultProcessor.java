@@ -60,6 +60,7 @@ public class ResultProcessor {
 		}
 		
 		if (result.getIndividualMode().isDuplication()) {
+			System.out.println("Duplicated Blocks : " + getFormattedNumber(result.getDuplicatedBlocks()));
 			System.out.println("Duplicated lines : " + getFormattedNumber(result.getDuplicatedLines()));
 			System.out.println("Duplication % : " + result.getDuplicatedLinesPercent() );
 			System.out.println();
@@ -84,7 +85,8 @@ public class ResultProcessor {
 			System.out.println("PMD violations : " + getFormattedNumber(result.getPmdCountAll()));
 			System.out.println("PMD 1 priority : " + getFormattedNumber(result.getPmdCount(1)));
 			System.out.println("PMD 2 priority : " + getFormattedNumber(result.getPmdCount(2)));
-			System.out.println("PMD < 3 priority : " + getFormattedNumber(result.getPmdCount(3) + result.getPmdCount(4) + result.getPmdCount(5)));
+			System.out.println("PMD 3 priority : " + getFormattedNumber(result.getPmdCount(3)));
+			System.out.println("PMD < 4 priority : " + getFormattedNumber(result.getPmdCount(4) + result.getPmdCount(5)));
 			System.out.println();
 		}
 	}
@@ -112,11 +114,6 @@ public class ResultProcessor {
 	private static void printWebResourceSummary(MeasuredResult result) {
 		if (result.getIndividualMode().isWebResource()) {
 			System.out.println("WebResource violations : " + getFormattedNumber(result.getWebResourceCountAll()));
-			System.out.println("WebResource 1 priority : " + getFormattedNumber(result.getWebResourceCount(1)));
-			System.out.println("WebResource 2 priority : " + getFormattedNumber(result.getWebResourceCount(2)));
-			System.out.println("WebResource 3 priority : " + getFormattedNumber(result.getWebResourceCount(3)));
-			System.out.println("WebResource 4 priority : " + getFormattedNumber(result.getWebResourceCount(4)));
-			System.out.println("WebResource 5 priority : " + getFormattedNumber(result.getWebResourceCount(5)));
 			System.out.println();
 		}
 	}

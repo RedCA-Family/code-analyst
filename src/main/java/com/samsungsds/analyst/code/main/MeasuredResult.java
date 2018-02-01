@@ -111,6 +111,9 @@ public class MeasuredResult implements Serializable {
 	private List<DuplicationResult> duplicationList = null;
 	
 	@Expose
+	private int duplicatedBlocks = 0;
+	
+	@Expose
 	private int duplicatedLines = 0;
 	
 	private Map<String, Set<Integer>> duplicatedBlockData = new HashMap<>();
@@ -351,6 +354,14 @@ public class MeasuredResult implements Serializable {
 	public synchronized void addStatements(int statements) {
 		this.statements += statements;
 	}
+	
+	public int getDuplicatedBlocks() {
+		return duplicatedBlocks;
+	}
+
+	public void addDuplicatedBlocks() {
+		this.duplicatedBlocks++;
+	}
 
 	public int getDuplicatedLines() {
 		return duplicatedLines;
@@ -365,6 +376,7 @@ public class MeasuredResult implements Serializable {
 		String duplcatedPath = null;
 		
 		if (DuplicationResult.DUPLICATED_FILE_SAME_MARK.equals(result.getDuplicatedPath())) {
+			addDuplicatedBlocks();
 			duplcatedPath = result.getPath();
 		} else {
 			duplcatedPath = result.getDuplicatedPath();

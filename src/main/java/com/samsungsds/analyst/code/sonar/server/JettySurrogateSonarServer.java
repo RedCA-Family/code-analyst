@@ -43,9 +43,7 @@ public class JettySurrogateSonarServer implements SurrogateSonarServer {
 		
 		ServletHandler handler = new ServletHandler();
 				
-//        handler.addServletWithMapping(GlobalSettingsResServlet.class, "/batch/global");
         handler.addServletWithMapping(SettingValuesResServlet.class, "/api/settings/values.protobuf");
-//        handler.addServletWithMapping(PluginsIndexResServlet.class, "/deploy/plugins/index.txt");
         handler.addServletWithMapping(PluginInstalledResServlet.class, "/api/plugins/installed");
         handler.addServletWithMapping(MetricsResServlet.class, "/api/metrics/search");
         handler.addServletWithMapping(JarDownloadServlet.class, "/deploy/plugins/*");
@@ -53,7 +51,6 @@ public class JettySurrogateSonarServer implements SurrogateSonarServer {
         handler.addServletWithMapping(QualityProfilesServlet.class, "/api/rules/search.protobuf");
         handler.addServletWithMapping(QualityProfilesServlet.class, "/api/rules/list.protobuf");
         handler.addServletWithMapping(QualityProfilesServlet.class, "/batch/project.protobuf");
-//        handler.addServletWithMapping(QualityProfilesServlet.class, "/batch/issues.protobuf");
         
         handler.addServletWithMapping(SubmitServlet.class, "/api/ce/submit");
         

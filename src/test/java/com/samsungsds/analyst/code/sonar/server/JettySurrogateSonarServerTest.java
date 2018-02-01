@@ -28,14 +28,14 @@ public class JettySurrogateSonarServerTest {
 	
 	private String[] servletPaths() {
 		return new String[] {
-				"/batch/global",
-				"/deploy/plugins/index.txt",
+				"/api/settings/values.protobuf",
+				"/api/plugins/installed",
+				"/api/metrics/search",
 				"/deploy/plugins/findsecbugs-plugin-1.7.1.jar",
 				"/api/qualityprofiles/search.protobuf",
-				"/api/rules/search.protobuf?qprofile=java-sonar-way",
+				"/api/rules/search.protobuf?qprofile=AWEgcpHElIthtMf8fR6x",
 				"/api/rules/list.protobuf",
-				"/batch/project.protobuf",
-				"/batch/issues.protobuf",
+				"/batch/project.protobuf"
 		}; 
 	}
 	

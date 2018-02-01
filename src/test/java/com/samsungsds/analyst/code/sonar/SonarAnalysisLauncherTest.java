@@ -59,6 +59,7 @@ public class SonarAnalysisLauncherTest {
 		sonar.addProperty(CoreProperties.PROJECT_KEY_PROPERTY, "local");
 		
 		sonar.addProperty("sonar.projectBaseDir", cli.getProjectBaseDir());
+		sonar.addProperty("sonar.java.binaries", cli.getBinary());
 		sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, cli.getSrc());
 		sonar.addProperty("sonar.java.source", cli.getJavaVersion());
 		sonar.addProperty("sonar.ws.timeout", cli.getTimeout());

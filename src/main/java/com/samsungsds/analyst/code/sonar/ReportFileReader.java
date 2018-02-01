@@ -93,6 +93,8 @@ public class ReportFileReader implements Closeable {
 					while (it.hasNext()) {
 						ScannerReport.Duplication dup = it.next();
 
+						MeasuredResult.getInstance(instanceKey).addDuplicatedBlocks();
+						
 						String path = component.getPath();
 						int startLine = dup.getOriginPosition().getStartLine();
 						int endLine = dup.getOriginPosition().getEndLine();

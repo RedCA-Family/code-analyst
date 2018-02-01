@@ -55,7 +55,7 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 	}
 
 	private void calculateDuplicationDebt() {
-		duplicationDebt = measuredResult.getDulicationList().size() * COST_TO_FIX_ONE_BLOCK;
+		duplicationDebt = measuredResult.getDuplicatedBlocks() * COST_TO_FIX_ONE_BLOCK;
 		LOGGER.info("Calculated Duplication Debt: " + duplicationDebt);
 	}
 

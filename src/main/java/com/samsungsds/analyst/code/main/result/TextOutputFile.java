@@ -87,6 +87,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println();
 		}
 		if (result.getIndividualMode().isDuplication()) {
+			writer.println("DuplicatedBlocks = " + result.getDuplicatedBlocks());
 			writer.println("DuplicatedLines = " + result.getDuplicatedLines());
 			writer.println();
 		}

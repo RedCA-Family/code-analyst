@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -113,7 +114,7 @@ public class App {
     		if (progressMonitor != null) {
     			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.PREPARE_COMPLETE));
     		}
-     		
+    		
     		if (cli.getMode() == MeasurementMode.ComplexityMode) {
     			LOGGER.info("Code Size Analysis start...");
         		
@@ -124,18 +125,20 @@ public class App {
     			runComplexity(cli);
     			
     		} else {
-    			
-    			if (cli.getIndividualMode().isCodeSize() && cli.getIndividualMode().isDuplication()) {
-        			LOGGER.info("Code Size & Duplication Analysis start...");
+    			if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isWebResource()) {
+    				List<String> sonarAnalysisModeList = new ArrayList<>();
+    				if (cli.getIndividualMode().isCodeSize()) {
+    					sonarAnalysisModeList.add("Code Size");
+    				}
+    				if (cli.getIndividualMode().isDuplication()) {
+    					sonarAnalysisModeList.add("Duplication");
+    				}
+    				if (cli.getIndividualMode().isWebResource()) {
+    					sonarAnalysisModeList.add("Web Resource");
+    				}
+    				String sonarAnalysisMode = StringUtils.join(sonarAnalysisModeList, " & ");
+        			LOGGER.info(sonarAnalysisMode + " Analysis start...");
         		
-        			runCodeSizeAalysis(cli);
-        		} else if (cli.getIndividualMode().isCodeSize()) {
-        			LOGGER.info("Code Size Analysis start...");
-            		
-        			runCodeSizeAalysis(cli);
-        		} else if (cli.getIndividualMode().isDuplication()) {
-        			LOGGER.info("Duplication Analysis start...");
-            		
         			runCodeSizeAalysis(cli);
         		}
         		
