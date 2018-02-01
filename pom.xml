@@ -228,7 +228,14 @@
 							<tasks>
 								<move
 									file="${project.basedir}/target/${jarName}-${project.version}-jar-with-dependencies.jar"
-									tofile="${project.basedir}/target/${jarName}-${project.version}.jar" />
+									tofile="${project.basedir}/target/${jarName}-${project.version}-temp.jar" />
+
+								<zip destfile="${project.basedir}/target/${jarName}-${project.version}.jar">
+									<zipfileset src="${project.basedir}/target/${jarName}-${project.version}-temp.jar">
+										<exclude name="statics/notBeIncluded/*.*"/>
+										<exclude name="statics/toBeDeleted/*.*"/>
+									</zipfileset>
+								</zip>
 
 								<jar
 									destfile="${project.basedir}/target/${jarName}-${project.version}.jar"
@@ -236,6 +243,8 @@
 									<zipfileset includes="**/*.*"
 										src="${project.basedir}/lib/sonar-scanner-api-batch.jar" />
 								</jar>
+
+								<delete file="${project.basedir}/target/${jarName}-${project.version}-temp.jar"/>
 							</tasks>
 						</configuration>
 						<goals>
