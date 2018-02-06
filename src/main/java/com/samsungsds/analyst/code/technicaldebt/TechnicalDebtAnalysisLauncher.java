@@ -23,6 +23,7 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 	private static final Logger LOGGER = LogManager.getLogger(TechnicalDebtAnalysisLauncher.class);
 
 	private static final double COST_TO_FIX_ONE_BLOCK = 2;
+	private static final double COST_TO_FIX_ONE_VIOLATION = 0.37;
 	private static final double COST_TO_FIX_ONE_VULNERABILITY_ISSUE = 0.62;
 	private static final double COST_TO_SPLIT_A_METHOD = 1;
 	private static final double COST_TO_CUT_AN_EDGE_BETWEEN_TWO_FILES = 4;
@@ -64,6 +65,7 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 		violationDebt += calculatePmdDebt();
 		violationDebt += calculateFindBugsDebt();
 		violationDebt += calculateFindSecBugsDebt();
+		violationDebt += calculateWebResourceDebt();
 		LOGGER.info("Calculated Violation Debt: " + violationDebt);
 	}
 
@@ -103,6 +105,10 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 
 	private double calculateFindSecBugsDebt() {
 		return measuredResult.getFindSecBugsCountAll() * COST_TO_FIX_ONE_VULNERABILITY_ISSUE;
+	}
+
+	private double calculateWebResourceDebt() {
+		return measuredResult.getWebResourceCountAll() * COST_TO_FIX_ONE_VIOLATION;
 	}
 
 	private void calculateComplexityDebt() {
