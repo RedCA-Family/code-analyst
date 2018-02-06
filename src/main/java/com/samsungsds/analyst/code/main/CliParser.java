@@ -331,12 +331,14 @@ public class CliParser {
 				individualMode.setFindBugs(true);
 			} else if (mode.equalsIgnoreCase("findsecbugs")) {
 				individualMode.setFindSecBugs(true);
+			} else if (mode.equalsIgnoreCase("webresource")) {
+				individualMode.setWebResource(true);
 			} else if (mode.equalsIgnoreCase("dependency")) {
 				individualMode.setDependency(true);
 			} else if (mode.equalsIgnoreCase("unusedcode")){
 				individualMode.setUnusedCode(true);
 			} else {
-				throw new IllegalArgumentException("'mode' option can only have 'code-size', 'duplication', 'complexity', 'pmd', 'findbugs', 'findsecbugs', 'unusedcode' and 'dependency'");
+				throw new IllegalArgumentException("'mode' option can only have 'code-size', 'duplication', 'complexity', 'pmd', 'findbugs', 'findsecbugs', 'webresource', 'dependency', and 'unusedcode'");
 			}
 		}
 	}

@@ -7,12 +7,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.samsungsds.analyst.code.util.LogUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.Configuration;
 import org.sonar.api.CoreProperties;
 import org.sonar.api.batch.bootstrap.ProjectDefinition;
 import org.sonarsource.scanner.api.ScanProperties;
@@ -93,11 +91,7 @@ public class App {
     		if (cli.isDebug()) {
     			LOGGER.info("Debugging enabled");
     		} else {
-    			LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-    			Configuration conf = ctx.getConfiguration();
-    			conf.getLoggerConfig("com.samsungsds.analyst.code").setLevel(Level.INFO);
-    			conf.getLoggerConfig("org.sonar").setLevel(Level.INFO);
-    			ctx.updateLoggers(conf);
+				LogUtils.unsetDebugLevel();
     		}
     		
     		if (cli.getMode() == MeasurementMode.ComplexityMode) {
@@ -252,15 +246,19 @@ public class App {
 		
 		sonar.run(cli.getInstanceKey());
 
-		if (progressMonitor != null) {
+		if (cli.getIndividualMode().isCodeSize() && progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.CODE_SIZE_COMPLETE));
 		}
 		
 		LOGGER.info("Surrogate Sonar Server stoping...");
 		server.stop();
 		
-		if (progressMonitor != null) {
+		if (cli.getIndividualMode().isDuplication() && progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.DUPLICATION_COMPLETE));
+		}
+
+		if (cli.getIndividualMode().isWebResource() && progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.WEBRESOURCE_COMPLETE));
 		}
 	}
 
@@ -396,6 +394,10 @@ public class App {
 		unusedCodeViolation.setTargetSrc(cli.getProjectBaseDir() + File.separator + cli.getSrc());
 		
 		unusedCodeViolation.run(cli.getInstanceKey());
+
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.UNUSED_COMPLETE));
+		}
 	}
 
 	private void runTechnicalDebt(CliParser cli) {

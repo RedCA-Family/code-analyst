@@ -39,13 +39,14 @@ public class ApiExample {
 		argument.setJavaVersion("1.8");	// default
 		
 		AnalysisMode mode = new AnalysisMode();
-//		mode.setCodeSize(true);
-//		mode.setDuplication(true);
-//		mode.setComplexity(true);
-//		mode.setPmd(true);
-//		mode.setFindBugs(true);
-//		mode.setFindSecBugs(true);
-//		mode.setDependency(true);
+		mode.setCodeSize(true);
+		mode.setDuplication(true);
+		mode.setComplexity(true);
+		mode.setPmd(true);
+		mode.setFindBugs(true);
+		mode.setFindSecBugs(true);
+		mode.setDependency(true);
+		mode.setWebResource(true);
 		mode.setUnusedCode(true);
 		
 		argument.setMode(mode);

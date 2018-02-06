@@ -15,7 +15,8 @@ public class AnalysisProgressMonitor {
 	private static ProgressEvent[] eventKeys = new ProgressEvent[] { 
 			ProgressEvent.PREPARE_COMPLETE, ProgressEvent.CODE_SIZE_COMPLETE, ProgressEvent.DUPLICATION_COMPLETE, 
 			ProgressEvent.COMPLEXITY_COMPLETE, ProgressEvent.PMD_COMPLETE, ProgressEvent.FINDBUGS_COMPLETE, 
-			ProgressEvent.FINDSECBUGS_COMPLETE, ProgressEvent.DEPENDENCY_COMPLETE, ProgressEvent.FINAL_COMPLETE };
+			ProgressEvent.FINDSECBUGS_COMPLETE, ProgressEvent.WEBRESOURCE_COMPLETE,
+			ProgressEvent.DEPENDENCY_COMPLETE, ProgressEvent.UNUSED_COMPLETE, ProgressEvent.FINAL_COMPLETE };
 	private static Map<ProgressEvent, Integer> stepRates = new HashMap<>();
 	private static Map<ProgressEvent, String> stepProperties = new HashMap<>();
 	
@@ -28,23 +29,27 @@ public class AnalysisProgressMonitor {
 	private long time = 0l;
 	
 	static {
-		stepRates.put(ProgressEvent.PREPARE_COMPLETE, 10);
+		stepRates.put(ProgressEvent.PREPARE_COMPLETE, 50);
 		stepRates.put(ProgressEvent.CODE_SIZE_COMPLETE, 10_000);
-		stepRates.put(ProgressEvent.DUPLICATION_COMPLETE, 4_000);
-		stepRates.put(ProgressEvent.COMPLEXITY_COMPLETE, 1_000);
-		stepRates.put(ProgressEvent.PMD_COMPLETE, 2_000);
-		stepRates.put(ProgressEvent.FINDBUGS_COMPLETE, 5_000);
-		stepRates.put(ProgressEvent.FINDSECBUGS_COMPLETE, 5_500);
-		stepRates.put(ProgressEvent.DEPENDENCY_COMPLETE, 500);
-		stepRates.put(ProgressEvent.FINAL_COMPLETE, 30);
+		stepRates.put(ProgressEvent.DUPLICATION_COMPLETE, 9_000);
+		stepRates.put(ProgressEvent.WEBRESOURCE_COMPLETE, 8_000);
+		stepRates.put(ProgressEvent.COMPLEXITY_COMPLETE, 1_500);
+		stepRates.put(ProgressEvent.PMD_COMPLETE, 2_800);
+		stepRates.put(ProgressEvent.FINDBUGS_COMPLETE, 9_500);
+		stepRates.put(ProgressEvent.FINDSECBUGS_COMPLETE, 9_000);
+		stepRates.put(ProgressEvent.DEPENDENCY_COMPLETE, 1_700);
+		stepRates.put(ProgressEvent.UNUSED_COMPLETE, 1_500);
+		stepRates.put(ProgressEvent.FINAL_COMPLETE, 100);
 		
 		stepProperties.put(ProgressEvent.CODE_SIZE_COMPLETE, "codeSize");
 		stepProperties.put(ProgressEvent.DUPLICATION_COMPLETE, "duplication");
+		stepProperties.put(ProgressEvent.WEBRESOURCE_COMPLETE, "webResource");
 		stepProperties.put(ProgressEvent.COMPLEXITY_COMPLETE, "complexity");
 		stepProperties.put(ProgressEvent.PMD_COMPLETE, "pmd");
 		stepProperties.put(ProgressEvent.FINDBUGS_COMPLETE, "findBugs");
 		stepProperties.put(ProgressEvent.FINDSECBUGS_COMPLETE, "findSecBugs");
 		stepProperties.put(ProgressEvent.DEPENDENCY_COMPLETE, "dependency");
+		stepProperties.put(ProgressEvent.UNUSED_COMPLETE, "unusedCode");
 	}
 	
 	public AnalysisProgressMonitor(AnalysisMode analysisMode) {
