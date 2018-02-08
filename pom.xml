@@ -245,6 +245,9 @@
 								</jar>
 
 								<delete file="${project.basedir}/target/${jarName}-${project.version}-temp.jar"/>
+
+								<copy file="${project.basedir}/target/${jarName}-${project.version}.jar"
+									  tofile="${project.basedir}/target/${jarName}-${project.version}-jar-with-dependencies.jar" />
 							</tasks>
 						</configuration>
 						<goals>

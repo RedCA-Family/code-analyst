@@ -1,13 +1,11 @@
 package com.samsungsds.analyst.code.main;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.samsungsds.analyst.code.pmd.PmdResult;
+import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import com.samsungsds.analyst.code.util.LogUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -20,14 +18,18 @@ import org.ini4j.Wini;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
 import com.samsungsds.analyst.code.util.FindFileUtils;
 
+import static com.samsungsds.analyst.code.util.CSVUtil.getString;
+import static com.samsungsds.analyst.code.util.CSVUtil.getStringsWithComma;
+
 public class DuplicationApp {
 	private enum Type {
-		OUT, CSV, CPD_CSV;
+		OUT, CSV, CPD_CSV
 	}
 
 	private String outputFile;
 	private static final String INSTANCE_KEY = DuplicationApp.class.getName();
 	private Type type;
+	private boolean saveCSVFile = false;
 
 	public DuplicationApp(Type type, String outputFile) {
 		this.outputFile = outputFile;
@@ -55,6 +57,31 @@ public class DuplicationApp {
 		System.out.println();
 		System.out.println("Duplicated file list : ");
 		System.out.println(MeasuredResult.getInstance(INSTANCE_KEY).getDuplicatedBlockDebugInfo());
+
+		if (saveCSVFile) {
+			System.out.println();
+			System.out.println("Save CSV File : duplication.csv");
+
+			String csvFile = "duplication.csv";
+
+			try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
+				csvWriter.println("No,Path,Start line,End line,Duplicated path,Start line,End line");
+
+				int count = 0;
+				synchronized (list) {
+					for (DuplicationResult result : MeasuredResult.getInstance(INSTANCE_KEY).getDulicationList()) {
+						csvWriter.print(++count + ",");
+						csvWriter.print(getStringsWithComma(result.getPath(), getString(result.getStartLine()), getString(result.getEndLine())));
+						csvWriter.print(",");
+						csvWriter.print(getStringsWithComma(result.getDuplicatedPath(), getString(result.getDuplicatedStartLine()), getString(result.getDuplicatedEndLine())));
+						csvWriter.println();
+					}
+				}
+
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
 	}
 
 	private void checkInput() {
@@ -121,7 +148,7 @@ public class DuplicationApp {
 					isFirst = false;
 					continue;
 				}
-				String no = record.get(0);
+				//String no = record.get(0);
 				String path = record.get(1);
 				String startLine = record.get(2);
 				String endLine = record.get(3);
@@ -205,6 +232,7 @@ public class DuplicationApp {
 			return;
 		}
 
+
 		Type type = null;
 		if (args[1].equalsIgnoreCase("out")) {
 			type = Type.OUT;
@@ -232,6 +260,9 @@ public class DuplicationApp {
 				if (args[index].equals("-exclude")) {
 					excludeFilters = args[++index];
 				}
+				if (args[index].equals("-save")) {
+					app.saveCSVFile = true;
+				}
 			}
 		}
 		
@@ -255,7 +286,7 @@ public class DuplicationApp {
 	}
 
 	private static void showHelp() {
-		System.out.println("\tjava .. com.samsungsds.analyst.code.main.DuplicationApp -type [out|csv|cpd-csv] \"output file\" [-include AntStyle.java] [-exclude AntStyle.java]");
+		System.out.println("\tjava .. com.samsungsds.analyst.code.main.DuplicationApp -type [out|csv|cpd-csv] \"output file\" [-include AntStyle.java] [-exclude AntStyle.java] -save");
 		System.out.println("\t\ttype can be 'out', 'csv' or 'cpd-csv' file");
 		System.out.println("\t\t* The parameter sequence have to be in the specified order");
 
