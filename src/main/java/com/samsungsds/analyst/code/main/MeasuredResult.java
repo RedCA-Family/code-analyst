@@ -618,7 +618,7 @@ public class MeasuredResult implements Serializable {
 		return packageList;
 	}
 	
-	public List<DuplicationResult> getDulicationList() {
+	public List<DuplicationResult> getDuplicationList() {
 		processTopDuplicationList();
 		
 		return duplicationList;

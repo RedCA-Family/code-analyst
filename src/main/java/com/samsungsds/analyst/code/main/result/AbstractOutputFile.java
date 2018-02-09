@@ -35,7 +35,7 @@ public abstract class AbstractOutputFile {
 			writeSummary(result);
 			
 			if (result.getIndividualMode().isDuplication()) {
-				writeDuplication(result.getDulicationList());
+				writeDuplication(result.getDuplicationList());
 			}
 			
 			if (result.getIndividualMode().isComplexity()) {

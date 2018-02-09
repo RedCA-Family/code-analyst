@@ -4,15 +4,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.samsungsds.analyst.code.pmd.PmdResult;
-import com.samsungsds.analyst.code.util.IOAndFileUtils;
+import com.samsungsds.analyst.code.main.detailed.Duplication;
 import com.samsungsds.analyst.code.util.LogUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.Configuration;
 import org.ini4j.Wini;
 
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
@@ -64,24 +59,48 @@ public class DuplicationApp {
 
 			String csvFile = "duplication.csv";
 
-			try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
-				csvWriter.println("No,Path,Start line,End line,Duplicated path,Start line,End line");
+			saveDuplicationListToCSV(csvFile);
 
-				int count = 0;
-				synchronized (list) {
-					for (DuplicationResult result : MeasuredResult.getInstance(INSTANCE_KEY).getDulicationList()) {
-						csvWriter.print(++count + ",");
-						csvWriter.print(getStringsWithComma(result.getPath(), getString(result.getStartLine()), getString(result.getEndLine())));
-						csvWriter.print(",");
-						csvWriter.print(getStringsWithComma(result.getDuplicatedPath(), getString(result.getDuplicatedStartLine()), getString(result.getDuplicatedEndLine())));
-						csvWriter.println();
-					}
-				}
+			System.out.println();
 
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
-			}
+			printTopDuplicationList();
 		}
+	}
+
+	private void saveDuplicationListToCSV(String csvFile) {
+		try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
+            csvWriter.println("No,Path,Start line,End line,Duplicated path,Start line,End line");
+
+            int count = 0;
+
+			for (DuplicationResult result : MeasuredResult.getInstance(INSTANCE_KEY).getDuplicationList()) {
+				csvWriter.print(++count + ",");
+				csvWriter.print(getStringsWithComma(result.getPath(), getString(result.getStartLine()), getString(result.getEndLine())));
+				csvWriter.print(",");
+				csvWriter.print(getStringsWithComma(result.getDuplicatedPath(), getString(result.getDuplicatedStartLine()), getString(result.getDuplicatedEndLine())));
+				csvWriter.println();
+			}
+
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+	}
+
+	private void printTopDuplicationList() {
+		System.out.println("[TopDuplication]");
+		System.out.println("path, start line, end line, count, total duplicated lines");
+
+		int count = 0;
+		for (Duplication result : MeasuredResult.getInstance(INSTANCE_KEY).getTopDuplicationList()) {
+			System.out.print(++count + " = ");
+			System.out.print(getStringsWithComma(result.getPath(), getString(result.getStartLine()), getString(result.getEndLine())));
+			System.out.print(",");
+			System.out.print(result.getCount());
+			System.out.print(",");
+			System.out.print(result.getTotalDuplicatedLines());
+			System.out.println();
+		}
+		System.out.println();
 	}
 
 	private void checkInput() {
@@ -187,7 +206,7 @@ public class DuplicationApp {
 				if (record.get(0).equals("")) {
 					continue;
 				}
-				System.out.println("index : " + index++);
+				//System.out.println("index : " + index++);
 
 				int lines = Integer.parseInt(record.get(0));
 				//int tokens = Integer.parseInt(record.get(1));
