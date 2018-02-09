@@ -86,6 +86,8 @@ public class CodeAnalysisSourceVisitor extends VoidVisitorAdapter<Void> {
 			return expectedClassName;
 		} catch (ClassNotFoundException e) {
 			//DO NOTHING
+		} catch (NoClassDefFoundError e) {
+			//DO NOTHING
 		}
 		
 		for (String packageName : importListWithAsterisk) {
