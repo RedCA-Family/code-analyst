@@ -22,7 +22,7 @@ public class JettySurrogateSonarServerTest {
 	
 	@Before public void 
 	init() {
-		server = new JettySurrogateSonarServer();
+		server = new JettySurrogateSonarServer("java");
 		port = server.startAndReturnPort();
 	}
 	

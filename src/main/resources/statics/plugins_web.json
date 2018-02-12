@@ -1,23 +1,6 @@
 {
 	"plugins": [
 		{
-			"key": "java",
-			"name": "SonarJava",
-			"filename": "sonar-java-plugin-5.0.1.12818.jar",
-			"sonarLintSupported": true,
-			"hash": "9c856240bb2a4d32ca97d416702f2d73",
-			"updatedAt": 1516766614460,
-			"description": "Code Analyzer for Java",
-			"version": "5.0.1 (build 12818)",
-			"license": "GNU LGPL 3",
-			"organizationName": "SonarSource",
-			"organizationUrl": "http://www.sonarsource.com",
-			"editionBundled": false,
-			"homepageUrl": "http://redirect.sonarsource.com/plugins/java.html",
-			"issueTrackerUrl": "https://jira.sonarsource.com/browse/SONARJAVA",
-			"implementationBuild": "1adc374f12babbaf5c01f52606297def1d05f42a"
-		},
-		{
 			"key": "javascript",
 			"name": "SonarJS",
 			"filename": "sonar-javascript-plugin-4.0.0.5862.jar",
@@ -49,6 +32,23 @@
 			"homepageUrl": "http://redirect.sonarsource.com/plugins/web.html",
 			"issueTrackerUrl": "http://jira.sonarsource.com/browse/SONARWEB",
 			"implementationBuild": "636872f5d37fa7a440fe07d08d504e1a881225e5"
-		}
+		},
+		{
+            "key": "css",
+            "name": "CSS / SCSS / Less",
+            "filename": "sonar-css-plugin-3.1.jar",
+            "sonarLintSupported": false,
+            "hash": "152af257b76efcae8f0cbf1c7617890e",
+            "updatedAt": 1518408472442,
+            "description": "Enables analysis of CSS and Less files",
+            "version": "3.1",
+            "license": "GNU LGPL 3",
+            "organizationName": "Tamas Kende and David RACODON",
+            "organizationUrl": "mailto:kende.tamas@gmail.com",
+            "editionBundled": false,
+            "homepageUrl": "https://github.com/racodond/sonar-css-plugin",
+            "issueTrackerUrl": "https://github.com/racodond/sonar-css-plugin/issues",
+            "implementationBuild": "58a0a86a53f82a8486a5ee93681257e1ae0a10c8"
+        }
 	]
 }

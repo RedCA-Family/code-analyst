@@ -49,10 +49,18 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 	}
 
 	private void calculateTechnicalDebt() {
-		calculateDuplicationDebt();
-		calculateViolationDebt();
-		calculateComplexityDebt();
-		calculateAcyclicDependencyDebt();
+		if (measuredResult.getIndividualMode().isDuplication()) {
+			calculateDuplicationDebt();
+		}
+		if (measuredResult.getIndividualMode().isPmd() || measuredResult.getIndividualMode().isFindBugs() || measuredResult.getIndividualMode().isFindSecBugs() || measuredResult.getIndividualMode().isWebResource()) {
+			calculateViolationDebt();
+		}
+		if (measuredResult.getIndividualMode().isComplexity()) {
+			calculateComplexityDebt();
+		}
+		if (measuredResult.getIndividualMode().isDependency()) {
+			calculateAcyclicDependencyDebt();
+		}
 	}
 
 	private void calculateDuplicationDebt() {

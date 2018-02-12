@@ -53,6 +53,12 @@ public class QualityProfilesServlet extends HttpServlet {
 				resourceName = "/statics/AWEgcpyRlIthtMf8fSSN.protobuf";
 			} else if (queryString.contains("qprofile=AWEgcp25lIthtMf8fSTR")) {
 				resourceName = "/statics/AWEgcp25lIthtMf8fSTR.protobuf";
+			} else if (queryString.contains("qprofile=AWGIMrVIyNk_vPtwVsb_")) {
+				resourceName = "/statics/AWGIMrVIyNk_vPtwVsb_.protobuf";
+			} else if (queryString.contains("qprofile=AWGIMrq3yNk_vPtwVsea")) {
+				resourceName = "/statics/AWGIMrq3yNk_vPtwVsea.protobuf";
+			} else if (queryString.contains("qprofile=AWGIMr_nyNk_vPtwVsg1")) {
+				resourceName = "/statics/AWGIMr_nyNk_vPtwVsg1.protobuf";
 			}
 		} else if (url.equals("/api/rules/list.protobuf")) {
 			resourceName = "/statics/list.protobuf";

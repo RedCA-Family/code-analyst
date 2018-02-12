@@ -66,30 +66,31 @@ public class ReportFileReader implements Closeable {
 			MeasuredResult.getInstance(instanceKey).addDirectories(1);
 		} else if (component.getType().equals(ComponentType.FILE)) {
 			if ("java".equals(component.getLanguage())) {
-				MeasuredResult.getInstance(instanceKey).addFiles(1);
-				MeasuredResult.getInstance(instanceKey).addLines(component.getLines());
-				
-				try (CloseableIterator<ScannerReport.Measure> it = reader.readComponentMeasures(component.getRef())) {
-					while (it.hasNext()) {
-						ScannerReport.Measure measure = it.next();
-						
-						if (measure.getMetricKey().equals(METRIC_CLASSES)) {
-							MeasuredResult.getInstance(instanceKey).addClasses(measure.getIntValue().getValue());
-						} else if (measure.getMetricKey().equals(METRIC_COMMENT_LINES)) {
-							MeasuredResult.getInstance(instanceKey).addCommentLines(measure.getIntValue().getValue());
-						} else if (measure.getMetricKey().equals(METRIC_FUNCTIONS)) {
-							MeasuredResult.getInstance(instanceKey).addFunctions(measure.getIntValue().getValue());
-						} else if (measure.getMetricKey().equals(METRIC_NCLOC)) {
-							MeasuredResult.getInstance(instanceKey).addNcloc(measure.getIntValue().getValue());
-						} else if (measure.getMetricKey().equals(METRIC_STATEMENTS)) {
-							MeasuredResult.getInstance(instanceKey).addStatements(measure.getIntValue().getValue());
+				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isCodeSize()) {
+					MeasuredResult.getInstance(instanceKey).addFiles(1);
+					MeasuredResult.getInstance(instanceKey).addLines(component.getLines());
+					
+					try (CloseableIterator<ScannerReport.Measure> it = reader.readComponentMeasures(component.getRef())) {
+						while (it.hasNext()) {
+							ScannerReport.Measure measure = it.next();
+							
+							if (measure.getMetricKey().equals(METRIC_CLASSES)) {
+								MeasuredResult.getInstance(instanceKey).addClasses(measure.getIntValue().getValue());
+							} else if (measure.getMetricKey().equals(METRIC_COMMENT_LINES)) {
+								MeasuredResult.getInstance(instanceKey).addCommentLines(measure.getIntValue().getValue());
+							} else if (measure.getMetricKey().equals(METRIC_FUNCTIONS)) {
+								MeasuredResult.getInstance(instanceKey).addFunctions(measure.getIntValue().getValue());
+							} else if (measure.getMetricKey().equals(METRIC_NCLOC)) {
+								MeasuredResult.getInstance(instanceKey).addNcloc(measure.getIntValue().getValue());
+							} else if (measure.getMetricKey().equals(METRIC_STATEMENTS)) {
+								MeasuredResult.getInstance(instanceKey).addStatements(measure.getIntValue().getValue());
+							}
 						}
+					} catch (Exception e) {
+						throw new IllegalStateException("Can't read measures for " + component, e);
 					}
-				} catch (Exception e) {
-					throw new IllegalStateException("Can't read measures for " + component, e);
 				}
-				
-				if (reader.hasCoverage(component.getRef())) {
+				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isDuplication() && reader.hasCoverage(component.getRef())) {
 					try (CloseableIterator<ScannerReport.Duplication> it = reader.readComponentDuplications(component.getRef())) {
 						while (it.hasNext()) {
 							ScannerReport.Duplication dup = it.next();
@@ -114,7 +115,8 @@ public class ReportFileReader implements Closeable {
 						}
 					}
 				}
-			} else if ("js".equals(component.getLanguage()) || "web".equals(component.getLanguage())) {
+			}
+			if ("js".equals(component.getLanguage()) || "web".equals(component.getLanguage()) || "css".equals(component.getLanguage()) || "less".equals(component.getLanguage()) || "scss".equals(component.getLanguage())) {
 				try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
 					while (it.hasNext()) {
 						ScannerReport.Issue issue = it.next();
@@ -124,8 +126,6 @@ public class ReportFileReader implements Closeable {
 				} catch (Exception e) {
 					throw new IllegalStateException("Can't read issues for " + component, e);
 				}
-			} else {
-				LOGGER.debug("Component language: " + component.getLanguage());
 			}
 		}
 

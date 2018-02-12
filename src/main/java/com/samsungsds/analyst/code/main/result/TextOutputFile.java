@@ -136,7 +136,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println();
 		}
 		if (result.getIndividualMode().isUnusedCode()) {
-			writer.println("UnusedCode =" + result.getUnusedCodeList().size());
+			writer.println("UnusedCode = " + result.getUnusedCodeList().size());
 			writer.println();
 		}
 		

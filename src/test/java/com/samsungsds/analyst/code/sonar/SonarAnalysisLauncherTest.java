@@ -32,7 +32,7 @@ public class SonarAnalysisLauncherTest {
 	
 	@Before	public void 
 	setUp() throws IOException {
-		server = new JettySurrogateSonarServer();
+		server = new JettySurrogateSonarServer("java");
 		port = server.startAndReturnPort();
 		
 		CliParser cli = new CliParser(new String[0]);

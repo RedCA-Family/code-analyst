@@ -8,6 +8,8 @@ H
 sonar.editions.jsonUrl,https://update.sonarsource.org/editions.json(
 '
 sonar.cs.ignoreHeaderCommentstrue(
+"
+sonar.less.file.suffixesless(
 /
 sonar.typescript.file.suffixes
 .ts
@@ -30,6 +32,8 @@ $
 sonar.notifications.delay60(
  
 sonar.flex.file.suffixesas(
+"
+sonar.scss.file.suffixesscss(
 8
 sonaranalyzer-cs.ruleNamespaceSonarAnalyzer.CSharp(
 
@@ -62,6 +66,8 @@ M
 sonar.javascript.exclusions,
 **/node_modules/**
 **/bower_components/**(
+ 
+sonar.css.file.suffixescss(
 0
 %sonar.organizations.createPersonalOrgfalse(
 D
@@ -101,6 +107,8 @@ T
 8sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByMonth52(
 g
 sonar.lf.gravatarServerUrlGhttps://secure.gravatar.com/avatar/{EMAIL_MD5}.jpg?s={SIZE}&d=identicon(
+#
+sonar.cpd.css.minimumTokens70(
 -
 "sonar.telemetry.frequencyInSeconds21600(
 E
@@ -153,6 +161,9 @@ M
 sonar.typescript.exclusions,
 **/node_modules/**
 **/bower_components/**(
+0
+ sonar.css.embedded.file.suffixes
+html,xhtml(
 5
 sonaranalyzer-cs.analyzerIdSonarAnalyzer.CSharp(
  
@@ -178,11 +189,11 @@ governance
 authgithub
 authbitbucket
 googleanalytics(
+"
+sonar.python.file.suffixespy(
 .
 sonaranalyzer-cs.pluginVersion
 6.7.1.4347(
-"
-sonar.python.file.suffixespy(
 2
 'sonar.python.coverage.forceZeroCoveragefalse(
 !
@@ -208,4 +219,4 @@ S
 %
 sonar.core.idAWEgck8olIthtMf8fRgY
 0
-sonar.core.startTime2018-01-25T13:24:55+0900
+sonar.core.startTime2018-02-12T13:07:49+0900

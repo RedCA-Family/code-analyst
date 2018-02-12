@@ -112,14 +112,14 @@ public class App {
     		if (cli.getMode() == MeasurementMode.ComplexityMode) {
     			LOGGER.info("Code Size Analysis start...");
         		
-    			runCodeSizeAalysis(cli);
+    			runSonarAnalysis(cli, "java");
     			
     			LOGGER.info("Complexity Analysis start...");
         		
     			runComplexity(cli);
     			
     		} else {
-    			if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isWebResource()) {
+    			if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication()) {
     				List<String> sonarAnalysisModeList = new ArrayList<>();
     				if (cli.getIndividualMode().isCodeSize()) {
     					sonarAnalysisModeList.add("Code Size");
@@ -127,13 +127,10 @@ public class App {
     				if (cli.getIndividualMode().isDuplication()) {
     					sonarAnalysisModeList.add("Duplication");
     				}
-    				if (cli.getIndividualMode().isWebResource()) {
-    					sonarAnalysisModeList.add("Web Resource");
-    				}
     				String sonarAnalysisMode = StringUtils.join(sonarAnalysisModeList, " & ");
         			LOGGER.info(sonarAnalysisMode + " Analysis start...");
         		
-        			runCodeSizeAalysis(cli);
+        			runSonarAnalysis(cli, "java");
         		}
         		
         		if (cli.getIndividualMode().isComplexity()) {
@@ -159,7 +156,13 @@ public class App {
     	    		
     	    		runFindSecBugs(cli);
         		}
-    	    	
+
+        		if (cli.getIndividualMode().isWebResource()) {
+        			LOGGER.info("Web Resource Analysis start...");
+        		
+        			runSonarAnalysis(cli, "web");
+        		}
+        		
         		if (cli.getIndividualMode().isDependency()) {
     	    		LOGGER.info("JDepend Analysis start...");
     	    		
@@ -199,9 +202,9 @@ public class App {
 		}
 	}
 	
-	private void runCodeSizeAalysis(CliParser cli) {
+	private void runSonarAnalysis(CliParser cli, String mode) {
 		LOGGER.info("Surrogate Sonar Server starting...");
-		SurrogateSonarServer server = new JettySurrogateSonarServer();
+		SurrogateSonarServer server = new JettySurrogateSonarServer(mode);
 		int port = server.startAndReturnPort();
 			
 		LOGGER.info("Sonar Scanner starting...");
