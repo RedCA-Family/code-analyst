@@ -11,7 +11,7 @@ import com.samsungsds.analyst.code.jdepend.framework.JavaPackage;
 public class MartinMetricsAnalyst {
 	private static final Logger LOGGER = LogManager.getLogger(MartinMetricsAnalyst.class);
 	
-	private final static float THRESHOLD = 0.25f;
+	private final static float THRESHOLD = 0.8f;
 	
 	private List<MartinMetrics> list = new ArrayList<>();
 
