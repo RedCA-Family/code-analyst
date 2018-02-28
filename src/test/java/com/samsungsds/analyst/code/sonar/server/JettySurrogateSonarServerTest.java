@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.samsungsds.analyst.code.main.CliParser;
+
 public class JettySurrogateSonarServerTest {
 	
 	private JettySurrogateSonarServer server;
@@ -22,8 +24,8 @@ public class JettySurrogateSonarServerTest {
 	
 	@Before public void 
 	init() {
-		server = new JettySurrogateSonarServer("java");
-		port = server.startAndReturnPort();
+		server = new JettySurrogateSonarServer();
+		port = server.startAndReturnPort(new CliParser(new String[0]));
 	}
 	
 	private String[] servletPaths() {

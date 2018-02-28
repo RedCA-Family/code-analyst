@@ -16,36 +16,36 @@ import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 public class ResultProcessor {
 	private static final Logger LOGGER = LogManager.getLogger(ResultProcessor.class);
-	
+
 	protected static NumberFormat noFormatter = NumberFormat.getInstance();
-	
+
 	protected static String getFormattedNumber(int number) {
 		return noFormatter.format(number);
 	}
-	
+
 	protected static void printSeparator() {
 		System.out.println("================================================================================");
 	}
-	
+
 	protected static void printTitle() {
 		printSeparator();
-		//System.out.println("");
-		//System.out.println("              ██████╗ ███████╗███████╗██╗   ██╗██╗  ████████╗");
-		//System.out.println("              ██╔══██╗██╔════╝██╔════╝██║   ██║██║  ╚══██╔══╝");
-		//System.out.println("              ██████╔╝█████╗  ███████╗██║   ██║██║     ██║");   
-		//System.out.println("              ██╔══██╗██╔══╝  ╚════██║██║   ██║██║     ██║");  
-		//System.out.println("              ██║  ██║███████╗███████║╚██████╔╝███████╗██║");  
-		//System.out.println("              ╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝ ╚══════╝╚═╝");
-		System.out.println("              ______    _______  _______  __   __  ___      _______"); 
+		// System.out.println("");
+		// System.out.println(" ██████╗ ███████╗███████╗██╗ ██╗██╗ ████████╗");
+		// System.out.println(" ██╔══██╗██╔════╝██╔════╝██║ ██║██║ ╚══██╔══╝");
+		// System.out.println(" ██████╔╝█████╗ ███████╗██║ ██║██║ ██║");
+		// System.out.println(" ██╔══██╗██╔══╝ ╚════██║██║ ██║██║ ██║");
+		// System.out.println(" ██║ ██║███████╗███████║╚██████╔╝███████╗██║");
+		// System.out.println(" ╚═╝ ╚═╝╚══════╝╚══════╝ ╚═════╝ ╚══════╝╚═╝");
+		System.out.println("              ______    _______  _______  __   __  ___      _______");
 		System.out.println("             |    _ |  |       ||       ||  | |  ||   |    |       |");
 		System.out.println("             |   | ||  |    ___||  _____||  | |  ||   |    |_     _|");
 		System.out.println("             |   |_||_ |   |___ | |_____ |  |_|  ||   |      |   |  ");
 		System.out.println("             |    __  ||    ___||_____  ||       ||   |___   |   |  ");
 		System.out.println("             |   |  | ||   |___  _____| ||       ||       |  |   |  ");
-		System.out.println("             |___|  |_||_______||_______||_______||_______|  |___|");  
+		System.out.println("             |___|  |_||_______||_______||_______||_______|  |___|");
 		printSeparator();
 	}
-	
+
 	protected static void printCommon(MeasuredResult result) {
 		if (result.getIndividualMode().isCodeSize()) {
 			System.out.println("Files : " + getFormattedNumber(result.getFiles()));
@@ -58,15 +58,15 @@ public class ResultProcessor {
 			System.out.println("Statements : " + getFormattedNumber(result.getStatements()));
 			System.out.println();
 		}
-		
+
 		if (result.getIndividualMode().isDuplication()) {
 			System.out.println("Duplicated Blocks : " + getFormattedNumber(result.getDuplicatedBlocks()));
 			System.out.println("Duplicated lines : " + getFormattedNumber(result.getDuplicatedLines()));
-			System.out.println("Duplication % : " + result.getDuplicatedLinesPercent() );
+			System.out.println("Duplication % : " + result.getDuplicatedLinesPercent());
 			System.out.println();
 		}
 	}
-	
+
 	protected static void printComplexitySummary(MeasuredResult result) {
 		if (result.getIndividualMode().isComplexity()) {
 			System.out.println("Complexity functions : " + getFormattedNumber(result.getComplexityFunctions()));
@@ -79,7 +79,14 @@ public class ResultProcessor {
 			System.out.println();
 		}
 	}
-	
+
+	private static void printSonarJavaSummary(MeasuredResult result) {
+		if (result.getIndividualMode().isSonarJava()) {
+			System.out.println("SonarJava violations : " + getFormattedNumber(result.getSonarJavaCountAll()));
+			System.out.println();
+		}
+	}
+
 	protected static void printPmdSummary(MeasuredResult result) {
 		if (result.getIndividualMode().isPmd()) {
 			System.out.println("PMD violations : " + getFormattedNumber(result.getPmdCountAll()));
@@ -90,7 +97,7 @@ public class ResultProcessor {
 			System.out.println();
 		}
 	}
-	
+
 	protected static void printFindBugsSummary(MeasuredResult result) {
 		if (result.getIndividualMode().isFindBugs()) {
 			System.out.println("FindBugs bugs : " + getFormattedNumber(result.getFindBugsCountAll()));
@@ -103,7 +110,7 @@ public class ResultProcessor {
 			System.out.println();
 		}
 	}
-	
+
 	protected static void printFindSecBugsSummary(MeasuredResult result) {
 		if (result.getIndividualMode().isFindSecBugs()) {
 			System.out.println("FindSecBugs bugs : " + getFormattedNumber(result.getFindSecBugsCountAll()));
@@ -144,17 +151,18 @@ public class ResultProcessor {
 			System.out.println(" - FindBugs, FindSecBugs, and Acyclic Dependencies");
 		}
 	}
-	
+
 	protected static void printBottom() {
 		printSeparator();
 	}
-	
+
 	public static void printSummary(MeasuredResult result) {
 		printTitle();
 		printCommon(result);
-		
+
 		if (result.getMode() == MeasurementMode.DefaultMode) {
 			printComplexitySummary(result);
+			printSonarJavaSummary(result);
 			printPmdSummary(result);
 			printFindBugsSummary(result);
 			printFindSecBugsSummary(result);
@@ -163,20 +171,19 @@ public class ResultProcessor {
 			printUnusedCodeSummary(result);
 			printTechnicalDebtSummary(result);
 		} else if (result.getMode() == MeasurementMode.ComplexityMode) {
-			printComplexity(result.getComplexityAllList());	
+			printComplexity(result.getComplexityAllList());
 		}
-		
-		
+
 		printWarning(result);
 		printBottom();
 	}
 
 	protected static void printComplexity(List<ComplexityResult> list) {
 		StringBuffer buffer = new StringBuffer();
-		
+
 		synchronized (list) {
-			//Collections.sort(list, (r1, r2) -> (r2.getComplexity() - r1.getComplexity()));
-			
+			// Collections.sort(list, (r1, r2) -> (r2.getComplexity() - r1.getComplexity()));
+
 			for (ComplexityResult result : list) {
 				if (buffer.length() == 0) {
 					buffer.append("* File : ").append(result.getPath()).append(IOAndFileUtils.CR_LF);
@@ -189,7 +196,7 @@ public class ResultProcessor {
 		}
 		System.out.println(buffer.toString());
 	}
-	
+
 	private static AbstractOutputFile createOutputFile(OutputFileFormat format) {
 		if (format == OutputFileFormat.TEXT) {
 			LOGGER.info("Text Output");
@@ -201,15 +208,15 @@ public class ResultProcessor {
 			throw new IllegalStateException("OutputFileFormat isn't 'json', 'text', nor 'none'");
 		}
 	}
-	
+
 	public static void saveResultOutputFile(File file, CliParser cli, MeasuredResult result) {
 		if (cli.getFormat() != OutputFileFormat.NONE) {
 			result.setOutputFile(file);
-			
+
 			AbstractOutputFile output = createOutputFile(cli.getFormat());
-			
+
 			LOGGER.info("Result file saved : {}", file);
-			
+
 			output.process(file, cli, result);
 		} else {
 			LOGGER.info("No output file");

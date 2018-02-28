@@ -14,8 +14,9 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ShutdownHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 
+import com.samsungsds.analyst.code.main.CliParser;
 import com.samsungsds.analyst.code.sonar.server.servlets.JarDownloadServlet;
-import com.samsungsds.analyst.code.sonar.server.servlets.JavaPluginInstalledResServlet;
+import com.samsungsds.analyst.code.sonar.server.servlets.PluginInstalledResServlet;
 import com.samsungsds.analyst.code.sonar.server.servlets.MetricsResServlet;
 import com.samsungsds.analyst.code.sonar.server.servlets.QualityProfilesServlet;
 import com.samsungsds.analyst.code.sonar.server.servlets.SettingValuesResServlet;
@@ -31,15 +32,9 @@ public class JettySurrogateSonarServer implements SurrogateSonarServer {
 	private UUID secretPassword = UUID.randomUUID();
 	
 	private int serverPort = 0;
-
-	private String mode;
 	
-	public JettySurrogateSonarServer(String mode) {
-		this.mode = mode;
-	}
-
 	@Override
-	public int startAndReturnPort() {		
+	public int startAndReturnPort(CliParser cli) {		
 		serverPort = IOAndFileUtils.findFreePort();
 		
 		if (serverPort == -1) {
@@ -51,10 +46,10 @@ public class JettySurrogateSonarServer implements SurrogateSonarServer {
 		ServletHandler handler = new ServletHandler();
 				
         handler.addServletWithMapping(SettingValuesResServlet.class, "/api/settings/values.protobuf");
-        if ("java".equals(mode)) {
-        	handler.addServletWithMapping(JavaPluginInstalledResServlet.class, "/api/plugins/installed");
-		} else if ("web".equals(mode)) {
-			handler.addServletWithMapping(WebPluginInstalledResServlet.class, "/api/plugins/installed");
+        if (cli.getIndividualMode().isWebResource()) {
+        	handler.addServletWithMapping(WebPluginInstalledResServlet.class, "/api/plugins/installed");
+		} else {
+			handler.addServletWithMapping(PluginInstalledResServlet.class, "/api/plugins/installed");
 		}
         handler.addServletWithMapping(MetricsResServlet.class, "/api/metrics/search");
         handler.addServletWithMapping(JarDownloadServlet.class, "/deploy/plugins/*");

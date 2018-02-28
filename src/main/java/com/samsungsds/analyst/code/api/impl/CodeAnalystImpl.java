@@ -243,6 +243,10 @@ public class CodeAnalystImpl implements CodeAnalyst {
 			addAnalysisItem(parameter, "complexity");
 		}
 		
+		if (mode.isSonarJava()) {
+			addAnalysisItem(parameter, "sonarjava");
+		}
+		
 		if (mode.isPmd()) {
 			addAnalysisItem(parameter, "pmd");
 		}

@@ -18,26 +18,27 @@ import com.samsungsds.analyst.code.main.detailed.MartinMetrics;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.sonar.SonarJavaResult;
 import com.samsungsds.analyst.code.sonar.WebResourceResult;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 
 public class TextOutputFile extends AbstractOutputFile {
 	MeasuredResult result;
-	
+
 	CSVSeperatedOutput csvOutput;
 
 	@Override
 	protected void open(MeasuredResult result) {
 		this.result = result;
-		
-		csvOutput =  new CSVSeperatedOutput(result);
+
+		csvOutput = new CSVSeperatedOutput(result);
 	}
-	
+
 	@Override
 	protected void writeSeparator() {
 		writer.println(";===============================================================================");
 	}
-	
+
 	@Override
 	protected void writeProjectInfo(CliParser cli, MeasuredResult result) {
 		writer.println("[Project]");
@@ -100,6 +101,15 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("ComplexityEqualOrOver50 = " + result.getComplexityEqualOrOver50());
 			writer.println();
 		}
+		if (result.getIndividualMode().isSonarJava()) {
+			writer.println("SonarJava = " + result.getSonarJavaCountAll());
+			writer.println("SonarJava1Priority = " + result.getSonarJavaCount(1));
+			writer.println("SonarJava2Priority = " + result.getSonarJavaCount(2));
+			writer.println("SonarJava3Priority = " + result.getSonarJavaCount(3));
+			writer.println("SonarJava4Priority = " + result.getSonarJavaCount(4));
+			writer.println("SonarJava5Priority = " + result.getSonarJavaCount(5));
+			writer.println();
+		}
 		if (result.getIndividualMode().isPmd()) {
 			writer.println("PMDViolations = " + result.getPmdCountAll());
 			writer.println("PMD1Priority = " + result.getPmdCount(1));
@@ -139,7 +149,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("UnusedCode = " + result.getUnusedCodeList().size());
 			writer.println();
 		}
-		
+
 		writer.println("TechnicalDebt(Total) = " + result.getTechnicalDebt().getTotalDebt() + "MH");
 		writer.println("TechnicalDebt(Duplication) = " + result.getTechnicalDebt().getDuplicationDebt() + "MH");
 		writer.println("TechnicalDebt(Violation) = " + result.getTechnicalDebt().getViolationDebt() + "MH");
@@ -156,7 +166,7 @@ public class TextOutputFile extends AbstractOutputFile {
 		} else {
 			writer.println("[Duplication]");
 			writer.println("; path, start line, end line, duplicated path, duplicated start line, duplicated end line");
-			
+
 			int count = 0;
 			synchronized (list) {
 				for (DuplicationResult result : list) {
@@ -172,7 +182,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println();
 			writer.println();
 		}
-		
+
 		if (result.isDetailAnalysis()) {
 			writeTopDuplication(result.getTopDuplicationList());
 		}
@@ -181,7 +191,7 @@ public class TextOutputFile extends AbstractOutputFile {
 	private void writeTopDuplication(List<Duplication> topDuplicationList) {
 		writer.println("[TopDuplication]");
 		writer.println("; path, start line, end line, count, total duplicated lines");
-		
+
 		int count = 0;
 		synchronized (topDuplicationList) {
 			for (Duplication result : topDuplicationList) {
@@ -206,10 +216,10 @@ public class TextOutputFile extends AbstractOutputFile {
 			csvOutput.writeComplexity(list);
 			return;
 		}
-		
+
 		writer.println("[Complexity]");
 		writer.println("; path, line, method, complexity");
-		writer.println("; only 20 over methods"); 
+		writer.println("; only 20 over methods");
 
 		int count = 0;
 		synchronized (list) {
@@ -231,13 +241,38 @@ public class TextOutputFile extends AbstractOutputFile {
 	}
 
 	@Override
+	protected void writeSonarJava(List<SonarJavaResult> sonarJavaList) {
+		if (result.isSeperatedOutput()) {
+			csvOutput.writeSonarJava(sonarJavaList);
+		} else {
+			writer.println("[SonarJava]");
+			writer.println("; path, rule, message, priority, start line, start offset, end line, end offset");
+
+			int count = 0;
+			synchronized (sonarJavaList) {
+				for (SonarJavaResult result : sonarJavaList) {
+					writer.print(++count + " = ");
+					writer.print(getStringsWithComma(getStringsWithComma(result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()),
+							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset()))));
+					writer.println();
+				}
+			}
+
+			writer.println();
+			writer.println("total = " + count);
+			writer.println();
+			writer.println();
+		}
+	}
+
+	@Override
 	protected void writePmd(List<PmdResult> list) {
 		if (result.isSeperatedOutput()) {
 			csvOutput.writePmd(list);
 		} else {
 			writer.println("[PMD]");
 			writer.println("; path, line, rule, priority, description");
-			
+
 			int count = 0;
 			synchronized (list) {
 				for (PmdResult result : list) {
@@ -246,27 +281,26 @@ public class TextOutputFile extends AbstractOutputFile {
 					writer.println();
 				}
 			}
-			
+
 			writer.println();
 			writer.println("total = " + count);
 			writer.println();
 			writer.println();
 		}
-		
+
 		if (result.isDetailAnalysis()) {
 			writeTopInspection(result.getTopPmdList(), "TopPmdList");
 		}
 	}
 
-
 	@Override
 	protected void writeUnusedCode(List<UnusedCodeResult> list) {
 		if (result.isSeperatedOutput()) {
-//			csvOutput.writePmd(list);
+			// csvOutput.writePmd(list);
 		} else {
 			writer.println("[Unused Code]");
 			writer.println("; type, package, class, line, name, description");
-			
+
 			int count = 0;
 			synchronized (list) {
 				for (UnusedCodeResult result : list) {
@@ -275,18 +309,18 @@ public class TextOutputFile extends AbstractOutputFile {
 					writer.println();
 				}
 			}
-			
+
 			writer.println();
 			writer.println("total = " + count);
 			writer.println();
 			writer.println();
 		}
 	}
-	
+
 	private void writeTopInspection(List<Inspection> topList, String topName) {
 		writer.println("[" + topName + "]");
 		writer.println("; rule, count");
-		
+
 		int count = 0;
 		synchronized (topList) {
 			for (Inspection result : topList) {
@@ -301,23 +335,23 @@ public class TextOutputFile extends AbstractOutputFile {
 		writer.println("total = " + count);
 		writer.println();
 		writer.println();
-		
+
 	}
 
 	@Override
 	protected void writeFindBugs(List<FindBugsResult> list) {
 		writeFindBugsAndFindSecBugs(list, "FindBugs");
-		
+
 		if (result.isDetailAnalysis()) {
 			writeTopInspection(result.getTopFindBugsList(), "TopFindBugsList");
 		}
 	}
-	
+
 	@Override
 	protected void writeFindSecBugs(List<FindBugsResult> list) {
 		writeFindBugsAndFindSecBugs(list, "FindSecBugs");
 	}
-	
+
 	private void writeFindBugsAndFindSecBugs(List<FindBugsResult> list, String title) {
 		if (result.isSeperatedOutput()) {
 			csvOutput.writeFindBugsAndFindSecBugs(list, title);
@@ -325,12 +359,13 @@ public class TextOutputFile extends AbstractOutputFile {
 		}
 		writer.println("[" + title + "]");
 		writer.println("; package, file, start line, end line, pattern key, pattern, priority, class, field, local var, method, message");
-		
+
 		int count = 0;
 		synchronized (list) {
 			for (FindBugsResult result : list) {
 				writer.print(++count + " = ");
-				writer.print(getStringsWithComma(result.getPackageName(), result.getFile(), getString(result.getStartLine()), getString(result.getEndLine()), result.getPatternKey(), result.getPattern()));
+				writer.print(
+						getStringsWithComma(result.getPackageName(), result.getFile(), getString(result.getStartLine()), getString(result.getEndLine()), result.getPatternKey(), result.getPattern()));
 				writer.print(", ");
 				writer.print(getStringsWithComma(getString(result.getPriority()), result.getClassName(), result.getField(), result.getLocalVariable(), result.getMethod(), result.getMessage()));
 				writer.println();
@@ -350,16 +385,17 @@ public class TextOutputFile extends AbstractOutputFile {
 		} else {
 			writer.println("[WebResource]");
 			writer.println("; path, rule, message, priority, start line, start offset, end line, end offset");
-			
+
 			int count = 0;
 			synchronized (webResourceList) {
 				for (WebResourceResult result : webResourceList) {
 					writer.print(++count + " = ");
-					writer.print(getStringsWithComma(getStringsWithComma(result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()), getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset()))));
+					writer.print(getStringsWithComma(getStringsWithComma(result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()),
+							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset()))));
 					writer.println();
 				}
 			}
-			
+
 			writer.println();
 			writer.println("total = " + count);
 			writer.println();
@@ -370,7 +406,7 @@ public class TextOutputFile extends AbstractOutputFile {
 	@Override
 	protected void writeAcyclicDependencies(List<String> list) {
 		writer.println("[AcyclicDependencies]");
-		
+
 		int count = 0;
 		synchronized (list) {
 			for (String dependency : list) {
@@ -379,12 +415,12 @@ public class TextOutputFile extends AbstractOutputFile {
 				writer.println();
 			}
 		}
-		
+
 		writer.println();
 		writer.println("total = " + count);
 		writer.println();
 		writer.println();
-		
+
 		if (result.isDetailAnalysis()) {
 			writeTopMartinMetrics(result.getTopMartinMetrics());
 		}
@@ -393,7 +429,7 @@ public class TextOutputFile extends AbstractOutputFile {
 	private void writeTopMartinMetrics(List<MartinMetrics> topMartinMetrics) {
 		writer.println("[TopMartinMetrics]");
 		writer.println("; package, Ca, Ce, A, I, D");
-		
+
 		int count = 0;
 		synchronized (topMartinMetrics) {
 			for (MartinMetrics result : topMartinMetrics) {
@@ -417,9 +453,10 @@ public class TextOutputFile extends AbstractOutputFile {
 		writer.println();
 		writer.println();
 	}
-	
+
 	@Override
 	protected void close(PrintWriter writer) {
 		// no-op
 	}
+
 }

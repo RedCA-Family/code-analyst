@@ -52,7 +52,7 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 		if (measuredResult.getIndividualMode().isDuplication()) {
 			calculateDuplicationDebt();
 		}
-		if (measuredResult.getIndividualMode().isPmd() || measuredResult.getIndividualMode().isFindBugs() || measuredResult.getIndividualMode().isFindSecBugs() || measuredResult.getIndividualMode().isWebResource()) {
+		if (measuredResult.getIndividualMode().isSonarJava() || measuredResult.getIndividualMode().isPmd() || measuredResult.getIndividualMode().isFindBugs() || measuredResult.getIndividualMode().isFindSecBugs() || measuredResult.getIndividualMode().isWebResource()) {
 			calculateViolationDebt();
 		}
 		if (measuredResult.getIndividualMode().isComplexity()) {
@@ -70,6 +70,7 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 
 	private void calculateViolationDebt() {
 		effortXMLParse();
+		violationDebt += calculateSonarJavaDebt();
 		violationDebt += calculatePmdDebt();
 		violationDebt += calculateFindBugsDebt();
 		violationDebt += calculateFindSecBugsDebt();
@@ -93,6 +94,10 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 		} catch (IOException e) {
 			LOGGER.info("IO Exception", e);
 		}
+	}
+
+	private double calculateSonarJavaDebt() {
+		return measuredResult.getSonarJavaCountAll() * COST_TO_FIX_ONE_VIOLATION;
 	}
 
 	private double calculatePmdDebt() {

@@ -42,6 +42,7 @@ public class ApiExample {
 		mode.setCodeSize(true);
 		mode.setDuplication(true);
 		mode.setComplexity(true);
+		mode.setSonarJava(true);
 		mode.setPmd(true);
 		mode.setFindBugs(true);
 		mode.setFindSecBugs(true);

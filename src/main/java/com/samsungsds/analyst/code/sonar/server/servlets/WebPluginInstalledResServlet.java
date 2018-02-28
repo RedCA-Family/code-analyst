@@ -23,7 +23,7 @@ public class WebPluginInstalledResServlet extends HttpServlet {
 
 		// Write back response
 		try (OutputStream outStream = response.getOutputStream()) {
-			IOAndFileUtils.write(outStream, "/statics/plugins_web.json");
+			IOAndFileUtils.write(outStream, "/statics/plugins_include_web.json");
 		}
 	}
 

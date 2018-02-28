@@ -1,9 +1,11 @@
 package com.samsungsds.analyst.code.api;
 
 public class AnalysisMode {
+
 	private boolean codeSize = false;
 	private boolean duplication = false;
 	private boolean complexity = false;
+	private boolean sonarJava = false;
 	private boolean pmd = false;
 	private boolean findBugs = false;
 	private boolean findSecBugs = false;
@@ -33,6 +35,14 @@ public class AnalysisMode {
 
 	public void setComplexity(boolean complexity) {
 		this.complexity = complexity;
+	}
+
+	public boolean isSonarJava() {
+		return sonarJava;
+	}
+
+	public void setSonarJava(boolean sonarJava) {
+		this.sonarJava = sonarJava;
 	}
 
 	public boolean isPmd() {

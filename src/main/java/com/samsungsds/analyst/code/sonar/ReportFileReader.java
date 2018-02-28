@@ -115,12 +115,23 @@ public class ReportFileReader implements Closeable {
 						}
 					}
 				}
+				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isSonarJava()) {
+					try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
+						while (it.hasNext()) {
+							ScannerReport.Issue issue = it.next();
+							SonarJavaResult sonarJavaResult = new SonarJavaResult(component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
+							MeasuredResult.getInstance(instanceKey).addSonarJavaResult(sonarJavaResult);
+						}
+					} catch (Exception e) {
+						throw new IllegalStateException("Can't read issues for " + component, e);
+					}
+				}
 			}
 			if ("js".equals(component.getLanguage()) || "web".equals(component.getLanguage()) || "css".equals(component.getLanguage()) || "less".equals(component.getLanguage()) || "scss".equals(component.getLanguage())) {
 				try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
 					while (it.hasNext()) {
 						ScannerReport.Issue issue = it.next();
-						WebResourceResult webResourceResult = new WebResourceResult(component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), issue.getSeverityValue(), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
+						WebResourceResult webResourceResult = new WebResourceResult(component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
 						MeasuredResult.getInstance(instanceKey).addWebResourceResult(webResourceResult);
 					}
 				} catch (Exception e) {
@@ -133,6 +144,23 @@ public class ReportFileReader implements Closeable {
 			Component child = reader.readComponent(ref);
 
 			readComponent(child);
+		}
+	}
+
+	private int reverseSeverity(int severityValue) {
+		switch (severityValue) {
+		case 1:
+			return 5;
+		case 2:
+			return 4;
+		case 3:
+			return 3;
+		case 4:
+			return 2;
+		case 5:
+			return 1;
+		default:
+			return 0;
 		}
 	}
 
