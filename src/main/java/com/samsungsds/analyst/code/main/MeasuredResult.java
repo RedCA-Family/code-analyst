@@ -190,6 +190,9 @@ public class MeasuredResult implements Serializable {
 	private InspectionDetailAnalyst inspectionDetailAnalyst = new InspectionDetailAnalyst();
 
 	@Expose
+	private List<Inspection> topSonarJavaList = null;
+
+	@Expose
 	private List<Inspection> topPmdList = null;
 
 	@Expose
@@ -650,13 +653,32 @@ public class MeasuredResult implements Serializable {
 	}
 
 	public List<SonarJavaResult> getSonarJavaList() {
+		processTopSonarJavaList();
+
 		return sonarJavaList;
+	}
+
+	private void processTopSonarJavaList() {
+		if (topSonarJavaList == null) {
+			topSonarJavaList = inspectionDetailAnalyst.getTopSonarJavaList();
+		}
+	}
+
+	public List<Inspection> getTopSonarJavaList() {
+		if (detailAnalysis) {
+			return topSonarJavaList;
+		} else {
+			throw new IllegalStateException("getTopSonarJavaList() can be called only detailed analysis mode.");
+		}
 	}
 
 	public void addSonarJavaResult(SonarJavaResult sonarJavaResult) {
 		sonarJavaList.add(sonarJavaResult);
 		sonarJavaCount[0]++;
 		sonarJavaCount[sonarJavaResult.getSeverity()]++;
+		if (detailAnalysis) {
+			inspectionDetailAnalyst.add(sonarJavaResult);
+		}
 	}
 
 	public int getSonarJavaCountAll() {

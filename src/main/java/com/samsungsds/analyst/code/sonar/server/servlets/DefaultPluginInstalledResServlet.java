@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 @SuppressWarnings("serial")
-public class PluginInstalledResServlet extends HttpServlet {
+public class DefaultPluginInstalledResServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

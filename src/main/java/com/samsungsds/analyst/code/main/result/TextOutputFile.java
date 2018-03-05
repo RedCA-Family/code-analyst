@@ -263,6 +263,10 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println();
 			writer.println();
 		}
+		
+		if (result.isDetailAnalysis()) {
+			writeTopInspection(result.getTopSonarJavaList(), "TopSonarJavaList");
+		}
 	}
 
 	@Override

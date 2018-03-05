@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 @SuppressWarnings("serial")
-public class WebPluginInstalledResServlet extends HttpServlet {
+public class JavaPluginInstalledResServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -23,7 +23,7 @@ public class WebPluginInstalledResServlet extends HttpServlet {
 
 		// Write back response
 		try (OutputStream outStream = response.getOutputStream()) {
-			IOAndFileUtils.write(outStream, "/statics/plugins_web.json");
+			IOAndFileUtils.write(outStream, "/statics/plugins_java.json");
 		}
 	}
 
