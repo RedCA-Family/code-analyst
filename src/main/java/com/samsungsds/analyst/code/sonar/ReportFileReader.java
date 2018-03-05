@@ -65,63 +65,74 @@ public class ReportFileReader implements Closeable {
 		if (component.getType().equals(ComponentType.DIRECTORY)) {
 			MeasuredResult.getInstance(instanceKey).addDirectories(1);
 		} else if (component.getType().equals(ComponentType.FILE)) {
-			MeasuredResult.getInstance(instanceKey).addFiles(1);
-			MeasuredResult.getInstance(instanceKey).addLines(component.getLines());
-
-			try (CloseableIterator<ScannerReport.Measure> it = reader.readComponentMeasures(component.getRef())) {
-				while (it.hasNext()) {
-					ScannerReport.Measure measure = it.next();
-
-					if (measure.getMetricKey().equals(METRIC_CLASSES)) {
-						MeasuredResult.getInstance(instanceKey).addClasses(measure.getIntValue().getValue());
-					} else if (measure.getMetricKey().equals(METRIC_COMMENT_LINES)) {
-						MeasuredResult.getInstance(instanceKey).addCommentLines(measure.getIntValue().getValue());
-					} else if (measure.getMetricKey().equals(METRIC_FUNCTIONS)) {
-						MeasuredResult.getInstance(instanceKey).addFunctions(measure.getIntValue().getValue());
-					} else if (measure.getMetricKey().equals(METRIC_NCLOC)) {
-						MeasuredResult.getInstance(instanceKey).addNcloc(measure.getIntValue().getValue());
-					} else if (measure.getMetricKey().equals(METRIC_STATEMENTS)) {
-						MeasuredResult.getInstance(instanceKey).addStatements(measure.getIntValue().getValue());
+			if ("java".equals(component.getLanguage())) {
+				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isCodeSize()) {
+					MeasuredResult.getInstance(instanceKey).addFiles(1);
+					MeasuredResult.getInstance(instanceKey).addLines(component.getLines());
+					
+					try (CloseableIterator<ScannerReport.Measure> it = reader.readComponentMeasures(component.getRef())) {
+						while (it.hasNext()) {
+							ScannerReport.Measure measure = it.next();
+							
+							if (measure.getMetricKey().equals(METRIC_CLASSES)) {
+								MeasuredResult.getInstance(instanceKey).addClasses(measure.getIntValue().getValue());
+							} else if (measure.getMetricKey().equals(METRIC_COMMENT_LINES)) {
+								MeasuredResult.getInstance(instanceKey).addCommentLines(measure.getIntValue().getValue());
+							} else if (measure.getMetricKey().equals(METRIC_FUNCTIONS)) {
+								MeasuredResult.getInstance(instanceKey).addFunctions(measure.getIntValue().getValue());
+							} else if (measure.getMetricKey().equals(METRIC_NCLOC)) {
+								MeasuredResult.getInstance(instanceKey).addNcloc(measure.getIntValue().getValue());
+							} else if (measure.getMetricKey().equals(METRIC_STATEMENTS)) {
+								MeasuredResult.getInstance(instanceKey).addStatements(measure.getIntValue().getValue());
+							}
+						}
+					} catch (Exception e) {
+						throw new IllegalStateException("Can't read measures for " + component, e);
 					}
 				}
-			} catch (Exception e) {
-				throw new IllegalStateException("Can't read measures for " + component, e);
-			}
-
-			if (reader.hasCoverage(component.getRef())) {
-				try (CloseableIterator<ScannerReport.Duplication> it = reader.readComponentDuplications(component.getRef())) {
-					while (it.hasNext()) {
-						ScannerReport.Duplication dup = it.next();
-
-						MeasuredResult.getInstance(instanceKey).addDuplicatedBlocks();
-						
-						String path = component.getPath();
-						int startLine = dup.getOriginPosition().getStartLine();
-						int endLine = dup.getOriginPosition().getEndLine();
-
-						for (Duplicate d : dup.getDuplicateList()) {
-							String duplicatedPath = null;
-							try {
-								duplicatedPath = reader.readComponent(d.getOtherFileRef()).getPath();
-							} catch (IllegalStateException ise) { // Unable to find report for component #...
-								duplicatedPath = DuplicationResult.DUPLICATED_FILE_SAME_MARK;
+				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isDuplication() && reader.hasCoverage(component.getRef())) {
+					try (CloseableIterator<ScannerReport.Duplication> it = reader.readComponentDuplications(component.getRef())) {
+						while (it.hasNext()) {
+							ScannerReport.Duplication dup = it.next();
+							
+							MeasuredResult.getInstance(instanceKey).addDuplicatedBlocks();
+							
+							String path = component.getPath();
+							int startLine = dup.getOriginPosition().getStartLine();
+							int endLine = dup.getOriginPosition().getEndLine();
+							
+							for (Duplicate d : dup.getDuplicateList()) {
+								String duplicatedPath = null;
+								try {
+									duplicatedPath = reader.readComponent(d.getOtherFileRef()).getPath();
+								} catch (IllegalStateException ise) { // Unable to find report for component #...
+									duplicatedPath = DuplicationResult.DUPLICATED_FILE_SAME_MARK;
+								}
+								DuplicationResult result = new DuplicationResult(path, startLine, endLine, duplicatedPath, d.getRange().getStartLine(), d.getRange().getEndLine());
+								
+								MeasuredResult.getInstance(instanceKey).addDuplicationResult(result);
 							}
-							DuplicationResult result = new DuplicationResult(path, startLine, endLine, duplicatedPath, d.getRange().getStartLine(), d.getRange().getEndLine());
-
-							MeasuredResult.getInstance(instanceKey).addDuplicationResult(result);
 						}
 					}
-				} catch (Exception e) {
-					throw new IllegalStateException("Can't read duplications for " + component, e);
 				}
-
+				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isSonarJava()) {
+					try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
+						while (it.hasNext()) {
+							ScannerReport.Issue issue = it.next();
+							SonarJavaResult sonarJavaResult = new SonarJavaResult(component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
+							MeasuredResult.getInstance(instanceKey).addSonarJavaResult(sonarJavaResult);
+						}
+					} catch (Exception e) {
+						throw new IllegalStateException("Can't read issues for " + component, e);
+					}
+				}
+			}
+			if ("js".equals(component.getLanguage()) || "web".equals(component.getLanguage()) || "css".equals(component.getLanguage()) || "less".equals(component.getLanguage()) || "scss".equals(component.getLanguage())) {
 				try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
 					while (it.hasNext()) {
 						ScannerReport.Issue issue = it.next();
-						if ("js".equals(component.getLanguage()) || "web".equals(component.getLanguage())) {
-							WebResourceResult webResourceResult = new WebResourceResult(component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), issue.getSeverityValue(), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
-							MeasuredResult.getInstance(instanceKey).addWebResourceResult(webResourceResult);
-						}
+						WebResourceResult webResourceResult = new WebResourceResult(component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
+						MeasuredResult.getInstance(instanceKey).addWebResourceResult(webResourceResult);
 					}
 				} catch (Exception e) {
 					throw new IllegalStateException("Can't read issues for " + component, e);
@@ -133,6 +144,23 @@ public class ReportFileReader implements Closeable {
 			Component child = reader.readComponent(ref);
 
 			readComponent(child);
+		}
+	}
+
+	private int reverseSeverity(int severityValue) {
+		switch (severityValue) {
+		case 1:
+			return 5;
+		case 2:
+			return 4;
+		case 3:
+			return 3;
+		case 4:
+			return 2;
+		case 5:
+			return 1;
+		default:
+			return 0;
 		}
 	}
 

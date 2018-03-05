@@ -37,8 +37,6 @@ public class QualityProfilesServlet extends HttpServlet {
 		} else if (url.equals("/api/rules/search.protobuf")) {
 			if (queryString.contains("qprofile=AWEgcpHElIthtMf8fR6x")) {
 				resourceName = "/statics/AWEgcpHElIthtMf8fR6x.protobuf";
-			} else if (queryString.contains("qprofile=AWEgcpQtlIthtMf8fSCR")) {
-				resourceName = "/statics/AWEgcpQtlIthtMf8fSCR.protobuf";
 			} else if (queryString.contains("qprofile=AWEmUh5aAmOaUaoeB5Tf")) {
 				resourceName = "/statics/AWEmUh5aAmOaUaoeB5Tf.protobuf";
 			} else if (queryString.contains("qprofile=AWEgcpZ4lIthtMf8fSH3")) {
@@ -53,6 +51,14 @@ public class QualityProfilesServlet extends HttpServlet {
 				resourceName = "/statics/AWEgcpyRlIthtMf8fSSN.protobuf";
 			} else if (queryString.contains("qprofile=AWEgcp25lIthtMf8fSTR")) {
 				resourceName = "/statics/AWEgcp25lIthtMf8fSTR.protobuf";
+			} else if (queryString.contains("qprofile=AWGIMrVIyNk_vPtwVsb_")) {
+				resourceName = "/statics/AWGIMrVIyNk_vPtwVsb_.protobuf";
+			} else if (queryString.contains("qprofile=AWGIMrq3yNk_vPtwVsea")) {
+				resourceName = "/statics/AWGIMrq3yNk_vPtwVsea.protobuf";
+			} else if (queryString.contains("qprofile=AWGIMr_nyNk_vPtwVsg1")) {
+				resourceName = "/statics/AWGIMr_nyNk_vPtwVsg1.protobuf";
+			} else if (queryString.contains("qprofile=AWHam0EHkasiS3G9MIkQ")) {
+				resourceName = "/statics/AWHam0EHkasiS3G9MIkQ.protobuf";
 			}
 		} else if (url.equals("/api/rules/list.protobuf")) {
 			resourceName = "/statics/list.protobuf";

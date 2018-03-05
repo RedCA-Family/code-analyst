@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         name="SDS Standard PMD ruleset"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+   <description>PMD 20180302, Samsung SDS</description>
+
+<rule ref="rulesets/java/basic.xml/AvoidBranchingStatementAsLastInLoop"/>
+<rule ref="rulesets/java/basic.xml/AvoidDecimalLiteralsInBigDecimalConstructor"/>
+<rule ref="rulesets/java/basic.xml/AvoidMultipleUnaryOperators"/>
+<rule ref="rulesets/java/basic.xml/AvoidUsingHardCodedIP"/>
+<rule ref="rulesets/java/basic.xml/AvoidUsingOctalValues"/>
+<rule ref="rulesets/java/basic.xml/BigIntegerInstantiation"/>
+<rule ref="rulesets/java/basic.xml/BrokenNullCheck"/>
+<rule ref="rulesets/java/basic.xml/CheckResultSet"/>
+<rule ref="rulesets/java/basic.xml/CheckSkipResult"/>
+<rule ref="rulesets/java/basic.xml/ClassCastExceptionWithToArray"/>
+<rule ref="rulesets/java/basic.xml/DontCallThreadRun"/>
+<rule ref="rulesets/java/basic.xml/DontUseFloatTypeForLoopIndices"/>
+<rule ref="rulesets/java/basic.xml/DoubleCheckedLocking"/>
+<rule ref="rulesets/java/basic.xml/JumbledIncrementer"/>
+<rule ref="rulesets/java/basic.xml/MisplacedNullCheck"/>
+<rule ref="rulesets/java/basic.xml/OverrideBothEqualsAndHashcode"/>
+<rule ref="rulesets/java/basic.xml/ReturnFromFinallyBlock"/>
+<rule ref="rulesets/java/basic.xml/UnconditionalIfStatement"/>
+<rule ref="rulesets/java/codesize.xml/ExcessiveClassLength">
+  <properties>
+        <property name="minimum" value="1500"/>
+    </properties>
+</rule>
+<rule ref="rulesets/java/codesize.xml/ExcessiveMethodLength">
+  <properties>
+        <property name="minimum" value="300"/>
+    </properties>
+</rule>
+<rule ref="rulesets/java/codesize.xml/ExcessiveParameterList">
+  <properties>
+        <property name="minimum" value="15"/>
+    </properties>
+</rule>
+<rule ref="rulesets/java/codesize.xml/ModifiedCyclomaticComplexity">
+  <properties>
+        <property name="reportLevel" value="21"/>
+    </properties>
+</rule>
+<rule ref="rulesets/java/controversial.xml/DoNotCallGarbageCollectionExplicitly"/>
+<rule ref="rulesets/java/controversial.xml/DontImportSun"/>
+<rule ref="rulesets/java/controversial.xml/SuspiciousOctalEscape"/>
+<rule ref="rulesets/java/coupling.xml/CouplingBetweenObjects">
+   <properties>
+        <property name="threshold" description="The unique type reporting threshold" value="20"/>
+    </properties>
+</rule>
+<rule ref="rulesets/java/design.xml/AbstractClassWithoutAnyMethod"/>
+<rule ref="rulesets/java/design.xml/AssignmentToNonFinalStatic"/>
+<rule ref="rulesets/java/design.xml/AvoidProtectedFieldInFinalClass"/>
+<rule ref="rulesets/java/design.xml/AvoidProtectedMethodInFinalClassNotExtending"/>
+<rule ref="rulesets/java/design.xml/BadComparison"/>
+<rule ref="rulesets/java/design.xml/ClassWithOnlyPrivateConstructorsShouldBeFinal"/>
+<rule ref="rulesets/java/design.xml/CloseResource"/>
+<rule ref="rulesets/java/design.xml/CompareObjectsWithEquals"/>
+<rule ref="rulesets/java/design.xml/ConstructorCallsOverridableMethod"/>
+<rule ref="rulesets/java/design.xml/DefaultLabelNotLastInSwitchStmt"/>
+<rule ref="rulesets/java/design.xml/EmptyMethodInAbstractClassShouldBeAbstract"/>
+<rule ref="rulesets/java/design.xml/EqualsNull"/>
+<rule ref="rulesets/java/design.xml/FinalFieldCouldBeStatic"/>
+<rule ref="rulesets/java/design.xml/IdempotentOperations"/>
+<rule ref="rulesets/java/design.xml/ImmutableField"/>
+<rule ref="rulesets/java/design.xml/MissingBreakInSwitch"/>
+<rule ref="rulesets/java/design.xml/MissingStaticMethodInNonInstantiatableClass"/>
+<rule ref="rulesets/java/design.xml/NonCaseLabelInSwitchStatement"/>
+<rule ref="rulesets/java/design.xml/NonStaticInitializer"/>
+<rule ref="rulesets/java/design.xml/NonThreadSafeSingleton"/>
+<rule ref="rulesets/java/design.xml/PositionLiteralsFirstInCaseInsensitiveComparisons"/>
+<rule ref="rulesets/java/design.xml/PositionLiteralsFirstInComparisons"/>
+<rule ref="rulesets/java/design.xml/PreserveStackTrace"/>
+<rule ref="rulesets/java/design.xml/ReturnEmptyArrayRatherThanNull"/>
+<rule ref="rulesets/java/design.xml/SimplifyConditional"/>
+<rule ref="rulesets/java/design.xml/SwitchStmtsShouldHaveDefault"/>
+<rule ref="rulesets/java/design.xml/UnsynchronizedStaticDateFormatter"/>
+<rule ref="rulesets/java/design.xml/UseLocaleWithCaseConversions">
+    <priority>1</priority>
+</rule>
+<rule ref="rulesets/java/design.xml/UseNotifyAllInsteadOfNotify"/>
+<rule ref="rulesets/java/finalizers.xml/AvoidCallingFinalize"/>
+<rule ref="rulesets/java/finalizers.xml/EmptyFinalizer"/>
+<rule ref="rulesets/java/finalizers.xml/FinalizeDoesNotCallSuperFinalize"/>
+<rule ref="rulesets/java/finalizers.xml/FinalizeOnlyCallsSuperFinalize"/>
+<rule ref="rulesets/java/finalizers.xml/FinalizeOverloaded"/>
+<rule ref="rulesets/java/finalizers.xml/FinalizeShouldBeProtected"/>
+<rule ref="rulesets/java/j2ee.xml/DoNotCallSystemExit"/>
+<rule ref="rulesets/java/j2ee.xml/UseProperClassLoader"/>
+<rule ref="rulesets/java/logging-jakarta-commons.xml/ProperLogger"/>
+<rule ref="rulesets/java/logging-java.xml/AvoidPrintStackTrace"/>
+<rule ref="rulesets/java/logging-java.xml/LoggerIsNotStaticFinal"/>
+<rule ref="rulesets/java/logging-java.xml/SystemPrintln"/>
+<rule ref="rulesets/java/naming.xml/AvoidDollarSigns"/>
+<rule ref="rulesets/java/naming.xml/AvoidFieldNameMatchingMethodName"/>
+<rule ref="rulesets/java/naming.xml/AvoidFieldNameMatchingTypeName"/>
+<rule ref="rulesets/java/naming.xml/ClassNamingConventions"/>
+<rule ref="rulesets/java/naming.xml/MethodNamingConventions"/>
+<rule ref="rulesets/java/naming.xml/MethodWithSameNameAsEnclosingClass"/>
+<rule ref="rulesets/java/naming.xml/PackageCase"/>
+<rule ref="rulesets/java/naming.xml/ShortMethodName"/>
+<rule ref="rulesets/java/naming.xml/SuspiciousConstantFieldName"/>
+<rule ref="rulesets/java/naming.xml/SuspiciousEqualsMethodName"/>
+<rule ref="rulesets/java/naming.xml/SuspiciousHashcodeMethodName"/>
+<rule ref="rulesets/java/optimizations.xml/UnnecessaryWrapperObjectCreation"/>
+<rule ref="rulesets/java/strictexception.xml/AvoidLosingExceptionInformation"/>
+<rule ref="rulesets/java/strictexception.xml/AvoidRethrowingException"/>
+<rule ref="rulesets/java/strictexception.xml/AvoidThrowingNewInstanceOfSameException"/>
+<rule ref="rulesets/java/strictexception.xml/DoNotExtendJavaLangError"/>
+<rule ref="rulesets/java/strictexception.xml/DoNotThrowExceptionInFinally"/>
+<rule ref="rulesets/java/strings.xml/AvoidDuplicateLiterals">
+  <properties>
+        <property name="maxDuplicateLiterals" value="7"/>
+    </properties>
+</rule>
+<rule ref="rulesets/java/strings.xml/InefficientStringBuffering"/>
+<rule ref="rulesets/java/strings.xml/StringInstantiation"/>
+<rule ref="rulesets/java/strings.xml/StringToString"/>
+<rule ref="rulesets/java/strings.xml/UseEqualsToCompareStrings"/>
+<rule ref="rulesets/java/unnecessary.xml/UnnecessaryConversionTemporary"/>
+<rule ref="rulesets/java/unnecessary.xml/UselessOperationOnImmutable"/>
+</ruleset>

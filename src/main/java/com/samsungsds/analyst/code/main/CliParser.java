@@ -54,7 +54,7 @@ public class CliParser {
 	private String instanceKey = "";
 
 	private boolean detailAnalysis = false;
-	
+
 	private boolean seperatedOutput = false;
 
 	public CliParser(String[] args) {
@@ -85,12 +85,12 @@ public class CliParser {
 		options.addOption("m", "mode", true, "specify analysis items with comma separated. (code-size,duplication,complexity,pmd,findbugs,findsecbugs,webresource,dependency,unusedcode)");
 
 		options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occured, use JVM '-Xmx' option like '-Xmx1024m')");
-		
+
 		options.addOption("r", "rerun", true, "specify previous output file to rerun with same options. "
 				+ "('project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', 'analysis', and 'seperated')");
-		
+
 		options.addOption("seperated", false, "specify seperated output mode.");
-		
+
 	}
 
 	public boolean parse() {
@@ -189,7 +189,7 @@ public class CliParser {
 					return false;
 				}
 				String analysisModeValue = cmd.getOptionValue("m");
-				
+
 				if (!settingAnalysisMode(analysisModeValue)) {
 					return false;
 				}
@@ -200,11 +200,11 @@ public class CliParser {
 			if (cmd.hasOption("a")) {
 				setDetailAnalysis(true);
 			}
-			
+
 			if (cmd.hasOption("seperated")) {
 				setSeperatedOutput(true);
 			}
-			
+
 			if (cmd.hasOption("r")) {
 				getOptionsFromOutFile(cmd.getOptionValue("r"));
 			}
@@ -231,7 +231,7 @@ public class CliParser {
 		}
 
 		analysisMode = analysisModeValue;
-		
+
 		return true;
 	}
 
@@ -242,7 +242,7 @@ public class CliParser {
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);
 		}
-		
+
 		projectBaseDir = getCheckedString(ini, "Project", "Target");
 		src = getCheckedString(ini, "Project", "Source");
 		binary = getCheckedString(ini, "Project", "Binary");
@@ -252,24 +252,24 @@ public class CliParser {
 		ruleSetFileForFindBugs = getCheckedString(ini, "Project", "FindBugs", true);
 		includes = getCheckedString(ini, "Project", "includes", true);
 		excludes = getCheckedString(ini, "Project", "excludes", true);
-		
+
 		String mode = getCheckedString(ini, "Project", "mode");
 		if (!mode.equals(Constants.DEFAULT_ANALYSIS_MODE)) {
 			settingAnalysisMode(mode);
 		}
-		
+
 		String analysis = getCheckedString(ini, "Project", "detailAnalysis", true);
-		
+
 		if (analysis.equals("true")) {
 			detailAnalysis = true;
 		}
-		
+
 		String seperated = getCheckedString(ini, "Project", "seperatedOutput", true);
-		
+
 		if (seperated.equals("true")) {
 			seperatedOutput = true;
 		}
-		
+
 		LOGGER.info("Rerun with following options");
 		LOGGER.info(" - project : {}", projectBaseDir);
 		LOGGER.info(" - src : {}", src);
@@ -298,14 +298,14 @@ public class CliParser {
 			LOGGER.info(" - seperatedOutput = true");
 		}
 	}
-	
+
 	private String getCheckedString(Wini ini, String sectionName, String optionName) {
 		return getCheckedString(ini, sectionName, optionName, false);
 	}
-	
+
 	private String getCheckedString(Wini ini, String sectionName, String optionName, boolean canBeNull) {
 		String value = ini.get(sectionName, optionName);
-		
+
 		if (value == null) {
 			if (canBeNull) {
 				return "";
@@ -313,7 +313,7 @@ public class CliParser {
 				throw new IllegalArgumentException("[" + sectionName + "]'s " + optionName + " value null!");
 			}
 		}
-		
+
 		return value.trim();
 	}
 
@@ -325,18 +325,23 @@ public class CliParser {
 				individualMode.setDuplication(true);
 			} else if (mode.equalsIgnoreCase("complexity")) {
 				individualMode.setComplexity(true);
+			} else if (mode.equalsIgnoreCase("sonarjava")) {
+				individualMode.setSonarJava(true);
 			} else if (mode.equalsIgnoreCase("pmd")) {
 				individualMode.setPmd(true);
 			} else if (mode.equalsIgnoreCase("findbugs")) {
 				individualMode.setFindBugs(true);
 			} else if (mode.equalsIgnoreCase("findsecbugs")) {
 				individualMode.setFindSecBugs(true);
+			} else if (mode.equalsIgnoreCase("webresource")) {
+				individualMode.setWebResource(true);
 			} else if (mode.equalsIgnoreCase("dependency")) {
 				individualMode.setDependency(true);
-			} else if (mode.equalsIgnoreCase("unusedcode")){
+			} else if (mode.equalsIgnoreCase("unusedcode")) {
 				individualMode.setUnusedCode(true);
 			} else {
-				throw new IllegalArgumentException("'mode' option can only have 'code-size', 'duplication', 'complexity', 'pmd', 'findbugs', 'findsecbugs', 'unusedcode' and 'dependency'");
+				throw new IllegalArgumentException(
+						"'mode' option can only have 'code-size', 'duplication', 'complexity', 'pmd', 'findbugs', 'findsecbugs', 'webresource', 'dependency', and 'unusedcode'");
 			}
 		}
 	}
