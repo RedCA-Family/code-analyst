@@ -7,7 +7,7 @@ public class UnusedCodeResult {
 	private String packageName="";
 	@Expose
 	private String className;
-	
+	@Expose
 	private String name;
 	@Expose
 	private int line;
