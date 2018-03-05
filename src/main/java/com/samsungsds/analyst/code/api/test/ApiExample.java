@@ -53,7 +53,9 @@ public class ApiExample {
 
 		argument.setMode(mode);
 
-		argument.setDetailAnalysis(true);
+		// argument.setDetailAnalysis(true);
+
+		// argument.setDebug(true);
 
 		// argument.setExclude("com/samsungsds/analyst/code/main/filter/*");
 

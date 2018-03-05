@@ -83,6 +83,11 @@ public class ResultProcessor {
 	private static void printSonarJavaSummary(MeasuredResult result) {
 		if (result.getIndividualMode().isSonarJava()) {
 			System.out.println("SonarJava violations : " + getFormattedNumber(result.getSonarJavaCountAll()));
+			System.out.println("SonarJava 1 priority : " + getFormattedNumber(result.getSonarJavaCount(1)));
+			System.out.println("SonarJava 2 priority : " + getFormattedNumber(result.getSonarJavaCount(2)));
+			System.out.println("SonarJava 3 priority : " + getFormattedNumber(result.getSonarJavaCount(3)));
+			System.out.println("SonarJava 4 priority : " + getFormattedNumber(result.getSonarJavaCount(4)));
+			System.out.println("SonarJava 5 priority : " + getFormattedNumber(result.getSonarJavaCount(5)));
 			System.out.println();
 		}
 	}

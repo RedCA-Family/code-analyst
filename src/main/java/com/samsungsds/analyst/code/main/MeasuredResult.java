@@ -1033,6 +1033,7 @@ public class MeasuredResult implements Serializable {
 		}
 
 		topDuplicationList = null;
+		topSonarJavaList = null;
 		topPmdList = null;
 		topFindBugsList = null;
 		technicalDebtResult = null;
