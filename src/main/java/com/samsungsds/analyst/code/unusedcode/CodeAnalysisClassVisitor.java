@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -144,6 +145,10 @@ public class CodeAnalysisClassVisitor extends ClassVisitor {
 			return null;
 		}
 		
+		//MethodVisitor 내의 method에서 사용하기 위한 변수 할당 
+		String methodName = name;
+		String methodDesc = desc;
+		
 		String formattedSignature = TypeUtil.formatClassNameFromSlashToDot(signature);
 		
 		addMethodToResult(access, name, desc, formattedSignature, exceptions);
@@ -151,6 +156,23 @@ public class CodeAnalysisClassVisitor extends ClassVisitor {
 		addUsedClassesToResult(getParameterAndReturnClassNames(desc));
 		
 		MethodVisitor methodVisitor = new MethodVisitor(Opcodes.ASM5, super.visitMethod(access, name, desc, signature, exceptions)) {
+			
+			@Override
+			public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+				LOGGER.debug(String.format("#####visitAnnotation %s %s %s", className, desc, methodDesc));
+				
+				String requestMappingDesc = "Lorg/springframework/web/bind/annotation/RequestMapping;";
+				if(desc.equals(requestMappingDesc)) {
+					CAMethod caMethod = new CAMethod();
+					caMethod.setClassName(className);
+					caMethod.setName(methodName);
+					caMethod.setDesc(methodDesc);
+					result.getUsedMethods().add(caMethod);
+					addUsedClassToResult(className);
+				}
+				
+				return super.visitAnnotation(desc, visible);
+			}
 			
 			@Override
 			public void visitFieldInsn(int opcode, String owner, String name, String desc) {
