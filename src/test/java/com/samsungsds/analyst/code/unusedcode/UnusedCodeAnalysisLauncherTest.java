@@ -43,17 +43,6 @@ public class UnusedCodeAnalysisLauncherTest {
 	}
 	
 	@Test public void
-	test() {
-		String src = "D:\\dev\\workspaces\\personal-workspace\\stts\\src";
-		String binary = "D:\\dev\\workspaces\\personal-workspace\\stts\\target";
-		
-		unusedCodeAnalysisLauncher.setTargetSrc(src);
-		unusedCodeAnalysisLauncher.setTargetBinary(binary);
-		
-		unusedCodeAnalysisLauncher.run(testInstanceKey);
-	}
-	
-	@Test public void
 	should_detect_2_unused_fields_when_launcher_analysis_UClass() {
 		String src = "./src";
 		String binary = "./target/classes/com/samsungsds/analyst/code/test/UClass.class";
