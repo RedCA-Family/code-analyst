@@ -53,7 +53,7 @@ public class ApiExample {
 
 		argument.setMode(mode);
 
-		// argument.setDetailAnalysis(true);
+		argument.setDetailAnalysis(true);
 
 		// argument.setDebug(true);
 
