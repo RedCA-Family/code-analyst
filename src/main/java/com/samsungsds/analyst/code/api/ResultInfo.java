@@ -7,6 +7,8 @@ public class ResultInfo {
 	private String pmdFile;
 	private String findBugsFile;
 	private String findSecBugsFile;
+	private String sonarJavaFile;
+	private String webResourceFile;
 	
 	public String getOutputFile() {
 		return outputFile;
@@ -54,5 +56,21 @@ public class ResultInfo {
 	
 	public void setFindSecBugsFile(String findSecBugsFile) {
 		this.findSecBugsFile = findSecBugsFile;
+	}
+
+	public String getSonarJavaFile() {
+		return sonarJavaFile;
+	}
+
+	public void setSonarJavaFile(String sonarJavaFile) {
+		this.sonarJavaFile = sonarJavaFile;
+	}
+
+	public String getWebResourceFile() {
+		return webResourceFile;
+	}
+
+	public void setWebResourceFile(String webResourceFile) {
+		this.webResourceFile = webResourceFile;
 	}
 }

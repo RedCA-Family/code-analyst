@@ -83,7 +83,7 @@ public class CSVSeperatedOutput {
 	}
 
 	public void writeSonarJava(List<SonarJavaResult> list) {
-		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-SonarJava.csv";
+		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjava.csv";
 
 		try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
 			csvWriter.println("No,Path,Rule,Message,Priority,Start line,Start offset,End line,End offset");
@@ -150,7 +150,7 @@ public class CSVSeperatedOutput {
 	}
 
 	public void writeWebResource(List<WebResourceResult> list) {
-		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-WebResource.csv";
+		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-webresource.csv";
 
 		try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
 			csvWriter.println("No,Path,Rule,Message,Priority,Start line,Start offset,End line,End offset");

@@ -13,6 +13,10 @@ public class AnalysisMode {
 	private boolean dependency = false;
 	private boolean unusedCode = false;
 
+	public boolean isSonarServer() {
+		return codeSize || duplication || sonarJava || webResource;
+	}
+
 	public boolean isCodeSize() {
 		return codeSize;
 	}

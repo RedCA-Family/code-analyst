@@ -20,7 +20,7 @@ import edu.umd.cs.findbugs.SortedBugCollection;
 public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 	private static final Logger LOGGER = LogManager.getLogger(FindBugsAnalysisLauncher.class);
 	
-	private static final String BUG_RULESET_FILE = "/statics/FindBugs-include-filter_246.xml";
+	private static final String BUG_RULESET_FILE = "/statics/FindBugs-include-filter_214.xml";
 	
 	private List<String> arg = new ArrayList<>();
 	private File reportFile = null;

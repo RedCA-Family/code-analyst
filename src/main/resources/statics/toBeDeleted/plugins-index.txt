@@ -1,2 +1,0 @@
-csharp,false,sonar-csharp-plugin-5.5.1.522.jar|33201dac2cc326970cf4954a097e486f
-java,true,sonar-java-plugin-4.3.0.7717.jar|b43b4a4b2c35231e8c02f4c6f55c87d1
