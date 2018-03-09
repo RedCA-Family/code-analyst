@@ -67,7 +67,7 @@ public class QualityProfilesServlet extends HttpServlet {
 			} else if (queryString.contains("qprofile=AWHam0EHkasiS3G9MIkQ")) {
 				resourceName = "/statics/AWHam0EHkasiS3G9MIkQ.protobuf";
 			}
-		} else if (url.equals("/api/rules/list.protobuf")) {
+		} else if (url.equals("/api/rules/list.protobuf")) {	// RuleSet이 변경되면 같이 변경하여야 함.. (parameter는 없음)
 			resourceName = "/statics/list.protobuf";
 		} else if (url.equals("/batch/project.protobuf")) {
 			resourceName = "/statics/project.protobuf";
