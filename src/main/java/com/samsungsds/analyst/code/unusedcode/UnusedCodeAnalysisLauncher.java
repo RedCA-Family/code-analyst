@@ -36,6 +36,8 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	
 	private String targetSrc = null;
 	private String targetBinary = null;
+	private String excludePath = null;
+	private String includePath = null;
 	
 	private String rootPackage = null;
 	private String sourceRootFolderPath = null;
@@ -53,10 +55,30 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		LOGGER.debug("UnusedCode Target Binary : {}", directory);
 		this.targetBinary = directory;
 	}
+	
+	@Override
+	public void setExclude(String path) {
+		LOGGER.debug("UnusedCode Exclude Path : {}", path);
+		this.excludePath = path;
+	}
+	
+	@Override
+	public void setInclude(String path) {
+		LOGGER.debug("UnusedCode Include Path : {}", path);
+		this.includePath = path;
+	}
 
 	@Override
 	public void run(String instanceKey) {
 		MeasuredResult measuredResult = MeasuredResult.getInstance(instanceKey);
+		
+		if(this.excludePath != null) {
+			measuredResult.setExcludeFilters(this.excludePath);
+		}
+		
+		if(this.includePath != null) {
+			measuredResult.setIncludeFilters(this.includePath);
+		}
 		
 		VisitResult visitResult = new VisitResult();
 		
@@ -97,7 +119,6 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 
 			clearTempInfo(visitResult);
 		}
-		
 		
 		//set total count per type
 		measuredResult.setUcTotalClassCount(visitResult.getClasses().size());

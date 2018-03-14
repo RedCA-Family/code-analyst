@@ -4,5 +4,7 @@ public interface UnusedCodeAnalysis {
 	
 	void setTargetSrc(String directory);
 	void setTargetBinary(String directory);
+	void setExclude(String path);
+	void setInclude(String path);
 	void run(String instanceKey);
 }

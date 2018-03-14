@@ -102,7 +102,7 @@ public class UnusedCodeAnalysisLauncherTest {
 		unusedCodeAnalysisLauncher.setTargetSrc(src);
 		unusedCodeAnalysisLauncher.setTargetBinary(binary);
 		
-		measuredResult.setExcludeFilters("*ClassVisitor*");
+		unusedCodeAnalysisLauncher.setExclude("*ClassVisitor*");
 
 		unusedCodeAnalysisLauncher.run(testInstanceKey);
 		
