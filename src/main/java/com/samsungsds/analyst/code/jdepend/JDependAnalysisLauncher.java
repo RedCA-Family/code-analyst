@@ -74,7 +74,7 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 	public void checkResult(ArrayList<JavaPackage> packageList, ResultIncludeFilter filter, String instanceKey) {
 		List<JavaPackage> list = new ArrayList<>();
 		
-		LOGGER.info("Acyclic Dependencies:");
+		LOGGER.info("Cyclic Dependencies:");
 		for (JavaPackage jPackage : packageList) {
 			if (!filter.include(jPackage.getName())) {
 				continue;

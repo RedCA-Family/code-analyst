@@ -12,7 +12,7 @@ public class ArgumentInfo {
 	private int timeout = 10 * 60;			// 10 minutes
 	private String exclude;					// exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)
 	
-	private AnalysisMode mode;				// code-size,duplication,complexity,pmd,findbugs,findsecbugs,dependency
+	private AnalysisMode mode;				// code-size,duplication,complexity,sonarjava,pmd,findbugs,findsecbugs,webresource,dependency,unused
 
 	private boolean detailAnalysis = false;	// Detail Analysis mode
 

@@ -317,7 +317,9 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		info.setPmdFile(fileWithoutExt + "-pmd.json");
 		info.setFindBugsFile(fileWithoutExt + "-findbugs.json");
 		info.setFindSecBugsFile(fileWithoutExt + "-findsecbugs.json");
-		
+		info.setSonarJavaFile(fileWithoutExt + "-sonarjava.json");
+		info.setWebResourceFile(fileWithoutExt + "-webresource.json");
+
 		return info;
 	}
 }

@@ -21,7 +21,7 @@ public class Version {
 	// 1.5.2 : 복잡도 Top 10 분석 개선
 	// 1.5.3 : Martin metrics 측정 추가, Inspection(PMD, FindBugs)에 대한 Top 10 측정 추가, Duplication Top 10 수정
 	// 1.5.4 : API 변경 (세부 분석 옵션 추가)
-	// 2.0.0 : SonarQube Upgrade (6.2.1 -> 6.7.1 LTS), 신규 기능(unused code detection, technical debt, Web Resource 점검) 등
+	// 2.0.0 : SonarQube Upgrade (6.2.1 -> 6.7.1 LTS), 신규 기능(unused code detection, technical debt, Web Resource 점검), '18년 3월 표준룰 개정 반영 등
 	//--------------------------------------------------
 	public static final String CODE_ANALYST = "2.0.0";
 	public static final String DOCUMENT_VERSION = "2.0";
@@ -31,15 +31,29 @@ public class Version {
 	public static final String FINDBUGS = "3.0.1";
 	public static final String FINDSECBUGS = "1.7.1";
 	public static final String JDEPEND = "2.9.1";
+
+	public static final String SONAR_JAVA = "5.1.1.13214";
+	public static final String SONAR_JS = "4.1.0.6085";
+	public static final String SONAR_CSS = "3.1";
+	public static final String SONAR_WEB = "2.5.0.476";
 	
-	public static final String PMD_RULESET = "5.4 - 147 ruleset";
-	public static final String FINDBUGS_RULESET = "3.0.1 - 246 ruleset";
-	public static final String FINDSECBUGS_RULESET = "1.7.1 - 121 ruleset";
+	public static final String PMD_RULESET = "91 ruleset (v5.4, SDS Std. Ruleset, '18.03)";
+	public static final String FINDBUGS_RULESET = "214 ruleset (v3.0.1, SDS Std. Ruleset, '18.03)";
+	public static final String FINDSECBUGS_RULESET = "121 ruleset (v1.7.1)";
+	public static final String SONAR_JAVA_RULESET = "292 ruleset (v4.15, SDS Std. Ruleset, '18.03)";
+	public static final String SONAR_JS_RULESET = "86 ruleset (v4.1)";
+	public static final String SONAR_CSS_RULESET = "CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)";
+	public static final String SONAR_WEB_RULESET = "16 ruleset (v2.5)";
 	
 	public static void printVersionInfo() {
 		System.out.println("Code Analyst : " + CODE_ANALYST);
 		System.out.println("  - Sonar Scanner : " + SONAR_SCANNER + " (LGPL v3.0)");
 		System.out.println("  - Sonar Server : " + SONAR_SERVER + " (LGPL v3.0)");
+		System.out.println("     [Plugins]");
+		System.out.println("       - SonarJava : " + SONAR_JAVA + " (LGPL v3.0)");
+		System.out.println("       - SonarJS : " + SONAR_JS + " (LGPL v3.0)");
+		System.out.println("       - CSS/SCSS/Less : " + SONAR_CSS + " (LGPL v3.0)");
+		System.out.println("       - Web : " + SONAR_WEB + " (Apache v2.0)");
 		System.out.println("  - PMD : " + PMD + " (BSD-style)");
 		System.out.println("  - FindBugs : " + FINDBUGS + " (LGPL v3.0)");
 		System.out.println("  - FindSecBugs : " + FINDSECBUGS + " (LGPL v3.0)");
@@ -49,6 +63,11 @@ public class Version {
 		System.out.println("  - PMD : " + PMD_RULESET);
 		System.out.println("  - FindBugs : " + FINDBUGS_RULESET);
 		System.out.println("  - FindSecBugs : " + FINDSECBUGS_RULESET);
+		System.out.println("  - SonarJava : " + SONAR_JAVA_RULESET);
+		System.out.println("  - Web Resources :");
+		System.out.println("      - JS : " + SONAR_JS_RULESET);
+		System.out.println("      - CSS : " + SONAR_CSS_RULESET);
+		System.out.println("      - HTML : " + SONAR_WEB_RULESET);
 		System.out.println();
 		System.out.println("Copyright(c) 2018 By Samsung SDS (Code Quality Group)");
 	}

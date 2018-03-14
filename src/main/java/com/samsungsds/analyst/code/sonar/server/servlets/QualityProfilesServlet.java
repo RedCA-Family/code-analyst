@@ -35,6 +35,13 @@ public class QualityProfilesServlet extends HttpServlet {
 		if (url.equals("/api/qualityprofiles/search.protobuf")) {
 			resourceName = "/statics/search.protobuf";
 		} else if (url.equals("/api/rules/search.protobuf")) {
+			// URL ex : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWHam0EHkasiS3G9MIkQ&p=1&ps=500
+
+			if (!queryString.contains("&p=1&")) {
+				LOGGER.error("'p' parameter error : {}", queryString);
+				throw new IllegalArgumentException("Request URL parameter error ('p' isn't 1");
+			}
+
 			if (queryString.contains("qprofile=AWEgcpHElIthtMf8fR6x")) {
 				resourceName = "/statics/AWEgcpHElIthtMf8fR6x.protobuf";
 			} else if (queryString.contains("qprofile=AWEmUh5aAmOaUaoeB5Tf")) {
@@ -57,14 +64,10 @@ public class QualityProfilesServlet extends HttpServlet {
 				resourceName = "/statics/AWGIMrq3yNk_vPtwVsea.protobuf";
 			} else if (queryString.contains("qprofile=AWGIMr_nyNk_vPtwVsg1")) {
 				resourceName = "/statics/AWGIMr_nyNk_vPtwVsg1.protobuf";
-			} else if (queryString.contains("qprofile=AWHam0EHkasiS3G9MIkQ&p=1")) {
-				resourceName = "/statics/AWHam0EHkasiS3G9MIkQ_1.protobuf";
-			} else if (queryString.contains("qprofile=AWHam0EHkasiS3G9MIkQ&p=2")) {
-				resourceName = "/statics/AWHam0EHkasiS3G9MIkQ_2.protobuf";
-			} else if (queryString.contains("qprofile=AWHam0EHkasiS3G9MIkQ&p=3")) {
-				resourceName = "/statics/AWHam0EHkasiS3G9MIkQ_3.protobuf";
+			} else if (queryString.contains("qprofile=AWHam0EHkasiS3G9MIkQ")) {
+				resourceName = "/statics/AWHam0EHkasiS3G9MIkQ.protobuf";
 			}
-		} else if (url.equals("/api/rules/list.protobuf")) {
+		} else if (url.equals("/api/rules/list.protobuf")) {	// RuleSet이 변경되면 같이 변경하여야 함.. (parameter는 없음)
 			resourceName = "/statics/list.protobuf";
 		} else if (url.equals("/batch/project.protobuf")) {
 			resourceName = "/statics/project.protobuf";
@@ -80,4 +83,3 @@ public class QualityProfilesServlet extends HttpServlet {
 		}
 	}
 }
-

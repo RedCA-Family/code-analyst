@@ -142,7 +142,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println();
 		}
 		if (result.getIndividualMode().isDependency()) {
-			writer.println("AcyclicDependecies = " + result.getAcyclicDependencyCount());
+			writer.println("CyclicDependecies = " + result.getAcyclicDependencyCount());
 			writer.println();
 		}
 		if (result.getIndividualMode().isUnusedCode()) {

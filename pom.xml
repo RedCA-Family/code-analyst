@@ -233,7 +233,6 @@
 								<zip destfile="${project.basedir}/target/${jarName}-${project.version}.jar">
 									<zipfileset src="${project.basedir}/target/${jarName}-${project.version}-temp.jar">
 										<exclude name="statics/notBeIncluded/*.*"/>
-										<exclude name="statics/toBeDeleted/*.*"/>
 									</zipfileset>
 								</zip>
 

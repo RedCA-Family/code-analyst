@@ -132,7 +132,7 @@ public class ResultProcessor {
 
 	protected static void printAcyclicDependSummary(MeasuredResult result) {
 		if (result.getIndividualMode().isDependency()) {
-			System.out.println("Acyclic Dependencies : " + getFormattedNumber(result.getAcyclicDependencyCount()));
+			System.out.println("Cyclic Dependencies : " + getFormattedNumber(result.getAcyclicDependencyCount()));
 			System.out.println();
 		}
 	}
@@ -153,7 +153,7 @@ public class ResultProcessor {
 		if (result.isWithDefaultPackageClasses()) {
 			System.out.print("* This project has classes with no package.");
 			System.out.println(" In this case, some analysis of these classes is not possible.");
-			System.out.println(" - FindBugs, FindSecBugs, and Acyclic Dependencies");
+			System.out.println(" - FindBugs, FindSecBugs, and Cyclic Dependencies");
 		}
 	}
 

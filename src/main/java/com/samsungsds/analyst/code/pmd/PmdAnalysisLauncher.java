@@ -14,7 +14,7 @@ import net.sourceforge.pmd.PMD;
 public class PmdAnalysisLauncher extends AbstractPmdAnalysis implements PmdAnalysis {
 	private static final Logger LOGGER = LogManager.getLogger(PmdAnalysisLauncher.class);
 	
-	private static final String CODE_QUALITY_RULESET_FILE = "/statics/PMD_ruleset_SDS_Standard_20160826.xml";
+	private static final String CODE_QUALITY_RULESET_FILE = "/statics/PMD_ruleset_SDS_Standard_20180302.xml";
 	
 	private List<String> arg = new ArrayList<>();
 	

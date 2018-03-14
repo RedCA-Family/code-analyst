@@ -3,18 +3,18 @@
 		{
 			"key": "javascript",
 			"name": "SonarJS",
-			"filename": "sonar-javascript-plugin-4.0.0.5862.jar",
+			"filename": "sonar-javascript-plugin-4.1.0.6085.jar",
 			"sonarLintSupported": true,
-			"hash": "cc8ad346e85db9d3735898b533d37d34",
-			"updatedAt": 1516766614460,
+			"hash": "132aaa5c3a6da2c09af83d327b1fc182",
+			"updatedAt": 1520315802623,
 			"description": "Code Analyzer for JavaScript",
-			"version": "4.0 (build 5862)",
+			"version": "4.1 (build 6085)",
 			"license": "GNU LGPL 3",
 			"organizationName": "SonarSource and Eriks Nukis",
 			"editionBundled": false,
 			"homepageUrl": "http://redirect.sonarsource.com/plugins/javascript.html",
 			"issueTrackerUrl": "https://github.com/SonarSource/sonar-javascript/issues",
-			"implementationBuild": "7c3166ea3f0526e74aa53e521d2fee2290fa0820"
+			"implementationBuild": "0a33c1a749126986ce73dd749f64f14ff4c91e33"
 		},
 		{
 			"key": "web",

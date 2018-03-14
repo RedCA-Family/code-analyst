@@ -207,6 +207,10 @@ public class App {
 		SurrogateSonarServer server = new JettySurrogateSonarServer();
 		int port = server.startAndReturnPort(cli);
 
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.SONAR_START_COMPLETE));
+		}
+
 		LOGGER.info("Sonar Scanner starting...");
 		SonarAnalysis sonar = new SonarAnalysisLauncher(cli.getSrc());
 
@@ -247,21 +251,24 @@ public class App {
 			sonar.addProperty("sonar.exclusions", MeasuredResult.getInstance(cli.getInstanceKey()).getExcludes());
 		}
 
+		SonarProgressEventChecker sonarProgressChecker = null;
+		if (progressMonitor != null) {
+			sonarProgressChecker = new SonarProgressEventChecker(cli.getIndividualMode(), this);
+
+			sonarProgressChecker.start();
+		}
+
 		sonar.run(cli.getInstanceKey());
 
-		if (cli.getIndividualMode().isCodeSize() && progressMonitor != null) {
-			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.CODE_SIZE_COMPLETE));
-		}
-
-		LOGGER.info("Surrogate Sonar Server stoping...");
+		LOGGER.info("Surrogate Sonar Server stopping...");
 		server.stop();
 
-		if (cli.getIndividualMode().isDuplication() && progressMonitor != null) {
-			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.DUPLICATION_COMPLETE));
+		if (sonarProgressChecker != null) {
+			sonarProgressChecker.stop();
 		}
 
-		if (cli.getIndividualMode().isWebResource() && progressMonitor != null) {
-			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.WEBRESOURCE_COMPLETE));
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.SONAR_ALL_COMPLETE));
 		}
 	}
 
@@ -451,6 +458,12 @@ public class App {
 	protected void notifyObservers(AnalysisProgress progress) {
 		for (ProgressObserver observer : observerList) {
 			observer.informProgress(progress);
+		}
+	}
+
+	protected void notifyObservers(ProgressEvent event) {
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(event));
 		}
 	}
 
