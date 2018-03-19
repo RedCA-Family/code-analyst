@@ -34,6 +34,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	public static final String UNUSED_CODE_TYPE_CONSTANT = "Constant";
 	public static final String UNUSED_CODE_TYPE_CLASS = "Class";
 	
+	private String projectBaseDir = null;
 	private String targetSrc = null;
 	private String targetBinary = null;
 	private String excludePath = null;
@@ -42,6 +43,11 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	private String rootPackage = null;
 	private String sourceRootFolderPath = null;
 	private String classRootFolderPath = null;
+	
+	@Override
+	public void setProjectBaseDir(String directory) {
+		this.projectBaseDir = directory;
+	}
 	
 	@Override
 	public void setTargetSrc(String directory) {
@@ -259,7 +265,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	
 	private String targetFolerPath(String searchDir, String targetPackage) {
 		String sourceDir = searchDir;
-		if(sourceDir.indexOf(rootPackage) > -1) {
+		if(sourceDir.indexOf(rootPackage, this.projectBaseDir.length()) > -1) {
 			return sourceDir.substring(0, sourceDir.indexOf(rootPackage)-1);
 		}
 		
@@ -270,7 +276,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			f = waitingQueue.poll();
 			for (File sub : f.listFiles()) {
 				if(rootPackage.equals(sub.getName())) {
-					if(sub.getParentFile().getPath().indexOf("test") < 0) {//package 경로 전, 파일경로에 test 폴더가 포함되어 있으면 skip한다.
+					if(sub.getParentFile().getPath().indexOf("\\test\\") < 0) {//package 경로 전, 파일경로에 test 폴더가 포함되어 있으면 skip한다.
 						return sub.getParent();
 					} 
 				}

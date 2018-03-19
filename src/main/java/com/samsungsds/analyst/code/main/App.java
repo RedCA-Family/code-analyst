@@ -399,7 +399,8 @@ public class App {
 
 	private void runUnusedCode(CliParser cli) {
 		UnusedCodeAnalysis unusedCodeViolation = new UnusedCodeAnalysisLauncher();
-
+		
+		unusedCodeViolation.setProjectBaseDir(cli.getProjectBaseDir());
 		unusedCodeViolation.setTargetBinary(cli.getProjectBaseDir() + File.separator + cli.getBinary());
 		unusedCodeViolation.setTargetSrc(cli.getProjectBaseDir() + File.separator + cli.getSrc());
 		unusedCodeViolation.setExclude(cli.getExcludes());
