@@ -47,6 +47,7 @@ public class UnusedCodeAnalysisLauncherTest {
 		String src = "./src";
 		String binary = "./target/classes/com/samsungsds/analyst/code/test/UClass.class";
 		
+		unusedCodeAnalysisLauncher.setProjectBaseDir(".");
 		unusedCodeAnalysisLauncher.setTargetSrc(src);
 		unusedCodeAnalysisLauncher.setTargetBinary(binary);
 		
@@ -60,6 +61,7 @@ public class UnusedCodeAnalysisLauncherTest {
 		String src = "./src";
 		String binary = "./target/classes/com/samsungsds/analyst/code/test/UClass.class";
 		
+		unusedCodeAnalysisLauncher.setProjectBaseDir(".");
 		unusedCodeAnalysisLauncher.setTargetSrc(src);
 		unusedCodeAnalysisLauncher.setTargetBinary(binary);
 		
@@ -73,6 +75,7 @@ public class UnusedCodeAnalysisLauncherTest {
 		String src = "./src";
 		String binary = "./target/classes/com/samsungsds/analyst/code/test/UClass.class";
 		
+		unusedCodeAnalysisLauncher.setProjectBaseDir(".");
 		unusedCodeAnalysisLauncher.setTargetSrc(src);
 		unusedCodeAnalysisLauncher.setTargetBinary(binary);
 		
@@ -86,6 +89,7 @@ public class UnusedCodeAnalysisLauncherTest {
 		String src = "./src";
 		String binary = "./target/classes/com/samsungsds/analyst/code/unusedcode";
 		
+		unusedCodeAnalysisLauncher.setProjectBaseDir(".");
 		unusedCodeAnalysisLauncher.setTargetSrc(src);
 		unusedCodeAnalysisLauncher.setTargetBinary(binary);
 		
@@ -99,6 +103,7 @@ public class UnusedCodeAnalysisLauncherTest {
 		String src = "./src";
 		String binary = "./target/classes/com/samsungsds/analyst/code/unusedcode";
 		
+		unusedCodeAnalysisLauncher.setProjectBaseDir(".");
 		unusedCodeAnalysisLauncher.setTargetSrc(src);
 		unusedCodeAnalysisLauncher.setTargetBinary(binary);
 		
