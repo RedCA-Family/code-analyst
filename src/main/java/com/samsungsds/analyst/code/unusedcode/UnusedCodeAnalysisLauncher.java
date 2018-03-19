@@ -72,11 +72,11 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	public void run(String instanceKey) {
 		MeasuredResult measuredResult = MeasuredResult.getInstance(instanceKey);
 		
-		if(this.excludePath != null) {
+		if(this.excludePath != null && !"".equals(this.excludePath)) {
 			measuredResult.setExcludeFilters(this.excludePath);
 		}
 		
-		if(this.includePath != null) {
+		if(this.includePath != null && !"".equals(this.includePath)) {
 			measuredResult.setIncludeFilters(this.includePath);
 		}
 		
@@ -93,7 +93,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			} else {
 				if(f.getName().indexOf(".class") == -1) continue;
 				if(f.getName().indexOf("$") > -1) continue;//skip additional classes that share a source file
-				if(measuredResult.haveToSkip(f.getPath())) continue;
+				if(measuredResult.haveToSkip(f.getPath().replaceAll("\\\\", "/").replace(".class", ".java"))) continue;
 				
 				try {
 //					LOGGER.info("Scan file... "+f.getPath());
