@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SonarProgressEventChecker implements Runnable {
     private static final Logger LOGGER = LogManager.getLogger(SonarProgressEventChecker.class);
 
-    private final static int DEFAULT_INTERVAL_MILLESECOND = 10_000;
+    private final static int DEFAULT_INTERVAL_MILLISECOND = 10_000;
     private final static double DEFAULT_INCREASE_RATE = 1.3;
 
     private Thread worker;
@@ -18,38 +18,38 @@ public class SonarProgressEventChecker implements Runnable {
 
     private App app;
 
-    private int intervalMillesecond = DEFAULT_INTERVAL_MILLESECOND;
+    private int intervalMillisecond = DEFAULT_INTERVAL_MILLISECOND;
 
-    private boolean codeSizeCompleted = false;
-    private boolean duplicationCompleted = false;
-    private boolean sonarJavaCompleted = false;
-    private boolean webResourceCompleted = false;
+    private AtomicBoolean codeSizeCompleted = new AtomicBoolean(false);
+    private AtomicBoolean duplicationCompleted = new AtomicBoolean(false);
+    private AtomicBoolean sonarJavaCompleted = new AtomicBoolean(false);
+    private AtomicBoolean webResourceCompleted = new AtomicBoolean(false);
 
-    public SonarProgressEventChecker(IndividualMode mode, App app, int intervalMillesecond) {
+    public SonarProgressEventChecker(IndividualMode mode, App app, int intervalMillisecond) {
         this(mode, app);
-        this.intervalMillesecond = intervalMillesecond;
+        this.intervalMillisecond = intervalMillisecond;
     }
 
     public SonarProgressEventChecker(IndividualMode mode, App app) {
         this.app = app;
 
         if (!mode.isCodeSize()) {
-            codeSizeCompleted = true;
+            codeSizeCompleted.set(true);
         }
 
         if (!mode.isDuplication()) {
-            duplicationCompleted = true;
+            duplicationCompleted.set(true);
         }
 
         if (!mode.isSonarJava()) {
-            sonarJavaCompleted = true;
+            sonarJavaCompleted.set(true);
         }
 
         if (!mode.isWebResource()) {
-            webResourceCompleted = true;
+            webResourceCompleted.set(true);
         }
 
-        LOGGER.debug("Sonar Progress Event Start ... (interval : {}ms)", intervalMillesecond);
+        LOGGER.debug("Sonar Progress Event Start ... (interval : {}ms)", intervalMillisecond);
     }
 
     public void start() {
@@ -62,24 +62,32 @@ public class SonarProgressEventChecker implements Runnable {
         LOGGER.debug("Sonar Process Event Thread stopping...");
         interrupt();
 
-        if (!codeSizeCompleted) {
-            codeSizeCompleted = true;
-            app.notifyObservers(ProgressEvent.CODE_SIZE_COMPLETE);
+        synchronized(codeSizeCompleted) {
+            if (!codeSizeCompleted.get()) {
+                codeSizeCompleted.set(true);
+                app.notifyObservers(ProgressEvent.CODE_SIZE_COMPLETE);
+            }
         }
 
-        if (!duplicationCompleted) {
-            duplicationCompleted = true;
-            app.notifyObservers(ProgressEvent.DUPLICATION_COMPLETE);
+        synchronized(duplicationCompleted) {
+            if (!duplicationCompleted.get()) {
+                duplicationCompleted.set(true);
+                app.notifyObservers(ProgressEvent.DUPLICATION_COMPLETE);
+            }
         }
 
-        if (!sonarJavaCompleted) {
-            sonarJavaCompleted = true;
-            app.notifyObservers(ProgressEvent.SONARJAVA_COMPLETE);
+        synchronized(sonarJavaCompleted) {
+            if (!sonarJavaCompleted.get()) {
+                sonarJavaCompleted.set(true);
+                app.notifyObservers(ProgressEvent.SONARJAVA_COMPLETE);
+            }
         }
 
-        if (!webResourceCompleted) {
-            webResourceCompleted = true;
-            app.notifyObservers(ProgressEvent.WEBRESOURCE_COMPLETE);
+        synchronized(webResourceCompleted) {
+            if (!webResourceCompleted.get()) {
+                webResourceCompleted.set(true);
+                app.notifyObservers(ProgressEvent.WEBRESOURCE_COMPLETE);
+            }
         }
     }
 
@@ -103,45 +111,53 @@ public class SonarProgressEventChecker implements Runnable {
 
         while (running.get()) {
             try {
-                Thread.sleep(intervalMillesecond);
+                Thread.sleep(intervalMillisecond);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 LOGGER.debug("Thread was interrupted...");
             }
             LOGGER.debug("Thread Process Event : {}, {}, {}, {}", codeSizeCompleted, duplicationCompleted, sonarJavaCompleted, webResourceCompleted);
-            intervalMillesecond *= DEFAULT_INCREASE_RATE;
+            intervalMillisecond *= DEFAULT_INCREASE_RATE;
             processEvent();
         }
         stopped.set(true);
     }
 
     private void processEvent() {
-        if (!codeSizeCompleted) {
-            codeSizeCompleted = true;
-            app.notifyObservers(ProgressEvent.CODE_SIZE_COMPLETE);
+        synchronized(codeSizeCompleted) {
+            if (!codeSizeCompleted.get()) {
+                codeSizeCompleted.set(true);
+                app.notifyObservers(ProgressEvent.CODE_SIZE_COMPLETE);
 
-            return;
+                return;
+            }
         }
 
-        if (!duplicationCompleted) {
-            duplicationCompleted = true;
-            app.notifyObservers(ProgressEvent.DUPLICATION_COMPLETE);
+        synchronized(duplicationCompleted) {
+            if (!duplicationCompleted.get()) {
+                duplicationCompleted.set(true);
+                app.notifyObservers(ProgressEvent.DUPLICATION_COMPLETE);
 
-            return;
+                return;
+            }
         }
 
-        if (!sonarJavaCompleted) {
-            sonarJavaCompleted = true;
-            app.notifyObservers(ProgressEvent.SONARJAVA_COMPLETE);
+        synchronized(sonarJavaCompleted) {
+            if (!sonarJavaCompleted.get()) {
+                sonarJavaCompleted.set(true);
+                app.notifyObservers(ProgressEvent.SONARJAVA_COMPLETE);
 
-            return;
+                return;
+            }
         }
 
-        if (!webResourceCompleted) {
-            webResourceCompleted = true;
-            app.notifyObservers(ProgressEvent.WEBRESOURCE_COMPLETE);
+        synchronized(webResourceCompleted) {
+            if (!webResourceCompleted.get()) {
+                webResourceCompleted.set(true);
+                app.notifyObservers(ProgressEvent.WEBRESOURCE_COMPLETE);
 
-            return;
+                return;
+            }
         }
     }
 }
