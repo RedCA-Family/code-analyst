@@ -435,10 +435,18 @@ public class MeasuredResult implements Serializable {
 	}
 
 	public boolean haveToSkip(String path) {
-		return haveToSkip(path, false);
+		return haveToSkip(path, false, false);
 	}
 
-	public boolean haveToSkip(String path, boolean withoutFilename) {
+	public boolean haveToSkip(String path, boolean withSrcPrefix) {
+		return haveToSkip(path, withSrcPrefix, false);
+	}
+
+	public boolean haveToSkip(String path, boolean withSrcPrefix, boolean withoutFilename) {
+		if (withSrcPrefix) {
+			path = source + (path.startsWith("/") ? path : "/" + path);
+		}
+
 		for (FilePathFilter filter : filePathFilterList) {
 			if (!filter.matched(path, withoutFilename)) {
 				return true;
@@ -559,7 +567,7 @@ public class MeasuredResult implements Serializable {
 
 	public synchronized void putFindBugsList(List<FindBugsResult> list) {
 		for (FindBugsResult result : list) {
-			if (haveToSkip(result.getPackageName().replaceAll("\\.", "/") + "/" + result.getFile())) {
+			if (haveToSkip(result.getPackageName().replaceAll("\\.", "/") + "/" + result.getFile(), true)) {
 				continue;
 			}
 			findBugsCount[0]++;
@@ -584,7 +592,7 @@ public class MeasuredResult implements Serializable {
 
 	public synchronized void putFindSecBugsList(List<FindBugsResult> list) {
 		for (FindBugsResult result : list) {
-			if (haveToSkip(result.getPackageName().replaceAll("\\.", "/") + "/" + result.getFile())) {
+			if (haveToSkip(result.getPackageName().replaceAll("\\.", "/") + "/" + result.getFile(), true)) {
 				continue;
 			}
 			findSecBugsCount[0]++;
@@ -610,15 +618,21 @@ public class MeasuredResult implements Serializable {
 			List<String> allPackages = PackageUtils.getProjectPackages(projectDirectory + File.separator + binary);
 
 			for (String sourcePackage : allPackages) {
-				if (haveToSkip(sourcePackage.replaceAll("\\.", "/") + "/*.java", true)) {
+				if (haveToSkip(sourcePackage.replaceAll("\\.", "/") + "/*.java", true, true)) {
 					continue;
 				}
 				packageList.add(sourcePackage);
 			}
 
 			/*
-			 * for (ComplexityResult result : allMethodList) { if (packageList.contains(result.getPackageName())) { continue; } packageList.add(result.getPackageName()); }
-			 */
+			for (ComplexityResult result : allMethodList) {
+				if (packageList.contains(result.getPackageName())) {
+					continue;
+				}
+				packageList.add(result.getPackageName());
+			}
+			*/
+
 		}
 
 		return packageList;
@@ -852,7 +866,8 @@ public class MeasuredResult implements Serializable {
 	}
 
 	public void setIncludeFilters(String includes) {
-		FilePathIncludeFilter filter = new FilePathIncludeFilter(includes);
+		assert source != null : "source have to be set in advance.";
+		FilePathIncludeFilter filter = new FilePathIncludeFilter(includes, source);
 
 		filePathFilterList.add(filter);
 

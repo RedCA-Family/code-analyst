@@ -16,10 +16,12 @@ public class SonarAnalysisLauncher implements SonarAnalysis {
 	private final Map<String, String> globalProperties = new HashMap<>();
 	private final LogOutput logOutput = new DefaultLogOutput();
 
-	public SonarAnalysisLauncher(String projectBaseDir) {
+	public SonarAnalysisLauncher(String projectBaseDir, String sourceDir) {
 		globalProperties.put("sonar.projectBaseDir", projectBaseDir);
 
-		// sonar.projectKey, sonar.sources
+		globalProperties.put("sonar.sources", sourceDir);
+
+		// sonar.projectKey
 	}
 
 	public void addProperty(String key, String value) {

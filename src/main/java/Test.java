@@ -2,6 +2,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class Test {
+	private boolean notUsedField = false;
+
 	public void duplatedMethod(String input) {
 		if (input != null) {
 			System.out.println("Hello, World");

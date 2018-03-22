@@ -111,7 +111,12 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 	private double calculateFindBugsDebt() {
 		double result = 0;
 		for (FindBugsResult findBugsResult : measuredResult.getFindBugsList()) {
-			result += findBugsEffortMap.get(findBugsResult.getPatternKey());
+			Double debt = findBugsEffortMap.get(findBugsResult.getPatternKey());
+			if (debt == null) {
+				debt = COST_TO_FIX_ONE_VIOLATION;
+			}
+
+			result += debt;
 		}
 		return result;
 	}

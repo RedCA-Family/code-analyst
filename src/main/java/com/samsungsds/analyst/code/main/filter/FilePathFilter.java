@@ -4,4 +4,6 @@ public interface FilePathFilter {
 	String getFilterName();
 	boolean matched(String filePath);
 	boolean matched(String filePath, boolean withoutFilename);
+
+	String getSrcPrefix();
 }

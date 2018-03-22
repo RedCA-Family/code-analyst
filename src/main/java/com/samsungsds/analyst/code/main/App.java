@@ -212,7 +212,7 @@ public class App {
 		}
 
 		LOGGER.info("Sonar Scanner starting...");
-		SonarAnalysis sonar = new SonarAnalysisLauncher(cli.getSrc());
+		SonarAnalysis sonar = new SonarAnalysisLauncher(MeasuredResult.getInstance(cli.getInstanceKey()).getProjectDirectory(), cli.getSrc());
 
 		if (cli.isDebug()) {
 			sonar.addProperty(SONAR_VERBOSE, "true");
@@ -244,7 +244,15 @@ public class App {
 		sonar.addProperty("sonar.scanAllFiles", "true");
 
 		if (!cli.getIncludes().equals("")) {
-			sonar.addProperty("sonar.inclusions", MeasuredResult.getInstance(cli.getInstanceKey()).getIncludes());
+            /*
+            String includes = MeasuredResult.getInstance(cli.getInstanceKey()).getIncludes();
+            if (includes.startsWith("/")) {
+                sonar.addProperty("sonar.inclusions", cli.getSrc() + includes);
+            } else {
+                sonar.addProperty("sonar.inclusions", cli.getSrc() + "/" + includes);
+            }
+            */
+            sonar.addProperty("sonar.inclusions", MeasuredResult.getInstance(cli.getInstanceKey()).getIncludes());
 		}
 
 		if (!cli.getExcludes().equals("")) {
@@ -403,8 +411,6 @@ public class App {
 		unusedCodeViolation.setProjectBaseDir(cli.getProjectBaseDir());
 		unusedCodeViolation.setTargetBinary(cli.getProjectBaseDir() + File.separator + cli.getBinary());
 		unusedCodeViolation.setTargetSrc(cli.getProjectBaseDir() + File.separator + cli.getSrc());
-		unusedCodeViolation.setExclude(cli.getExcludes());
-		unusedCodeViolation.setInclude(cli.getIncludes());
 
 		unusedCodeViolation.run(cli.getInstanceKey());
 

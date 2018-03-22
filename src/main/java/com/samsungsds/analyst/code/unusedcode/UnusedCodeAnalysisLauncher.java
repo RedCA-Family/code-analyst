@@ -37,9 +37,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	private String projectBaseDir = null;
 	private String targetSrc = null;
 	private String targetBinary = null;
-	private String excludePath = null;
-	private String includePath = null;
-	
+
 	private String rootPackage = null;
 	private String sourceRootFolderPath = null;
 	private String classRootFolderPath = null;
@@ -61,30 +59,10 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		LOGGER.debug("UnusedCode Target Binary : {}", directory);
 		this.targetBinary = directory;
 	}
-	
-	@Override
-	public void setExclude(String path) {
-		LOGGER.debug("UnusedCode Exclude Path : {}", path);
-		this.excludePath = path;
-	}
-	
-	@Override
-	public void setInclude(String path) {
-		LOGGER.debug("UnusedCode Include Path : {}", path);
-		this.includePath = path;
-	}
 
 	@Override
 	public void run(String instanceKey) {
 		MeasuredResult measuredResult = MeasuredResult.getInstance(instanceKey);
-		
-		if(this.excludePath != null && !"".equals(this.excludePath)) {
-			measuredResult.setExcludeFilters(this.excludePath);
-		}
-		
-		if(this.includePath != null && !"".equals(this.includePath)) {
-			measuredResult.setIncludeFilters(this.includePath);
-		}
 		
 		VisitResult visitResult = new VisitResult();
 		
@@ -97,12 +75,20 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 					waitingQueue.offer(sub);
 				}
 			} else {
-				if(f.getName().indexOf(".class") == -1) continue;
-				if(f.getName().indexOf("$") > -1) continue;//skip additional classes that share a source file
-				if(measuredResult.haveToSkip(f.getPath().replaceAll("\\\\", "/").replace(".class", ".java"))) continue;
+				if (f.getName().indexOf(".class") == -1) continue;
+				if (f.getName().indexOf("$") > -1) continue;//skip additional classes that share a source file
+
+				String path = getPrefixRemovedPath(f.getPath(), projectBaseDir);
+				String binary = getPrefixRemovedPath(targetBinary, projectBaseDir);
+
+				path = getPrefixRemovedPath(path, binary);
+
+				if (measuredResult.haveToSkip(path.replace(".class", ".java"), true)) {
+					continue;
+				}
 				
 				try {
-//					LOGGER.info("Scan file... "+f.getPath());
+					// LOGGER.info("Scan file... "+f.getPath());
 					ClassReader reader = new ClassReader(new FileInputStream(f));
 					reader.accept(new CodeAnalysisClassVisitor(Opcodes.ASM5, visitResult), 0);
 					
@@ -212,7 +198,21 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		
 		measuredResult.putUnusedCodeList(resultList);
 	}
-	
+
+	private String getPrefixRemovedPath(String path, String prefix) {
+		path = path.replaceAll("\\\\", "/");
+		prefix = prefix.replaceAll("\\\\", "/");
+
+		if (!prefix.endsWith("/")) {
+			prefix += "/";
+        }
+		if (path.startsWith(prefix)) {
+            path = path.substring(prefix.length());
+        }
+
+		return path;
+	}
+
 	private boolean isNotExistInSource(CAType caType) {
 		return caType.getLine() == 0;
 	}

@@ -6,9 +6,15 @@ import org.springframework.util.AntPathMatcher;
 
 public class FilePathExcludeFilter extends FilePathAbstractFilter {
 	private static final Logger LOGGER = LogManager.getLogger(FilePathExcludeFilter.class);
+
+	private boolean printPathFilter = false;
 	
 	public FilePathExcludeFilter(String filterString) {
-		super(filterString);
+		super(filterString, "");
+
+		if (System.getProperty(PRINT_PATH_FILTER_PROPERTY_KEY).equalsIgnoreCase("true")) {
+			printPathFilter = true;
+		}
 	}
 	
 	@Override
@@ -25,10 +31,17 @@ public class FilePathExcludeFilter extends FilePathAbstractFilter {
 		
 		for (String filter : getFilters()) {
 			if (matcher.match(filter, filePath)) {
+				if (printPathFilter) {
+					System.out.println("[FilePathFilter] <" + filter + ", " + filePath + "> : exclude");
+				}
 				return false;
 			}
 		}
-		
+
+		if (printPathFilter) {
+			System.out.println("[FilePathFilter] <" + filePath + "> : not exclude");
+		}
+
 		return true;
 	}
 }

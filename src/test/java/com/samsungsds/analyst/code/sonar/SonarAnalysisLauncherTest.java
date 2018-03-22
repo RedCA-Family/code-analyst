@@ -37,7 +37,7 @@ public class SonarAnalysisLauncherTest {
 		server = new JettySurrogateSonarServer();
 		port = server.startAndReturnPort(cli);
 
-		sonar = new SonarAnalysisLauncher(cli.getSrc());
+		sonar = new SonarAnalysisLauncher(cli.getProjectBaseDir(), cli.getSrc());
 
 		setOptionsForTest();
 		setMeasuredResultForTest();

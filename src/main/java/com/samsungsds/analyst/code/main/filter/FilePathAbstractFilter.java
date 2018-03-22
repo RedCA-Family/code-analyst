@@ -7,10 +7,18 @@ import com.samsungsds.analyst.code.util.FindFileUtils;
 
 public abstract class FilePathAbstractFilter implements FilePathFilter {
 	private static final Logger LOGGER = LogManager.getLogger(FilePathAbstractFilter.class);
+
+	protected static final String PRINT_PATH_FILTER_PROPERTY_KEY = "print.path.filter";
+
+	public static final String FIXED_PREFIX = "fixed:";
 	
 	private String[] filters;
-	
-	public FilePathAbstractFilter(String filterString) {
+
+	private String srcPrefix;
+
+	public FilePathAbstractFilter(String filterString, String srcPrefix) {
+	    this.srcPrefix = srcPrefix;
+
 		setNormalizedFilterString(filterString);
 		
 		debuggingFilters();
@@ -23,8 +31,18 @@ public abstract class FilePathAbstractFilter implements FilePathFilter {
 		
 		for (int i = 0; i < splittedFilters.length; i++) {
 			String ret = splittedFilters[i].replaceAll("\\\\", "/");
+
+			if (ret.startsWith(FIXED_PREFIX)) {
+				this.filters[i] = srcPrefix + "/" + ret.substring(FIXED_PREFIX.length());
+				continue;
+			}
+
 			if (!ret.startsWith("**/")) {
-				ret = "**/" + ret;
+				if (ret.startsWith("/")) {
+					ret = "**" + ret;
+				} else {
+					ret = "**/" + ret;
+				}
 			}
 			
 			this.filters[i] = ret;
@@ -67,4 +85,9 @@ public abstract class FilePathAbstractFilter implements FilePathFilter {
 	public boolean matched(String filePath) {
 		return matched(filePath, false);
 	}
+
+	@Override
+    public String getSrcPrefix() {
+	    return srcPrefix;
+    }
 }

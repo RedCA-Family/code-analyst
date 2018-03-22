@@ -53,7 +53,6 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		
 		if (withSeperatedOutput) {
 			System.out.println(" - with seperated output option");
-			
 		}
 		
 		CliParser cli = new CliParser(arguments);
@@ -153,7 +152,6 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		
 		argumentList.add("-include");
 		argumentList.add(getIncludeString(targetFile));
-		 
 		
 		if (isValidated(argument.getExclude())) {
 			argumentList.add("-exclude");
@@ -181,7 +179,7 @@ public class CodeAnalystImpl implements CodeAnalyst {
 			if (builder.length() != 0) {
 				builder.append(",");
 			}
-			builder.append(file.replaceAll("\\.java", "").replaceAll("\\.", "/") + ".java");
+			builder.append(file.replaceAll("\\.java", "").replaceAll("\\.", "/")).append(".java");
 		}
 		
 		System.out.println("* Target file patterns : " + builder.toString());
