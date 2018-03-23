@@ -72,12 +72,16 @@ public class ApiExample {
 
         // Default package에 소스가 있는 경우 테스트
 		//targetFile.setIncludeSubPackage(false);
-		targetFile.addPackage("");
+		//targetFile.addPackage("");
 
 		//argument.setExclude("**/FileManager.java");
 
         // Default package 파일만 추가하는 경우 테스트
-        //targetFile.addFile("", "Test.java");
+		//targetFile.addFile("", "Test.java");
+
+		// src가 상위인 경우 addFile 테스트
+		argument.setSrc("src");
+        targetFile.addFile("com.samsungsds.analyst.code.test", "Test.java");
 
 		File temp = new File(TEMP_DIRECTORY);
 		if (!temp.exists()) {

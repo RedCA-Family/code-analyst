@@ -33,7 +33,7 @@ public class TargetFileInfo {
         if (!packageName.equals("")) {
             packageName += "/";
         }
-		fileList.add(FilePathAbstractFilter.FIXED_PREFIX + packageName + file);
+		fileList.add(FilePathAbstractFilter.FIXED_PREFIX + "**/" + packageName + file);
 	}
 
 	public String[] getFiles() {
