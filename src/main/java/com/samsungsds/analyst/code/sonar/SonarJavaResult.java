@@ -3,11 +3,16 @@ package com.samsungsds.analyst.code.sonar;
 import java.io.Serializable;
 
 import com.google.gson.annotations.Expose;
+import com.samsungsds.analyst.code.main.issue.IssueType;
+import com.samsungsds.analyst.code.main.issue.IssueTypeRepository;
 import com.samsungsds.analyst.code.util.CSVFileResult;
 
 public class SonarJavaResult implements Serializable, CSVFileResult {
 
 	private static final long serialVersionUID = 6343847614524493660L;
+
+	@Expose
+	private IssueType type;
 
 	@Expose
 	private String path;
@@ -44,7 +49,7 @@ public class SonarJavaResult implements Serializable, CSVFileResult {
 
 	@Override
 	public int getColumnSize() {
-		return 9;
+		return 10;
 	}
 
 	@Override
@@ -68,6 +73,8 @@ public class SonarJavaResult implements Serializable, CSVFileResult {
 			return String.valueOf(endLine);
 		case 8:
 			return String.valueOf(endOffset);
+		case 9:
+			return type.toString();
 		default:
 			throw new IndexOutOfBoundsException("Index: " + columnIndex);
 		}
@@ -103,6 +110,8 @@ public class SonarJavaResult implements Serializable, CSVFileResult {
 		case 8:
 			endOffset = Integer.parseInt(data);
 			break;
+		case 9:
+			type = IssueType.getIssueTypeOf(data); break;
 		default:
 			throw new IndexOutOfBoundsException("Index: " + columnIndex);
 		}
@@ -118,6 +127,8 @@ public class SonarJavaResult implements Serializable, CSVFileResult {
 		this.startOffset = startOffset;
 		this.endLine = endLine;
 		this.endOffset = endOffset;
+
+		this.type = IssueTypeRepository.getIssueType("squid", ruleKey);
 	}
 
 	public String getPath() {
@@ -190,6 +201,10 @@ public class SonarJavaResult implements Serializable, CSVFileResult {
 
 	public void setEndOffset(int endOffset) {
 		this.endOffset = endOffset;
+	}
+
+	public IssueType getIssueType() {
+		return type;
 	}
 
 }

@@ -2,6 +2,8 @@ package com.samsungsds.analyst.code.findbugs;
 
 import java.io.Serializable;
 
+import com.samsungsds.analyst.code.main.issue.IssueType;
+import com.samsungsds.analyst.code.main.issue.IssueTypeRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +17,10 @@ public class FindBugsResult implements Serializable, CSVFileResult {
 	private static final long serialVersionUID = 4683955564828835719L;
 
 	private static final Logger LOGGER = LogManager.getLogger(FindBugsResult.class);
-	
+
+	@Expose
+	private IssueType type;
+
 	@Expose
 	private String patternKey;
 	@Expose
@@ -47,12 +52,12 @@ public class FindBugsResult implements Serializable, CSVFileResult {
 	
 	public FindBugsResult() {
 		// default constructor (CSV)
-		// column : package, file, start line, end line, pattern key, pattern, priority, class, field, local var, method, message
+		// column : package, file, start line, end line, pattern key, pattern, priority, class, field, local var, method, message, type
 	}
 	
 	@Override
 	public int getColumnSize() {
-		return 12;
+		return 13;
 	}
 
 	@Override
@@ -70,6 +75,7 @@ public class FindBugsResult implements Serializable, CSVFileResult {
 		case 9 : return localVariable;
 		case 10 : return method;
 		case 11 : return message;
+		case 12 : return type.toString();
 		default : throw new IndexOutOfBoundsException("Index: " + columnIndex);
 		}
 	}
@@ -89,6 +95,7 @@ public class FindBugsResult implements Serializable, CSVFileResult {
 		case 9 : localVariable = data; break;
 		case 10 : method = data; break;
 		case 11 : message = data; break;
+		case 12 : type = IssueType.getIssueTypeOf(data); break;
 		default : throw new IndexOutOfBoundsException("Index: " + columnIndex);
 		}
 	}
@@ -131,8 +138,10 @@ public class FindBugsResult implements Serializable, CSVFileResult {
 				this.endLine = 0;
 			}
 		}
+
+		this.type = IssueTypeRepository.getIssueType("FindBugs", patternKey);
 				
-		LOGGER.debug("pattern : {}, priority : {}, message : {}, package : {}, class : {}, field : {}, localVar : {}, method : {}, line : {} ~ {}", patternKey, priority, message, packageName, className, field, localVariable, method, startLine, endLine);
+		LOGGER.debug("pattern : {}, priority : {}, message : {}, package : {}, class : {}, field : {}, localVar : {}, method : {}, line : {} ~ {}, type : {}", patternKey, priority, message, packageName, className, field, localVariable, method, startLine, endLine, type);
 	}
 
 	public void setPatternKey(String patternKey) {
@@ -245,5 +254,9 @@ public class FindBugsResult implements Serializable, CSVFileResult {
 
 	public String getPatternKey() {
 		return patternKey;
+	}
+
+	public IssueType getIssueType() {
+		return type;
 	}
 }

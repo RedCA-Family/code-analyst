@@ -21,7 +21,8 @@ public class Version {
 	// 1.5.2 : 복잡도 Top 10 분석 개선
 	// 1.5.3 : Martin metrics 측정 추가, Inspection(PMD, FindBugs)에 대한 Top 10 측정 추가, Duplication Top 10 수정
 	// 1.5.4 : API 변경 (세부 분석 옵션 추가)
-	// 2.0.0 : SonarQube Upgrade (6.2.1 -> 6.7.1 LTS), 신규 기능(unused code detection, technical debt, Web Resource 점검), '18년 3월 표준룰 개정 반영 등
+	// 2.0.0 : SonarQube Upgrade (6.2.1 -> 6.7.1 LTS), 신규 기능(unused code detection, technical debt, Web Resource 점검), '18년 3월 표준룰 개정 반영,
+	//         API 부분 패턴 fixed 처리 추가(default package 클래스 처리), Issue Type 정부 추가 (Bug, Vulnerability, Code Smell) 등
 	//--------------------------------------------------
 	public static final String CODE_ANALYST = "2.0.0";
 	public static final String DOCUMENT_VERSION = "2.0";

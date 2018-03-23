@@ -15,6 +15,7 @@ import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.main.detailed.Duplication;
 import com.samsungsds.analyst.code.main.detailed.Inspection;
 import com.samsungsds.analyst.code.main.detailed.MartinMetrics;
+import com.samsungsds.analyst.code.main.issue.IssueType;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
@@ -109,6 +110,13 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("SonarJava4Priority = " + result.getSonarJavaCount(4));
 			writer.println("SonarJava5Priority = " + result.getSonarJavaCount(5));
 			writer.println();
+
+			writer.println("SonarJavaBug = " + result.getSonarJavaType(IssueType.BUG.getTypeIndex()));
+			writer.println("SonarJavaVulnerability = " + result.getSonarJavaType(IssueType.VULNERABILITY.getTypeIndex()));
+			writer.println("SonarJavaCodeSmell = " + result.getSonarJavaType(IssueType.CODE_SMELL.getTypeIndex()));
+			writer.println("SonarJavaNA = " + result.getSonarJavaType(IssueType.NA.getTypeIndex()));
+			writer.println();
+
 		}
 		if (result.getIndividualMode().isPmd()) {
 			writer.println("PMDViolations = " + result.getPmdCountAll());
@@ -118,6 +126,12 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("PMD4Priority = " + result.getPmdCount(4));
 			writer.println("PMD5Priority = " + result.getPmdCount(5));
 			writer.println();
+
+			writer.println("PMDBug = " + result.getPmdType(IssueType.BUG.getTypeIndex()));
+			writer.println("PMDVulnerability = " + result.getPmdType(IssueType.VULNERABILITY.getTypeIndex()));
+			writer.println("PMDCodeSmell = " + result.getPmdType(IssueType.CODE_SMELL.getTypeIndex()));
+			writer.println("PMDNA = " + result.getPmdType(IssueType.NA.getTypeIndex()));
+			writer.println();
 		}
 		if (result.getIndividualMode().isFindBugs()) {
 			writer.println("FindBugs = " + result.getFindBugsCountAll());
@@ -126,6 +140,12 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("FindBugs3Priority = " + result.getFindBugsCount(3));
 			writer.println("FindBugs4Priority = " + result.getFindBugsCount(4));
 			writer.println("FindBugs5Priority = " + result.getFindBugsCount(5));
+			writer.println();
+
+			writer.println("FindBugsBug = " + result.getFindBugsType(IssueType.BUG.getTypeIndex()));
+			writer.println("FindBugsVulnerability = " + result.getFindBugsType(IssueType.VULNERABILITY.getTypeIndex()));
+			writer.println("FindBugsCodeSmell = " + result.getFindBugsType(IssueType.CODE_SMELL.getTypeIndex()));
+			writer.println("FindBugsNA = " + result.getFindBugsType(IssueType.NA.getTypeIndex()));
 			writer.println();
 		}
 		if (result.getIndividualMode().isFindSecBugs()) {
@@ -246,14 +266,15 @@ public class TextOutputFile extends AbstractOutputFile {
 			csvOutput.writeSonarJava(sonarJavaList);
 		} else {
 			writer.println("[SonarJava]");
-			writer.println("; path, rule, message, priority, start line, start offset, end line, end offset");
+			writer.println("; type, path, rule, message, priority, start line, start offset, end line, end offset");
 
 			int count = 0;
 			synchronized (sonarJavaList) {
 				for (SonarJavaResult result : sonarJavaList) {
 					writer.print(++count + " = ");
-					writer.print(getStringsWithComma(getStringsWithComma(result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()),
-							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset()))));
+					writer.print(getStringsWithComma(result.getIssueType().toString(),
+							result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()),
+							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset())));
 					writer.println();
 				}
 			}
@@ -275,13 +296,14 @@ public class TextOutputFile extends AbstractOutputFile {
 			csvOutput.writePmd(list);
 		} else {
 			writer.println("[PMD]");
-			writer.println("; path, line, rule, priority, description");
+			writer.println("; type, path, line, rule, priority, description");
 
 			int count = 0;
 			synchronized (list) {
 				for (PmdResult result : list) {
 					writer.print(++count + " = ");
-					writer.print(getStringsWithComma(result.getPath(), getString(result.getLine()), result.getRule(), getString(result.getPriority()), result.getDescription()));
+					writer.print(getStringsWithComma(result.getIssueType().toString(), result.getPath(), getString(result.getLine()),
+							result.getRule(), getString(result.getPriority()), result.getDescription()));
 					writer.println();
 				}
 			}
@@ -362,14 +384,14 @@ public class TextOutputFile extends AbstractOutputFile {
 			return;
 		}
 		writer.println("[" + title + "]");
-		writer.println("; package, file, start line, end line, pattern key, pattern, priority, class, field, local var, method, message");
+		writer.println("; type, package, file, start line, end line, pattern key, pattern, priority, class, field, local var, method, message");
 
 		int count = 0;
 		synchronized (list) {
 			for (FindBugsResult result : list) {
 				writer.print(++count + " = ");
-				writer.print(
-						getStringsWithComma(result.getPackageName(), result.getFile(), getString(result.getStartLine()), getString(result.getEndLine()), result.getPatternKey(), result.getPattern()));
+				writer.print(getStringsWithComma(result.getIssueType().toString(), result.getPackageName(), result.getFile(),
+						getString(result.getStartLine()), getString(result.getEndLine()), result.getPatternKey(), result.getPattern()));
 				writer.print(", ");
 				writer.print(getStringsWithComma(getString(result.getPriority()), result.getClassName(), result.getField(), result.getLocalVariable(), result.getMethod(), result.getMessage()));
 				writer.println();

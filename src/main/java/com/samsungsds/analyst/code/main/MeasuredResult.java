@@ -152,16 +152,22 @@ public class MeasuredResult implements Serializable {
 	private List<SonarJavaResult> sonarJavaList = null;
 	@Expose
 	private int[] sonarJavaCount = new int[6]; // 0 : 전체, 1 ~ 5 (Priority)
+	@Expose
+	private int[] sonarJavaType = new int[4];	// 0 : NA, 1 : Bug, 2 : Vulnerability, 3 : Code Smell
 
 	@Expose
 	private List<PmdResult> pmdList = null;
 	@Expose
 	private int[] pmdCount = new int[6]; // 0 : 전체, 1 ~ 5 (Priority)
+	@Expose
+	private int[] pmdType = new int[4];	// 0 : NA, 1 : Bug, 2 : Vulnerability, 3 : Code Smell
 
 	@Expose
 	private List<FindBugsResult> findBugsList = null;
 	@Expose
 	private int[] findBugsCount = new int[6]; // 0 : 전체, 1 ~ 5 (High, Normal, Low, Experimental, Ignore)
+	@Expose
+	private int[] findBugsType = new int[4];	// 0 : NA, 1 : Bug, 2 : Vulnerability, 3 : Code Smell
 
 	@Expose
 	private List<FindBugsResult> findSecBugsList = null;
@@ -547,6 +553,8 @@ public class MeasuredResult implements Serializable {
 
 			pmdCount[result.getPriority()]++;
 
+			pmdType[result.getIssueType().getTypeIndex()]++;
+
 			pmdList.add(result);
 
 			if (detailAnalysis) {
@@ -565,6 +573,10 @@ public class MeasuredResult implements Serializable {
 		return pmdCount[priority];
 	}
 
+	public int getPmdType(int index) {
+		return pmdType[index];
+	}
+
 	public synchronized void putFindBugsList(List<FindBugsResult> list) {
 		for (FindBugsResult result : list) {
 			if (haveToSkip(result.getPackageName().replaceAll("\\.", "/") + "/" + result.getFile(), true)) {
@@ -573,6 +585,8 @@ public class MeasuredResult implements Serializable {
 			findBugsCount[0]++;
 
 			findBugsCount[result.getPriority()]++;
+
+			findBugsType[result.getIssueType().getTypeIndex()]++;
 
 			findBugsList.add(result);
 
@@ -588,6 +602,10 @@ public class MeasuredResult implements Serializable {
 
 	public int getFindBugsCount(int priority) {
 		return findBugsCount[priority];
+	}
+
+	public int getFindBugsType(int index) {
+		return findBugsType[index];
 	}
 
 	public synchronized void putFindSecBugsList(List<FindBugsResult> list) {
@@ -690,6 +708,9 @@ public class MeasuredResult implements Serializable {
 		sonarJavaList.add(sonarJavaResult);
 		sonarJavaCount[0]++;
 		sonarJavaCount[sonarJavaResult.getSeverity()]++;
+
+		sonarJavaType[sonarJavaResult.getIssueType().getTypeIndex()]++;
+
 		if (detailAnalysis) {
 			inspectionDetailAnalyst.add(sonarJavaResult);
 		}
@@ -701,6 +722,10 @@ public class MeasuredResult implements Serializable {
 
 	public int getSonarJavaCount(int priority) {
 		return sonarJavaCount[priority];
+	}
+
+	public int getSonarJavaType(int index) {
+		return sonarJavaType[index];
 	}
 
 	public List<PmdResult> getPmdList() {

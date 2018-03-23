@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.List;
 
+import com.samsungsds.analyst.code.main.issue.IssueType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -89,6 +90,15 @@ public class ResultProcessor {
 			System.out.println("SonarJava 4 priority : " + getFormattedNumber(result.getSonarJavaCount(4)));
 			System.out.println("SonarJava 5 priority : " + getFormattedNumber(result.getSonarJavaCount(5)));
 			System.out.println();
+
+			System.out.println("SonarJava Bug Type : " + result.getSonarJavaType(IssueType.BUG.getTypeIndex()));
+			System.out.println("SonarJava Vulnerability Type : " + result.getSonarJavaType(IssueType.VULNERABILITY.getTypeIndex()));
+			System.out.println("SonarJava Code Smell Type : " + result.getSonarJavaType(IssueType.CODE_SMELL.getTypeIndex()));
+
+			if (result.getSonarJavaType(IssueType.NA.getTypeIndex()) > 0) {
+				System.out.println("* SonarJava N/A Type : " + result.getSonarJavaType(IssueType.NA.getTypeIndex()));
+			}
+			System.out.println();
 		}
 	}
 
@@ -99,6 +109,15 @@ public class ResultProcessor {
 			System.out.println("PMD 2 priority : " + getFormattedNumber(result.getPmdCount(2)));
 			System.out.println("PMD 3 priority : " + getFormattedNumber(result.getPmdCount(3)));
 			System.out.println("PMD < 4 priority : " + getFormattedNumber(result.getPmdCount(4) + result.getPmdCount(5)));
+			System.out.println();
+
+			System.out.println("PMD Bug Type : " + result.getPmdType(IssueType.BUG.getTypeIndex()));
+			System.out.println("PMD Vulnerability Type : " + result.getPmdType(IssueType.VULNERABILITY.getTypeIndex()));
+			System.out.println("PMD Code Smell Type : " + result.getPmdType(IssueType.CODE_SMELL.getTypeIndex()));
+
+			if (result.getPmdType(IssueType.NA.getTypeIndex()) > 0) {
+				System.out.println("* PMD N/A Type : " + result.getPmdType(IssueType.NA.getTypeIndex()));
+			}
 			System.out.println();
 		}
 	}
@@ -111,6 +130,15 @@ public class ResultProcessor {
 			System.out.println("FindBugs 3 priority : " + getFormattedNumber(result.getFindBugsCount(3)));
 			if (result.getFindBugsCount(4) + result.getFindBugsCount(5) > 0) {
 				System.out.println("FindBugs < 4 priority : " + getFormattedNumber(result.getFindBugsCount(4) + result.getFindBugsCount(5)));
+			}
+			System.out.println();
+
+			System.out.println("FindBugs Bug Type : " + result.getFindBugsType(IssueType.BUG.getTypeIndex()));
+			System.out.println("FindBugs Vulnerability Type : " + result.getFindBugsType(IssueType.VULNERABILITY.getTypeIndex()));
+			System.out.println("FindBugs Code Smell Type : " + result.getFindBugsType(IssueType.CODE_SMELL.getTypeIndex()));
+
+			if (result.getPmdType(IssueType.NA.getTypeIndex()) > 0) {
+				System.out.println("* FindBugs N/A Type : " + result.getFindBugsType(IssueType.NA.getTypeIndex()));
 			}
 			System.out.println();
 		}

@@ -86,13 +86,14 @@ public class CSVSeperatedOutput {
 		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjava.csv";
 
 		try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
-			csvWriter.println("No,Path,Rule,Message,Priority,Start line,Start offset,End line,End offset");
+			csvWriter.println("No,Type,Path,Rule,Message,Priority,Start line,Start offset,End line,End offset");
 
 			int count = 0;
 			synchronized (list) {
 				for (SonarJavaResult result : list) {
 					csvWriter.print(++count + ",");
-					csvWriter.print(getStringsWithComma(result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()),
+					csvWriter.print(getStringsWithComma(result.getIssueType().toString(),
+							result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()),
 							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset())));
 					csvWriter.println();
 				}
@@ -108,13 +109,14 @@ public class CSVSeperatedOutput {
 		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-pmd.csv";
 
 		try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
-			csvWriter.println("No,Path,Line,Rule,Priority,Description");
+			csvWriter.println("No,Type,Path,Line,Rule,Priority,Description");
 
 			int count = 0;
 			synchronized (list) {
 				for (PmdResult result : list) {
 					csvWriter.print(++count + ",");
-					csvWriter.print(getStringsWithComma(result.getPath(), getString(result.getLine()), result.getRule(), getString(result.getPriority()), result.getDescription()));
+					csvWriter.print(getStringsWithComma(result.getIssueType().toString(), result.getPath(), getString(result.getLine()),
+							result.getRule(), getString(result.getPriority()), result.getDescription()));
 					csvWriter.println();
 				}
 			}
@@ -129,14 +131,14 @@ public class CSVSeperatedOutput {
 		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-" + title.toLowerCase() + ".csv";
 
 		try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
-			csvWriter.println("No,Package,File,Start line,End line,Pattern key,Pattern,Priority,Class,Field,Local var,Method,Message");
+			csvWriter.println("No,Type,Package,File,Start line,End line,Pattern key,Pattern,Priority,Class,Field,Local var,Method,Message");
 
 			int count = 0;
 			synchronized (list) {
 				for (FindBugsResult result : list) {
 					csvWriter.print(++count + ",");
-					csvWriter.print(getStringsWithComma(result.getPackageName(), result.getFile(), getString(result.getStartLine()), getString(result.getEndLine()), result.getPatternKey(),
-							result.getPattern()));
+					csvWriter.print(getStringsWithComma(result.getIssueType().toString(), result.getPackageName(), result.getFile(),
+							getString(result.getStartLine()), getString(result.getEndLine()), result.getPatternKey(), result.getPattern()));
 					csvWriter.print(", ");
 					csvWriter.print(getStringsWithComma(getString(result.getPriority()), result.getClassName(), result.getField(), result.getLocalVariable(), result.getMethod(), result.getMessage()));
 					csvWriter.println();
