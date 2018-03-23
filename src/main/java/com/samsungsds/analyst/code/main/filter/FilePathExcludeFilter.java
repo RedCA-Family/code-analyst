@@ -12,7 +12,7 @@ public class FilePathExcludeFilter extends FilePathAbstractFilter {
 	public FilePathExcludeFilter(String filterString) {
 		super(filterString, "");
 
-		if (System.getProperty(PRINT_PATH_FILTER_PROPERTY_KEY).equalsIgnoreCase("true")) {
+		if (System.getProperty(PRINT_PATH_FILTER_PROPERTY_KEY, "false").equalsIgnoreCase("true")) {
 			printPathFilter = true;
 		}
 	}

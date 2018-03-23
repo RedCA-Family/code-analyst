@@ -8,7 +8,7 @@ public class FilePathIncludeFilter extends FilePathAbstractFilter {
 	public FilePathIncludeFilter(String filterString, String srcPrefix) {
 		super(filterString, srcPrefix);
 
-		if (System.getProperty(PRINT_PATH_FILTER_PROPERTY_KEY).equalsIgnoreCase("true")) {
+		if (System.getProperty(PRINT_PATH_FILTER_PROPERTY_KEY, "false").equalsIgnoreCase("true")) {
 			printPathFilter = true;
 		}
 	}
