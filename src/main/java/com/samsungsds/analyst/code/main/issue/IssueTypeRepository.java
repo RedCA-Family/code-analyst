@@ -19,6 +19,6 @@ public class IssueTypeRepository {
     public static IssueType getIssueType(String repository, String key) {
         String property = prop.getProperty(repository + ":" + key, "N/A");
 
-        return IssueType.getIssueTypeOf(property);
+        return IssueType.getIssueTypeOf(property.trim());
     }
 }
