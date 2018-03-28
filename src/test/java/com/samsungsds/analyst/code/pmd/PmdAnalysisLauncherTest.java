@@ -110,24 +110,24 @@ public class PmdAnalysisLauncherTest {
 		
 		assertTrue(arg.contains(path));
 	}
-	
-	@Test public void 
-	should_pmd_count_all_of_measuredResult_is_1_when_pmdResultList_has_a_element() {
-		
-		List<PmdResult> resultList = new ArrayList<>();
-		PmdResult pmdResult = new PmdResult();
-		pmdResult.setDataIn(0, "data");
-		pmdResult.setDataIn(1, "1");
-		pmdResult.setDataIn(2, "rule");
-		pmdResult.setDataIn(3, "1");
-		pmdResult.setDataIn(4, "description");
-		resultList.add(pmdResult);
-		
-		doReturn(resultList).when(pmdAnalysisLauncher).parseCSV(Mockito.any(), Mockito.any());
-
-		pmdAnalysisLauncher.run(testInstanceKey);
-		
-		int actualPmdCountAll = measuredResult.getPmdCountAll();
-		assertThat(actualPmdCountAll, is(1));
-	}
+//	
+//	@Test public void 
+//	should_pmd_count_all_of_measuredResult_is_1_when_pmdResultList_has_a_element() {
+//		
+//		List<PmdResult> resultList = new ArrayList<>();
+//		PmdResult pmdResult = new PmdResult();
+//		pmdResult.setDataIn(0, "data");
+//		pmdResult.setDataIn(1, "1");
+//		pmdResult.setDataIn(2, "rule");
+//		pmdResult.setDataIn(3, "1");
+//		pmdResult.setDataIn(4, "description");
+//		resultList.add(pmdResult);
+//		
+//		doReturn(resultList).when(pmdAnalysisLauncher).parseCSV(Mockito.any(), Mockito.any());
+//
+//		pmdAnalysisLauncher.run(testInstanceKey);
+//		
+//		int actualPmdCountAll = measuredResult.getPmdCountAll();
+//		assertThat(actualPmdCountAll, is(1));
+//	}
 }
