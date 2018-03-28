@@ -409,8 +409,8 @@ public class App {
 		UnusedCodeAnalysis unusedCodeViolation = new UnusedCodeAnalysisLauncher();
 		
 		unusedCodeViolation.setProjectBaseDir(cli.getProjectBaseDir());
-		unusedCodeViolation.setTargetBinary(cli.getProjectBaseDir() + File.separator + cli.getBinary());
-		unusedCodeViolation.setTargetSrc(cli.getProjectBaseDir() + File.separator + cli.getSrc());
+		unusedCodeViolation.setTargetBinary(cli.getBinary());
+		unusedCodeViolation.setTargetSrc(cli.getSrc());
 
 		unusedCodeViolation.run(cli.getInstanceKey());
 

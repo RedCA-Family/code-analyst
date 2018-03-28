@@ -209,6 +209,26 @@ public class CodeAnalysisClassVisitor extends ClassVisitor {
 					addUsedClassToResult(formattedOwner);
 				}
 				
+				//add used methods for superclass and interface
+//				try {
+//					Class superClass = Class.forName(formattedOwner).getSuperclass();
+//					if(superClass != null) {
+//						String superClassName = superClass.getName();
+//						
+//						CAMethod superClassMethod = new CAMethod();
+//						superClassMethod.setClassName(superClassName);
+//						superClassMethod.setName(name);
+//						superClassMethod.setDesc(desc);
+//						result.getUsedMethods().add(superClassMethod);
+//						
+//						addUsedClassToResult(superClassName);
+//					}
+//				} catch (ClassNotFoundException e) {
+//					LOGGER.error(e);
+//				}
+				
+				
+				
 				super.visitMethodInsn(opcode, owner, name, desc, itf);
 			}
 		};

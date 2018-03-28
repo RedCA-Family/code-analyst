@@ -67,7 +67,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		VisitResult visitResult = new VisitResult();
 		
 		Queue<File> waitingQueue = new LinkedList<>();
-		waitingQueue.offer(new File(this.targetBinary));
+		waitingQueue.offer(new File(getProjectBinary()));
 		while(!waitingQueue.isEmpty()) {
 			File f = waitingQueue.poll();
 			if(f.isDirectory()) {
@@ -78,8 +78,8 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 				if (f.getName().indexOf(".class") == -1) continue;
 				if (f.getName().indexOf("$") > -1) continue;//skip additional classes that share a source file
 
-				String path = getPrefixRemovedPath(f.getPath(), projectBaseDir);
-				String binary = getPrefixRemovedPath(targetBinary, projectBaseDir);
+				String path = getPrefixRemovedPath(f.getPath(), getProjectBinary());
+				String binary = getPrefixRemovedPath(getProjectBinary(), projectBaseDir);
 
 				path = getPrefixRemovedPath(path, binary);
 
@@ -199,6 +199,14 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		measuredResult.putUnusedCodeList(resultList);
 	}
 
+	private String getProjectBinary() {
+		return this.projectBaseDir + File.separator + this.targetBinary;
+	}
+
+	private String getProjectSrc() {
+		return this.projectBaseDir + File.separator + this.targetSrc;
+	}
+
 	private String getPrefixRemovedPath(String path, String prefix) {
 		path = path.replaceAll("\\\\", "/");
 		prefix = prefix.replaceAll("\\\\", "/");
@@ -227,12 +235,12 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		boolean isDefaultPackage = className.indexOf(".") == -1;
 		if(isDefaultPackage) {
 			rootPackage = "default";
-			sourceRootFolderPath = sourceFolderPathOfDefaultPackage(this.targetSrc).replaceAll("/", "\\\\");;
-			classRootFolderPath = sourceFolderPathOfDefaultPackage(this.targetBinary).replaceAll("/", "\\\\");;
+			sourceRootFolderPath = sourceFolderPathOfDefaultPackage(getProjectSrc()).replaceAll("/", "\\\\");;
+			classRootFolderPath = sourceFolderPathOfDefaultPackage(getProjectBinary()).replaceAll("/", "\\\\");;
 		} else {
 			rootPackage = className.substring(0, className.indexOf("."));
-			sourceRootFolderPath = targetFolerPath(this.targetSrc, rootPackage).replaceAll("/", "\\\\");
-			classRootFolderPath = targetFolerPath(this.targetBinary, rootPackage).replaceAll("/", "\\\\");;
+			sourceRootFolderPath = targetFolerPath(getProjectSrc(), rootPackage).replaceAll("/", "\\\\");
+			classRootFolderPath = targetFolerPath(getProjectBinary(), rootPackage).replaceAll("/", "\\\\");;
 		}
 	}
 	
@@ -276,7 +284,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			f = waitingQueue.poll();
 			for (File sub : f.listFiles()) {
 				if(rootPackage.equals(sub.getName())) {
-					if(sub.getParentFile().getPath().indexOf("\\test\\") < 0) {//package 경로 전, 파일경로에 test 폴더가 포함되어 있으면 skip한다.
+					if(this.targetSrc.equals("src") && sub.getParentFile().getPath().indexOf("\\test\\") < 0) {//source directory가 default 값이면, 테스트 폴더에 대한 검사는 SKIP한다.
 						return sub.getParent();
 					} 
 				}

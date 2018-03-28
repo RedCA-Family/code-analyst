@@ -44,8 +44,8 @@ public class UnusedCodeAnalysisLauncherTest {
 	
 	@Test public void
 	should_detect_2_unused_fields_when_launcher_analysis_UClass() {
-		String src = "./src";
-		String binary = "./target/classes/com/samsungsds/analyst/code/test/UClass.class";
+		String src = "src/main/java/com/samsungsds/analyst/code/test/UClass.class";
+		String binary = "target/classes/com/samsungsds/analyst/code/test/UClass.class";
 		
 		unusedCodeAnalysisLauncher.setProjectBaseDir(".");
 		unusedCodeAnalysisLauncher.setTargetSrc(src);
@@ -58,8 +58,8 @@ public class UnusedCodeAnalysisLauncherTest {
 	
 	@Test public void
 	should_detect_2_unused_methods_when_launcher_analysis_UClass() {
-		String src = "./src";
-		String binary = "./target/classes/com/samsungsds/analyst/code/test/UClass.class";
+		String src = "src/main/java/com/samsungsds/analyst/code/test/UClass.java";
+		String binary = "target/classes/com/samsungsds/analyst/code/test/UClass.class";
 		
 		unusedCodeAnalysisLauncher.setProjectBaseDir(".");
 		unusedCodeAnalysisLauncher.setTargetSrc(src);
@@ -72,8 +72,8 @@ public class UnusedCodeAnalysisLauncherTest {
 	
 	@Test public void
 	should_detect_1_unused_constant_when_launcher_analysis_UClass() {
-		String src = "./src";
-		String binary = "./target/classes/com/samsungsds/analyst/code/test/UClass.class";
+		String src = "src/main/java/com/samsungsds/analyst/code/test/UClass.java";
+		String binary = "target/classes/com/samsungsds/analyst/code/test/UClass.class";
 		
 		unusedCodeAnalysisLauncher.setProjectBaseDir(".");
 		unusedCodeAnalysisLauncher.setTargetSrc(src);
@@ -86,8 +86,8 @@ public class UnusedCodeAnalysisLauncherTest {
 	
 	@Test public void
 	sholud_detect_1_unused_class_when_launcher_analysis_unusedcode_package(){
-		String src = "./src";
-		String binary = "./target/classes/com/samsungsds/analyst/code/unusedcode";
+		String src = "src/main/java/com/samsungsds/analyst/code/unusedcode";
+		String binary = "target/classes/com/samsungsds/analyst/code/unusedcode";
 		
 		unusedCodeAnalysisLauncher.setProjectBaseDir(".");
 		unusedCodeAnalysisLauncher.setTargetSrc(src);
@@ -100,8 +100,8 @@ public class UnusedCodeAnalysisLauncherTest {
 	
 	@Test public void
 	should_detect_1_unused_constant_when_lancher_analysis_unusedcode_package_with_filter() {
-		String src = "./src";
-		String binary = "./target/classes/com/samsungsds/analyst/code/unusedcode";
+		String src = "src/main/java/com/samsungsds/analyst/code/unusedcode";
+		String binary = "target/classes/com/samsungsds/analyst/code/unusedcode";
 		
 		unusedCodeAnalysisLauncher.setProjectBaseDir(".");
 		unusedCodeAnalysisLauncher.setTargetSrc(src);
@@ -123,5 +123,19 @@ public class UnusedCodeAnalysisLauncherTest {
 		
 		String[] expected = {"int", "java.lang.String"};
 		assertThat(method.getParameterTypes(), is(expected));
+	}
+	
+	@Test public void
+	test() {
+		String src = "src/test/java/com/samsungsds/analyst/code/unusedcode";
+		String binary = "target/test-classes/com/samsungsds/analyst/code/unusedcode";
+		
+		unusedCodeAnalysisLauncher.setProjectBaseDir(".");
+		unusedCodeAnalysisLauncher.setTargetSrc(src);
+		unusedCodeAnalysisLauncher.setTargetBinary(binary);
+		
+		unusedCodeAnalysisLauncher.run(testInstanceKey);
+		
+		assertThat(measuredResult.getUnusedClassCount(), is(1));
 	}
 }
