@@ -266,7 +266,7 @@ public class App {
 
 		SonarProgressEventChecker sonarProgressChecker = null;
 		if (progressMonitor != null) {
-			int fileCount = IOAndFileUtils.getJavaFileCount(Paths.get(cli.getSrc()));
+			int fileCount = IOAndFileUtils.getJavaFileCount(Paths.get(cli.getProjectBaseDir(), cli.getSrc()));
 			LOGGER.info("Approximate number of files : {}", fileCount);
 			sonarProgressChecker = new SonarProgressEventChecker(cli.getIndividualMode(), this, fileCount);
 
