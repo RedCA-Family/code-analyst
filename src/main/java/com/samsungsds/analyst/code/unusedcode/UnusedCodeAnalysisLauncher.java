@@ -27,6 +27,8 @@ import com.samsungsds.analyst.code.unusedcode.type.CAType;
 
 public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	
+	private static final String DEFAULT_TARGET_SRC = "src";
+
 	private static final Logger LOGGER = LogManager.getLogger(UnusedCodeAnalysisLauncher.class);
 	
 	public static final String UNUSED_CODE_TYPE_FIELD = "Field";
@@ -239,8 +241,8 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			classRootFolderPath = sourceFolderPathOfDefaultPackage(getProjectBinary()).replaceAll("/", "\\\\");;
 		} else {
 			rootPackage = className.substring(0, className.indexOf("."));
-			sourceRootFolderPath = targetFolerPath(getProjectSrc(), rootPackage).replaceAll("/", "\\\\");
-			classRootFolderPath = targetFolerPath(getProjectBinary(), rootPackage).replaceAll("/", "\\\\");;
+			sourceRootFolderPath = targetFolerPath(getProjectSrc()).replaceAll("/", "\\\\");
+			classRootFolderPath = targetFolerPath(getProjectBinary()).replaceAll("/", "\\\\");;
 		}
 	}
 	
@@ -271,7 +273,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		throw new IllegalArgumentException("the source file path of default package doesn't exist in "+sourceDir);
 	}
 	
-	private String targetFolerPath(String searchDir, String targetPackage) {
+	private String targetFolerPath(String searchDir) {
 		String sourceDir = searchDir;
 		if(sourceDir.indexOf(rootPackage, this.projectBaseDir.length()) > -1) {
 			return sourceDir.substring(0, sourceDir.indexOf(rootPackage)-1);
@@ -284,7 +286,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			f = waitingQueue.poll();
 			for (File sub : f.listFiles()) {
 				if(rootPackage.equals(sub.getName())) {
-					if(this.targetSrc.equals("src") && sub.getParentFile().getPath().indexOf("\\test\\") < 0) {//source directory가 default 값이면, 테스트 폴더에 대한 검사는 SKIP한다.
+					if(isNotDefaultTargetSrc() || isTestFolerWhenTargetSrcIsDefaultValue(sub)) {//source directory가 default 값이면, 테스트 폴더에 대한 검사는 SKIP한다.
 						return sub.getParent();
 					} 
 				}
@@ -296,5 +298,13 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		}
 		
 		throw new IllegalArgumentException("the source file path of given rootPackage was not found");
+	}
+
+	private boolean isTestFolerWhenTargetSrcIsDefaultValue(File sub) {
+		return this.targetSrc.equals(DEFAULT_TARGET_SRC) && sub.getParentFile().getPath().indexOf("\\test\\") < 0;
+	}
+
+	private boolean isNotDefaultTargetSrc() {
+		return !this.targetSrc.equals(DEFAULT_TARGET_SRC);
 	}
 }
