@@ -23,8 +23,9 @@ public class Version {
 	// 1.5.4 : API 변경 (세부 분석 옵션 추가)
 	// 2.0.0 : SonarQube Upgrade (6.2.1 -> 6.7.1 LTS), 신규 기능(unused code detection, technical debt, Web Resource 점검), '18년 3월 표준룰 개정 반영,
 	//         API 부분 패턴 fixed 처리 추가(default package 클래스 처리), Issue Type 정부 추가 (Bug, Vulnerability, Code Smell) 등
+	// 2.0.1 : Unused 오류 수정 및 Progress Event 개선
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "2.0.0";
+	public static final String CODE_ANALYST = "2.0.1";
 	public static final String DOCUMENT_VERSION = "2.0";
 	public static final String SONAR_SCANNER = "2.10.0.1189";
 	public static final String SONAR_SERVER = "6.7.1";

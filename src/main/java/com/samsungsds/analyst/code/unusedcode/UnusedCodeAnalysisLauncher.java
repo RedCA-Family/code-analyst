@@ -241,8 +241,8 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			classRootFolderPath = sourceFolderPathOfDefaultPackage(getProjectBinary()).replaceAll("/", "\\\\");;
 		} else {
 			rootPackage = className.substring(0, className.indexOf("."));
-			sourceRootFolderPath = targetFolerPath(getProjectSrc()).replaceAll("/", "\\\\");
-			classRootFolderPath = targetFolerPath(getProjectBinary()).replaceAll("/", "\\\\");;
+			sourceRootFolderPath = targetFolderPath(getProjectSrc()).replaceAll("/", "\\\\");
+			classRootFolderPath = targetFolderPath(getProjectBinary()).replaceAll("/", "\\\\");;
 		}
 	}
 	
@@ -273,7 +273,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		throw new IllegalArgumentException("the source file path of default package doesn't exist in "+sourceDir);
 	}
 	
-	private String targetFolerPath(String searchDir) {
+	private String targetFolderPath(String searchDir) {
 		String sourceDir = searchDir;
 		if(sourceDir.indexOf(rootPackage, this.projectBaseDir.length()) > -1) {
 			return sourceDir.substring(0, sourceDir.indexOf(rootPackage)-1);
@@ -286,7 +286,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			f = waitingQueue.poll();
 			for (File sub : f.listFiles()) {
 				if(rootPackage.equals(sub.getName())) {
-					if(isNotDefaultTargetSrc() || isTestFolerWhenTargetSrcIsDefaultValue(sub)) {//source directory가 default 값이면, 테스트 폴더에 대한 검사는 SKIP한다.
+					if(isNotDefaultTargetSrc() || isTestFolderWhenTargetSrcIsDefaultValue(sub)) {//source directory가 default 값이면, 테스트 폴더에 대한 검사는 SKIP한다.
 						return sub.getParent();
 					} 
 				}
@@ -300,7 +300,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		throw new IllegalArgumentException("the source file path of given rootPackage was not found");
 	}
 
-	private boolean isTestFolerWhenTargetSrcIsDefaultValue(File sub) {
+	private boolean isTestFolderWhenTargetSrcIsDefaultValue(File sub) {
 		return this.targetSrc.equals(DEFAULT_TARGET_SRC) && sub.getParentFile().getPath().indexOf("\\test\\") < 0;
 	}
 

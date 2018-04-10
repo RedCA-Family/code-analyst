@@ -9,8 +9,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SonarProgressEventChecker implements Runnable {
     private static final Logger LOGGER = LogManager.getLogger(SonarProgressEventChecker.class);
 
-    private final static int DEFAULT_INTERVAL_MILLISECOND = 10_000;
-    private final static double DEFAULT_INCREASE_RATE = 1.3;
+    private final static int DEFAULT_INTERVAL_MILLISECOND = 7_000;
+    private final static double DEFAULT_INCREASE_RATE = 1.1;
 
     private Thread worker;
     private AtomicBoolean running = new AtomicBoolean(false);
@@ -19,15 +19,20 @@ public class SonarProgressEventChecker implements Runnable {
     private App app;
 
     private int intervalMillisecond = DEFAULT_INTERVAL_MILLISECOND;
+    private double increaseRate = DEFAULT_INCREASE_RATE;
 
     private AtomicBoolean codeSizeCompleted = new AtomicBoolean(false);
     private AtomicBoolean duplicationCompleted = new AtomicBoolean(false);
     private AtomicBoolean sonarJavaCompleted = new AtomicBoolean(false);
     private AtomicBoolean webResourceCompleted = new AtomicBoolean(false);
 
-    public SonarProgressEventChecker(IndividualMode mode, App app, int intervalMillisecond) {
+    public SonarProgressEventChecker(IndividualMode mode, App app, int targetFiles) {
         this(mode, app);
-        this.intervalMillisecond = intervalMillisecond;
+        this.intervalMillisecond = (int)(DEFAULT_INTERVAL_MILLISECOND * (targetFiles / 100.0));
+
+        if (targetFiles > 1_000) {
+            increaseRate = 1.2;
+        }
     }
 
     public SonarProgressEventChecker(IndividualMode mode, App app) {
@@ -117,7 +122,7 @@ public class SonarProgressEventChecker implements Runnable {
                 LOGGER.debug("Thread was interrupted...");
             }
             LOGGER.debug("Thread Process Event : {}, {}, {}, {}", codeSizeCompleted, duplicationCompleted, sonarJavaCompleted, webResourceCompleted);
-            intervalMillisecond *= DEFAULT_INCREASE_RATE;
+            intervalMillisecond *= increaseRate;
             processEvent();
         }
         stopped.set(true);

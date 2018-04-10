@@ -2,6 +2,7 @@ package com.samsungsds.analyst.code.main;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -100,9 +101,13 @@ public class App {
 				analysisMode.setCodeSize(true);
 				analysisMode.setComplexity(true);
 
-				progressMonitor = new AnalysisProgressMonitor(analysisMode);
+				if (!observerList.isEmpty()) {
+					progressMonitor = new AnalysisProgressMonitor(analysisMode);
+				}
 			} else {
-				progressMonitor = new AnalysisProgressMonitor(cli.getIndividualMode());
+				if (!observerList.isEmpty()) {
+					progressMonitor = new AnalysisProgressMonitor(cli.getIndividualMode());
+				}
 			}
 
 			if (progressMonitor != null) {
@@ -261,7 +266,9 @@ public class App {
 
 		SonarProgressEventChecker sonarProgressChecker = null;
 		if (progressMonitor != null) {
-			sonarProgressChecker = new SonarProgressEventChecker(cli.getIndividualMode(), this);
+			int fileCount = IOAndFileUtils.getJavaFileCount(Paths.get(cli.getSrc()));
+			LOGGER.info("Approximate number of files : {}", fileCount);
+			sonarProgressChecker = new SonarProgressEventChecker(cli.getIndividualMode(), this, fileCount);
 
 			sonarProgressChecker.start();
 		}

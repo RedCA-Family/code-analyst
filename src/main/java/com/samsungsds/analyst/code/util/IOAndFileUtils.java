@@ -1,19 +1,12 @@
 package com.samsungsds.analyst.code.util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.stream.Stream;
 
 public class IOAndFileUtils {
 	private final static int BUFFER_SIZE = 8192;
@@ -139,5 +132,18 @@ public class IOAndFileUtils {
 		
 		String csvFile = outputFile.substring(0, outputFile.lastIndexOf("."));
 		return csvFile;
+	}
+
+	public static int getJavaFileCount(Path dir) {
+		try (Stream<Path> paths =  Files.walk(dir)) {
+			return (int) paths
+					.parallel()
+					.filter(p -> !p.toFile().isDirectory())
+					.filter(p -> p.toFile().getName().endsWith(".java"))
+					.count();
+		} catch (IOException ioe) {
+			throw new UncheckedIOException(ioe);
+		}
+
 	}
 }

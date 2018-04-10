@@ -80,8 +80,8 @@ public class ApiExample {
 		//targetFile.addFile("", "Test.java");
 
 		// src가 상위인 경우 addFile 테스트
-		argument.setSrc("src");
-        targetFile.addFile("com.samsungsds.analyst.code.test", "Test.java");
+		//argument.setSrc("src");
+        //targetFile.addFile("com.samsungsds.analyst.code.test", "Test.java");
 
 		File temp = new File(TEMP_DIRECTORY);
 		if (!temp.exists()) {
