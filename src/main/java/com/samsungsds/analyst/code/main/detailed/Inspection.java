@@ -9,16 +9,24 @@ public class Inspection implements Serializable {
 
 	@Expose
 	private String rule;
+
+	@Expose
+	private String type;
 	
 	@Expose
 	private int count;
 	
-	public Inspection(String rule) {
+	public Inspection(String rule, String type) {
 		this.rule = rule;
+		this.type = type;
 	}
 	
 	public String getRule() {
 		return rule;
+	}
+
+	public String getType() {
+		return type;
 	}
 
 	public int getCount() {

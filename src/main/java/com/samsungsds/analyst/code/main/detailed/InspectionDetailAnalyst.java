@@ -28,7 +28,7 @@ public class InspectionDetailAnalyst {
 	}
 
 	protected Inspection getInspection(SonarJavaResult result) {
-		return new Inspection(result.getRuleKey());
+		return new Inspection(result.getRuleKey(), result.getIssueType().toString());
 	}
 
 	public void add(PmdResult result) {
@@ -42,7 +42,7 @@ public class InspectionDetailAnalyst {
 	}
 
 	protected Inspection getInspection(PmdResult result) {
-		return new Inspection(result.getRule());
+		return new Inspection(result.getRule(), result.getIssueType().toString());
 	}
 
 	public void add(FindBugsResult result) {
@@ -56,7 +56,7 @@ public class InspectionDetailAnalyst {
 	}
 
 	private Inspection getInspection(FindBugsResult result) {
-		return new Inspection(result.getPatternKey());
+		return new Inspection(result.getPatternKey(), result.getIssueType().toString());
 	}
 
 	public List<Inspection> getTopSonarJavaList() {
@@ -85,7 +85,7 @@ public class InspectionDetailAnalyst {
 
 			Inspection inspection = sortedList.get(index).getKey();
 
-			Inspection newInspection = new Inspection(inspection.getRule());
+			Inspection newInspection = new Inspection(inspection.getRule(), inspection.getType());
 
 			newInspection.setCount(sortedList.get(index).getValue());
 

@@ -345,13 +345,15 @@ public class TextOutputFile extends AbstractOutputFile {
 
 	private void writeTopInspection(List<Inspection> topList, String topName) {
 		writer.println("[" + topName + "]");
-		writer.println("; rule, count");
+		writer.println("; rule, type, count");
 
 		int count = 0;
 		synchronized (topList) {
 			for (Inspection result : topList) {
 				writer.print(++count + " = ");
 				writer.print(getStringsWithComma(result.getRule()));
+				writer.print(",");
+				writer.print(result.getType());
 				writer.print(",");
 				writer.print(result.getCount());
 				writer.println();
