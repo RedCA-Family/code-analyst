@@ -42,7 +42,7 @@ public class Version {
 	public static final String PMD_RULESET = "91 ruleset (v5.4, SDS Std. Ruleset, '18.03)";
 	public static final String FINDBUGS_RULESET = "214 ruleset (v3.0.1, SDS Std. Ruleset, '18.03)";
 	public static final String FINDSECBUGS_RULESET = "121 ruleset (v1.7.1)";
-	public static final String SONAR_JAVA_RULESET = "292 ruleset (v4.15, SDS Std. Ruleset, '18.03)";
+	public static final String SONAR_JAVA_RULESET = "227 ruleset (v4.15, SDS Std. Ruleset, '18.03)";
 	public static final String SONAR_JS_RULESET = "86 ruleset (v4.1)";
 	public static final String SONAR_CSS_RULESET = "CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)";
 	public static final String SONAR_WEB_RULESET = "16 ruleset (v2.5)";
