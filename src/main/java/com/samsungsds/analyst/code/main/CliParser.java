@@ -33,6 +33,7 @@ public class CliParser {
 
 	private String ruleSetFileForPMD = "";
 	private String ruleSetFileForFindBugs = "";
+	private String ruleSetFileForSonar = "";
 
 	private String output = "";
 	private OutputFileFormat format = OutputFileFormat.TEXT;
@@ -71,6 +72,11 @@ public class CliParser {
 
 		options.addOption("pmd", true, "specify PMD ruleset xml file.");
 		options.addOption("findbugs", true, "specify FindBugs ruleset(include filter) xml file.");
+		options.addOption("sonar", true, "specify SonarQube issue ruleset(exclude filter) xml file." +
+				"\nex:" +
+				"\n<SonarIssueFilter>" +
+				"\n    <Exclude key=\"common-java:DuplicatedBlocks\"/>" +
+				"\n</SonarIssueFilter>");
 
 		options.addOption("o", "output", true, "specify result output file. (default : \"result-[yyyyMMddHHmmss].[out|json]\")");
 		options.addOption("f", "format", true, "specify result output file format(json, text, none). (default : text)");
@@ -145,6 +151,10 @@ public class CliParser {
 
 			if (cmd.hasOption("findbugs")) {
 				ruleSetFileForFindBugs = cmd.getOptionValue("findbugs");
+			}
+
+			if (cmd.hasOption("sonar")) {
+				ruleSetFileForSonar = cmd.getOptionValue("sonar");
 			}
 
 			if (cmd.hasOption("o")) {
@@ -250,6 +260,7 @@ public class CliParser {
 		javaVersion = getCheckedString(ini, "Project", "JavaVersion");
 		ruleSetFileForPMD = getCheckedString(ini, "Project", "PMD", true);
 		ruleSetFileForFindBugs = getCheckedString(ini, "Project", "FindBugs", true);
+		ruleSetFileForSonar = getCheckedString(ini, "Project", "Sonar", true);
 		includes = getCheckedString(ini, "Project", "includes", true);
 		excludes = getCheckedString(ini, "Project", "excludes", true);
 
@@ -281,6 +292,9 @@ public class CliParser {
 		}
 		if (!ruleSetFileForFindBugs.equals("")) {
 			LOGGER.info(" - findbugs : {}", ruleSetFileForFindBugs);
+		}
+		if (!ruleSetFileForSonar.equals("")) {
+			LOGGER.info(" - sonar : {}", ruleSetFileForSonar);
 		}
 		if (!includes.equals("")) {
 			LOGGER.info(" - include : {}", includes);
@@ -415,16 +429,12 @@ public class CliParser {
 		return ruleSetFileForPMD;
 	}
 
-	public void setRuleSetFileForPMD(String ruleSetFileForPMD) {
-		this.ruleSetFileForPMD = ruleSetFileForPMD;
-	}
-
 	public String getRuleSetFileForFindBugs() {
 		return ruleSetFileForFindBugs;
 	}
 
-	public void setRuleSetFileForFindBugs(String ruleSetFileForFindBugs) {
-		this.ruleSetFileForFindBugs = ruleSetFileForFindBugs;
+	public String getRuleSetFileForSonar() {
+		return ruleSetFileForSonar;
 	}
 
 	public String getOutput() {

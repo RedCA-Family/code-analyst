@@ -9,6 +9,7 @@ public class ArgumentInfo {
 	private String javaVersion = "1.8";		// java source version
 	private String pmdRuleFile;				// PMD ruleset xml file (if omitted, SDS Standard Ruleset used)
 	private String findBugsRuleFile;		// Findbugs ruleset xml file (if omitted, SDS Standard Ruleset used)
+	private String sonarRuleFile;			// SonarQube Issue exclude xml file (if omitted, all SDS Standard Rules included)
 	private int timeout = 10 * 60;			// 10 minutes
 	private String exclude;					// exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)
 	
@@ -78,6 +79,14 @@ public class ArgumentInfo {
 
 	public void setFindBugsRuleFile(String findBugsRuleFile) {
 		this.findBugsRuleFile = findBugsRuleFile;
+	}
+
+	public void setSonarRuleFile(String sonarRuleFile) {
+		this.sonarRuleFile = sonarRuleFile;
+	}
+
+	public String getSonarRuleFile() {
+		return sonarRuleFile;
 	}
 
 	public int getTimeout() {

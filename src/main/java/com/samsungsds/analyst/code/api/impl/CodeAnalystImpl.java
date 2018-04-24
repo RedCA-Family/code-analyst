@@ -140,6 +140,11 @@ public class CodeAnalystImpl implements CodeAnalyst {
 			argumentList.add("-findbugs");
 			argumentList.add(argument.getFindBugsRuleFile());
 		}
+
+		if (isValidated(argument.getSonarRuleFile())) {
+			argumentList.add("-sonar");
+			argumentList.add(argument.getSonarRuleFile());
+		}
 		
 		argumentList.add("--output");
 		argumentList.add(outputFilePath = getOutputFile(where, "json"));

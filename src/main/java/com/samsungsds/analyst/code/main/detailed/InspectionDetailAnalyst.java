@@ -28,7 +28,7 @@ public class InspectionDetailAnalyst {
 	}
 
 	protected Inspection getInspection(SonarJavaResult result) {
-		return new Inspection(result.getRuleKey(), result.getIssueType().toString());
+		return new Inspection(result.getRuleRepository() + ":" + result.getRuleKey(), result.getIssueType().toString());
 	}
 
 	public void add(PmdResult result) {

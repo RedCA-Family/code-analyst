@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.samsungsds.analyst.code.sonar.filter.SonarIssueFilter;
 import com.samsungsds.analyst.code.util.LogUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -262,6 +263,12 @@ public class App {
 
 		if (!cli.getExcludes().equals("")) {
 			sonar.addProperty("sonar.exclusions", MeasuredResult.getInstance(cli.getInstanceKey()).getExcludes());
+		}
+
+		if (cli.getRuleSetFileForSonar() != null && !cli.getRuleSetFileForSonar().equals("")) {
+			SonarIssueFilter filter = new SonarIssueFilter();
+
+			MeasuredResult.getInstance(cli.getInstanceKey()).setSonarIssueFilterSet(filter.parse(cli.getRuleSetFileForSonar()));
 		}
 
 		SonarProgressEventChecker sonarProgressChecker = null;

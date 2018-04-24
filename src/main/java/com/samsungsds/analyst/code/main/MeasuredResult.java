@@ -66,6 +66,10 @@ public class MeasuredResult implements Serializable {
 	private String pmdRuleSetFile;
 	@Expose
 	private String findBugsRuleSetFile;
+	@Expose
+	private String sonarRuleSetFile;
+
+	private Set<String> sonarIssueFilterSet = new HashSet<>();
 
 	@Expose
 	private String includes = "";
@@ -298,6 +302,11 @@ public class MeasuredResult implements Serializable {
 		} else {
 			findBugsRuleSetFile = "";
 		}
+		if (cli.getRuleSetFileForSonar() != null && !cli.getRuleSetFileForSonar().equals("")) {
+			sonarRuleSetFile = cli.getRuleSetFileForSonar();
+		} else {
+			sonarRuleSetFile = "";
+		}
 	}
 
 	public synchronized void setProjectDirectory(String projectDirectory) {
@@ -386,6 +395,10 @@ public class MeasuredResult implements Serializable {
 
 	public String getDuplicatedLinesPercent() {
 		return String.format("%.2f%%", (double) duplicatedLines / (double) lines * 100);
+	}
+
+	public void setSonarIssueFilterSet(Set<String> sonarIssueFilterSet) {
+		this.sonarIssueFilterSet = sonarIssueFilterSet;
 	}
 
 	public synchronized void addDuplicationResult(DuplicationResult result) {
@@ -705,6 +718,11 @@ public class MeasuredResult implements Serializable {
 	}
 
 	public void addSonarJavaResult(SonarJavaResult sonarJavaResult) {
+		String ruleKey = sonarJavaResult.getRuleRepository() + ":" + sonarJavaResult.getRuleKey();
+		if (sonarIssueFilterSet.contains(ruleKey)) {
+			LOGGER.debug("SonarJava Rule exclude : {}", ruleKey);
+			return;
+		}
 		sonarJavaList.add(sonarJavaResult);
 		sonarJavaCount[0]++;
 		sonarJavaCount[sonarJavaResult.getSeverity()]++;
@@ -1013,6 +1031,8 @@ public class MeasuredResult implements Serializable {
 		lines = 0;
 		ncloc = 0;
 		statements = 0;
+
+		sonarIssueFilterSet = new HashSet<>();
 
 		duplicatedLines = 0;
 		duplicatedBlockData.clear();

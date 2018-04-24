@@ -1,0 +1,3 @@
+<SonarIssueFilter>
+    <Exclude key="common-java:DuplicatedBlocks"/>
+</SonarIssueFilter>

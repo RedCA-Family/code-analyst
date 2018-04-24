@@ -55,6 +55,9 @@ public class TextOutputFile extends AbstractOutputFile {
 		if (cli.getRuleSetFileForFindBugs() != null && !cli.getRuleSetFileForFindBugs().equals("")) {
 			writer.println("FindBugs = " + cli.getRuleSetFileForFindBugs());
 		}
+		if (cli.getRuleSetFileForSonar() != null && !cli.getRuleSetFileForSonar().equals("")) {
+			writer.println("Sonar = " + cli.getRuleSetFileForSonar());
+		}
 		if (!"".equals(cli.getIncludes())) {
 			writer.println("includes = " + cli.getIncludes());
 		}
@@ -273,7 +276,8 @@ public class TextOutputFile extends AbstractOutputFile {
 				for (SonarJavaResult result : sonarJavaList) {
 					writer.print(++count + " = ");
 					writer.print(getStringsWithComma(result.getIssueType().toString(),
-							result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()),
+							result.getPath(), result.getRuleRepository() + ":" + result.getRuleKey(), result.getMsg(),
+							getString(result.getSeverity()), getString(result.getStartLine()),
 							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset())));
 					writer.println();
 				}
@@ -418,7 +422,8 @@ public class TextOutputFile extends AbstractOutputFile {
 			synchronized (webResourceList) {
 				for (WebResourceResult result : webResourceList) {
 					writer.print(++count + " = ");
-					writer.print(getStringsWithComma(getStringsWithComma(result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()),
+					writer.print(getStringsWithComma(getStringsWithComma(result.getPath(), result.getRuleRepository() + ":" + result.getRuleKey(), result.getMsg(),
+							getString(result.getSeverity()), getString(result.getStartLine()),
 							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset()))));
 					writer.println();
 				}

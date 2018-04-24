@@ -93,7 +93,8 @@ public class CSVSeperatedOutput {
 				for (SonarJavaResult result : list) {
 					csvWriter.print(++count + ",");
 					csvWriter.print(getStringsWithComma(result.getIssueType().toString(),
-							result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()),
+							result.getPath(), result.getRuleRepository() + ":" + result.getRuleKey(), result.getMsg(),
+							getString(result.getSeverity()), getString(result.getStartLine()),
 							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset())));
 					csvWriter.println();
 				}
@@ -161,7 +162,8 @@ public class CSVSeperatedOutput {
 			synchronized (list) {
 				for (WebResourceResult result : list) {
 					csvWriter.print(++count + ",");
-					csvWriter.print(getStringsWithComma(result.getPath(), result.getRuleKey(), result.getMsg(), getString(result.getSeverity()), getString(result.getStartLine()),
+					csvWriter.print(getStringsWithComma(result.getPath(), result.getRuleRepository() + ":" + result.getRuleKey(), result.getMsg(),
+							getString(result.getSeverity()), getString(result.getStartLine()),
 							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset())));
 					csvWriter.println();
 				}
