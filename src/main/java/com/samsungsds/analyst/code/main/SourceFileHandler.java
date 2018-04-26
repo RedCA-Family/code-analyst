@@ -33,12 +33,18 @@ public class SourceFileHandler {
                     break;
                 }
 
-                ret.append(path);
+                ret.append(path).append("\\");
             }
         }
 
-        LOGGER.info("Modified Directories or files : {}", ret);
+        String directoriesOrFiles = ret.toString();
 
-        return ret.toString();
+        if (directoriesOrFiles.endsWith("\\")) {
+            directoriesOrFiles = directoriesOrFiles.substring(0, directoriesOrFiles.length() - 1);
+        }
+
+        LOGGER.info("Modified Directories or files : {}", directoriesOrFiles);
+
+        return directoriesOrFiles;
     }
 }
