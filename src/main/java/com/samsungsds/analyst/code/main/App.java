@@ -307,7 +307,13 @@ public class App {
 			pmdComplexity.addOption("-dir", dir);
 
 		} else {
-			pmdComplexity.addOption("-dir", dir);
+			if ("".equals(cli.getIncludes())) {
+				pmdComplexity.addOption("-dir", dir);
+			} else {
+				SourceFileHandler pathHandler = new SourceFileHandler(cli.getProjectBaseDir(), cli.getSrc());
+
+				pmdComplexity.addOption("-dir", pathHandler.getPathStringWithInclude(cli.getIncludes()));
+			}
 		}
 
 		if (cli.isDebug()) {
@@ -328,7 +334,13 @@ public class App {
 	private void runPmd(CliParser cli) {
 		PmdAnalysis pmdViolation = new PmdAnalysisLauncher();
 
-		pmdViolation.addOption("-dir", cli.getProjectBaseDir() + File.separator + cli.getSrc());
+		if ("".equals(cli.getIncludes())) {
+			pmdViolation.addOption("-dir", cli.getProjectBaseDir() + File.separator + cli.getSrc());
+		} else {
+			SourceFileHandler pathHandler = new SourceFileHandler(cli.getProjectBaseDir(), cli.getSrc());
+
+			pmdViolation.addOption("-dir", pathHandler.getPathStringWithInclude(cli.getIncludes()));
+		}
 
 		if (cli.isDebug()) {
 			pmdViolation.addOption("-debug", "");
