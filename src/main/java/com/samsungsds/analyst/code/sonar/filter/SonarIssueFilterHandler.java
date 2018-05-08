@@ -17,6 +17,8 @@ public class SonarIssueFilterHandler extends DefaultHandler {
 
     private Set<String> filters;
 
+    private int excludedRules = 0;
+
     public SonarIssueFilterHandler(Set<String> filters) {
         this.filters = filters;
     }
@@ -38,6 +40,11 @@ public class SonarIssueFilterHandler extends DefaultHandler {
 
             LOGGER.info("Exclude Key : {}", keyValue);
             filters.add(keyValue);
+            excludedRules++;
         }
+    }
+
+    public int getExcludedRules() {
+        return excludedRules;
     }
 }

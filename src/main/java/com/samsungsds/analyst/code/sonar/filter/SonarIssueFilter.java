@@ -16,6 +16,8 @@ public class SonarIssueFilter {
     private static final Logger LOGGER = LogManager.getLogger(SonarIssueFilter.class);
     private final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();;
 
+    private int excludedRules = 0;
+
     public Set<String> parse(String ruleSetFileForSonar) {
         Set<String> filters = new HashSet<>();
 
@@ -30,6 +32,12 @@ public class SonarIssueFilter {
             throw new IllegalArgumentException(e);
         }
 
+        excludedRules = filterHandler.getExcludedRules();
+
         return filters;
+    }
+
+    public int getExcludedRules() {
+        return excludedRules;
     }
 }

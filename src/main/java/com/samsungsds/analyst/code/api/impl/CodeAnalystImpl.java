@@ -173,6 +173,10 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		if (argument.isDetailAnalysis()) {
 			argumentList.add("--analysis");
 		}
+
+		if (argument.isSaveCatalog()) {
+			argumentList.add("-catalog");
+		}
 		
 		return argumentList.toArray(new String[0]);
 	}

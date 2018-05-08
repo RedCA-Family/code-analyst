@@ -88,6 +88,9 @@ public class MeasuredResult implements Serializable {
 	@Expose
 	private boolean seperatedOutput = false;
 
+	@Expose
+	private boolean saveCatalog = false;
+
 	private IndividualMode individualMode;
 
 	@Expose
@@ -111,6 +114,9 @@ public class MeasuredResult implements Serializable {
 	private int ncloc = 0;
 	@Expose
 	private int statements = 0;
+
+	@Expose
+	private List<String> filePathList = Collections.synchronizedList(new ArrayList<>());;
 
 	@Expose
 	private List<DuplicationResult> duplicationList = null;
@@ -151,6 +157,13 @@ public class MeasuredResult implements Serializable {
 	private int complexityOver20 = 0;
 	@Expose
 	private int complexityEqualOrOver50 = 0;
+
+	@Expose
+	private int sonarJavaRules = 0;
+	@Expose
+	private int pmdRules = 0;
+	@Expose
+	private int findBugsRules = 0;
 
 	@Expose
 	private List<SonarJavaResult> sonarJavaList = null;
@@ -309,6 +322,14 @@ public class MeasuredResult implements Serializable {
 		}
 	}
 
+	public boolean isSaveCatalog() {
+		return saveCatalog;
+	}
+
+	public void setSaveCatalog(boolean saveCatalog) {
+		this.saveCatalog = saveCatalog;
+	}
+
 	public synchronized void setProjectDirectory(String projectDirectory) {
 		this.projectDirectory = projectDirectory;
 	}
@@ -379,6 +400,14 @@ public class MeasuredResult implements Serializable {
 
 	public synchronized void addStatements(int statements) {
 		this.statements += statements;
+	}
+
+	public List<String> getFilePathList() {
+		return filePathList;
+	}
+
+	public void addFilePathList(String filePath) {
+		filePathList.add(filePath);
 	}
 
 	public int getDuplicatedBlocks() {
@@ -696,6 +725,31 @@ public class MeasuredResult implements Serializable {
 	public List<ComplexityResult> getComplexityList() {
 		return complexityListOver20;
 	}
+
+	public int getSonarJavaRules() {
+		return sonarJavaRules;
+	}
+
+	public void setSonarJavaRules(int sonarJavaRules) {
+		this.sonarJavaRules = sonarJavaRules;
+	}
+
+	public int getPmdRules() {
+		return pmdRules;
+	}
+
+	public void setPmdRules(int pmdRules) {
+		this.pmdRules = pmdRules;
+	}
+
+	public int getFindBugsRules() {
+		return findBugsRules;
+	}
+
+	public void setFindBugsRules(int findBugsRules) {
+		this.findBugsRules = findBugsRules;
+	}
+
 
 	public List<SonarJavaResult> getSonarJavaList() {
 		processTopSonarJavaList();
@@ -1040,12 +1094,18 @@ public class MeasuredResult implements Serializable {
 		allMethodList.clear();
 		packageList.clear();
 
+		filePathList.clear();
+
 		complexityFunctions = 0;
 		complexitySum = 0;
 		complexityOver10 = 0;
 		complexityOver15 = 0;
 		complexityOver20 = 0;
 		complexityEqualOrOver50 = 0;
+
+		sonarJavaRules = 0;
+		pmdRules = 0;
+		findBugsRules = 0;
 
 		for (int i = 0; i < pmdCount.length; i++) {
 			pmdCount[i] = 0;
@@ -1069,6 +1129,7 @@ public class MeasuredResult implements Serializable {
 
 		detailAnalysis = false;
 		seperatedOutput = false;
+		saveCatalog = false;
 
 		if (detailAnalysis) {
 			duplicationList.clear();

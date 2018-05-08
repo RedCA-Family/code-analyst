@@ -136,6 +136,11 @@ public class JsonOutputFile extends AbstractOutputFile {
 	}
 
 	@Override
+	protected void writeFilePathList(List<String> filePathList) {
+		// no-op
+	}
+
+	@Override
 	protected void close(PrintWriter writer) {
 		if (result.isSeperatedOutput()) {
 			result.clearSeperatedList();

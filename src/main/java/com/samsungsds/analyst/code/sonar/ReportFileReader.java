@@ -65,6 +65,9 @@ public class ReportFileReader implements Closeable {
 		if (component.getType().equals(ComponentType.DIRECTORY)) {
 			MeasuredResult.getInstance(instanceKey).addDirectories(1);
 		} else if (component.getType().equals(ComponentType.FILE)) {
+
+			MeasuredResult.getInstance(instanceKey).addFilePathList(component.getPath());
+
 			if ("java".equals(component.getLanguage())) {
 				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isCodeSize()) {
 					MeasuredResult.getInstance(instanceKey).addFiles(1);

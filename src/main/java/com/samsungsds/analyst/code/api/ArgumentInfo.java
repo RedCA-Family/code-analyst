@@ -17,6 +17,8 @@ public class ArgumentInfo {
 
 	private boolean detailAnalysis = false;	// Detail Analysis mode
 
+	private boolean saveCatalog = false;	// Save target file list
+
 	public String getProject() {
 		return project;
 	}
@@ -119,5 +121,13 @@ public class ArgumentInfo {
 
 	public void setDetailAnalysis(boolean detailAnalysis) {
 		this.detailAnalysis = detailAnalysis;
+	}
+
+	public boolean isSaveCatalog() {
+		return saveCatalog;
+	}
+
+	public void setSaveCatalog(boolean saveCatalog) {
+		this.saveCatalog = saveCatalog;
 	}
 }

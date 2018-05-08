@@ -71,6 +71,9 @@ public class TextOutputFile extends AbstractOutputFile {
 		if (result.isSeperatedOutput()) {
 			writer.println("seperatedOutput = true");
 		}
+		if (result.isSaveCatalog()) {
+			writer.println("saveCatalog = true");
+		}
 		writer.println("version = " + result.getVersion());
 		writer.println("engineVersion = " + result.getEngineVersion());
 		writer.println();
@@ -106,6 +109,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println();
 		}
 		if (result.getIndividualMode().isSonarJava()) {
+			writer.println("SonarJavaRules = " + result.getSonarJavaRules());
 			writer.println("SonarJava = " + result.getSonarJavaCountAll());
 			writer.println("SonarJava1Priority = " + result.getSonarJavaCount(1));
 			writer.println("SonarJava2Priority = " + result.getSonarJavaCount(2));
@@ -122,6 +126,7 @@ public class TextOutputFile extends AbstractOutputFile {
 
 		}
 		if (result.getIndividualMode().isPmd()) {
+			writer.println("PMDRules = " + result.getPmdRules());
 			writer.println("PMDViolations = " + result.getPmdCountAll());
 			writer.println("PMD1Priority = " + result.getPmdCount(1));
 			writer.println("PMD2Priority = " + result.getPmdCount(2));
@@ -137,6 +142,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println();
 		}
 		if (result.getIndividualMode().isFindBugs()) {
+			writer.println("FindBugsRules = " + result.getFindBugsRules());
 			writer.println("FindBugs = " + result.getFindBugsCountAll());
 			writer.println("FindBugs1Priority = " + result.getFindBugsCount(1));
 			writer.println("FindBugs2Priority = " + result.getFindBugsCount(2));
@@ -178,6 +184,23 @@ public class TextOutputFile extends AbstractOutputFile {
 		writer.println("TechnicalDebt(Violation) = " + result.getTechnicalDebt().getViolationDebt() + "MH");
 		writer.println("TechnicalDebt(Complexity) = " + result.getTechnicalDebt().getComplexityDebt() + "MH");
 		writer.println("TechnicalDebt(AcyclicDependency) = " + result.getTechnicalDebt().getAcyclicDependencyDebt() + "MH");
+		writer.println();
+		writer.println();
+	}
+
+	@Override
+	protected void writeFilePathList(List<String> filePathList) {
+		writer.println("[FilePath]");
+
+		int count = 0;
+		synchronized (filePathList) {
+			for (String file : filePathList) {
+				writer.print(++count + " = ");
+				writer.println(file);
+			}
+		}
+		writer.println();
+		writer.println("total = " + count);
 		writer.println();
 		writer.println();
 	}

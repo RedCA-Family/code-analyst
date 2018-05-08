@@ -24,7 +24,8 @@ public class Version {
 	// 2.0.0 : SonarQube Upgrade (6.2.1 -> 6.7.1 LTS), 신규 기능(unused code detection, technical debt, Web Resource 점검), '18년 3월 표준룰 개정 반영,
 	//         API 부분 패턴 fixed 처리 추가(default package 클래스 처리), Issue Type 정부 추가 (Bug, Vulnerability, Code Smell) 등
 	// 2.0.1 : Unused 오류 수정 및 Progress Event 개선
-	// 2.1.0 : Top 10 Issue 구분(Bug, ...) 추가, SonarJava Issue filter(API 포함)
+	// 2.1.0 : Top 10 Issue 구분(Bug, ...) 추가, SonarJava Issue filter(API 포함), 속도 개선(PMD 점검 대상 제한 등),
+	//         점검 Rule 수 표시, 점검된 대상 파일 list 표시
 	//--------------------------------------------------
 	public static final String CODE_ANALYST = "2.1.0";
 	public static final String DOCUMENT_VERSION = "2.1";
@@ -48,6 +49,10 @@ public class Version {
 	public static final String SONAR_JS_RULESET = "86 ruleset (v4.1)";
 	public static final String SONAR_CSS_RULESET = "CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)";
 	public static final String SONAR_WEB_RULESET = "16 ruleset (v2.5)";
+
+	public static final int SONAR_JAVA_DEFAULT_RULES = 227;
+	public static final int PMD_DEFAULT_RULES = 91;
+	public static final int FINDBUGS_DEFAULT_RULES = 214;
 	
 	public static void printVersionInfo() {
 		System.out.println("Code Analyst : " + CODE_ANALYST);

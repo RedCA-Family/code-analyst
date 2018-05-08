@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.samsungsds.analyst.code.sonar.filter.SonarIssueFilter;
-import com.samsungsds.analyst.code.util.LogUtils;
+import com.samsungsds.analyst.code.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,9 +42,6 @@ import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtAnalysis;
 import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtAnalysisLauncher;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeAnalysis;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeAnalysisLauncher;
-import com.samsungsds.analyst.code.util.FindFileUtils;
-import com.samsungsds.analyst.code.util.IOAndFileUtils;
-import com.samsungsds.analyst.code.util.PackageUtils;
 
 public class App {
 	private static final Logger LOGGER = LogManager.getLogger(App.class);
@@ -66,6 +63,12 @@ public class App {
 			MeasuredResult.getInstance(cli.getInstanceKey()).initialize(cli.isDetailAnalysis(), cli.isSeperatedOutput());
 			if (cli.isDetailAnalysis()) {
 				LOGGER.info("Detail Analysis mode...");
+			}
+
+			if (cli.isSaveCatalog()) {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setSaveCatalog(true);
+            } else {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setSaveCatalog(false);
 			}
 
 			if (!cli.getAnalysisMode().equals(Constants.DEFAULT_ANALYSIS_MODE)) {
@@ -265,10 +268,18 @@ public class App {
 			sonar.addProperty("sonar.exclusions", MeasuredResult.getInstance(cli.getInstanceKey()).getExcludes());
 		}
 
+		if (!cli.getIndividualMode().isDuplication()) {
+			LOGGER.info("CPD Exclusions All files");
+			sonar.addProperty("sonar.cpd.exclusions", "**/*");
+		}
+
 		if (cli.getRuleSetFileForSonar() != null && !cli.getRuleSetFileForSonar().equals("")) {
 			SonarIssueFilter filter = new SonarIssueFilter();
 
 			MeasuredResult.getInstance(cli.getInstanceKey()).setSonarIssueFilterSet(filter.parse(cli.getRuleSetFileForSonar()));
+			MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJavaRules(Version.SONAR_JAVA_DEFAULT_RULES - filter.getExcludedRules() );
+		} else {
+			MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJavaRules(Version.SONAR_JAVA_DEFAULT_RULES);
 		}
 
 		SonarProgressEventChecker sonarProgressChecker = null;
@@ -352,6 +363,10 @@ public class App {
 
 		if (cli.getRuleSetFileForPMD() != null && !cli.getRuleSetFileForPMD().equals("")) {
 			pmdViolation.addOption("-rulesets", cli.getRuleSetFileForPMD());
+
+			MeasuredResult.getInstance(cli.getInstanceKey()).setPmdRules(XmlElementUtil.getElementCount(cli.getRuleSetFileForPMD(), "rule"));
+		} else {
+			MeasuredResult.getInstance(cli.getInstanceKey()).setPmdRules(Version.PMD_DEFAULT_RULES);
 		}
 
 		pmdViolation.run(cli.getInstanceKey());
@@ -372,6 +387,10 @@ public class App {
 
 		if (cli.getRuleSetFileForFindBugs() != null && !cli.getRuleSetFileForFindBugs().equals("")) {
 			findBugsViolation.addOption("-include", cli.getRuleSetFileForFindBugs());
+
+			MeasuredResult.getInstance(cli.getInstanceKey()).setFindBugsRules(XmlElementUtil.getElementCount(cli.getRuleSetFileForFindBugs(), "Match"));
+		} else {
+			MeasuredResult.getInstance(cli.getInstanceKey()).setFindBugsRules(Version.FINDBUGS_DEFAULT_RULES);
 		}
 
 		findBugsViolation.run(cli.getInstanceKey());

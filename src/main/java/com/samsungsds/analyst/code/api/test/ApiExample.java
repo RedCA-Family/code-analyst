@@ -83,6 +83,11 @@ public class ApiExample {
 		//argument.setSrc("src");
         //targetFile.addFile("com.samsungsds.analyst.code.test", "Test.java");
 
+		// addFileExactly 테스트
+		targetFile.addFileExactly("com.samsungsds.analyst.code.test", "Test.java");
+
+		argument.setSaveCatalog(true);
+
 		File temp = new File(TEMP_DIRECTORY);
 		if (!temp.exists()) {
 			temp.mkdirs();

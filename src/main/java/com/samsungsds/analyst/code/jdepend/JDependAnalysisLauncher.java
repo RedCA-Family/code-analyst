@@ -89,7 +89,7 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 	        if (!jPackage.containsCycle()) {
 	            continue;
 	        }
-	        
+
 	        JavaPackage cyclePackage = (JavaPackage) list.get(list.size() - 1);
 	        String cyclePackageName = cyclePackage.getName();
 

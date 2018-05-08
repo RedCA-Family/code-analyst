@@ -35,6 +35,10 @@ public abstract class AbstractOutputFile {
 
 			writeSummary(result);
 
+			if (result.isSaveCatalog()) {
+				writeFilePathList(result.getFilePathList());
+			}
+
 			if (result.getIndividualMode().isDuplication()) {
 				writeDuplication(result.getDuplicationList());
 			}
@@ -105,6 +109,8 @@ public abstract class AbstractOutputFile {
 	protected abstract void writeUnusedCode(List<UnusedCodeResult> unusedCodeList);
 
 	protected abstract void writeSummary(MeasuredResult result);
+
+	protected abstract void writeFilePathList(List<String> filePathList);
 
 	protected abstract void writeProjectInfo(CliParser cli, MeasuredResult result);
 

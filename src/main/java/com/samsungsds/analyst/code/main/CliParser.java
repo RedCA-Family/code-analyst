@@ -58,6 +58,8 @@ public class CliParser {
 
 	private boolean seperatedOutput = false;
 
+	private boolean saveCatalog = false;
+
 	public CliParser(String[] args) {
 		this.args = args;
 
@@ -93,10 +95,11 @@ public class CliParser {
 		options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occured, use JVM '-Xmx' option like '-Xmx1024m')");
 
 		options.addOption("r", "rerun", true, "specify previous output file to rerun with same options. "
-				+ "('project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', 'analysis', and 'seperated')");
+				+ "('project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', 'analysis', 'seperated', and 'catalog')");
 
 		options.addOption("seperated", false, "specify seperated output mode.");
 
+		options.addOption("catalog", false, "specify file catalog saving mode.");
 	}
 
 	public boolean parse() {
@@ -219,6 +222,10 @@ public class CliParser {
 				getOptionsFromOutFile(cmd.getOptionValue("r"));
 			}
 
+			if (cmd.hasOption("catalog")) {
+				setSaveCatalog(true);
+			}
+
 			return true;
 		} catch (ParseException pe) {
 			errorMessage = "Failed to parse command line";
@@ -281,6 +288,12 @@ public class CliParser {
 			seperatedOutput = true;
 		}
 
+		String catalog = getCheckedString(ini, "Project", "saveCatalog", true);
+
+		if (catalog.equals("true")) {
+			saveCatalog = true;
+		}
+
 		LOGGER.info("Rerun with following options");
 		LOGGER.info(" - project : {}", projectBaseDir);
 		LOGGER.info(" - src : {}", src);
@@ -310,6 +323,9 @@ public class CliParser {
 		}
 		if (seperated.equals("true")) {
 			LOGGER.info(" - seperatedOutput = true");
+		}
+		if (catalog.equals("true")) {
+			LOGGER.info("- saveCatalog = true");
 		}
 	}
 
@@ -510,5 +526,13 @@ public class CliParser {
 
 	public void setSeperatedOutput(boolean seperatedOutput) {
 		this.seperatedOutput = seperatedOutput;
+	}
+
+	public boolean isSaveCatalog() {
+		return saveCatalog;
+	}
+
+	public void setSaveCatalog(boolean saveCatalog) {
+		this.saveCatalog = saveCatalog;
 	}
 }

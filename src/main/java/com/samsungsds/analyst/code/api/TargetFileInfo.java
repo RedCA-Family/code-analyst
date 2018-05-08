@@ -29,11 +29,22 @@ public class TargetFileInfo {
 		}
 	}
 
+	/**
+	 * @deprecated  This method has to be replaced by {@link #addFileExactly(String, String)}
+	 */
+	@Deprecated
 	public void addFile(String packageName, String file) {
         if (!packageName.equals("")) {
             packageName += "/";
         }
 		fileList.add(FilePathAbstractFilter.FIXED_PREFIX + "**/" + packageName + file);
+	}
+
+	public void addFileExactly(String packageName, String file) {
+		if (!packageName.equals("")) {
+			packageName += "/";
+		}
+		fileList.add(FilePathAbstractFilter.FIXED_PREFIX + packageName + file);
 	}
 
 	public String[] getFiles() {

@@ -6,6 +6,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
+import static com.samsungsds.analyst.code.main.filter.FilePathAbstractFilter.FIXED_PREFIX;
+
 public class SourceFileHandler {
     private static final Logger LOGGER = LogManager.getLogger(SourceFileHandler.class);
 
@@ -24,6 +26,10 @@ public class SourceFileHandler {
 
             if (ret.length() != 0) {
                 ret.append(",");
+            }
+
+            if (pattern.startsWith(FIXED_PREFIX)) {
+                pattern = pattern.substring(FIXED_PREFIX.length());
             }
 
             ret.append(projectBaseDir).append(File.separator).append(src).append(File.separator);
