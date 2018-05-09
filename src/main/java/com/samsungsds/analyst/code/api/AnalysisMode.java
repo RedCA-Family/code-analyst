@@ -2,16 +2,16 @@ package com.samsungsds.analyst.code.api;
 
 public class AnalysisMode {
 
-	private boolean codeSize = false;
-	private boolean duplication = false;
-	private boolean complexity = false;
-	private boolean sonarJava = false;
-	private boolean pmd = false;
-	private boolean findBugs = false;
-	private boolean findSecBugs = false;
-	private boolean webResource = false;
-	private boolean dependency = false;
-	private boolean unusedCode = false;
+	private boolean codeSize = true;
+	private boolean duplication = true;
+	private boolean complexity = true;
+	private boolean sonarJava = true;
+	private boolean pmd = true;
+	private boolean findBugs = true;
+	private boolean findSecBugs = true;
+	private boolean webResource = true;
+	private boolean dependency = true;
+	private boolean unusedCode = true;
 
 	public boolean isSonarServer() {
 		return codeSize || duplication || sonarJava || webResource;

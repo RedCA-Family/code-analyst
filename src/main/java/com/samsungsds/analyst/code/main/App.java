@@ -60,6 +60,8 @@ public class App {
 
 			SystemInfo.print();
 
+			LOGGER.info("Mode : {}", cli.getIndividualMode());
+
 			MeasuredResult.getInstance(cli.getInstanceKey()).initialize(cli.isDetailAnalysis(), cli.isSeperatedOutput());
 			if (cli.isDetailAnalysis()) {
 				LOGGER.info("Detail Analysis mode...");

@@ -19,6 +19,7 @@ import com.samsungsds.analyst.code.util.FindFileUtils;
 public class CliParser {
 	private static final Logger LOGGER = LogManager.getLogger(CliParser.class);
 	private static final String APPLICATION_JAR = "Code-Analyst-" + Version.CODE_ANALYST + ".jar";
+	public static final String EXCLUSION_PREFIX = "exclusion:";
 
 	private String[] args = null;
 	private Options options = new Options();
@@ -42,6 +43,8 @@ public class CliParser {
 
 	private MeasurementMode mode = MeasurementMode.DefaultMode;
 	private String classForCCMeasurement = "";
+
+	private String webapp = "src\\main\\webapp";
 
 	private String includes = "";
 	private String excludes = "";
@@ -90,7 +93,7 @@ public class CliParser {
 		options.addOption("include", true, "specify include pattern(Ant-style) with comma separated. (eg: com/sds/**/*.java)");
 		options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)");
 
-		options.addOption("m", "mode", true, "specify analysis items with comma separated. (code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs, webresource, dependency, unusedcode)");
+		options.addOption("m", "mode", true, "specify analysis items with comma separated. If '-' specified in each mode, the mode is excluded. (code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs, webresource, dependency, unusedcode)");
 
 		options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occured, use JVM '-Xmx' option like '-Xmx1024m')");
 
@@ -106,6 +109,8 @@ public class CliParser {
 		CommandLineParser parser = new DefaultParser();
 
 		CommandLine cmd = null;
+
+		processArgs();
 
 		try {
 			cmd = parser.parse(options, args);
@@ -201,7 +206,7 @@ public class CliParser {
 					help();
 					return false;
 				}
-				String analysisModeValue = cmd.getOptionValue("m");
+				String analysisModeValue = cmd.getOptionValue("m").replaceAll(EXCLUSION_PREFIX, "");
 
 				if (!settingAnalysisMode(analysisModeValue)) {
 					return false;
@@ -235,7 +240,19 @@ public class CliParser {
 		}
 	}
 
+	private void processArgs() {
+		for (int i = 0; i < args.length - 1; i++) {
+			if (args[i].equals("-m") || args[i].equals("--mode")) {
+				if (args[i+1].startsWith("-")) {
+					args[i+1] = EXCLUSION_PREFIX + args[i+1];
+				}
+				break;
+			}
+		}
+	}
+
 	private boolean settingAnalysisMode(String analysisModeValue) {
+
 		String[] modes = analysisModeValue.split(FindFileUtils.COMMA_SPLITTER);
 
 		try {
@@ -349,29 +366,43 @@ public class CliParser {
 
 	private void parseIndividualMode(String[] modes) {
 		for (String mode : modes) {
+			if (mode.startsWith("-")) {
+				individualMode.setAll();
+				break;
+			}
+		}
+
+		for (String mode : modes) {
+			boolean includeOrExclude = true;
+
+			if (mode.startsWith("-")) {
+				includeOrExclude = false;
+				mode = mode.substring(1);
+			}
+
 			if (mode.equalsIgnoreCase("code-size") || mode.equalsIgnoreCase("codesize")) {
-				individualMode.setCodeSize(true);
+				individualMode.setCodeSize(includeOrExclude);
 			} else if (mode.equalsIgnoreCase("duplication")) {
-				individualMode.setDuplication(true);
+				individualMode.setDuplication(includeOrExclude);
 			} else if (mode.equalsIgnoreCase("complexity")) {
-				individualMode.setComplexity(true);
+				individualMode.setComplexity(includeOrExclude);
 			} else if (mode.equalsIgnoreCase("sonarjava")) {
-				individualMode.setSonarJava(true);
+				individualMode.setSonarJava(includeOrExclude);
 			} else if (mode.equalsIgnoreCase("pmd")) {
-				individualMode.setPmd(true);
+				individualMode.setPmd(includeOrExclude);
 			} else if (mode.equalsIgnoreCase("findbugs")) {
-				individualMode.setFindBugs(true);
+				individualMode.setFindBugs(includeOrExclude);
 			} else if (mode.equalsIgnoreCase("findsecbugs")) {
-				individualMode.setFindSecBugs(true);
+				individualMode.setFindSecBugs(includeOrExclude);
 			} else if (mode.equalsIgnoreCase("webresource")) {
-				individualMode.setWebResource(true);
+				individualMode.setWebResource(includeOrExclude);
 			} else if (mode.equalsIgnoreCase("dependency")) {
-				individualMode.setDependency(true);
+				individualMode.setDependency(includeOrExclude);
 			} else if (mode.equalsIgnoreCase("unusedcode")) {
-				individualMode.setUnusedCode(true);
+				individualMode.setUnusedCode(includeOrExclude);
 			} else {
 				throw new IllegalArgumentException(
-						"'mode' option can only have 'code-size', 'duplication', 'complexity', 'sonarjava', 'pmd', 'findbugs', 'findsecbugs', 'webresource', 'dependency', and 'unusedcode'");
+						"'mode' option can only have 'code-size', 'duplication', 'complexity', 'sonarjava', 'pmd', 'findbugs', 'findsecbugs', 'webresource', 'dependency', and 'unusedcode' (with or without '-')");
 			}
 		}
 	}
