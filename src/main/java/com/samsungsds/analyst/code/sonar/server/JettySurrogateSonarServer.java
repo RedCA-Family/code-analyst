@@ -49,12 +49,12 @@ public class JettySurrogateSonarServer implements SurrogateSonarServer {
 
 		handler.addServletWithMapping(SettingValuesResServlet.class, "/api/settings/values.protobuf");
 		if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isSonarJava()) {
-			if (cli.getIndividualMode().isWebResource()) {
+			if (cli.getIndividualMode().isWebResources()) {
 				handler.addServletWithMapping(DefaultPluginInstalledResServlet.class, "/api/plugins/installed");
 			} else {
 				handler.addServletWithMapping(JavaPluginInstalledResServlet.class, "/api/plugins/installed");
 			}
-		} else if (cli.getIndividualMode().isWebResource()) {
+		} else if (cli.getIndividualMode().isWebResources()) {
 			handler.addServletWithMapping(WebPluginInstalledResServlet.class, "/api/plugins/installed");
 		}
 		handler.addServletWithMapping(MetricsResServlet.class, "/api/metrics/search");

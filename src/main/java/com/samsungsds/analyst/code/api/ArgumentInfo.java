@@ -10,10 +10,11 @@ public class ArgumentInfo {
 	private String pmdRuleFile;				// PMD ruleset xml file (if omitted, SDS Standard Ruleset used)
 	private String findBugsRuleFile;		// Findbugs ruleset xml file (if omitted, SDS Standard Ruleset used)
 	private String sonarRuleFile;			// SonarQube Issue exclude xml file (if omitted, all SDS Standard Rules included)
-	private int timeout = 10 * 60;			// 10 minutes
+	private int timeout = 10 * 60 * 10;		// 100 minutes
 	private String exclude;					// exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)
+	private String webapp;					// webapp directory
 	
-	private AnalysisMode mode;				// code-size,duplication,complexity,sonarjava,pmd,findbugs,findsecbugs,webresource,dependency,unused
+	private AnalysisMode mode;				// code-size,duplication,complexity,sonarjava,pmd,findbugs,findsecbugs,javascript,css,html,dependency,unused
 
 	private boolean detailAnalysis = false;	// Detail Analysis mode
 
@@ -129,5 +130,13 @@ public class ArgumentInfo {
 
 	public void setSaveCatalog(boolean saveCatalog) {
 		this.saveCatalog = saveCatalog;
+	}
+
+	public String getWebapp() {
+		return webapp;
+	}
+
+	public void setWebapp(String webapp) {
+		this.webapp = webapp;
 	}
 }

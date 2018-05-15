@@ -48,12 +48,16 @@ public class ApiExample {
 		mode.setFindBugs(true);
 		mode.setFindSecBugs(true);
 		mode.setDependency(true);
-		mode.setWebResource(true);
+		mode.setJavascript(false);
+		mode.setCss(false);
+		mode.setHtml(false);
 		mode.setUnusedCode(true);
 
 		argument.setMode(mode);
 
 		argument.setDetailAnalysis(true);
+
+		//argument.setWebapp("src/main/webapp");
 
 		// argument.setDebug(true);
 
@@ -97,7 +101,7 @@ public class ApiExample {
 
 		System.out.println("Result File : " + resultFile);
 
-		// ResultInfo result = analyst.analyzeWithSeperatedResult(TEMP_DIRECTORY, argument, targetFile);
+		// ResultInfo result = analyst.analyzeWithSeparatedResult(TEMP_DIRECTORY, argument, targetFile);
 
 		// System.out.println("Result File : " + result.getOutputFile());
 	}

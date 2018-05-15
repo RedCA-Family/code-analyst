@@ -8,16 +8,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.samsungsds.analyst.code.api.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.samsungsds.analyst.code.api.AnalysisMode;
-import com.samsungsds.analyst.code.api.AnalysisProgress;
-import com.samsungsds.analyst.code.api.ArgumentInfo;
-import com.samsungsds.analyst.code.api.CodeAnalyst;
-import com.samsungsds.analyst.code.api.ProgressObserver;
-import com.samsungsds.analyst.code.api.ResultInfo;
-import com.samsungsds.analyst.code.api.TargetFileInfo;
 import com.samsungsds.analyst.code.main.App;
 import com.samsungsds.analyst.code.main.CliParser;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
@@ -44,8 +38,8 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		return analyze(where, argument, targetFile, false);
 	}
 	
-	public String analyze(String where, ArgumentInfo argument, TargetFileInfo targetFile, boolean withSeperatedOutput) {
-		checkDirectoryAndArgument(where, argument);
+	public String analyze(String where, ArgumentInfo argument, AbstractFileInfo targetFile, boolean withSeperatedOutput) {
+		checkDirectoryAndArgument(where, argument, targetFile.isWebResourceAnalysis());
 		
 		String[] arguments = getArguments(where, argument, targetFile, withSeperatedOutput);
 
@@ -83,6 +77,75 @@ public class CodeAnalystImpl implements CodeAnalyst {
     	}
 	}
 
+	@Override
+	public ResultInfo analyzeWithSeparatedResult(String where, ArgumentInfo argument, TargetFileInfo targetFile) {
+		String resultFile = analyze(where, argument, targetFile, true);
+
+		ResultInfo info = new ResultInfo();
+		info.setOutputFile(resultFile);
+
+		String fileWithoutExt = IOAndFileUtils.getFilenameWithoutExt(new File(resultFile));
+
+		info.setDuplicationFile(fileWithoutExt + "-duplication.json");
+		info.setComplexityFile(fileWithoutExt + "-complexity.json");
+		info.setPmdFile(fileWithoutExt + "-pmd.json");
+		info.setFindBugsFile(fileWithoutExt + "-findbugs.json");
+		info.setFindSecBugsFile(fileWithoutExt + "-findsecbugs.json");
+		info.setSonarJavaFile(fileWithoutExt + "-sonarjava.json");
+		info.setWebResourceFile(fileWithoutExt + "-webresource.json");
+
+		return info;
+	}
+
+	@Override
+	public String analyzeWebResource(String where, WebArgumentInfo webArgument, WebTargetFileInfo webTargetFile, boolean includeCssAndHtml) {
+		ArgumentInfo argument = getArgumentInfo(webArgument);
+
+		argument.setMode(settingAnalysisMode(includeCssAndHtml));
+
+		return analyze(where, argument, webTargetFile, false);
+	}
+
+	private ArgumentInfo getArgumentInfo(WebArgumentInfo webArgument) {
+		ArgumentInfo argument = new ArgumentInfo();
+
+		argument.setProject(webArgument.getProject());
+		argument.setSrc("");
+		argument.setBinary("");
+		argument.setDebug(webArgument.isDebug());
+		argument.setEncoding(webArgument.getEncoding());
+		argument.setSonarRuleFile(webArgument.getSonarRuleFile());
+		argument.setTimeout(webArgument.getTimeout());
+		argument.setExclude(webArgument.getExclude());
+		argument.setWebapp(webArgument.getWebapp());
+		argument.setDetailAnalysis(webArgument.isDetailAnalysis());
+		argument.setSaveCatalog(webArgument.isSaveCatalog());
+		return argument;
+	}
+
+	private AnalysisMode settingAnalysisMode(boolean includeCssAndHtml) {
+		AnalysisMode mode = new AnalysisMode();
+		mode.setCodeSize(false);
+		mode.setDuplication(false);
+		mode.setComplexity(false);
+		mode.setSonarJava(false);
+		mode.setPmd(false);
+		mode.setFindBugs(false);
+		mode.setFindSecBugs(false);
+		mode.setJavascript(true);
+		if (includeCssAndHtml) {
+			mode.setCss(true);
+			mode.setHtml(true);
+		} else {
+			mode.setCss(false);
+			mode.setHtml(false);
+		}
+		mode.setDependency(false);
+		mode.setUnusedCode(false);
+
+		return mode;
+	}
+
 	private String getUniqueId() {
 		return UUID.randomUUID().toString().toUpperCase();
 	}
@@ -109,15 +172,15 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		return string;
 	}
 
-	private String[] getArguments(String where, ArgumentInfo argument, TargetFileInfo targetFile, boolean withSeperatedOutput) {
+	private String[] getArguments(String where, ArgumentInfo argument, AbstractFileInfo targetFile, boolean withSeperatedOutput) {
 		List<String> argumentList = new ArrayList<>();
 		
 		argumentList.add("--project");
 		argumentList.add(argument.getProject());
-		
+
 		argumentList.add("--src");
 		argumentList.add(argument.getSrc());
-		
+
 		argumentList.add("--binary");
 		argumentList.add(argument.getBinary());
 		
@@ -154,9 +217,12 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		
 		argumentList.add("--timeout");
 		argumentList.add(Integer.toString(argument.getTimeout()));
-		
-		argumentList.add("-include");
-		argumentList.add(getIncludeString(targetFile));
+
+		String includeString = getIncludeString(targetFile);
+		if (!includeString.equals("")) {
+			argumentList.add("-include");
+			argumentList.add(includeString);
+		}
 		
 		if (isValidated(argument.getExclude())) {
 			argumentList.add("-exclude");
@@ -164,7 +230,12 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		}
 		
 		argumentList.add("--mode");
-		argumentList.add(getModeParameter(argument.getMode()));
+		argumentList.add(getModeParameter(argument.getMode(), isValidated(argument.getWebapp())));
+
+		if (isValidated(argument.getWebapp())) {
+			argumentList.add("--webapp");
+			argumentList.add(argument.getWebapp());
+		}
 		
 		if (withSeperatedOutput) {
 			argumentList.add("-seperated");
@@ -181,14 +252,16 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		return argumentList.toArray(new String[0]);
 	}
 	
-	private String getIncludeString(TargetFileInfo targetFile) {
+	private String getIncludeString(AbstractFileInfo targetFile) {
 		StringBuilder builder = new StringBuilder();
 		
 		for (String file : targetFile.getFiles()) {
 			if (builder.length() != 0) {
 				builder.append(",");
 			}
-			builder.append(file.replaceAll("\\.java", "").replaceAll("\\.", "/")).append(".java");
+			if (targetFile.isPackageExpression()) {
+				builder.append(file.replaceAll("\\.java", "").replaceAll("\\.", "/")).append(".java");
+			}
 		}
 		
 		System.out.println("* Target file patterns : " + builder.toString());
@@ -196,7 +269,7 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		return builder.toString();
 	}
 
-	private void checkDirectoryAndArgument(String where, ArgumentInfo argument) {
+	private void checkDirectoryAndArgument(String where, ArgumentInfo argument, boolean isWebResourceAnalysis) {
 		File dir = new File(where);
 		
 		if (!dir.exists() || !dir.isDirectory()) {
@@ -206,13 +279,19 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		if (isNotValidated(argument.getProject())) {
 			throw new IllegalArgumentException("Project directory is needed...");
 		}
-		
-		if (isNotValidated(argument.getSrc())) {
-			throw new IllegalArgumentException("Source directory is needed...");
-		}
-		
-		if (isNotValidated(argument.getBinary())) {
-			throw new IllegalArgumentException("Binary directory is needed...");
+
+		if (isWebResourceAnalysis) {
+			if (isNotValidated(argument.getWebapp())) {
+				throw new IllegalArgumentException("webapp directory is needed...");
+			}
+		} else {
+			if (isNotValidated(argument.getSrc())) {
+				throw new IllegalArgumentException("Source directory is needed...");
+			}
+
+			if (isNotValidated(argument.getBinary())) {
+				throw new IllegalArgumentException("Binary directory is needed...");
+			}
 		}
 		
 		if (argument.getMode() == null) {
@@ -235,7 +314,7 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		}
 	}
 	
-	private String getModeParameter(AnalysisMode mode) {
+	private String getModeParameter(AnalysisMode mode, boolean hasWebappAugument) {
 		StringBuilder parameter = new StringBuilder();
 		
 		if (mode.isCodeSize()) {
@@ -266,8 +345,18 @@ public class CodeAnalystImpl implements CodeAnalyst {
 			addAnalysisItem(parameter, "findsecbugs");
 		}
 
-		if (mode.isWebResource()) {
-			addAnalysisItem(parameter, "webresource");
+		if (hasWebappAugument) {
+			if (mode.isJavascript()) {
+				addAnalysisItem(parameter, "javascript");
+			}
+
+			if (mode.isCss()) {
+				addAnalysisItem(parameter, "css");
+			}
+
+			if (mode.isHtml()) {
+				addAnalysisItem(parameter, "html");
+			}
 		}
 		
 		if (mode.isDependency()) {
@@ -308,25 +397,5 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		}
 		
 		return false;
-	}
-
-	@Override
-	public ResultInfo analyzeWithSeperatedResult(String where, ArgumentInfo argument, TargetFileInfo targetFile) {
-		String resultFile = analyze(where, argument, targetFile, true);
-		
-		ResultInfo info = new ResultInfo();
-		info.setOutputFile(resultFile);
-		
-		String fileWithoutExt = IOAndFileUtils.getFilenameWithoutExt(new File(resultFile));
-		
-		info.setDuplicationFile(fileWithoutExt + "-duplication.json");
-		info.setComplexityFile(fileWithoutExt + "-complexity.json");
-		info.setPmdFile(fileWithoutExt + "-pmd.json");
-		info.setFindBugsFile(fileWithoutExt + "-findbugs.json");
-		info.setFindSecBugsFile(fileWithoutExt + "-findsecbugs.json");
-		info.setSonarJavaFile(fileWithoutExt + "-sonarjava.json");
-		info.setWebResourceFile(fileWithoutExt + "-webresource.json");
-
-		return info;
 	}
 }

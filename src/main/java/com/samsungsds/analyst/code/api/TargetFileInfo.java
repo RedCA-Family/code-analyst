@@ -5,7 +5,7 @@ import com.samsungsds.analyst.code.main.filter.FilePathAbstractFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TargetFileInfo {
+public class TargetFileInfo implements AbstractFileInfo {
 	private boolean includeSubPackage = true;
 	private List<String> fileList = new ArrayList<>();
 
@@ -47,7 +47,13 @@ public class TargetFileInfo {
 		fileList.add(FilePathAbstractFilter.FIXED_PREFIX + packageName + file);
 	}
 
+	@Override
 	public String[] getFiles() {
 		return fileList.toArray(new String[0]);
+	}
+
+	@Override
+	public boolean isPackageExpression() {
+		return true;
 	}
 }

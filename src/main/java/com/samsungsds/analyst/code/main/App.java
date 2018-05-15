@@ -60,9 +60,11 @@ public class App {
 
 			SystemInfo.print();
 
-			LOGGER.info("Mode : {}", cli.getIndividualMode());
+			if (cli.getMode() == MeasurementMode.DefaultMode) {
+				LOGGER.info("Mode : {}", cli.getIndividualMode());
+			}
 
-			MeasuredResult.getInstance(cli.getInstanceKey()).initialize(cli.isDetailAnalysis(), cli.isSeperatedOutput());
+			MeasuredResult.getInstance(cli.getInstanceKey()).initialize(cli.isDetailAnalysis(), cli.isSeperatedOutput(), cli.getIndividualMode());
 			if (cli.isDetailAnalysis()) {
 				LOGGER.info("Detail Analysis mode...");
 			}
@@ -130,7 +132,7 @@ public class App {
 				runComplexity(cli);
 
 			} else {
-				if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isSonarJava() || cli.getIndividualMode().isWebResource()) {
+				if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isSonarJava() || cli.getIndividualMode().isWebResources()) {
 					List<String> sonarAnalysisModeList = new ArrayList<>();
 					if (cli.getIndividualMode().isCodeSize()) {
 						sonarAnalysisModeList.add("Code Size");
@@ -141,8 +143,14 @@ public class App {
 					if (cli.getIndividualMode().isSonarJava()) {
 						sonarAnalysisModeList.add("Sonar Java");
 					}
-					if (cli.getIndividualMode().isWebResource()) {
-						sonarAnalysisModeList.add("Web Resource");
+					if (cli.getIndividualMode().isJavascript()) {
+						sonarAnalysisModeList.add("JavaScript");
+					}
+					if (cli.getIndividualMode().isCss()) {
+						sonarAnalysisModeList.add("CSS");
+					}
+					if (cli.getIndividualMode().isHtml()) {
+						sonarAnalysisModeList.add("HTML");
 					}
 					String sonarAnalysisMode = StringUtils.join(sonarAnalysisModeList, " & ");
 					LOGGER.info(sonarAnalysisMode + " Analysis start...");
@@ -223,7 +231,16 @@ public class App {
 		}
 
 		LOGGER.info("Sonar Scanner starting...");
-		SonarAnalysis sonar = new SonarAnalysisLauncher(MeasuredResult.getInstance(cli.getInstanceKey()).getProjectDirectory(), cli.getSrc());
+		String src = cli.getSrc();
+		if (cli.getIndividualMode().isWebResources()) {
+			if (src.equals("")) {
+				src = cli.getWebapp();
+			} else {
+				src += "," + cli.getWebapp();
+			}
+		}
+
+		SonarAnalysis sonar = new SonarAnalysisLauncher(MeasuredResult.getInstance(cli.getInstanceKey()).getProjectDirectory(), src);
 
 		if (cli.isDebug()) {
 			sonar.addProperty(SONAR_VERBOSE, "true");
@@ -242,7 +259,7 @@ public class App {
 
 		sonar.addProperty("sonar.projectBaseDir", cli.getProjectBaseDir());
 		sonar.addProperty("sonar.java.binaries", cli.getBinary());
-		sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, cli.getSrc());
+		sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, src);
 		sonar.addProperty("sonar.java.source", cli.getJavaVersion());
 
 		// BatchWSClient timeout
@@ -255,14 +272,6 @@ public class App {
 		sonar.addProperty("sonar.scanAllFiles", "true");
 
 		if (!cli.getIncludes().equals("")) {
-            /*
-            String includes = MeasuredResult.getInstance(cli.getInstanceKey()).getIncludes();
-            if (includes.startsWith("/")) {
-                sonar.addProperty("sonar.inclusions", cli.getSrc() + includes);
-            } else {
-                sonar.addProperty("sonar.inclusions", cli.getSrc() + "/" + includes);
-            }
-            */
             sonar.addProperty("sonar.inclusions", MeasuredResult.getInstance(cli.getInstanceKey()).getIncludes());
 		}
 
@@ -286,7 +295,20 @@ public class App {
 
 		SonarProgressEventChecker sonarProgressChecker = null;
 		if (progressMonitor != null) {
-			int fileCount = IOAndFileUtils.getJavaFileCount(Paths.get(cli.getProjectBaseDir(), cli.getSrc()));
+			int fileCount = 0;
+
+			if (!cli.getSrc().equals("")) {
+				fileCount += IOAndFileUtils.getJavaFileCount(Paths.get(cli.getProjectBaseDir(), cli.getSrc()));
+			}
+			if (cli.getIndividualMode().isJavascript()) {
+				fileCount += IOAndFileUtils.getFileCountWithExt(Paths.get(cli.getProjectBaseDir(), cli.getWebapp()), "js");
+			}
+			if (cli.getIndividualMode().isCss()) {
+				fileCount += IOAndFileUtils.getFileCountWithExt(Paths.get(cli.getProjectBaseDir(), cli.getWebapp()), "css", "less", "scss");
+			}
+			if (cli.getIndividualMode().isHtml()) {
+				fileCount += IOAndFileUtils.getFileCountWithExt(Paths.get(cli.getProjectBaseDir(), cli.getWebapp()), "htm", "html", "jsp");
+			}
 			LOGGER.info("Approximate number of files : {}", fileCount);
 			sonarProgressChecker = new SonarProgressEventChecker(cli.getIndividualMode(), this, fileCount);
 

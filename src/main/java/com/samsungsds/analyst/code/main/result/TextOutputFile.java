@@ -161,7 +161,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("FindSecBugs = " + result.getFindSecBugsCountAll());
 			writer.println();
 		}
-		if (result.getIndividualMode().isWebResource()) {
+		if (result.getIndividualMode().isWebResources()) {
 			writer.println("WebResource = " + result.getWebResourceCountAll());
 			writer.println("WebResource1Priority = " + result.getWebResourceCount(1));
 			writer.println("WebResource2Priority = " + result.getWebResourceCount(2));
@@ -169,9 +169,15 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("WebResource4Priority = " + result.getWebResourceCount(4));
 			writer.println("WebResource5Priority = " + result.getWebResourceCount(5));
 			writer.println();
+
+			writer.println("WebResourceBug = " + result.getWebResourceType(IssueType.BUG.getTypeIndex()));
+			writer.println("WebResourceVulnerability = " + result.getWebResourceType(IssueType.VULNERABILITY.getTypeIndex()));
+			writer.println("WebResourceCodeSmell = " + result.getWebResourceType(IssueType.CODE_SMELL.getTypeIndex()));
+			writer.println("WebResourceNA = " + result.getWebResourceType(IssueType.NA.getTypeIndex()));
+			writer.println();
 		}
 		if (result.getIndividualMode().isDependency()) {
-			writer.println("CyclicDependecies = " + result.getAcyclicDependencyCount());
+			writer.println("CyclicDependencies = " + result.getAcyclicDependencyCount());
 			writer.println();
 		}
 		if (result.getIndividualMode().isUnusedCode()) {
@@ -439,15 +445,17 @@ public class TextOutputFile extends AbstractOutputFile {
 			csvOutput.writeWebResource(webResourceList);
 		} else {
 			writer.println("[WebResource]");
-			writer.println("; path, rule, message, priority, start line, start offset, end line, end offset");
+			writer.println("; lang, type, path, rule, message, priority, start line, start offset, end line, end offset");
 
 			int count = 0;
 			synchronized (webResourceList) {
 				for (WebResourceResult result : webResourceList) {
 					writer.print(++count + " = ");
-					writer.print(getStringsWithComma(getStringsWithComma(result.getPath(), result.getRuleRepository() + ":" + result.getRuleKey(), result.getMsg(),
+					writer.print(getStringsWithComma(result.getLanguage(), result.getIssueType().toString()));
+					writer.print(",");
+					writer.print(getStringsWithComma(result.getPath(), result.getRuleRepository() + ":" + result.getRuleKey(), result.getMsg(),
 							getString(result.getSeverity()), getString(result.getStartLine()),
-							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset()))));
+							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset())));
 					writer.println();
 				}
 			}

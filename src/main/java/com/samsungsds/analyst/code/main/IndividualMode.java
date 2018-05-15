@@ -4,7 +4,7 @@ import com.samsungsds.analyst.code.api.AnalysisMode;
 
 public class IndividualMode extends AnalysisMode {
 
-	public void setAll() {
+	public void setDefault() {
 		setCodeSize(true);
 		setDuplication(true);
 		setComplexity(true);
@@ -12,9 +12,26 @@ public class IndividualMode extends AnalysisMode {
 		setPmd(true);
 		setFindBugs(true);
 		setFindSecBugs(true);
-		setWebResource(true);
+		setJavascript(true);
+		setCss(false);			// disabled by default
+		setHtml(false);			// disabled by default
 		setDependency(true);
 		setUnusedCode(true);
+	}
+
+	public void setUnsetAll() {
+		setCodeSize(false);
+		setDuplication(false);
+		setComplexity(false);
+		setSonarJava(false);
+		setPmd(false);
+		setFindBugs(false);
+		setFindSecBugs(false);
+		setJavascript(false);
+		setCss(false);
+		setHtml(false);
+		setDependency(false);
+		setUnusedCode(false);
 	}
 
 	@Override
@@ -42,8 +59,14 @@ public class IndividualMode extends AnalysisMode {
 		if (isFindSecBugs()) {
 			builder.append("FindSecBugs, ");
 		}
-		if (isWebResource()) {
-			builder.append("WebResource, ");
+		if (isJavascript()) {
+			builder.append("JavaScript, ");
+		}
+		if (isCss()) {
+			builder.append("CSS, ");
+		}
+		if (isHtml()) {
+			builder.append("HTML, ");
 		}
 		if (isDependency()) {
 			builder.append("Dependency, ");

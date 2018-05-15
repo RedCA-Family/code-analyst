@@ -8,8 +8,7 @@ import com.samsungsds.analyst.code.main.issue.IssueTypeRepository;
 import com.samsungsds.analyst.code.util.CSVFileResult;
 
 public class SonarJavaResult implements Serializable, CSVFileResult {
-
-	private static final long serialVersionUID = 6343847614524493660L;
+	private static final long serialVersionUID = -5191533809154238051L;
 
 	@Expose
 	private IssueType type;
@@ -35,7 +34,7 @@ public class SonarJavaResult implements Serializable, CSVFileResult {
 
 	public SonarJavaResult() {
 		// default constructor (CSV)
-		// column : path, ruleRepository, ruleKey, msg, severity, startLine, startOffset, endLine, endOffset
+		// column : path, ruleRepository, ruleKey, msg, severity, startLine, startOffset, endLine, endOffset, type
 		path = "";
 		ruleRepository = "";
 		ruleKey = "";
@@ -55,65 +54,34 @@ public class SonarJavaResult implements Serializable, CSVFileResult {
 	@Override
 	public String getDataIn(int columnIndex) {
 		switch (columnIndex) {
-		case 0:
-			return path;
-		case 1:
-			return ruleRepository;
-		case 2:
-			return ruleKey;
-		case 3:
-			return msg;
-		case 4:
-			return String.valueOf(severity);
-		case 5:
-			return String.valueOf(startLine);
-		case 6:
-			return String.valueOf(startOffset);
-		case 7:
-			return String.valueOf(endLine);
-		case 8:
-			return String.valueOf(endOffset);
-		case 9:
-			return type.toString();
-		default:
-			throw new IndexOutOfBoundsException("Index: " + columnIndex);
+		case 0: return path;
+		case 1: return ruleRepository;
+		case 2: return ruleKey;
+		case 3: return msg;
+		case 4: return String.valueOf(severity);
+		case 5: return String.valueOf(startLine);
+		case 6: return String.valueOf(startOffset);
+		case 7: return String.valueOf(endLine);
+		case 8: return String.valueOf(endOffset);
+		case 9: return type.toString();
+		default: throw new IndexOutOfBoundsException("Index: " + columnIndex);
 		}
 	}
 
 	@Override
 	public void setDataIn(int columnIndex, String data) {
 		switch (columnIndex) {
-		case 0:
-			path = data;
-			break;
-		case 1:
-			ruleRepository = data;
-			break;
-		case 2:
-			ruleKey = data;
-			break;
-		case 3:
-			msg = data;
-			break;
-		case 4:
-			severity = Integer.parseInt(data);
-			break;
-		case 5:
-			startLine = Integer.parseInt(data);
-			break;
-		case 6:
-			startOffset = Integer.parseInt(data);
-			break;
-		case 7:
-			endLine = Integer.parseInt(data);
-			break;
-		case 8:
-			endOffset = Integer.parseInt(data);
-			break;
-		case 9:
-			type = IssueType.getIssueTypeOf(data); break;
-		default:
-			throw new IndexOutOfBoundsException("Index: " + columnIndex);
+		case 0: path = data; break;
+		case 1: ruleRepository = data; break;
+		case 2: ruleKey = data; break;
+		case 3: msg = data; break;
+		case 4: severity = Integer.parseInt(data); break;
+		case 5: startLine = Integer.parseInt(data); break;
+		case 6: startOffset = Integer.parseInt(data); break;
+		case 7: endLine = Integer.parseInt(data); break;
+		case 8: endOffset = Integer.parseInt(data); break;
+		case 9: type = IssueType.getIssueTypeOf(data); break;
+		default: throw new IndexOutOfBoundsException("Index: " + columnIndex);
 		}
 	}
 

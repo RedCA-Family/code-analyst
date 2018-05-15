@@ -134,7 +134,7 @@ public class ReportFileReader implements Closeable {
 				try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
 					while (it.hasNext()) {
 						ScannerReport.Issue issue = it.next();
-						WebResourceResult webResourceResult = new WebResourceResult(component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
+						WebResourceResult webResourceResult = new WebResourceResult(component.getLanguage(), component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
 						MeasuredResult.getInstance(instanceKey).addWebResourceResult(webResourceResult);
 					}
 				} catch (Exception e) {
