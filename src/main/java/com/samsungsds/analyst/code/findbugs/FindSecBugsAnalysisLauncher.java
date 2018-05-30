@@ -56,12 +56,12 @@ public class FindSecBugsAnalysisLauncher extends FindBugsAnalysisLauncher {
 			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
+		} finally {
+			firstRun = false;
 		}
 		
 		List<FindBugsResult> resultList = parseXML(reportFile);
 		
 		MeasuredResult.getInstance(instanceKey).putFindSecBugsList(resultList);
-		
-		firstRun = false;
 	}
 }
