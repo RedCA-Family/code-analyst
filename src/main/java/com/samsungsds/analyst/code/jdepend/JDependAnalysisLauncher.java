@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.samsungsds.analyst.code.util.FindFileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,9 +44,10 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 
 	@Override
 	public void run(String instanceKey) {
-		
 		try {
-			analyzer.addDirectory(directory);
+			for (String dir : directory.split(FindFileUtils.COMMA_SPLITTER)) {
+				analyzer.addDirectory(dir);
+			}
 		} catch (IOException ioe) {
 			throw new IllegalArgumentException(ioe);
 		}

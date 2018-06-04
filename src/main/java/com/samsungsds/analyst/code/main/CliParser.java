@@ -68,9 +68,9 @@ public class CliParser {
 
 		options.addOption("h", "help", false, "show help.");
 		options.addOption("p", "project", true, "specify project base directory. (default: \".\")");
-		options.addOption("s", "src", true, "specify source directory. (default: \"${project}" + File.separator + src + "\")");
-		options.addOption("b", "binary", true, "specify binary directory. (default: \"${project}" + File.separator + binary + "\")");
-		options.addOption("l", "library", true, "specify libary directory, jar files contained.");
+		options.addOption("s", "src", true, "specify source directories with comma separated. (default: \"${project}" + File.separator + src + "\")");
+		options.addOption("b", "binary", true, "specify binary directories with comma separated. (default: \"${project}" + File.separator + binary + "\")");
+		options.addOption("l", "library", true, "specify library directory, jar files contained.");
 		options.addOption("d", "debug", false, "debug mode.");
 		options.addOption("e", "encoding", true, "encoding of the source code. (default: UTF-8)");
 		options.addOption("j", "java", true, "specify java version. (default: 1.8)");
@@ -225,6 +225,8 @@ public class CliParser {
 				individualMode.setDefault();
 			}
 
+			checkWebAppOption();
+
 			if (cmd.hasOption("a")) {
 				setDetailAnalysis(true);
 			}
@@ -282,14 +284,16 @@ public class CliParser {
 
 		analysisMode = analysisModeValue;
 
+		return true;
+	}
+
+	private void checkWebAppOption() {
 		if (webapp.equals("") && (individualMode.isWebResources())) {
 			LOGGER.info("webapp option not found => disable Web Resources inspection");
 			individualMode.setJavascript(false);
 			individualMode.setCss(false);
 			individualMode.setHtml(false);
 		}
-
-		return true;
 	}
 
 	private void getOptionsFromOutFile(String outputFile) {
@@ -316,6 +320,8 @@ public class CliParser {
 		if (!mode.equals(Constants.DEFAULT_ANALYSIS_MODE)) {
 			settingAnalysisMode(mode);
 		}
+
+		checkWebAppOption();
 
 		String analysis = getCheckedString(ini, "Project", "detailAnalysis", true);
 

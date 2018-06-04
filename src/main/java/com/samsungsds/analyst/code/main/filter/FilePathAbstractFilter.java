@@ -5,6 +5,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.samsungsds.analyst.code.util.FindFileUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class FilePathAbstractFilter implements FilePathFilter {
 	private static final Logger LOGGER = LogManager.getLogger(FilePathAbstractFilter.class);
 
@@ -26,14 +29,20 @@ public abstract class FilePathAbstractFilter implements FilePathFilter {
 	
 	public void setNormalizedFilterString(String filterString) {
 		String[] splittedFilters = filterString.split(FindFileUtils.COMMA_SPLITTER);
-		
-		this.filters = new String[splittedFilters.length];
-		
+
+		List<String> list = new ArrayList<>();
+
 		for (int i = 0; i < splittedFilters.length; i++) {
 			String ret = splittedFilters[i].replaceAll("\\\\", "/");
 
 			if (ret.startsWith(FIXED_PREFIX)) {
-				this.filters[i] = srcPrefix + "/" + ret.substring(FIXED_PREFIX.length());
+
+				String[] srcDirectories = srcPrefix.split(FindFileUtils.COMMA_SPLITTER);
+
+				for (String src : srcDirectories) {
+					list.add(src + "/" + ret.substring(FIXED_PREFIX.length()));
+				}
+
 				continue;
 			}
 
@@ -44,9 +53,11 @@ public abstract class FilePathAbstractFilter implements FilePathFilter {
 					ret = "**/" + ret;
 				}
 			}
-			
-			this.filters[i] = ret;
+
+			list.add(ret);
 		}
+
+		this.filters = list.toArray(new String[0]);
 	}
 	
 	private void debuggingFilters() {

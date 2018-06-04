@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.samsungsds.analyst.code.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.sonar.core.util.stream.MoreCollectors;
@@ -36,10 +37,6 @@ import com.samsungsds.analyst.code.sonar.SonarJavaResult;
 import com.samsungsds.analyst.code.sonar.WebResourceResult;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtResult;
-import com.samsungsds.analyst.code.util.CSVFileCollectionList;
-import com.samsungsds.analyst.code.util.CSVFileResult;
-import com.samsungsds.analyst.code.util.IOAndFileUtils;
-import com.samsungsds.analyst.code.util.PackageUtils;
 
 public class MeasuredResult implements Serializable {
 	private static final Logger LOGGER = LogManager.getLogger(MeasuredResult.class);
@@ -537,13 +534,26 @@ public class MeasuredResult implements Serializable {
 	}
 
 	public boolean haveToSkip(String path, boolean withSrcPrefix, boolean withoutFilename) {
+		String[] pathArray = null;
+
 		if (withSrcPrefix) {
-			path = source + (path.startsWith("/") ? path : "/" + path);
+			String[] sourceDirectories = source.split(FindFileUtils.COMMA_SPLITTER);
+
+			pathArray = new String[sourceDirectories.length];
+
+			for (int i = 0; i < sourceDirectories.length; i++) {
+				pathArray[i] = sourceDirectories[i] + (path.startsWith("/") ? path : "/" + path);
+			}
+		} else {
+			pathArray = new String[1];
+			pathArray[0] = path;
 		}
 
-		for (FilePathFilter filter : filePathFilterList) {
-			if (!filter.matched(path, withoutFilename)) {
-				return true;
+		for (String pathDirectory : pathArray) {
+			for (FilePathFilter filter : filePathFilterList) {
+				if (!filter.matched(pathDirectory, withoutFilename)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -721,23 +731,29 @@ public class MeasuredResult implements Serializable {
 		if (packageList.size() == 0) {
 			LOGGER.info("Get target packages");
 
-			List<String> allPackages = PackageUtils.getProjectPackages(projectDirectory + File.separator + binary);
+			String[] binaryDirectories = binary.split(FindFileUtils.COMMA_SPLITTER);
 
-			for (String sourcePackage : allPackages) {
-				if (haveToSkip(sourcePackage.replaceAll("\\.", "/") + "/*.java", true, true)) {
-					continue;
-				}
-				packageList.add(sourcePackage);
-			}
+			for (String dir : binaryDirectories) {
+				List<String> allPackages = PackageUtils.getProjectPackages(projectDirectory + File.separator + dir);
 
-			/*
-			for (ComplexityResult result : allMethodList) {
-				if (packageList.contains(result.getPackageName())) {
-					continue;
+				for (String sourcePackage : allPackages) {
+					if (haveToSkip(sourcePackage.replaceAll("\\.", "/") + "/*.java", true, true)) {
+						continue;
+					}
+					if (!packageList.contains(sourcePackage)) {
+						packageList.add(sourcePackage);
+					}
 				}
-				packageList.add(result.getPackageName());
+
+				/*
+				for (ComplexityResult result : allMethodList) {
+					if (packageList.contains(result.getPackageName())) {
+						continue;
+					}
+					packageList.add(result.getPackageName());
+				}
+				*/
 			}
-			*/
 
 		}
 
@@ -1025,6 +1041,7 @@ public class MeasuredResult implements Serializable {
 
 	public void setIncludeFilters(String includes) {
 		assert source != null : "source have to be set in advance.";
+
 		FilePathIncludeFilter filter = new FilePathIncludeFilter(includes, source);
 
 		filePathFilterList.add(filter);

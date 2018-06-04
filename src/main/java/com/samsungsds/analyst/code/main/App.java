@@ -56,9 +56,9 @@ public class App {
 	private String parsingErrorMessage = "";
 
 	public void process(CliParser cli) {
-		if (cli.parse()) {
+		SystemInfo.print();
 
-			SystemInfo.print();
+		if (cli.parse()) {
 
 			if (cli.getMode() == MeasurementMode.DefaultMode) {
 				LOGGER.info("Mode : {}", cli.getIndividualMode());
@@ -235,7 +235,7 @@ public class App {
 		if (cli.getIndividualMode().isWebResources()) {
 			if (src.equals("")) {
 				src = cli.getWebapp();
-			} else {
+			} else if (!"".equals(cli.getWebapp())) {
 				src += "," + cli.getWebapp();
 			}
 		}
@@ -298,7 +298,10 @@ public class App {
 			int fileCount = 0;
 
 			if (!cli.getSrc().equals("")) {
-				fileCount += IOAndFileUtils.getJavaFileCount(Paths.get(cli.getProjectBaseDir(), cli.getSrc()));
+				String[] srcDirectories = cli.getSrc().split(FindFileUtils.COMMA_SPLITTER);
+				for (String srcDir : srcDirectories) {
+					fileCount += IOAndFileUtils.getJavaFileCount(Paths.get(cli.getProjectBaseDir(), srcDir));
+				}
 			}
 			if (cli.getIndividualMode().isJavascript()) {
 				fileCount += IOAndFileUtils.getFileCountWithExt(Paths.get(cli.getProjectBaseDir(), cli.getWebapp()), "js");
@@ -332,7 +335,7 @@ public class App {
 	private void runComplexity(CliParser cli) {
 		ComplexityAnalysis pmdComplexity = new ComplexityAnalysisLauncher();
 
-		String dir = cli.getProjectBaseDir() + File.separator + cli.getSrc();
+		String dir = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getSrc());
 		if (cli.getMode() == MeasurementMode.ComplexityMode) {
 			try {
 				dir = FindFileUtils.getDirectoryWithFilenamePattern(dir, cli.getClassForCCMeasurement());
@@ -345,7 +348,7 @@ public class App {
 			if ("".equals(cli.getIncludes())) {
 				pmdComplexity.addOption("-dir", dir);
 			} else {
-				SourceFileHandler pathHandler = new SourceFileHandler(cli.getProjectBaseDir(), cli.getSrc());
+				SourceFileHandler pathHandler = new SourceFileHandler(cli.getProjectBaseDir(), cli.getSrc().split(FindFileUtils.COMMA_SPLITTER));
 
 				pmdComplexity.addOption("-dir", pathHandler.getPathStringWithInclude(cli.getIncludes()));
 			}
@@ -369,10 +372,12 @@ public class App {
 	private void runPmd(CliParser cli) {
 		PmdAnalysis pmdViolation = new PmdAnalysisLauncher();
 
+		String dir = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getSrc());
+
 		if ("".equals(cli.getIncludes())) {
-			pmdViolation.addOption("-dir", cli.getProjectBaseDir() + File.separator + cli.getSrc());
+			pmdViolation.addOption("-dir", dir);
 		} else {
-			SourceFileHandler pathHandler = new SourceFileHandler(cli.getProjectBaseDir(), cli.getSrc());
+			SourceFileHandler pathHandler = new SourceFileHandler(cli.getProjectBaseDir(), cli.getSrc().split(FindFileUtils.COMMA_SPLITTER));
 
 			pmdViolation.addOption("-dir", pathHandler.getPathStringWithInclude(cli.getIncludes()));
 		}
@@ -401,23 +406,38 @@ public class App {
 	}
 
 	private void runFindBugs(CliParser cli) {
-		FindBugsAnalysis findBugsViolation = new FindBugsAnalysisLauncher();
-
-		findBugsViolation.setTarget(cli.getProjectBaseDir() + File.separator + cli.getBinary());
-
 		if (cli.isDebug()) {
 			System.setProperty("findbugs.debug", "true");
 		}
 
-		if (cli.getRuleSetFileForFindBugs() != null && !cli.getRuleSetFileForFindBugs().equals("")) {
-			findBugsViolation.addOption("-include", cli.getRuleSetFileForFindBugs());
+		String[] binaryDirectories = FindFileUtils.getFullDirectories(cli.getProjectBaseDir(), cli.getBinary());
 
-			MeasuredResult.getInstance(cli.getInstanceKey()).setFindBugsRules(XmlElementUtil.getElementCount(cli.getRuleSetFileForFindBugs(), "Match"));
-		} else {
-			MeasuredResult.getInstance(cli.getInstanceKey()).setFindBugsRules(Version.FINDBUGS_DEFAULT_RULES);
+		boolean isFirstRun = true;
+
+		for (String binary : binaryDirectories) {
+
+			LOGGER.info("FindBugs Target : {}", binary);
+
+			FindBugsAnalysis findBugsViolation = new FindBugsAnalysisLauncher();
+
+			findBugsViolation.setTarget(binary);
+
+			if (cli.getRuleSetFileForFindBugs() != null && !cli.getRuleSetFileForFindBugs().equals("")) {
+				findBugsViolation.addOption("-include", cli.getRuleSetFileForFindBugs());
+
+				if (isFirstRun) {
+					MeasuredResult.getInstance(cli.getInstanceKey()).setFindBugsRules(XmlElementUtil.getElementCount(cli.getRuleSetFileForFindBugs(), "Match"));
+				}
+			} else {
+				if (isFirstRun) {
+					MeasuredResult.getInstance(cli.getInstanceKey()).setFindBugsRules(Version.FINDBUGS_DEFAULT_RULES);
+				}
+			}
+
+			findBugsViolation.run(cli.getInstanceKey());
+
+			isFirstRun = false;
 		}
-
-		findBugsViolation.run(cli.getInstanceKey());
 
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.FINDBUGS_COMPLETE));
@@ -425,15 +445,19 @@ public class App {
 	}
 
 	private void runFindSecBugs(CliParser cli) {
-		FindBugsAnalysis findBugsViolation = new FindSecBugsAnalysisLauncher();
-
-		findBugsViolation.setTarget(cli.getProjectBaseDir() + File.separator + cli.getBinary());
-
 		if (cli.isDebug()) {
 			System.setProperty("findbugs.debug", "true");
 		}
 
-		findBugsViolation.run(cli.getInstanceKey());
+		String[] binaryDirectories = FindFileUtils.getFullDirectories(cli.getProjectBaseDir(), cli.getBinary());
+
+		for (String binary : binaryDirectories) {
+			FindBugsAnalysis findBugsViolation = new FindSecBugsAnalysisLauncher();
+
+			findBugsViolation.setTarget(binary);
+
+			findBugsViolation.run(cli.getInstanceKey());
+		}
 
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.FINDSECBUGS_COMPLETE));
@@ -443,9 +467,15 @@ public class App {
 	private void runJDepend(CliParser cli) {
 		JDependAnalysis jdepend = new JDependAnalysisLauncher();
 
-		jdepend.setTarget(cli.getProjectBaseDir() + File.separator + cli.getBinary());
+		String dirs = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getBinary());
 
-		List<String> packageList = PackageUtils.getProjectPackages(cli.getProjectBaseDir() + File.separator + cli.getBinary());
+		jdepend.setTarget(dirs);
+
+		List<String> packageList = new ArrayList<>();
+
+		for (String dir : FindFileUtils.getFullDirectories(cli.getProjectBaseDir(), cli.getBinary())) {
+			packageList.addAll(PackageUtils.getProjectPackages(dir));
+		}
 
 		LOGGER.debug("Package List");
 		for (String packageName : MeasuredResult.getInstance(cli.getInstanceKey()).getPackageList()) {

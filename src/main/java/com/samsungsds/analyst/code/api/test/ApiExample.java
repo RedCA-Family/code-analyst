@@ -33,8 +33,8 @@ public class ApiExample {
 			ex.printStackTrace();
 			return;
 		}
-		argument.setSrc("src/main/java");
-		argument.setBinary("target/classes");
+		argument.setSrc("src/main/java,src/test/java");
+		argument.setBinary("target/classes,target/test-classes");
 
 		argument.setEncoding("UTF-8"); // default
 		argument.setJavaVersion("1.8"); // default
@@ -89,6 +89,8 @@ public class ApiExample {
 
 		// addFileExactly 테스트
 		targetFile.addFileExactly("com.samsungsds.analyst.code.test", "Test.java");
+		targetFile.addFileExactly("com.samsungsds.analyst.code.api.impl", "CodeAnalystImpl.java");
+		targetFile.addFileExactly("com.samsungsds.analyst.code.pmd", "ComplexityAnalysisLauncherTest.java");
 
 		argument.setSaveCatalog(true);
 

@@ -26,7 +26,7 @@ public class Version {
 	// 2.0.1 : Unused 오류 수정 및 Progress Event 개선
 	// 2.1.0 : Top 10 Issue 구분(Bug, ...) 추가, SonarJava Issue filter(API 포함), 속도 개선(PMD 점검 대상 제한 등),
 	//         점검 Rule 수 표시, 점검된 대상 파일 list 표시
-	// 2.2.0 : mode 옵션에 제외("-") 지정 기능, Web Resource 점검 분리
+	// 2.2.0 : mode 옵션에 제외("-") 지정 기능, Web Resource 점검 분리, src/binary multi 지정
 	//--------------------------------------------------
 	public static final String CODE_ANALYST = "2.2.0";
 	public static final String DOCUMENT_VERSION = "2.2";

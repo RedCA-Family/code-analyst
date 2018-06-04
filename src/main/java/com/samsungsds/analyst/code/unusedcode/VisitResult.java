@@ -28,72 +28,95 @@ public class VisitResult {
 	public boolean skipThisClass() {
 		return skipThisClass;
 	}
+
 	public void setSkipThisClass(boolean skipThisClass) {
 		this.skipThisClass = skipThisClass;
 	}
+
 	public Set<CAClass> getClasses() {
 		return classes;
 	}
+
 	public void setClasses(Set<CAClass> classes) {
 		this.classes = classes;
 	}
+
 	public Set<CAClass> getUsedClasses() {
 		return usedClasses;
 	}
+
 	public void setUsedClasses(Set<CAClass> usedClasses) {
 		this.usedClasses = usedClasses;
 	}
+
 	public Set<CAField> getFields() {
 		return fields;
 	}
+
 	public void setFields(Set<CAField> fields) {
 		this.fields = fields;
 	}
+
 	public Set<CAField> getUsedFields() {
 		return usedFields;
 	}
+
 	public void setUsedFields(Set<CAField> usedFields) {
 		this.usedFields = usedFields;
 	}
+
 	public Set<CAMethod> getMethods() {
 		return methods;
 	}
+
 	public void setMethods(Set<CAMethod> methods) {
 		this.methods = methods;
 	}
+
 	public Set<CAMethod> getUsedMethods() {
 		return usedMethods;
 	}
+
 	public void setUsedMethods(Set<CAMethod> usedMethods) {
 		this.usedMethods = usedMethods;
 	}
+
 	public Set<CAConstant> getContants() {
 		return contants;
 	}
+
 	public void setContants(Set<CAConstant> contants) {
 		this.contants = contants;
 	}
+
 	public Set<CAConstant> getUsedConstants() {
 		return usedConstants;
 	}
+
 	public void setUsedConstants(Set<CAConstant> usedConstants) {
 		this.usedConstants = usedConstants;
 	}
+
 	public Set<CAMethod> getTempMethods() {
 		return tempMethods;
 	}
+
 	public void setTempMethods(Set<CAMethod> tempMethods) {
 		this.tempMethods = tempMethods;
 	}
+
 	public Set<CAField> getTempFields() {
 		return tempFields;
 	}
+
 	public void setTempFields(Set<CAField> tempFields) {
 		this.tempFields = tempFields;
 	}
+
 	public Set<CAConstant> getTempConstants() {
 		return tempConstants;
 	}
+
 	public void setTempConstants(Set<CAConstant> tempConstants) {
 		this.tempConstants = tempConstants;
 	}
