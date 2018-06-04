@@ -26,13 +26,13 @@ public class Version {
 	// 2.0.1 : Unused 오류 수정 및 Progress Event 개선
 	// 2.1.0 : Top 10 Issue 구분(Bug, ...) 추가, SonarJava Issue filter(API 포함), 속도 개선(PMD 점검 대상 제한 등),
 	//         점검 Rule 수 표시, 점검된 대상 파일 list 표시
-	// 2.2.0 : mode 옵션에 제외("-") 지정 기능, Web Resource 점검 분리, src/binary multi 지정
+	// 2.2.0 : mode 옵션에 제외("-") 지정 기능, Web Resource 점검 분리, src/binary multi 지정, SonarJS SDS 표준 반영, SonarQube (6.7.1 -> 6.7.4) 변경
 	//--------------------------------------------------
 	public static final String CODE_ANALYST = "2.2.0";
 	public static final String DOCUMENT_VERSION = "2.2";
 
 	public static final String SONAR_SCANNER = "2.10.0.1189";
-	public static final String SONAR_SERVER = "6.7.1";
+	public static final String SONAR_SERVER = "6.7.4";
 	public static final String PMD = "5.4.6";
 	public static final String FINDBUGS = "3.0.1";
 	public static final String FINDSECBUGS = "1.7.1";
@@ -47,7 +47,7 @@ public class Version {
 	public static final String FINDBUGS_RULESET = "214 ruleset (v3.0.1, SDS Std. Ruleset, '18.03)";
 	public static final String FINDSECBUGS_RULESET = "121 ruleset (v1.7.1)";
 	public static final String SONAR_JAVA_RULESET = "227 ruleset (v4.15, SDS Std. Ruleset, '18.03)";
-	public static final String SONAR_JS_RULESET = "86 ruleset (v4.1)";
+	public static final String SONAR_JS_RULESET = "109 ruleset (v4.1, SDS Std. Ruleset, '18.05)";
 	public static final String SONAR_CSS_RULESET = "CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)";
 	public static final String SONAR_WEB_RULESET = "16 ruleset (v2.5)";
 

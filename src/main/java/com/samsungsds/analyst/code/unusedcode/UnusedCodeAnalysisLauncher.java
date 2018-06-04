@@ -113,7 +113,6 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 							unit.accept(new CodeAnalysisSourceVisitor(visitResult), null);
 						}
 					} catch (IOException e) {
-						e.printStackTrace();
 						LOGGER.info("SKIP FileNotFound: {}", e.getMessage());
 						visitResult.getFields().removeAll(visitResult.getTempFields());
 						visitResult.getMethods().removeAll(visitResult.getTempMethods());
