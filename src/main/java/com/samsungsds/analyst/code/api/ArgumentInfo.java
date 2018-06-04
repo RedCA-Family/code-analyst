@@ -139,4 +139,12 @@ public class ArgumentInfo {
 	public void setWebapp(String webapp) {
 		this.webapp = webapp;
 	}
+
+	public void setSrc(String[] srcDirectories) {
+		this.src = String.join(",", srcDirectories);
+	}
+
+	public void setBinary(String[] binaryDirectories) {
+		this.binary = String.join(",", binaryDirectories);
+	}
 }
