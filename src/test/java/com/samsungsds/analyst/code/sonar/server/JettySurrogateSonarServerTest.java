@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -35,7 +36,7 @@ public class JettySurrogateSonarServerTest {
 				"/api/metrics/search",
 				"/deploy/plugins/findsecbugs-plugin-1.7.1.jar",
 				"/api/qualityprofiles/search.protobuf",
-				"/api/rules/search.protobuf?qprofile=AWEgcpHElIthtMf8fR6x",
+				"/api/rules/search.protobuf?qprofile=AWPJpVp5CQBOyaqowaql",
 				"/api/rules/list.protobuf",
 				"/batch/project.protobuf"
 		}; 
@@ -64,6 +65,13 @@ public class JettySurrogateSonarServerTest {
 		URL url = new URL(PREFIX+port+ path);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
+
+		String body = "projectKey=local:test";
+		conn.setDoOutput(true);
+		OutputStream os = conn.getOutputStream();
+		os.write(body.getBytes("utf-8"));
+		os.flush();
+		os.close();
 		
 		assertThat(conn.getResponseCode(), is(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
 	}
