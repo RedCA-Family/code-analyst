@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.samsungsds.analyst.code.sonar.filter.SonarIssueFilter;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -249,6 +251,10 @@ public class App {
 		sonar.addProperty(ScannerProperties.HOST_URL, "http://localhost:" + port);
 
 		sonar.addProperty(InternalProperties.SCANNER_APP, "SonarQubeScanner");
+
+		Gson gson = new Gson();
+		String json = gson.toJson(cli.getIndividualMode());
+		sonar.addProperty(InternalProperties.SCANNER_APP_VERSION, "mode=" + json);
 
 		sonar.addProperty(ScanProperties.PROJECT_SOURCE_ENCODING, cli.getEncoding());
 

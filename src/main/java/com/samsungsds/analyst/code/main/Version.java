@@ -27,7 +27,7 @@ public class Version {
 	// 2.1.0 : Top 10 Issue 구분(Bug, ...) 추가, SonarJava Issue filter(API 포함), 속도 개선(PMD 점검 대상 제한 등),
 	//         점검 Rule 수 표시, 점검된 대상 파일 list 표시
 	// 2.2.0 : mode 옵션에 제외("-") 지정 기능, Web Resource 점검 분리, src/binary multi 지정, SonarJS SDS 표준 반영, SonarQube (6.7.1 -> 6.7.4) 변경,
-	//         전체 분석 시간 기록
+	//         전체 분석 시간 기록, SonarQube plugin 다운로드 세분화 (속도 개선)
 	//--------------------------------------------------
 	public static final String CODE_ANALYST = "2.2.0";
 	public static final String DOCUMENT_VERSION = "2.2";

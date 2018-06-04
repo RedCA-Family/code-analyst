@@ -21,6 +21,10 @@ public class IOAndFileUtils {
 		}
 		return -1;
 	}
+
+	public static void writeString(OutputStream output, String str) throws IOException {
+		output.write(str.getBytes("UTF-8"));
+	}
 	
 	public static long write(OutputStream output, String resourcePath) throws IOException {
 		URL url = IOAndFileUtils.class.getResource(resourcePath);
