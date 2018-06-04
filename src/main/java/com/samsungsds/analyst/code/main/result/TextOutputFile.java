@@ -49,6 +49,8 @@ public class TextOutputFile extends AbstractOutputFile {
 		writer.println("Encoding = " + cli.getEncoding());
 		writer.println("JavaVersion = " + cli.getJavaVersion());
 		writer.println("Datetime = " + new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date()));
+		writer.println("ElapsedAnalysisTime = " + result.getElapsedAnalysisTime());
+		writer.println("; Elapsed Analysis Time Unit : Minutes ");
 		if (cli.getRuleSetFileForPMD() != null && !cli.getRuleSetFileForPMD().equals("")) {
 			writer.println("PMD = " + cli.getRuleSetFileForPMD());
 		}

@@ -3,15 +3,11 @@ package com.samsungsds.analyst.code.main;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import com.samsungsds.analyst.code.util.*;
 import org.apache.logging.log4j.LogManager;
@@ -59,6 +55,8 @@ public class MeasuredResult implements Serializable {
 	private String javaVersion;
 	@Expose
 	private String dateTime;
+	@Expose
+    private int elapsedAnalysisTime;
 	@Expose
 	private String pmdRuleSetFile;
 	@Expose
@@ -345,7 +343,7 @@ public class MeasuredResult implements Serializable {
 		binary = cli.getBinary();
 		encoding = cli.getEncoding();
 		javaVersion = cli.getJavaVersion();
-		dateTime = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date());
+		dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		if (cli.getRuleSetFileForPMD() != null && !cli.getRuleSetFileForPMD().equals("")) {
 			pmdRuleSetFile = cli.getRuleSetFileForPMD();
 		} else {
@@ -1105,7 +1103,11 @@ public class MeasuredResult implements Serializable {
 		return seperatedOutput;
 	}
 
-	public void clearSeperatedList() {
+    public int getElapsedAnalysisTime() {
+        return elapsedAnalysisTime;
+    }
+
+    public void clearSeperatedList() {
 		if (detailAnalysis) {
 			duplicationList.clear();
 			complexityListOver20.clear();
@@ -1153,6 +1155,24 @@ public class MeasuredResult implements Serializable {
 	public TechnicalDebtResult getTechnicalDebt() {
 		return technicalDebtResult;
 	}
+
+    public void calculateElapsedTime() {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        try {
+            Date startDate = df.parse(dateTime);
+
+            Date endDate = new Date();
+
+            long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());
+            long diff = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+            elapsedAnalysisTime = (int)diff + 1;
+
+        } catch (ParseException ex) {
+            throw new IllegalStateException("Date format error", ex);
+        }
+    }
 
 	public void clear() {
 		directories = 0;

@@ -537,6 +537,8 @@ public class App {
 				outputFile = new File(cli.getOutput());
 			}
 
+            MeasuredResult.getInstance(cli.getInstanceKey()).calculateElapsedTime();
+
 			ResultProcessor.saveResultOutputFile(outputFile, cli, MeasuredResult.getInstance(cli.getInstanceKey()));
 		}
 
