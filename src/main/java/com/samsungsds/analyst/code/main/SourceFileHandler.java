@@ -95,6 +95,9 @@ public class SourceFileHandler {
     }
 
     private void appendStringWithComma(StringBuilder builder, final String str) {
+        if (str == null || str.trim().equals("")) {
+            return;
+        }
         if (builder.length() != 0) {
             builder.append(",");
         }
