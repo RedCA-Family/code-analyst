@@ -5,9 +5,11 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
-import com.samsungsds.analyst.code.util.FindFileUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,10 +46,9 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 
 	@Override
 	public void run(String instanceKey) {
+		
 		try {
-			for (String dir : directory.split(FindFileUtils.COMMA_SPLITTER)) {
-				analyzer.addDirectory(dir);
-			}
+			analyzer.addDirectory(directory);
 		} catch (IOException ioe) {
 			throw new IllegalArgumentException(ioe);
 		}
@@ -75,6 +76,7 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 
 	public void checkResult(ArrayList<JavaPackage> packageList, ResultIncludeFilter filter, String instanceKey) {
 		List<JavaPackage> list = new ArrayList<>();
+		List<List<JavaPackage>> cycleList = new ArrayList<>();
 		
 		LOGGER.info("Cyclic Dependencies:");
 		for (JavaPackage jPackage : packageList) {
@@ -93,47 +95,82 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 	        }
 
 	        JavaPackage cyclePackage = (JavaPackage) list.get(list.size() - 1);
-	        String cyclePackageName = cyclePackage.getName();
-
-	        int i = 0;
-	        
-			StringBuilder print = new StringBuilder();
 			
-			int countOfProjectPackages = 0;
+			int i = 0;
+			
+			boolean isInCycle = false;
+			List<JavaPackage> currentCycle = new LinkedList<>();
+			
 	        for (JavaPackage pkg : list) {
 	            i++;
-
-	            if (i == 1) {
-	                print.append(pkg.getName());
-	                LOGGER.info("{}", pkg.getName());
-	                LOGGER.info("{}|", tab());
-	            } else {
-	                if (pkg.getName().equals(cyclePackageName)) {
-	                	print.append(" |-> " + pkg.getName());
-	                	if (filter.include(pkg.getName())) {
-	                		LOGGER.info("{}|-> {}", tab(), pkg.getName());
-	                		countOfProjectPackages++;
-	                	} else {
-	                		LOGGER.info("{}|-> {} (skip)", tab(), pkg.getName());
-	                	}
-	                } else {
-	                	print.append(" | " + pkg.getName());
-	                	if (filter.include(pkg.getName())) {
-	                		LOGGER.info("{}|   {}", tab(), pkg.getName());
-	                	} else {
-	                		LOGGER.info("{}|   {} (skip)", tab(), pkg.getName());
-	                	}
-	                }
+	            
+	            if (pkg == cyclePackage) {
+	            	isInCycle = true;
+	            }
+	            
+	            if (isInCycle == true && i < list.size()) {
+	            	currentCycle.add(pkg);
 	            }
 	        }
 	        
-	        if (countOfProjectPackages > 0) { 
-	        	MeasuredResult.getInstance(instanceKey).addAcyclicDependency(print.toString());
+	     
+	        JavaPackage headPackage = Collections.min(currentCycle, Comparator.comparing(JavaPackage::getName));
+	        
+	        while(currentCycle.get(0) != headPackage) {
+	        	Collections.rotate(currentCycle, 1);
+	        }
+
+	        boolean isDuplicatedCycle = false;
+	      
+	        for(List<JavaPackage> cycle : cycleList) {      	
+	        	if(CollectionUtils.isEqualCollection(currentCycle, cycle))
+		        {
+	        		isDuplicatedCycle = true;
+	        		break;
+		        }
+	        }
+	        
+	        if(isDuplicatedCycle == false) {
+	        	cycleList.add(currentCycle);
 	        }
 	        
 	        list.clear();
         }
 		
+	    if (cycleList.size() > 0) {
+	    	
+	        for (List<JavaPackage> cycle : cycleList) {
+	        	
+	        	StringBuilder print = new StringBuilder();
+	        	
+	        	int i = 0;
+	        	for (JavaPackage pkg : cycle) {
+	        		if(i++ == 0) {
+	        			print.append(pkg.getName());
+		        		LOGGER.info("{}", pkg.getName());
+		                LOGGER.info("{}|", tab());
+	        		}
+	        		else {
+	        			print.append(" | " + pkg.getName());
+	                	if (filter.include(pkg.getName())) {
+	                		LOGGER.info("{}|   {}", tab(), pkg.getName());
+	                	} else {
+	                		LOGGER.info("{}|   {} (skip)", tab(), pkg.getName());
+	                	}
+	        		}
+	        	}
+	        	
+	        	print.append(" |-> " + cycle.get(0).getName());
+            	if (filter.include(cycle.get(0).getName())) {
+            		LOGGER.info("{}|-> {}", tab(), cycle.get(0).getName());
+            	} else {
+            		LOGGER.info("{}|-> {} (skip)", tab(), cycle.get(0).getName());
+            	}
+	        	 
+	        	MeasuredResult.getInstance(instanceKey).addAcyclicDependency(print.toString());
+	        }
+	    }
+	     
 		if (MeasuredResult.getInstance(instanceKey).isDetailAnalysis()) {
 			MeasuredResult.getInstance(instanceKey).setTopMartinMetrics(martinMetrics.getMartinMetricsList());
 		}
