@@ -120,6 +120,7 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		argument.setWebapp(webArgument.getWebapp());
 		argument.setDetailAnalysis(webArgument.isDetailAnalysis());
 		argument.setSaveCatalog(webArgument.isSaveCatalog());
+
 		return argument;
 	}
 
@@ -261,6 +262,8 @@ public class CodeAnalystImpl implements CodeAnalyst {
 			}
 			if (targetFile.isPackageExpression()) {
 				builder.append(file.replaceAll("\\.java", "").replaceAll("\\.", "/")).append(".java");
+			} else {
+				builder.append(file);
 			}
 		}
 		

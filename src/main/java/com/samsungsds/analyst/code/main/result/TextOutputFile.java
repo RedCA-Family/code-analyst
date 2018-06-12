@@ -164,6 +164,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println();
 		}
 		if (result.getIndividualMode().isWebResources()) {
+			writer.println("SonarJSRules = " + result.getSonarJSRules());
 			writer.println("WebResource = " + result.getWebResourceCountAll());
 			writer.println("WebResource1Priority = " + result.getWebResourceCount(1));
 			writer.println("WebResource2Priority = " + result.getWebResourceCount(2));

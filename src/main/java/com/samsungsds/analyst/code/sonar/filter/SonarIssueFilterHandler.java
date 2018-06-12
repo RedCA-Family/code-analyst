@@ -18,6 +18,8 @@ public class SonarIssueFilterHandler extends DefaultHandler {
     private Set<String> filters;
 
     private int excludedRules = 0;
+    private int excludedJavaRules = 0;
+    private int excludedJSRules = 0;
 
     public SonarIssueFilterHandler(Set<String> filters) {
         this.filters = filters;
@@ -41,10 +43,24 @@ public class SonarIssueFilterHandler extends DefaultHandler {
             LOGGER.info("Exclude Key : {}", keyValue);
             filters.add(keyValue);
             excludedRules++;
+
+            if (keyValue.startsWith("squid:") || keyValue.startsWith("common-java:")) {
+                excludedJavaRules++;
+            } else if (keyValue.startsWith("javascript:") || keyValue.startsWith("common-js:")) {
+                excludedJSRules++;
+            }
         }
     }
 
     public int getExcludedRules() {
         return excludedRules;
+    }
+
+    public int getExcludedJavaRules() {
+        return excludedJavaRules;
+    }
+
+    public int getExcludedJSRules() {
+        return excludedJSRules;
     }
 }

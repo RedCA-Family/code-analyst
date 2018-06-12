@@ -41,6 +41,8 @@ public class ApiWebExample {
 
         WebTargetFileInfo targetFile = new WebTargetFileInfo();
 
+        targetFile.addFile("js/test.js");
+
         File temp = new File(TEMP_DIRECTORY);
         if (!temp.exists()) {
             temp.mkdirs();

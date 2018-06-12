@@ -18,9 +18,11 @@ public abstract class FilePathAbstractFilter implements FilePathFilter {
 	private String[] filters;
 
 	private String srcPrefix;
+	private String webapp;
 
-	public FilePathAbstractFilter(String filterString, String srcPrefix) {
+	public FilePathAbstractFilter(String filterString, String srcPrefix, String webapp) {
 	    this.srcPrefix = srcPrefix;
+		this.webapp = webapp;
 
 		setNormalizedFilterString(filterString);
 		
@@ -28,19 +30,23 @@ public abstract class FilePathAbstractFilter implements FilePathFilter {
 	}
 	
 	public void setNormalizedFilterString(String filterString) {
-		String[] splittedFilters = filterString.split(FindFileUtils.COMMA_SPLITTER);
+		String[] splitFilters = filterString.split(FindFileUtils.COMMA_SPLITTER);
 
 		List<String> list = new ArrayList<>();
 
-		for (int i = 0; i < splittedFilters.length; i++) {
-			String ret = splittedFilters[i].replaceAll("\\\\", "/");
+		for (int i = 0; i < splitFilters.length; i++) {
+			String ret = splitFilters[i].replaceAll("\\\\", "/");
 
 			if (ret.startsWith(FIXED_PREFIX)) {
 
-				String[] srcDirectories = srcPrefix.split(FindFileUtils.COMMA_SPLITTER);
+				if (!srcPrefix.equals("")) {
+					String[] srcDirectories = srcPrefix.split(FindFileUtils.COMMA_SPLITTER);
 
-				for (String src : srcDirectories) {
-					list.add(src + "/" + ret.substring(FIXED_PREFIX.length()));
+					for (String src : srcDirectories) {
+						list.add(src + "/" + ret.substring(FIXED_PREFIX.length()));
+					}
+				} else if (!webapp.equals("")) {
+					list.add(webapp + "/" + ret.substring(FIXED_PREFIX.length()));
 				}
 
 				continue;

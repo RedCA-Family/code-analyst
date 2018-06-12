@@ -1,0 +1,3 @@
+<SonarIssueFilter>
+    <Exclude key="squid:S1118"/>
+</SonarIssueFilter>

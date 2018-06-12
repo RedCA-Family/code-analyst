@@ -294,9 +294,20 @@ public class App {
 			SonarIssueFilter filter = new SonarIssueFilter();
 
 			MeasuredResult.getInstance(cli.getInstanceKey()).setSonarIssueFilterSet(filter.parse(cli.getRuleSetFileForSonar()));
-			MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJavaRules(Version.SONAR_JAVA_DEFAULT_RULES - filter.getExcludedRules() );
+
+			if (cli.getIndividualMode().isSonarJava()) {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJavaRules(Version.SONAR_JAVA_DEFAULT_RULES - filter.getExcludedJavaRules());
+			}
+			if (cli.getIndividualMode().isJavascript()) {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJSRules(Version.SONAR_JS_DEFAULT_RULES - filter.getExcludedJSRules());
+			}
 		} else {
-			MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJavaRules(Version.SONAR_JAVA_DEFAULT_RULES);
+			if (cli.getIndividualMode().isSonarJava()) {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJavaRules(Version.SONAR_JAVA_DEFAULT_RULES);
+			}
+			if (cli.getIndividualMode().isJavascript()) {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJSRules(Version.SONAR_JS_DEFAULT_RULES);
+			}
 		}
 
 		SonarProgressEventChecker sonarProgressChecker = null;

@@ -5,8 +5,8 @@ import org.springframework.util.AntPathMatcher;
 public class FilePathIncludeFilter extends FilePathAbstractFilter {
 	private boolean printPathFilter = false;
 	
-	public FilePathIncludeFilter(String filterString, String srcPrefix) {
-		super(filterString, srcPrefix);
+	public FilePathIncludeFilter(String filterString, String srcPrefix, String webapp) {
+		super(filterString, srcPrefix, webapp);
 
 		if (System.getProperty(PRINT_PATH_FILTER_PROPERTY_KEY, "false").equalsIgnoreCase("true")) {
 			printPathFilter = true;

@@ -23,6 +23,10 @@ public class AnalysisMode {
 		return javascript || css || html;
 	}
 
+	public boolean isWebResourcesOnly() {
+		return !codeSize && javascript;
+	}
+
 	public boolean isCodeSize() {
 		return codeSize;
 	}

@@ -162,6 +162,8 @@ public class MeasuredResult implements Serializable {
 	private int pmdRules = 0;
 	@Expose
 	private int findBugsRules = 0;
+	@Expose
+	private int sonarJSRules = 0;
 
 	@Expose
 	private List<SonarJavaResult> sonarJavaList = null;
@@ -810,6 +812,14 @@ public class MeasuredResult implements Serializable {
 		this.findBugsRules = findBugsRules;
 	}
 
+	public int getSonarJSRules() {
+		return sonarJSRules;
+	}
+
+	public void setSonarJSRules(int sonarJSRules) {
+		this.sonarJSRules = sonarJSRules;
+	}
+
 	public String getWebapp() {
 		return webapp;
 	}
@@ -1040,7 +1050,7 @@ public class MeasuredResult implements Serializable {
 	public void setIncludeFilters(String includes) {
 		assert source != null : "source have to be set in advance.";
 
-		FilePathIncludeFilter filter = new FilePathIncludeFilter(includes, source);
+		FilePathIncludeFilter filter = new FilePathIncludeFilter(includes, source, webapp);
 
 		filePathFilterList.add(filter);
 
@@ -1204,6 +1214,7 @@ public class MeasuredResult implements Serializable {
 		sonarJavaRules = 0;
 		pmdRules = 0;
 		findBugsRules = 0;
+		sonarJSRules = 0;
 
 		for (int i = 0; i < pmdCount.length; i++) {
 			pmdCount[i] = 0;
