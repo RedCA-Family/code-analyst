@@ -142,8 +142,9 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 	        for (List<JavaPackage> cycle : cycleList) {
 	        	
 	        	StringBuilder print = new StringBuilder();
-	        	
+	        	boolean isSkipedCycle = false;
 	        	int i = 0;
+	        	
 	        	for (JavaPackage pkg : cycle) {
 	        		if(i++ == 0) {
 	        			print.append(pkg.getName());
@@ -156,6 +157,7 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 	                		LOGGER.info("{}|   {}", tab(), pkg.getName());
 	                	} else {
 	                		LOGGER.info("{}|   {} (skip)", tab(), pkg.getName());
+	                		isSkipedCycle = true;
 	                	}
 	        		}
 	        	}
@@ -165,9 +167,12 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
             		LOGGER.info("{}|-> {}", tab(), cycle.get(0).getName());
             	} else {
             		LOGGER.info("{}|-> {} (skip)", tab(), cycle.get(0).getName());
+            		isSkipedCycle = true;
             	}
 	        	 
-	        	MeasuredResult.getInstance(instanceKey).addAcyclicDependency(print.toString());
+            	if(!isSkipedCycle) {
+            		MeasuredResult.getInstance(instanceKey).addAcyclicDependency(print.toString());
+            	}
 	        }
 	    }
 	     
