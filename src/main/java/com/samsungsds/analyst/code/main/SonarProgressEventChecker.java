@@ -24,7 +24,9 @@ public class SonarProgressEventChecker implements Runnable {
     private AtomicBoolean codeSizeCompleted = new AtomicBoolean(false);
     private AtomicBoolean duplicationCompleted = new AtomicBoolean(false);
     private AtomicBoolean sonarJavaCompleted = new AtomicBoolean(false);
-    private AtomicBoolean webResourceCompleted = new AtomicBoolean(false);
+    private AtomicBoolean javascriptCompleted = new AtomicBoolean(false);
+    private AtomicBoolean cssCompleted = new AtomicBoolean(false);
+    private AtomicBoolean htmlCompleted = new AtomicBoolean(false);
 
     public SonarProgressEventChecker(IndividualMode mode, App app, int targetFiles) {
         this(mode, app);
@@ -50,8 +52,16 @@ public class SonarProgressEventChecker implements Runnable {
             sonarJavaCompleted.set(true);
         }
 
-        if (!mode.isWebResource()) {
-            webResourceCompleted.set(true);
+        if (!mode.isJavascript()) {
+            javascriptCompleted.set(true);
+        }
+
+        if (!mode.isCss()) {
+            cssCompleted.set(true);
+        }
+
+        if (!mode.isHtml()) {
+            htmlCompleted.set(true);
         }
 
         LOGGER.debug("Sonar Progress Event Start ... (interval : {}ms)", intervalMillisecond);
@@ -88,10 +98,24 @@ public class SonarProgressEventChecker implements Runnable {
             }
         }
 
-        synchronized(webResourceCompleted) {
-            if (!webResourceCompleted.get()) {
-                webResourceCompleted.set(true);
-                app.notifyObservers(ProgressEvent.WEBRESOURCE_COMPLETE);
+        synchronized(javascriptCompleted) {
+            if (!javascriptCompleted.get()) {
+                javascriptCompleted.set(true);
+                app.notifyObservers(ProgressEvent.JAVASCRIPT_COMPLETE);
+            }
+        }
+
+        synchronized(cssCompleted) {
+            if (!cssCompleted.get()) {
+                cssCompleted.set(true);
+                app.notifyObservers(ProgressEvent.CSS_COMPLETE);
+            }
+        }
+
+        synchronized(htmlCompleted) {
+            if (!htmlCompleted.get()) {
+                htmlCompleted.set(true);
+                app.notifyObservers(ProgressEvent.HTML_COMPLETE);
             }
         }
     }
@@ -121,7 +145,7 @@ public class SonarProgressEventChecker implements Runnable {
                 Thread.currentThread().interrupt();
                 LOGGER.debug("Thread was interrupted...");
             }
-            LOGGER.debug("Thread Process Event : {}, {}, {}, {}", codeSizeCompleted, duplicationCompleted, sonarJavaCompleted, webResourceCompleted);
+            LOGGER.debug("Thread Process Event : {}, {}, {}, {}, {}, {}", codeSizeCompleted, duplicationCompleted, sonarJavaCompleted, javascriptCompleted, cssCompleted, htmlCompleted);
             intervalMillisecond *= increaseRate;
             processEvent();
         }
@@ -156,10 +180,19 @@ public class SonarProgressEventChecker implements Runnable {
             }
         }
 
-        synchronized(webResourceCompleted) {
-            if (!webResourceCompleted.get()) {
-                webResourceCompleted.set(true);
-                app.notifyObservers(ProgressEvent.WEBRESOURCE_COMPLETE);
+        synchronized(javascriptCompleted) {
+            if (!javascriptCompleted.get()) {
+                javascriptCompleted.set(true);
+                app.notifyObservers(ProgressEvent.JAVASCRIPT_COMPLETE);
+
+                return;
+            }
+        }
+
+        synchronized(cssCompleted) {
+            if (!cssCompleted.get()) {
+                cssCompleted.set(true);
+                app.notifyObservers(ProgressEvent.CSS_COMPLETE);
 
                 return;
             }

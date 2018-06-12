@@ -33,43 +33,41 @@ public class QualityProfilesServlet extends HttpServlet {
 		String resourceName = null;
 		
 		if (url.equals("/api/qualityprofiles/search.protobuf")) {
+			// URL 호출 : /batch/project.protobuf?key=local%3Acom.samsungsds.analyst.code.main.App
+
 			resourceName = "/statics/search.protobuf";
 		} else if (url.equals("/api/rules/search.protobuf")) {
-			// URL ex : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWHam0EHkasiS3G9MIkQ&p=1&ps=500
+			// URL 호출
+			// JavaScript : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJparXCQBOyaqowaxt&p=1&ps=500
+			// CSS        : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJooCyCQBOyaqowaiw&p=1&ps=500
+			// Java       : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJpVp5CQBOyaqowaql&p=1&ps=500
+			// Less       : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJoogvCQBOyaqowapc&p=1&ps=500
+			// SCSS       : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJooTrCQBOyaqowal7&p=1&ps=500
+			// Web        : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJooQ2CQBOyaqowakX&p=1&ps=500
 
 			if (!queryString.contains("&p=1&")) {
 				LOGGER.error("'p' parameter error : {}", queryString);
 				throw new IllegalArgumentException("Request URL parameter error ('p' isn't 1");
 			}
 
-			if (queryString.contains("qprofile=AWEgcpHElIthtMf8fR6x")) {
-				resourceName = "/statics/AWEgcpHElIthtMf8fR6x.protobuf";
-			} else if (queryString.contains("qprofile=AWEmUh5aAmOaUaoeB5Tf")) {
-				resourceName = "/statics/AWEmUh5aAmOaUaoeB5Tf.protobuf";
-			} else if (queryString.contains("qprofile=AWEgcpZ4lIthtMf8fSH3")) {
-				resourceName = "/statics/AWEgcpZ4lIthtMf8fSH3.protobuf";
-			} else if (queryString.contains("qprofile=AWEgcpWvlIthtMf8fSG4")) {
-				resourceName = "/statics/AWEgcpWvlIthtMf8fSG4.protobuf";
-			} else if (queryString.contains("qprofile=AWEgcpjplIthtMf8fSNd")) {
-				resourceName = "/statics/AWEgcpjplIthtMf8fSNd.protobuf";
-			} else if (queryString.contains("qprofile=AWEgcpnxlIthtMf8fSPc")) {
-				resourceName = "/statics/AWEgcpnxlIthtMf8fSPc.protobuf";
-			} else if (queryString.contains("qprofile=AWEgcpyRlIthtMf8fSSN")) {
-				resourceName = "/statics/AWEgcpyRlIthtMf8fSSN.protobuf";
-			} else if (queryString.contains("qprofile=AWEgcp25lIthtMf8fSTR")) {
-				resourceName = "/statics/AWEgcp25lIthtMf8fSTR.protobuf";
-			} else if (queryString.contains("qprofile=AWGIMrVIyNk_vPtwVsb_")) {
-				resourceName = "/statics/AWGIMrVIyNk_vPtwVsb_.protobuf";
-			} else if (queryString.contains("qprofile=AWGIMrq3yNk_vPtwVsea")) {
-				resourceName = "/statics/AWGIMrq3yNk_vPtwVsea.protobuf";
-			} else if (queryString.contains("qprofile=AWGIMr_nyNk_vPtwVsg1")) {
-				resourceName = "/statics/AWGIMr_nyNk_vPtwVsg1.protobuf";
-			} else if (queryString.contains("qprofile=AWHam0EHkasiS3G9MIkQ")) {
-				resourceName = "/statics/AWHam0EHkasiS3G9MIkQ.protobuf";
+			if (queryString.contains("qprofile=AWPJparXCQBOyaqowaxt")) {		// JavaScript
+				resourceName = "/statics/AWPJparXCQBOyaqowaxt.protobuf";
+			} else if (queryString.contains("qprofile=AWPJooCyCQBOyaqowaiw")) {	// CSS
+				resourceName = "/statics/AWPJooCyCQBOyaqowaiw.protobuf";
+			} else if (queryString.contains("qprofile=AWPJpVp5CQBOyaqowaql")) {	// Java
+				resourceName = "/statics/AWPJpVp5CQBOyaqowaql.protobuf";
+			} else if (queryString.contains("qprofile=AWPJoogvCQBOyaqowapc")) {	// Less
+				resourceName = "/statics/AWPJoogvCQBOyaqowapc.protobuf";
+			} else if (queryString.contains("qprofile=AWPJooTrCQBOyaqowal7")) {	// SCSS
+				resourceName = "/statics/AWPJooTrCQBOyaqowal7.protobuf";
+			} else if (queryString.contains("qprofile=AWPJooQ2CQBOyaqowakX")) {	// Web
+				resourceName = "/statics/AWPJooQ2CQBOyaqowakX.protobuf";
 			}
-		} else if (url.equals("/api/rules/list.protobuf")) {	// RuleSet이 변경되면 같이 변경하여야 함.. (parameter는 없음)
+		} else if (url.equals("/api/rules/list.protobuf")) {	// RuleSet이 변경되면 같이 변경하여야 함.. (parameter 없음)
+			// URL 호출 : /api/rules/list.protobuf
 			resourceName = "/statics/list.protobuf";
 		} else if (url.equals("/batch/project.protobuf")) {
+			// URL 호출 : /batch/project.protobuf?key=local%3Acom.samsungsds.analyst.code.main.App
 			resourceName = "/statics/project.protobuf";
 		}
 		

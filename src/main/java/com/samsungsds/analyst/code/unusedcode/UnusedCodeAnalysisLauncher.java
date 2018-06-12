@@ -3,6 +3,8 @@ package com.samsungsds.analyst.code.unusedcode;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import com.samsungsds.analyst.code.util.FindFileUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +30,7 @@ import com.samsungsds.analyst.code.unusedcode.type.CAType;
 
 public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	
-	private static final String DEFAULT_TARGET_SRC = "src";
+	//private static final String DEFAULT_TARGET_SRC = "src";
 
 	private static final Logger LOGGER = LogManager.getLogger(UnusedCodeAnalysisLauncher.class);
 	
@@ -40,9 +43,9 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	private String targetSrc = null;
 	private String targetBinary = null;
 
-	private String rootPackage = null;
-	private String sourceRootFolderPath = null;
-	private String classRootFolderPath = null;
+	//private String rootPackage = null;
+	//private String sourceRootFolderPath = null;
+	//private String classRootFolderPath = null;
 	
 	@Override
 	public void setProjectBaseDir(String directory) {
@@ -52,14 +55,14 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	@Override
 	public void setTargetSrc(String directory) {
 		LOGGER.debug("UnusedCode Target Src : {}", directory);
-		this.targetSrc = directory; 
+		this.targetSrc = directory.replaceAll("/", "\\\\");
 	}
 
 
 	@Override
 	public void setTargetBinary(String directory) {
 		LOGGER.debug("UnusedCode Target Binary : {}", directory);
-		this.targetBinary = directory;
+		this.targetBinary = directory.replaceAll("/", "\\\\");
 	}
 
 	@Override
@@ -69,49 +72,56 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		VisitResult visitResult = new VisitResult();
 		
 		Queue<File> waitingQueue = new LinkedList<>();
-		waitingQueue.offer(new File(getProjectBinary()));
-		while(!waitingQueue.isEmpty()) {
-			File f = waitingQueue.poll();
-			if(f.isDirectory()) {
-				for (File sub : f.listFiles()) {
-					waitingQueue.offer(sub);
-				}
-			} else {
-				if (f.getName().indexOf(".class") == -1) continue;
-				if (f.getName().indexOf("$") > -1) continue;//skip additional classes that share a source file
 
-				String path = getPrefixRemovedPath(f.getPath(), getProjectBinary());
-				String binary = getPrefixRemovedPath(getProjectBinary(), projectBaseDir);
+		for (String projectBinary : getProjectBinary()) {
 
-				path = getPrefixRemovedPath(path, binary);
+			waitingQueue.offer(new File(projectBinary));
 
-				if (measuredResult.haveToSkip(path.replace(".class", ".java"), true)) {
-					continue;
-				}
-				
-				try {
-					// LOGGER.info("Scan file... "+f.getPath());
-					ClassReader reader = new ClassReader(new FileInputStream(f));
-					reader.accept(new CodeAnalysisClassVisitor(Opcodes.ASM5, visitResult), 0);
-					
-					if(!visitResult.skipThisClass()) {
-						if(rootPackage == null) {
-							initPathInfo(visitResult.getClasses().iterator().next().getName());
-						}
-						
-						FileInputStream in = new FileInputStream(sourceFileOf(f));
-						CompilationUnit unit = JavaParser.parse(in);
-						unit.accept(new CodeAnalysisSourceVisitor(visitResult), null);
+			while (!waitingQueue.isEmpty()) {
+				File f = waitingQueue.poll();
+
+				if (f.isDirectory()) {
+					for (File sub : f.listFiles()) {
+						waitingQueue.offer(sub);
 					}
-				} catch (IOException e) {
-					LOGGER.info("SKIP FileNotFound: "+sourceFileOf(f).getPath());
-					visitResult.getFields().removeAll(visitResult.getTempFields());
-					visitResult.getMethods().removeAll(visitResult.getTempMethods());
-					visitResult.getContants().removeAll(visitResult.getTempConstants());
-				}
-			}
+				} else {
+					if (!f.getName().contains(".class")) continue;
+					if (f.getName().contains("$")) continue;    // skip additional classes that share a source file
 
-			clearTempInfo(visitResult);
+					String path = getPrefixRemovedPath(f.getPath(), projectBinary);
+					String binary = getPrefixRemovedPath(projectBinary, projectBaseDir);
+
+					path = getPrefixRemovedPath(path, binary);
+
+					if (measuredResult.haveToSkip(path.replace(".class", ".java"), true)) {
+						continue;
+					}
+
+					File sourceFileOf = null;
+					try {
+						ClassReader reader = new ClassReader(new FileInputStream(f));
+						reader.accept(new CodeAnalysisClassVisitor(Opcodes.ASM5, visitResult), 0);
+
+						if (!visitResult.skipThisClass()) {
+							//if (rootPackage == null) {
+							//	initPathInfo(visitResult.getClasses().iterator().next().getName());
+							//}
+
+							sourceFileOf = sourceFileOf(f);
+							FileInputStream in = new FileInputStream(sourceFileOf);
+							CompilationUnit unit = JavaParser.parse(in);
+							unit.accept(new CodeAnalysisSourceVisitor(visitResult), null);
+						}
+					} catch (IOException e) {
+						LOGGER.info("SKIP FileNotFound: {}", e.getMessage());
+						visitResult.getFields().removeAll(visitResult.getTempFields());
+						visitResult.getMethods().removeAll(visitResult.getTempMethods());
+						visitResult.getContants().removeAll(visitResult.getTempConstants());
+					}
+				}
+
+				clearTempInfo(visitResult);
+			}
 		}
 		
 		//set total count per type
@@ -132,9 +142,9 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		measuredResult.setUnusedConstantCount(unusedConstants.size());
 		
 		List<UnusedCodeResult> resultList = new ArrayList<>();
-		for(CAClass caClass : unusedClasses) {
+		for (CAClass caClass : unusedClasses) {
 			UnusedCodeResult result = new UnusedCodeResult();
-			if(caClass.getName().indexOf(".") > -1) {
+			if (caClass.getName().contains(".")) {
 				result.setPackageName(caClass.getName().substring(0, caClass.getName().lastIndexOf(".")));
 			}
 			result.setClassName(caClass.getName().substring(caClass.getName().lastIndexOf(".")+1));
@@ -144,14 +154,14 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			resultList.add(result);
 		}
 		
-		for(CAMethod caMethod : unusedMethods) {
-			if(isNotExistInSource(caMethod)) {
+		for (CAMethod caMethod : unusedMethods) {
+			if (isNotExistInSource(caMethod)) {
 				measuredResult.setUnusedMethodCount(measuredResult.getUnusedMethodCount() - 1);
 				continue;
 			}
 			
 			UnusedCodeResult result = new UnusedCodeResult();
-			if(caMethod.getClassName().indexOf(".") > -1) {
+			if (caMethod.getClassName().contains(".")) {
 				result.setPackageName(caMethod.getClassName().substring(0, caMethod.getClassName().lastIndexOf(".")));
 			}
 			result.setClassName(caMethod.getClassName().substring(caMethod.getClassName().lastIndexOf(".")+1));
@@ -163,13 +173,13 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		}
 		
 		for (CAField caField : unusedFields) {
-			if(isNotExistInSource(caField)) {
+			if (isNotExistInSource(caField)) {
 				measuredResult.setUnusedFieldCount(measuredResult.getUnusedFieldCount() - 1);
 				continue;
 			}
 			
 			UnusedCodeResult result = new UnusedCodeResult();
-			if(caField.getClassName().indexOf(".") > -1) {
+			if (caField.getClassName().contains(".")) {
 				result.setPackageName(caField.getClassName().substring(0, caField.getClassName().lastIndexOf(".")));
 			}
 			result.setClassName(caField.getClassName().substring(caField.getClassName().lastIndexOf(".")+1));
@@ -187,7 +197,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			}
 			
 			UnusedCodeResult result = new UnusedCodeResult();
-			if(caConstant.getClassName().indexOf(".") > -1) {
+			if (caConstant.getClassName().contains(".")) {
 				result.setPackageName(caConstant.getClassName().substring(0, caConstant.getClassName().lastIndexOf(".")));
 			}
 			result.setClassName(caConstant.getClassName().substring(caConstant.getClassName().lastIndexOf(".")+1));
@@ -201,12 +211,24 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		measuredResult.putUnusedCodeList(resultList);
 	}
 
-	private String getProjectBinary() {
-		return this.projectBaseDir + File.separator + this.targetBinary;
+	private String[] getProjectBinary() {
+		List<String> list = new ArrayList<>();
+
+		for (String binary : targetBinary.split(FindFileUtils.COMMA_SPLITTER)) {
+			list.add(this.projectBaseDir + File.separator + binary);
+		}
+
+		return list.toArray(new String[0]);
 	}
 
-	private String getProjectSrc() {
-		return this.projectBaseDir + File.separator + this.targetSrc;
+	private String[] getProjectSrc() {
+		List<String> list = new ArrayList<>();
+
+		for (String src : targetSrc.split(FindFileUtils.COMMA_SPLITTER)) {
+			list.add(this.projectBaseDir + File.separator + src);
+		}
+
+		return list.toArray(new String[0]);
 	}
 
 	private String getPrefixRemovedPath(String path, String prefix) {
@@ -232,67 +254,121 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		visitResult.getTempMethods().clear();
 		visitResult.getTempConstants().clear();
 	}
-	
+
+	/*
 	private void initPathInfo(String className) {
-		boolean isDefaultPackage = className.indexOf(".") == -1;
-		if(isDefaultPackage) {
-			rootPackage = "default";
-			sourceRootFolderPath = sourceFolderPathOfDefaultPackage(getProjectSrc()).replaceAll("/", "\\\\");;
-			classRootFolderPath = sourceFolderPathOfDefaultPackage(getProjectBinary()).replaceAll("/", "\\\\");;
-		} else {
-			rootPackage = className.substring(0, className.indexOf("."));
-			sourceRootFolderPath = targetFolderPath(getProjectSrc()).replaceAll("/", "\\\\");
-			classRootFolderPath = targetFolderPath(getProjectBinary()).replaceAll("/", "\\\\");;
-		}
+		//if (className.contains(".")) {
+		//	rootPackage = className.substring(0, className.indexOf("."));
+		//	sourceRootFolderPath = targetFolderPath(className, getProjectSrc()).replaceAll("/", "\\\\");
+		//	classRootFolderPath = targetFolderPath(className, getProjectBinary()).replaceAll("/", "\\\\");
+		//} else {
+		//	rootPackage = "default";
+		//	sourceRootFolderPath = sourceFolderPathOfDefaultPackage(className, getProjectSrc()).replaceAll("/", "\\\\");
+		//	classRootFolderPath = sourceFolderPathOfDefaultPackage(className, getProjectBinary()).replaceAll("/", "\\\\");
+		//}
+		rootPackage = "default";
+		sourceRootFolderPath = sourceFolderPathOfDefaultPackage(className, getProjectSrc()).replaceAll("/", "\\\\");
+		classRootFolderPath = sourceFolderPathOfDefaultPackage(className, getProjectBinary()).replaceAll("/", "\\\\");
 	}
+	*/
 	
-	private File sourceFileOf(File classFile) {
-		String sourceFilePath = classFile.getPath().replace(classRootFolderPath, sourceRootFolderPath).replace(".class", ".java");
-		return new File(sourceFilePath);
-	}
-	
-	private String sourceFolderPathOfDefaultPackage(String targetDir) {
-		String sourceDir = targetDir;
-		
-		File f = new File(sourceDir);
-		Queue<File> waitingQueue = new LinkedList<>();
-		waitingQueue.offer(f);
-		while(!waitingQueue.isEmpty()) {
-			f = waitingQueue.poll();
-			for (File sub : f.listFiles()) {
-				if(sub.isDirectory()) {
-					waitingQueue.offer(sub);
+	private File sourceFileOf(File classFile) throws IOException {
+
+		String classFilePath = null;
+
+		for (String binary : getProjectBinary()) {
+			if (classFile.getPath().startsWith(binary)) {
+				if (classFile.getPath().length() == binary.length()) {
+					classFilePath = classFile.getPath();
 				} else {
-					if(sub.getPath().indexOf(".java") > -1 || sub.getPath().indexOf(".class") > -1) {
-						return sub.getParent();
+					classFilePath = classFile.getPath().substring(binary.length() + 1);
+				}
+				break;
+			}
+		}
+
+		if (classFilePath == null) {
+			throw new IOException("Class file path not found : " + classFile);
+		}
+
+		for (String src : getProjectSrc()) {
+			if (Files.exists(Paths.get(src)) && !Files.isDirectory(Paths.get(src))) {
+				return new File(src);
+			}
+
+			File sourceFile = new File(src + "\\" + classFilePath.replace(".class", ".java"));
+
+			LOGGER.debug("Check source file : {}", sourceFile);
+
+			if (sourceFile.exists()) {
+				return sourceFile;
+			}
+		}
+
+		throw new IOException("Source file not found : " + classFilePath);
+	}
+
+	/*
+	private String sourceFolderPathOfDefaultPackage(String className, String[] targetDir) {
+
+		for (String target : targetDir) {
+
+			File f = new File(target);
+			Queue<File> waitingQueue = new LinkedList<>();
+			waitingQueue.offer(f);
+			while (!waitingQueue.isEmpty()) {
+				f = waitingQueue.poll();
+				for (File sub : f.listFiles()) {
+					if (sub.isDirectory()) {
+						waitingQueue.offer(sub);
+					} else {
+						String java = sub.getParentFile().getPath() + File.separator + className.replaceAll("\\.", "/") + ".java";
+						String clazz =  sub.getParentFile().getPath()+ File.separator + className.replaceAll("\\.", "/") + ".class";
+
+						if (Files.exists(Paths.get(java)) || Files.exists(Paths.get(clazz))) {
+							return sub.getParent();
+						}
 					}
 				}
 			}
 		}
-		
-		throw new IllegalArgumentException("the source file path of default package doesn't exist in "+sourceDir);
+
+		throw new IllegalArgumentException("the source file path of default package doesn't exist in " + String.join(",", targetDir));
 	}
-	
-	private String targetFolderPath(String searchDir) {
-		String sourceDir = searchDir;
-		if(sourceDir.indexOf(rootPackage, this.projectBaseDir.length()) > -1) {
-			return sourceDir.substring(0, sourceDir.indexOf(rootPackage)-1);
-		}
-		
-		File f = new File(sourceDir);
-		Queue<File> waitingQueue = new LinkedList<>();
-		waitingQueue.offer(f);
-		while(!waitingQueue.isEmpty()) {
-			f = waitingQueue.poll();
-			for (File sub : f.listFiles()) {
-				if(rootPackage.equals(sub.getName())) {
-					if(isNotDefaultTargetSrc() || isTestFolderWhenTargetSrcIsDefaultValue(sub)) {//source directory가 default 값이면, 테스트 폴더에 대한 검사는 SKIP한다.
+	*/
+
+	/*
+	private String targetFolderPath(String className, String[] searchDir) {
+
+		for (String sourceDir : searchDir) {
+			if (sourceDir.indexOf(rootPackage, this.projectBaseDir.length()) > -1) {
+				return sourceDir.substring(0, sourceDir.indexOf(rootPackage) - 1);
+			}
+
+			File f = new File(sourceDir);
+			Queue<File> waitingQueue = new LinkedList<>();
+			waitingQueue.offer(f);
+			while (!waitingQueue.isEmpty()) {
+				f = waitingQueue.poll();
+				for (File sub : f.listFiles()) {
+
+					String java = sub.getParentFile().getPath() + File.separator + className.replaceAll("\\.", "/") + ".java";
+					String clazz =  sub.getParentFile().getPath()+ File.separator + className.replaceAll("\\.", "/") + ".class";
+
+					if (Files.exists(Paths.get(java)) || Files.exists(Paths.get(clazz))) {
 						return sub.getParent();
-					} 
-				}
-				
-				if(sub.isDirectory()) {
-					waitingQueue.offer(sub);
+					}
+
+					//if (rootPackage.equals(sub.getName())) {
+					//	// source directory가 default 값이면, 테스트 폴더에 대한 검사는 SKIP한다.
+					//	if (isNotDefaultTargetSrc() || isTestFolderWhenTargetSrcIsDefaultValue(sub)) {
+					//		return sub.getParent();
+					//	}
+					//}
+
+					if (sub.isDirectory()) {
+						waitingQueue.offer(sub);
+					}
 				}
 			}
 		}
@@ -301,10 +377,11 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	}
 
 	private boolean isTestFolderWhenTargetSrcIsDefaultValue(File sub) {
-		return this.targetSrc.equals(DEFAULT_TARGET_SRC) && sub.getParentFile().getPath().indexOf("\\test\\") < 0;
+		return targetSrc.equals(DEFAULT_TARGET_SRC) && !sub.getParentFile().getPath().contains("\\test\\");
 	}
 
 	private boolean isNotDefaultTargetSrc() {
-		return !this.targetSrc.equals(DEFAULT_TARGET_SRC);
+		return !targetSrc.equals(DEFAULT_TARGET_SRC);
 	}
+	*/
 }

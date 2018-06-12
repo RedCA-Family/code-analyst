@@ -6,6 +6,7 @@ import java.net.SocketException;
 import java.net.URL;
 import java.util.UUID;
 
+import com.samsungsds.analyst.code.sonar.server.servlets.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Handler;
@@ -15,14 +16,6 @@ import org.eclipse.jetty.server.handler.ShutdownHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 
 import com.samsungsds.analyst.code.main.CliParser;
-import com.samsungsds.analyst.code.sonar.server.servlets.DefaultPluginInstalledResServlet;
-import com.samsungsds.analyst.code.sonar.server.servlets.JarDownloadServlet;
-import com.samsungsds.analyst.code.sonar.server.servlets.JavaPluginInstalledResServlet;
-import com.samsungsds.analyst.code.sonar.server.servlets.MetricsResServlet;
-import com.samsungsds.analyst.code.sonar.server.servlets.QualityProfilesServlet;
-import com.samsungsds.analyst.code.sonar.server.servlets.SettingValuesResServlet;
-import com.samsungsds.analyst.code.sonar.server.servlets.SubmitServlet;
-import com.samsungsds.analyst.code.sonar.server.servlets.WebPluginInstalledResServlet;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 public class JettySurrogateSonarServer implements SurrogateSonarServer {
@@ -48,15 +41,19 @@ public class JettySurrogateSonarServer implements SurrogateSonarServer {
 		ServletHandler handler = new ServletHandler();
 
 		handler.addServletWithMapping(SettingValuesResServlet.class, "/api/settings/values.protobuf");
+		/*
 		if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isSonarJava()) {
-			if (cli.getIndividualMode().isWebResource()) {
+			if (cli.getIndividualMode().isWebResources()) {
 				handler.addServletWithMapping(DefaultPluginInstalledResServlet.class, "/api/plugins/installed");
 			} else {
 				handler.addServletWithMapping(JavaPluginInstalledResServlet.class, "/api/plugins/installed");
 			}
-		} else if (cli.getIndividualMode().isWebResource()) {
+		} else if (cli.getIndividualMode().isWebResources()) {
 			handler.addServletWithMapping(WebPluginInstalledResServlet.class, "/api/plugins/installed");
 		}
+		*/
+		handler.addServletWithMapping(PluginInstalledResServlet.class, "/api/plugins/installed");
+
 		handler.addServletWithMapping(MetricsResServlet.class, "/api/metrics/search");
 		handler.addServletWithMapping(JarDownloadServlet.class, "/deploy/plugins/*");
 		handler.addServletWithMapping(QualityProfilesServlet.class, "/api/qualityprofiles/search.protobuf");

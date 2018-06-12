@@ -3,11 +3,14 @@ package com.samsungsds.analyst.code.unusedcode;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
 
+import com.samsungsds.analyst.code.main.CliParser;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.samsungsds.analyst.code.main.MeasuredResult;
@@ -20,9 +23,13 @@ public class UnusedCodeAnalysisLauncherTest {
 	private UnusedCodeAnalysisLauncher unusedCodeAnalysisLauncher;
 	
 	private MeasuredResult measuredResult;
-	
-	@Before	public void 
+
+	private CliParser cli = new CliParser(new String[0]);
+
+	@Before	public void
 	setUp() throws IOException {
+
+		cli = spy(new CliParser(new String[0]));
 		unusedCodeAnalysisLauncher = spy(new UnusedCodeAnalysisLauncher());
 		
 		setOptionsForTest();
@@ -36,17 +43,22 @@ public class UnusedCodeAnalysisLauncherTest {
 	
 	private void
 	setMeasuredResultForTest() throws IOException {
+
+		when(cli.getSrc()).thenReturn("");
+		when(cli.getBinary()).thenReturn("");
+
 		testInstanceKey = Integer.toString(Integer.parseInt(testInstanceKey)+1);//테스트 메서드를 수행할때마다 다른 instance 키를 생성한다.
 		measuredResult = MeasuredResult.getInstance(testInstanceKey);
 		measuredResult.setProjectDirectory(new File(".").getCanonicalPath());
+		measuredResult.setProjectInfo(cli);
 		measuredResult.initialize(false, false);
 	}
 	
 	@Test public void
 	should_detect_2_unused_fields_when_launcher_analysis_UClass() {
-		String src = "src/main/java/com/samsungsds/analyst/code/test/UClass.class";
+		String src = "src/main/java/com/samsungsds/analyst/code/test/UClass.java";
 		String binary = "target/classes/com/samsungsds/analyst/code/test/UClass.class";
-		
+
 		unusedCodeAnalysisLauncher.setProjectBaseDir(".");
 		unusedCodeAnalysisLauncher.setTargetSrc(src);
 		unusedCodeAnalysisLauncher.setTargetBinary(binary);
@@ -97,7 +109,8 @@ public class UnusedCodeAnalysisLauncherTest {
 		
 		assertThat(measuredResult.getUnusedClassCount(), is(1));
 	}
-	
+
+	//@Ignore("package not supported since V2.2")
 	@Test public void
 	should_detect_1_unused_constant_when_lancher_analysis_unusedcode_package_with_filter() {
 		String src = "src/main/java/com/samsungsds/analyst/code/unusedcode";

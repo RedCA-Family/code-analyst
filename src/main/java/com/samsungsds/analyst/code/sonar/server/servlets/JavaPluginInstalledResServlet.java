@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
+@Deprecated
 @SuppressWarnings("serial")
 public class JavaPluginInstalledResServlet extends HttpServlet {
 

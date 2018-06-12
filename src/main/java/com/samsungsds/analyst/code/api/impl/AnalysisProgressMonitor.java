@@ -15,7 +15,8 @@ public class AnalysisProgressMonitor {
 	private static ProgressEvent[] eventKeys = new ProgressEvent[] { 
 			ProgressEvent.PREPARE_COMPLETE, ProgressEvent.SONAR_START_COMPLETE,
 			ProgressEvent.CODE_SIZE_COMPLETE, ProgressEvent.DUPLICATION_COMPLETE,
-			ProgressEvent.COMPLEXITY_COMPLETE, ProgressEvent.SONARJAVA_COMPLETE, ProgressEvent.WEBRESOURCE_COMPLETE,
+			ProgressEvent.COMPLEXITY_COMPLETE, ProgressEvent.SONARJAVA_COMPLETE,
+			ProgressEvent.JAVASCRIPT_COMPLETE, ProgressEvent.CSS_COMPLETE, ProgressEvent.HTML_COMPLETE,
 			ProgressEvent.SONAR_ALL_COMPLETE,
 			ProgressEvent.PMD_COMPLETE, ProgressEvent.FINDBUGS_COMPLETE, ProgressEvent.FINDSECBUGS_COMPLETE,
 			ProgressEvent.DEPENDENCY_COMPLETE, ProgressEvent.UNUSED_COMPLETE, ProgressEvent.FINAL_COMPLETE };
@@ -37,7 +38,9 @@ public class AnalysisProgressMonitor {
 		stepRates.put(ProgressEvent.DUPLICATION_COMPLETE, 9_000);
 		stepRates.put(ProgressEvent.COMPLEXITY_COMPLETE, 1_500);
 		stepRates.put(ProgressEvent.SONARJAVA_COMPLETE, 8_000);
-		stepRates.put(ProgressEvent.WEBRESOURCE_COMPLETE, 8_000);
+		stepRates.put(ProgressEvent.JAVASCRIPT_COMPLETE, 4_000);
+		stepRates.put(ProgressEvent.CSS_COMPLETE, 2_000);
+		stepRates.put(ProgressEvent.HTML_COMPLETE, 2_000);
 		stepRates.put(ProgressEvent.SONAR_ALL_COMPLETE, 5_000);
 		stepRates.put(ProgressEvent.PMD_COMPLETE, 2_800);
 		stepRates.put(ProgressEvent.FINDBUGS_COMPLETE, 9_500);
@@ -51,7 +54,9 @@ public class AnalysisProgressMonitor {
 		stepProperties.put(ProgressEvent.DUPLICATION_COMPLETE, "duplication");
 		stepProperties.put(ProgressEvent.COMPLEXITY_COMPLETE, "complexity");
 		stepProperties.put(ProgressEvent.SONARJAVA_COMPLETE, "sonarJava");
-		stepProperties.put(ProgressEvent.WEBRESOURCE_COMPLETE, "webResource");
+		stepProperties.put(ProgressEvent.JAVASCRIPT_COMPLETE, "javascript");
+		stepProperties.put(ProgressEvent.CSS_COMPLETE, "css");
+		stepProperties.put(ProgressEvent.HTML_COMPLETE, "html");
 		stepProperties.put(ProgressEvent.SONAR_ALL_COMPLETE, "sonarServer");	// Same as SONAR_START_COMPLETE;
 		stepProperties.put(ProgressEvent.PMD_COMPLETE, "pmd");
 		stepProperties.put(ProgressEvent.FINDBUGS_COMPLETE, "findBugs");

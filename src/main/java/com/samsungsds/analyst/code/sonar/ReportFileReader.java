@@ -70,28 +70,7 @@ public class ReportFileReader implements Closeable {
 
 			if ("java".equals(component.getLanguage())) {
 				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isCodeSize()) {
-					MeasuredResult.getInstance(instanceKey).addFiles(1);
-					MeasuredResult.getInstance(instanceKey).addLines(component.getLines());
-					
-					try (CloseableIterator<ScannerReport.Measure> it = reader.readComponentMeasures(component.getRef())) {
-						while (it.hasNext()) {
-							ScannerReport.Measure measure = it.next();
-							
-							if (measure.getMetricKey().equals(METRIC_CLASSES)) {
-								MeasuredResult.getInstance(instanceKey).addClasses(measure.getIntValue().getValue());
-							} else if (measure.getMetricKey().equals(METRIC_COMMENT_LINES)) {
-								MeasuredResult.getInstance(instanceKey).addCommentLines(measure.getIntValue().getValue());
-							} else if (measure.getMetricKey().equals(METRIC_FUNCTIONS)) {
-								MeasuredResult.getInstance(instanceKey).addFunctions(measure.getIntValue().getValue());
-							} else if (measure.getMetricKey().equals(METRIC_NCLOC)) {
-								MeasuredResult.getInstance(instanceKey).addNcloc(measure.getIntValue().getValue());
-							} else if (measure.getMetricKey().equals(METRIC_STATEMENTS)) {
-								MeasuredResult.getInstance(instanceKey).addStatements(measure.getIntValue().getValue());
-							}
-						}
-					} catch (Exception e) {
-						throw new IllegalStateException("Can't read measures for " + component, e);
-					}
+					calculateCodeSize(component);
 				}
 				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isDuplication() && reader.hasCoverage(component.getRef())) {
 					try (CloseableIterator<ScannerReport.Duplication> it = reader.readComponentDuplications(component.getRef())) {
@@ -131,15 +110,19 @@ public class ReportFileReader implements Closeable {
 				}
 			}
 			if ("js".equals(component.getLanguage()) || "web".equals(component.getLanguage()) || "css".equals(component.getLanguage()) || "less".equals(component.getLanguage()) || "scss".equals(component.getLanguage())) {
+				if ("js".equals(component.getLanguage()) && MeasuredResult.getInstance(instanceKey).getIndividualMode().isWebResourcesOnly()) {
+					calculateCodeSize(component);
+				}
 				try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
 					while (it.hasNext()) {
 						ScannerReport.Issue issue = it.next();
-						WebResourceResult webResourceResult = new WebResourceResult(component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
+						WebResourceResult webResourceResult = new WebResourceResult(component.getLanguage(), component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
 						MeasuredResult.getInstance(instanceKey).addWebResourceResult(webResourceResult);
 					}
 				} catch (Exception e) {
 					throw new IllegalStateException("Can't read issues for " + component, e);
 				}
+
 			}
 		}
 
@@ -147,6 +130,31 @@ public class ReportFileReader implements Closeable {
 			Component child = reader.readComponent(ref);
 
 			readComponent(child);
+		}
+	}
+
+	private void calculateCodeSize(Component component) {
+		MeasuredResult.getInstance(instanceKey).addFiles(1);
+		MeasuredResult.getInstance(instanceKey).addLines(component.getLines());
+
+		try (CloseableIterator<ScannerReport.Measure> it = reader.readComponentMeasures(component.getRef())) {
+			while (it.hasNext()) {
+				ScannerReport.Measure measure = it.next();
+
+				if (measure.getMetricKey().equals(METRIC_CLASSES)) {
+					MeasuredResult.getInstance(instanceKey).addClasses(measure.getIntValue().getValue());
+				} else if (measure.getMetricKey().equals(METRIC_COMMENT_LINES)) {
+					MeasuredResult.getInstance(instanceKey).addCommentLines(measure.getIntValue().getValue());
+				} else if (measure.getMetricKey().equals(METRIC_FUNCTIONS)) {
+					MeasuredResult.getInstance(instanceKey).addFunctions(measure.getIntValue().getValue());
+				} else if (measure.getMetricKey().equals(METRIC_NCLOC)) {
+					MeasuredResult.getInstance(instanceKey).addNcloc(measure.getIntValue().getValue());
+				} else if (measure.getMetricKey().equals(METRIC_STATEMENTS)) {
+					MeasuredResult.getInstance(instanceKey).addStatements(measure.getIntValue().getValue());
+				}
+			}
+		} catch (Exception e) {
+			throw new IllegalStateException("Can't read measures for " + component, e);
 		}
 	}
 

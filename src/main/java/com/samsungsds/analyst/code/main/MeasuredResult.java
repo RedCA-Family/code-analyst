@@ -3,16 +3,13 @@ package com.samsungsds.analyst.code.main;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
+import com.samsungsds.analyst.code.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.sonar.core.util.stream.MoreCollectors;
@@ -36,10 +33,6 @@ import com.samsungsds.analyst.code.sonar.SonarJavaResult;
 import com.samsungsds.analyst.code.sonar.WebResourceResult;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtResult;
-import com.samsungsds.analyst.code.util.CSVFileCollectionList;
-import com.samsungsds.analyst.code.util.CSVFileResult;
-import com.samsungsds.analyst.code.util.IOAndFileUtils;
-import com.samsungsds.analyst.code.util.PackageUtils;
 
 public class MeasuredResult implements Serializable {
 	private static final Logger LOGGER = LogManager.getLogger(MeasuredResult.class);
@@ -63,6 +56,8 @@ public class MeasuredResult implements Serializable {
 	@Expose
 	private String dateTime;
 	@Expose
+    private int elapsedAnalysisTime;
+	@Expose
 	private String pmdRuleSetFile;
 	@Expose
 	private String findBugsRuleSetFile;
@@ -70,6 +65,9 @@ public class MeasuredResult implements Serializable {
 	private String sonarRuleSetFile;
 
 	private Set<String> sonarIssueFilterSet = new HashSet<>();
+
+	@Expose
+	private String webapp = "";
 
 	@Expose
 	private String includes = "";
@@ -164,6 +162,8 @@ public class MeasuredResult implements Serializable {
 	private int pmdRules = 0;
 	@Expose
 	private int findBugsRules = 0;
+	@Expose
+	private int sonarJSRules = 0;
 
 	@Expose
 	private List<SonarJavaResult> sonarJavaList = null;
@@ -195,6 +195,8 @@ public class MeasuredResult implements Serializable {
 	private List<WebResourceResult> webResourceList = null;
 	@Expose
 	private int[] webResourceCount = new int[6]; // 0 : 전체, 1 ~ 5 (Priority)
+	@Expose
+	private int[] webResourceType = new int[4];	// 0 : NA, 1 : Bug, 2 : Vulnerability, 3 : Code Smell
 
 	@Expose
 	private List<JDependResult> acyclicDependencyList = null;
@@ -267,6 +269,13 @@ public class MeasuredResult implements Serializable {
 	}
 
 	public void initialize(boolean detailAnalysis, boolean seperatedOutput) {
+		IndividualMode defaultMode = new IndividualMode();
+		defaultMode.setDefault();
+
+		initialize(detailAnalysis, seperatedOutput, defaultMode);
+	}
+
+	public void initialize(boolean detailAnalysis, boolean seperatedOutput, IndividualMode individualMode) {
 		this.detailAnalysis = detailAnalysis;
 		this.seperatedOutput = seperatedOutput;
 
@@ -280,14 +289,46 @@ public class MeasuredResult implements Serializable {
 			webResourceList = Collections.synchronizedList(new ArrayList<>());
 			acyclicDependencyList = Collections.synchronizedList(new ArrayList<>());
 		} else {
-			duplicationList = makeCSVFileCollectionList(DuplicationResult.class, this);
-			complexityListOver20 = makeCSVFileCollectionList(ComplexityResult.class, this);
-			sonarJavaList = makeCSVFileCollectionList(SonarJavaResult.class, this);
-			pmdList = makeCSVFileCollectionList(PmdResult.class, this);
-			findBugsList = makeCSVFileCollectionList(FindBugsResult.class, this);
-			findSecBugsList = makeCSVFileCollectionList(FindBugsResult.class, this);
-			webResourceList = makeCSVFileCollectionList(WebResourceResult.class, this);
-			acyclicDependencyList = makeCSVFileCollectionList(JDependResult.class, this);
+			if (individualMode.isDuplication()) {
+				duplicationList = makeCSVFileCollectionList(DuplicationResult.class, this);
+			} else {
+				duplicationList = new ArrayList<>(0);
+			}
+			if (individualMode.isComplexity()) {
+				complexityListOver20 = makeCSVFileCollectionList(ComplexityResult.class, this);
+			} else {
+				complexityListOver20 = new ArrayList<>(0);
+			}
+			if (individualMode.isSonarJava()) {
+				sonarJavaList = makeCSVFileCollectionList(SonarJavaResult.class, this);
+			} else {
+				sonarJavaList = new ArrayList<>(0);
+			}
+			if (individualMode.isPmd()) {
+				pmdList = makeCSVFileCollectionList(PmdResult.class, this);
+			} else {
+				pmdList = new ArrayList<>(0);
+			}
+			if (individualMode.isFindBugs()) {
+				findBugsList = makeCSVFileCollectionList(FindBugsResult.class, this);
+			} else {
+				findBugsList = new ArrayList<>(0);
+			}
+			if (individualMode.isFindSecBugs()) {
+				findSecBugsList = makeCSVFileCollectionList(FindBugsResult.class, this);
+			} else {
+				findSecBugsList = new ArrayList<>(0);
+			}
+			if (individualMode.isWebResources()) {
+				webResourceList = makeCSVFileCollectionList(WebResourceResult.class, this);
+			} else {
+				webResourceList = new ArrayList<>(0);
+			}
+			if (individualMode.isDependency()) {
+				acyclicDependencyList = makeCSVFileCollectionList(JDependResult.class, this);
+			} else {
+				acyclicDependencyList = new ArrayList<>(0);
+			}
 		}
 	}
 
@@ -304,7 +345,7 @@ public class MeasuredResult implements Serializable {
 		binary = cli.getBinary();
 		encoding = cli.getEncoding();
 		javaVersion = cli.getJavaVersion();
-		dateTime = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date());
+		dateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		if (cli.getRuleSetFileForPMD() != null && !cli.getRuleSetFileForPMD().equals("")) {
 			pmdRuleSetFile = cli.getRuleSetFileForPMD();
 		} else {
@@ -320,6 +361,8 @@ public class MeasuredResult implements Serializable {
 		} else {
 			sonarRuleSetFile = "";
 		}
+
+		webapp = cli.getWebapp();
 	}
 
 	public boolean isSaveCatalog() {
@@ -491,13 +534,26 @@ public class MeasuredResult implements Serializable {
 	}
 
 	public boolean haveToSkip(String path, boolean withSrcPrefix, boolean withoutFilename) {
+		String[] pathArray = null;
+
 		if (withSrcPrefix) {
-			path = source + (path.startsWith("/") ? path : "/" + path);
+			String[] sourceDirectories = source.split(FindFileUtils.COMMA_SPLITTER);
+
+			pathArray = new String[sourceDirectories.length];
+
+			for (int i = 0; i < sourceDirectories.length; i++) {
+				pathArray[i] = sourceDirectories[i] + (path.startsWith("/") ? path : "/" + path);
+			}
+		} else {
+			pathArray = new String[1];
+			pathArray[0] = path;
 		}
 
-		for (FilePathFilter filter : filePathFilterList) {
-			if (!filter.matched(path, withoutFilename)) {
-				return true;
+		for (String pathDirectory : pathArray) {
+			for (FilePathFilter filter : filePathFilterList) {
+				if (!filter.matched(pathDirectory, withoutFilename)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -675,23 +731,29 @@ public class MeasuredResult implements Serializable {
 		if (packageList.size() == 0) {
 			LOGGER.info("Get target packages");
 
-			List<String> allPackages = PackageUtils.getProjectPackages(projectDirectory + File.separator + binary);
+			String[] binaryDirectories = binary.split(FindFileUtils.COMMA_SPLITTER);
 
-			for (String sourcePackage : allPackages) {
-				if (haveToSkip(sourcePackage.replaceAll("\\.", "/") + "/*.java", true, true)) {
-					continue;
-				}
-				packageList.add(sourcePackage);
-			}
+			for (String dir : binaryDirectories) {
+				List<String> allPackages = PackageUtils.getProjectPackages(projectDirectory + File.separator + dir);
 
-			/*
-			for (ComplexityResult result : allMethodList) {
-				if (packageList.contains(result.getPackageName())) {
-					continue;
+				for (String sourcePackage : allPackages) {
+					if (haveToSkip(sourcePackage.replaceAll("\\.", "/") + "/*.java", true, true)) {
+						continue;
+					}
+					if (!packageList.contains(sourcePackage)) {
+						packageList.add(sourcePackage);
+					}
 				}
-				packageList.add(result.getPackageName());
+
+				/*
+				for (ComplexityResult result : allMethodList) {
+					if (packageList.contains(result.getPackageName())) {
+						continue;
+					}
+					packageList.add(result.getPackageName());
+				}
+				*/
 			}
-			*/
 
 		}
 
@@ -750,6 +812,17 @@ public class MeasuredResult implements Serializable {
 		this.findBugsRules = findBugsRules;
 	}
 
+	public int getSonarJSRules() {
+		return sonarJSRules;
+	}
+
+	public void setSonarJSRules(int sonarJSRules) {
+		this.sonarJSRules = sonarJSRules;
+	}
+
+	public String getWebapp() {
+		return webapp;
+	}
 
 	public List<SonarJavaResult> getSonarJavaList() {
 		processTopSonarJavaList();
@@ -849,9 +922,17 @@ public class MeasuredResult implements Serializable {
 	}
 
 	public void addWebResourceResult(WebResourceResult webResourceResult) {
+		String ruleKey = webResourceResult.getRuleRepository() + ":" + webResourceResult.getRuleKey();
+		if (sonarIssueFilterSet.contains(ruleKey)) {
+			LOGGER.debug("WebResource Rule exclude : {}", ruleKey);
+			return;
+		}
+
 		webResourceList.add(webResourceResult);
 		webResourceCount[0]++;
 		webResourceCount[webResourceResult.getSeverity()]++;
+
+		webResourceType[webResourceResult.getIssueType().getTypeIndex()]++;
 	}
 
 	public int getWebResourceCountAll() {
@@ -860,6 +941,10 @@ public class MeasuredResult implements Serializable {
 
 	public int getWebResourceCount(int priority) {
 		return webResourceCount[priority];
+	}
+
+	public int getWebResourceType(int index) {
+		return webResourceType[index];
 	}
 
 	public void putUnusedCodeList(List<UnusedCodeResult> unusedCodeResultList) {
@@ -943,7 +1028,7 @@ public class MeasuredResult implements Serializable {
 	}
 
 	public List<String> getAcyclicDependencyList() {
-		return acyclicDependencyList.stream().map(s -> s.getAcyclicDependecies()).collect(MoreCollectors.toList());
+		return acyclicDependencyList.stream().map(s -> s.getAcyclicDependencies()).collect(MoreCollectors.toList());
 	}
 
 	public void setMode(MeasurementMode mode) {
@@ -964,7 +1049,8 @@ public class MeasuredResult implements Serializable {
 
 	public void setIncludeFilters(String includes) {
 		assert source != null : "source have to be set in advance.";
-		FilePathIncludeFilter filter = new FilePathIncludeFilter(includes, source);
+
+		FilePathIncludeFilter filter = new FilePathIncludeFilter(includes, source, webapp);
 
 		filePathFilterList.add(filter);
 
@@ -1027,7 +1113,11 @@ public class MeasuredResult implements Serializable {
 		return seperatedOutput;
 	}
 
-	public void clearSeperatedList() {
+    public int getElapsedAnalysisTime() {
+        return elapsedAnalysisTime;
+    }
+
+    public void clearSeperatedList() {
 		if (detailAnalysis) {
 			duplicationList.clear();
 			complexityListOver20.clear();
@@ -1076,6 +1166,24 @@ public class MeasuredResult implements Serializable {
 		return technicalDebtResult;
 	}
 
+    public void calculateElapsedTime() {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        try {
+            Date startDate = df.parse(dateTime);
+
+            Date endDate = new Date();
+
+            long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());
+            long diff = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+            elapsedAnalysisTime = (int)diff + 1;
+
+        } catch (ParseException ex) {
+            throw new IllegalStateException("Date format error", ex);
+        }
+    }
+
 	public void clear() {
 		directories = 0;
 		files = 0;
@@ -1106,6 +1214,7 @@ public class MeasuredResult implements Serializable {
 		sonarJavaRules = 0;
 		pmdRules = 0;
 		findBugsRules = 0;
+		sonarJSRules = 0;
 
 		for (int i = 0; i < pmdCount.length; i++) {
 			pmdCount[i] = 0;

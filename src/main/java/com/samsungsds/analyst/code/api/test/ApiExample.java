@@ -33,8 +33,8 @@ public class ApiExample {
 			ex.printStackTrace();
 			return;
 		}
-		argument.setSrc("src/main/java");
-		argument.setBinary("target/classes");
+		argument.setSrc("src/main/java,src/test/java");
+		argument.setBinary("target/classes,target/test-classes");
 
 		argument.setEncoding("UTF-8"); // default
 		argument.setJavaVersion("1.8"); // default
@@ -48,12 +48,16 @@ public class ApiExample {
 		mode.setFindBugs(true);
 		mode.setFindSecBugs(true);
 		mode.setDependency(true);
-		mode.setWebResource(true);
+		mode.setJavascript(false);
+		mode.setCss(false);
+		mode.setHtml(false);
 		mode.setUnusedCode(true);
 
 		argument.setMode(mode);
 
 		argument.setDetailAnalysis(true);
+
+		//argument.setWebapp("src/main/webapp");
 
 		// argument.setDebug(true);
 
@@ -85,6 +89,8 @@ public class ApiExample {
 
 		// addFileExactly 테스트
 		targetFile.addFileExactly("com.samsungsds.analyst.code.test", "Test.java");
+		targetFile.addFileExactly("com.samsungsds.analyst.code.api.impl", "CodeAnalystImpl.java");
+		targetFile.addFileExactly("com.samsungsds.analyst.code.pmd", "ComplexityAnalysisLauncherTest.java");
 
 		argument.setSaveCatalog(true);
 
@@ -97,7 +103,7 @@ public class ApiExample {
 
 		System.out.println("Result File : " + resultFile);
 
-		// ResultInfo result = analyst.analyzeWithSeperatedResult(TEMP_DIRECTORY, argument, targetFile);
+		// ResultInfo result = analyst.analyzeWithSeparatedResult(TEMP_DIRECTORY, argument, targetFile);
 
 		// System.out.println("Result File : " + result.getOutputFile());
 	}

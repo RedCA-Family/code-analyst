@@ -48,7 +48,7 @@ public class ComplexityAnalysisLauncherTest {
 	setMeasuredResultForTest() throws IOException {
 		testInstanceKey = Integer.toString(Integer.parseInt(testInstanceKey)+1);//테스트 메서드를 수행할때마다 다른 instance 키를 생성한다.
 		IndividualMode mode = new IndividualMode();//set default mode
-		mode.setAll();
+		mode.setDefault();
 		
 		measuredResult = MeasuredResult.getInstance(testInstanceKey);
 		measuredResult.setIndividualMode(mode);

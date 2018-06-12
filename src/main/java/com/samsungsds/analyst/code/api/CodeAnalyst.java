@@ -6,5 +6,7 @@ public interface CodeAnalyst {
 	
 	String analyze(String where, ArgumentInfo argument, TargetFileInfo targetFile);
 	
-	ResultInfo analyzeWithSeperatedResult(String where, ArgumentInfo argument, TargetFileInfo targetFile);
+	ResultInfo analyzeWithSeparatedResult(String where, ArgumentInfo argument, TargetFileInfo targetFile);
+
+	String analyzeWebResource(String where, WebArgumentInfo webArgument, WebTargetFileInfo webTargetFile, boolean includeCssAndHtml);
 }

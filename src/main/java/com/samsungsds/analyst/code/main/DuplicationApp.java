@@ -45,6 +45,7 @@ public class DuplicationApp {
 			list = getDuplicationListFromCPD();
 		}
 
+		IndividualMode individualMode = new IndividualMode();
 		MeasuredResult.getInstance(INSTANCE_KEY).initialize(true, false);
 
 		System.out.println("Duplicated lines : " + getDuplicatedLines(list));

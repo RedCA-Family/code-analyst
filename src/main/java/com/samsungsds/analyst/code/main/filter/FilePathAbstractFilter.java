@@ -5,6 +5,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.samsungsds.analyst.code.util.FindFileUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class FilePathAbstractFilter implements FilePathFilter {
 	private static final Logger LOGGER = LogManager.getLogger(FilePathAbstractFilter.class);
 
@@ -15,9 +18,11 @@ public abstract class FilePathAbstractFilter implements FilePathFilter {
 	private String[] filters;
 
 	private String srcPrefix;
+	private String webapp;
 
-	public FilePathAbstractFilter(String filterString, String srcPrefix) {
+	public FilePathAbstractFilter(String filterString, String srcPrefix, String webapp) {
 	    this.srcPrefix = srcPrefix;
+		this.webapp = webapp;
 
 		setNormalizedFilterString(filterString);
 		
@@ -25,15 +30,25 @@ public abstract class FilePathAbstractFilter implements FilePathFilter {
 	}
 	
 	public void setNormalizedFilterString(String filterString) {
-		String[] splittedFilters = filterString.split(FindFileUtils.COMMA_SPLITTER);
-		
-		this.filters = new String[splittedFilters.length];
-		
-		for (int i = 0; i < splittedFilters.length; i++) {
-			String ret = splittedFilters[i].replaceAll("\\\\", "/");
+		String[] splitFilters = filterString.split(FindFileUtils.COMMA_SPLITTER);
+
+		List<String> list = new ArrayList<>();
+
+		for (int i = 0; i < splitFilters.length; i++) {
+			String ret = splitFilters[i].replaceAll("\\\\", "/");
 
 			if (ret.startsWith(FIXED_PREFIX)) {
-				this.filters[i] = srcPrefix + "/" + ret.substring(FIXED_PREFIX.length());
+
+				if (!srcPrefix.equals("")) {
+					String[] srcDirectories = srcPrefix.split(FindFileUtils.COMMA_SPLITTER);
+
+					for (String src : srcDirectories) {
+						list.add(src + "/" + ret.substring(FIXED_PREFIX.length()));
+					}
+				} else if (!webapp.equals("")) {
+					list.add(webapp + "/" + ret.substring(FIXED_PREFIX.length()));
+				}
+
 				continue;
 			}
 
@@ -44,9 +59,11 @@ public abstract class FilePathAbstractFilter implements FilePathFilter {
 					ret = "**/" + ret;
 				}
 			}
-			
-			this.filters[i] = ret;
+
+			list.add(ret);
 		}
+
+		this.filters = list.toArray(new String[0]);
 	}
 	
 	private void debuggingFilters() {

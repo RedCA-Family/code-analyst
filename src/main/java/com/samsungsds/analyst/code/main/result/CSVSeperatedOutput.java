@@ -140,7 +140,7 @@ public class CSVSeperatedOutput {
 					csvWriter.print(++count + ",");
 					csvWriter.print(getStringsWithComma(result.getIssueType().toString(), result.getPackageName(), result.getFile(),
 							getString(result.getStartLine()), getString(result.getEndLine()), result.getPatternKey(), result.getPattern()));
-					csvWriter.print(", ");
+					csvWriter.print(",");
 					csvWriter.print(getStringsWithComma(getString(result.getPriority()), result.getClassName(), result.getField(), result.getLocalVariable(), result.getMethod(), result.getMessage()));
 					csvWriter.println();
 				}
@@ -156,12 +156,14 @@ public class CSVSeperatedOutput {
 		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-webresource.csv";
 
 		try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
-			csvWriter.println("No,Path,Rule,Message,Priority,Start line,Start offset,End line,End offset");
+			csvWriter.println("No,Language,Type,Path,Rule,Message,Priority,Start line,Start offset,End line,End offset");
 
 			int count = 0;
 			synchronized (list) {
 				for (WebResourceResult result : list) {
 					csvWriter.print(++count + ",");
+					csvWriter.print(getStringsWithComma(result.getLanguage(), result.getIssueType().toString()));
+					csvWriter.print(",");
 					csvWriter.print(getStringsWithComma(result.getPath(), result.getRuleRepository() + ":" + result.getRuleKey(), result.getMsg(),
 							getString(result.getSeverity()), getString(result.getStartLine()),
 							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset())));

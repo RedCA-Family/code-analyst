@@ -63,7 +63,7 @@ public abstract class AbstractOutputFile {
 				writeFindSecBugs(result.getFindSecBugsList());
 			}
 
-			if (result.getIndividualMode().isWebResource()) {
+			if (result.getIndividualMode().isWebResources()) {
 				writeWebResource(result.getWebResourceList());
 			}
 

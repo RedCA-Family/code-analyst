@@ -152,8 +152,22 @@ public class ResultProcessor {
 	}
 
 	private static void printWebResourceSummary(MeasuredResult result) {
-		if (result.getIndividualMode().isWebResource()) {
+		if (result.getIndividualMode().isWebResources()) {
 			System.out.println("WebResource violations : " + getFormattedNumber(result.getWebResourceCountAll()));
+			System.out.println("WebResource 1 priority : " + getFormattedNumber(result.getWebResourceCount(1)));
+			System.out.println("WebResource 2 priority : " + getFormattedNumber(result.getWebResourceCount(2)));
+			System.out.println("WebResource 3 priority : " + getFormattedNumber(result.getWebResourceCount(3)));
+			System.out.println("WebResource 4 priority : " + getFormattedNumber(result.getWebResourceCount(4)));
+			System.out.println("WebResource 5 priority : " + getFormattedNumber(result.getWebResourceCount(5)));
+			System.out.println();
+
+			System.out.println("WebResource Bug Type : " + result.getWebResourceType(IssueType.BUG.getTypeIndex()));
+			System.out.println("WebResource Vulnerability Type : " + result.getWebResourceType(IssueType.VULNERABILITY.getTypeIndex()));
+			System.out.println("WebResource Code Smell Type : " + result.getWebResourceType(IssueType.CODE_SMELL.getTypeIndex()));
+
+			if (result.getWebResourceType(IssueType.NA.getTypeIndex()) > 0) {
+				System.out.println("* WebResource N/A Type : " + result.getWebResourceType(IssueType.NA.getTypeIndex()));
+			}
 			System.out.println();
 		}
 	}

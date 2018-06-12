@@ -17,6 +17,8 @@ public class SonarIssueFilter {
     private final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();;
 
     private int excludedRules = 0;
+    private int excludedJavaRules = 0;
+    private int excludedJSRules = 0;
 
     public Set<String> parse(String ruleSetFileForSonar) {
         Set<String> filters = new HashSet<>();
@@ -33,11 +35,25 @@ public class SonarIssueFilter {
         }
 
         excludedRules = filterHandler.getExcludedRules();
+        excludedJavaRules = filterHandler.getExcludedJavaRules();
+        excludedJSRules = filterHandler.getExcludedJSRules();
 
         return filters;
     }
 
+    /**
+     * @deprecated use getExcludedJavaRules() or getExcludedJSRules()
+     */
+    @Deprecated
     public int getExcludedRules() {
         return excludedRules;
+    }
+
+    public int getExcludedJavaRules() {
+        return excludedJavaRules;
+    }
+
+    public int getExcludedJSRules() {
+        return excludedJSRules;
     }
 }

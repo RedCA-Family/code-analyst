@@ -10,6 +10,8 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +20,7 @@ public class FindFileUtils {
 	private static final Logger LOGGER = LogManager.getLogger(FindFileUtils.class);
 	
 	public static final String COMMA_SPLITTER = "\\s*,\\s*";
-	
+
 	public static class Finder extends SimpleFileVisitor<Path> {
 		private String path;
 		
@@ -72,6 +74,10 @@ public class FindFileUtils {
 	
 	public static String getDirectoryWithFilenamePattern(String startDirectory, String pattern) throws IOException {
 
+		if (startDirectory.contains(",")) {
+			throw new IOException("Multiple source directories not supported : " + startDirectory);
+		}
+
 		Path startingDir = Paths.get(startDirectory);
 
 		Finder finder = null;
@@ -88,5 +94,21 @@ public class FindFileUtils {
 		}
 
 		return finder.path;
+	}
+
+	public static String[] getFullDirectories(String prefix, String directoriesWithComma) {
+		String[] directories = directoriesWithComma.split(COMMA_SPLITTER);
+
+		List<String> list = new ArrayList<>();
+
+		for (String dir : directories) {
+			list.add(prefix + File.separator + dir);
+		}
+
+		return list.toArray(new String[0]);
+	}
+
+	public static String getMultiDirectoriesWithComma(String prefix, String directoriesWithComma) {
+		return String.join(",", getFullDirectories(prefix, directoriesWithComma));
 	}
 }

@@ -2,19 +2,29 @@ package com.samsungsds.analyst.code.api;
 
 public class AnalysisMode {
 
-	private boolean codeSize = false;
-	private boolean duplication = false;
-	private boolean complexity = false;
-	private boolean sonarJava = false;
-	private boolean pmd = false;
-	private boolean findBugs = false;
-	private boolean findSecBugs = false;
-	private boolean webResource = false;
-	private boolean dependency = false;
-	private boolean unusedCode = false;
+	private boolean codeSize = true;
+	private boolean duplication = true;
+	private boolean complexity = true;
+	private boolean sonarJava = true;
+	private boolean pmd = true;
+	private boolean findBugs = true;
+	private boolean findSecBugs = true;
+	private boolean javascript = true;
+	private boolean css = false;			// disabled by default
+	private boolean html = false;			// disabled by default
+	private boolean dependency = true;
+	private boolean unusedCode = true;
 
 	public boolean isSonarServer() {
-		return codeSize || duplication || sonarJava || webResource;
+		return codeSize || duplication || sonarJava || javascript || css || html;
+	}
+
+	public boolean isWebResources() {
+		return javascript || css || html;
+	}
+
+	public boolean isWebResourcesOnly() {
+		return !codeSize && javascript;
 	}
 
 	public boolean isCodeSize() {
@@ -73,12 +83,28 @@ public class AnalysisMode {
 		this.findSecBugs = findSecBugs;
 	}
 
-	public boolean isWebResource() {
-		return webResource;
+	public boolean isJavascript() {
+		return javascript;
 	}
 
-	public void setWebResource(boolean webResource) {
-		this.webResource = webResource;
+	public void setJavascript(boolean javascript) {
+		this.javascript = javascript;
+	}
+
+	public boolean isCss() {
+		return css;
+	}
+
+	public void setCss(boolean css) {
+		this.css = css;
+	}
+
+	public boolean isHtml() {
+		return html;
+	}
+
+	public void setHtml(boolean html) {
+		this.html = html;
 	}
 
 	public boolean isDependency() {

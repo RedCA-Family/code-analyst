@@ -7,15 +7,15 @@ import com.samsungsds.analyst.code.util.CSVFileResult;
 public class JDependResult implements Serializable, CSVFileResult {
 	private static final long serialVersionUID = -6859698000616986124L;
 	
-	private String acyclicDependecies;
+	private String acyclicDependencies;
 	
-	public JDependResult(String acyclicDependecies) {
-		this.acyclicDependecies = acyclicDependecies;
+	public JDependResult(String acyclicDependencies) {
+		this.acyclicDependencies = acyclicDependencies;
 	}
 	
 	public JDependResult() {
 		// default constructor (CSV)
-		// column : acyclicDependecies
+		// column : acyclicDependencies
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class JDependResult implements Serializable, CSVFileResult {
 	@Override
 	public String getDataIn(int columnIndex) {
 		switch (columnIndex) {
-		case 0 : return acyclicDependecies;
+		case 0 : return acyclicDependencies;
 		default : throw new IndexOutOfBoundsException("Index: " + columnIndex);
 		}
 	}
@@ -34,21 +34,21 @@ public class JDependResult implements Serializable, CSVFileResult {
 	@Override
 	public void setDataIn(int columnIndex, String data) {
 		switch (columnIndex) {
-		case 0 : acyclicDependecies = data; break;
+		case 0 : acyclicDependencies = data; break;
 		default : throw new IndexOutOfBoundsException("Index: " + columnIndex);
 		}
 	}
 
-	public String getAcyclicDependecies() {
-		return acyclicDependecies;
+	public String getAcyclicDependencies() {
+		return acyclicDependencies;
 	}
 
-	public void setAcyclicDependecies(String acyclicDependecies) {
-		this.acyclicDependecies = acyclicDependecies;
+	public void setAcyclicDependencies(String acyclicDependencies) {
+		this.acyclicDependencies = acyclicDependencies;
 	}
 
 	@Override
 	public String toString() {
-		return acyclicDependecies;
+		return acyclicDependencies;
 	}
 }

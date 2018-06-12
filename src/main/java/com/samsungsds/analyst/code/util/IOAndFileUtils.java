@@ -21,6 +21,10 @@ public class IOAndFileUtils {
 		}
 		return -1;
 	}
+
+	public static void writeString(OutputStream output, String str) throws IOException {
+		output.write(str.getBytes("UTF-8"));
+	}
 	
 	public static long write(OutputStream output, String resourcePath) throws IOException {
 		URL url = IOAndFileUtils.class.getResource(resourcePath);
@@ -144,6 +148,27 @@ public class IOAndFileUtils {
 		} catch (IOException ioe) {
 			throw new UncheckedIOException(ioe);
 		}
+	}
 
+	public static int getFileCountWithExt(Path dir, String... ext) {
+		try (Stream<Path> paths =  Files.walk(dir)) {
+			return (int) paths
+					.parallel()
+					.filter(p -> !p.toFile().isDirectory())
+					.filter(p -> checkFileExt(p.toFile().getName(), ext))
+					.count();
+		} catch (IOException ioe) {
+			throw new UncheckedIOException(ioe);
+		}
+	}
+
+	private static boolean checkFileExt(String filename, String... extVarargs) {
+		for (String ext : extVarargs) {
+			if (filename.endsWith("." + ext)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

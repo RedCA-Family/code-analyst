@@ -156,7 +156,7 @@ public class JsonOutputFile extends AbstractOutputFile {
 				JsonArray json = new JsonArray();
 
 				for (JDependResult jdepend : src) {
-					JsonElement element = new JsonPrimitive(jdepend.getAcyclicDependecies());
+					JsonElement element = new JsonPrimitive(jdepend.getAcyclicDependencies());
 					json.add(element);
 				}
 

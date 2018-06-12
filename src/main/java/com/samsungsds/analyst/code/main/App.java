@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.samsungsds.analyst.code.sonar.filter.SonarIssueFilter;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -56,11 +58,15 @@ public class App {
 	private String parsingErrorMessage = "";
 
 	public void process(CliParser cli) {
+		SystemInfo.print();
+
 		if (cli.parse()) {
 
-			SystemInfo.print();
+			if (cli.getMode() == MeasurementMode.DefaultMode) {
+				LOGGER.info("Mode : {}", cli.getIndividualMode());
+			}
 
-			MeasuredResult.getInstance(cli.getInstanceKey()).initialize(cli.isDetailAnalysis(), cli.isSeperatedOutput());
+			MeasuredResult.getInstance(cli.getInstanceKey()).initialize(cli.isDetailAnalysis(), cli.isSeperatedOutput(), cli.getIndividualMode());
 			if (cli.isDetailAnalysis()) {
 				LOGGER.info("Detail Analysis mode...");
 			}
@@ -128,7 +134,7 @@ public class App {
 				runComplexity(cli);
 
 			} else {
-				if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isSonarJava() || cli.getIndividualMode().isWebResource()) {
+				if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isSonarJava() || cli.getIndividualMode().isWebResources()) {
 					List<String> sonarAnalysisModeList = new ArrayList<>();
 					if (cli.getIndividualMode().isCodeSize()) {
 						sonarAnalysisModeList.add("Code Size");
@@ -139,8 +145,14 @@ public class App {
 					if (cli.getIndividualMode().isSonarJava()) {
 						sonarAnalysisModeList.add("Sonar Java");
 					}
-					if (cli.getIndividualMode().isWebResource()) {
-						sonarAnalysisModeList.add("Web Resource");
+					if (cli.getIndividualMode().isJavascript()) {
+						sonarAnalysisModeList.add("JavaScript");
+					}
+					if (cli.getIndividualMode().isCss()) {
+						sonarAnalysisModeList.add("CSS");
+					}
+					if (cli.getIndividualMode().isHtml()) {
+						sonarAnalysisModeList.add("HTML");
 					}
 					String sonarAnalysisMode = StringUtils.join(sonarAnalysisModeList, " & ");
 					LOGGER.info(sonarAnalysisMode + " Analysis start...");
@@ -221,7 +233,16 @@ public class App {
 		}
 
 		LOGGER.info("Sonar Scanner starting...");
-		SonarAnalysis sonar = new SonarAnalysisLauncher(MeasuredResult.getInstance(cli.getInstanceKey()).getProjectDirectory(), cli.getSrc());
+		String src = cli.getSrc();
+		if (cli.getIndividualMode().isWebResources()) {
+			if (src.equals("")) {
+				src = cli.getWebapp();
+			} else if (!"".equals(cli.getWebapp())) {
+				src += "," + cli.getWebapp();
+			}
+		}
+
+		SonarAnalysis sonar = new SonarAnalysisLauncher(MeasuredResult.getInstance(cli.getInstanceKey()).getProjectDirectory(), src);
 
 		if (cli.isDebug()) {
 			sonar.addProperty(SONAR_VERBOSE, "true");
@@ -230,6 +251,10 @@ public class App {
 		sonar.addProperty(ScannerProperties.HOST_URL, "http://localhost:" + port);
 
 		sonar.addProperty(InternalProperties.SCANNER_APP, "SonarQubeScanner");
+
+		Gson gson = new Gson();
+		String json = gson.toJson(cli.getIndividualMode());
+		sonar.addProperty(InternalProperties.SCANNER_APP_VERSION, "mode=" + json);
 
 		sonar.addProperty(ScanProperties.PROJECT_SOURCE_ENCODING, cli.getEncoding());
 
@@ -240,7 +265,7 @@ public class App {
 
 		sonar.addProperty("sonar.projectBaseDir", cli.getProjectBaseDir());
 		sonar.addProperty("sonar.java.binaries", cli.getBinary());
-		sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, cli.getSrc());
+		sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, src);
 		sonar.addProperty("sonar.java.source", cli.getJavaVersion());
 
 		// BatchWSClient timeout
@@ -253,14 +278,6 @@ public class App {
 		sonar.addProperty("sonar.scanAllFiles", "true");
 
 		if (!cli.getIncludes().equals("")) {
-            /*
-            String includes = MeasuredResult.getInstance(cli.getInstanceKey()).getIncludes();
-            if (includes.startsWith("/")) {
-                sonar.addProperty("sonar.inclusions", cli.getSrc() + includes);
-            } else {
-                sonar.addProperty("sonar.inclusions", cli.getSrc() + "/" + includes);
-            }
-            */
             sonar.addProperty("sonar.inclusions", MeasuredResult.getInstance(cli.getInstanceKey()).getIncludes());
 		}
 
@@ -277,14 +294,41 @@ public class App {
 			SonarIssueFilter filter = new SonarIssueFilter();
 
 			MeasuredResult.getInstance(cli.getInstanceKey()).setSonarIssueFilterSet(filter.parse(cli.getRuleSetFileForSonar()));
-			MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJavaRules(Version.SONAR_JAVA_DEFAULT_RULES - filter.getExcludedRules() );
+
+			if (cli.getIndividualMode().isSonarJava()) {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJavaRules(Version.SONAR_JAVA_DEFAULT_RULES - filter.getExcludedJavaRules());
+			}
+			if (cli.getIndividualMode().isJavascript()) {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJSRules(Version.SONAR_JS_DEFAULT_RULES - filter.getExcludedJSRules());
+			}
 		} else {
-			MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJavaRules(Version.SONAR_JAVA_DEFAULT_RULES);
+			if (cli.getIndividualMode().isSonarJava()) {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJavaRules(Version.SONAR_JAVA_DEFAULT_RULES);
+			}
+			if (cli.getIndividualMode().isJavascript()) {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setSonarJSRules(Version.SONAR_JS_DEFAULT_RULES);
+			}
 		}
 
 		SonarProgressEventChecker sonarProgressChecker = null;
 		if (progressMonitor != null) {
-			int fileCount = IOAndFileUtils.getJavaFileCount(Paths.get(cli.getProjectBaseDir(), cli.getSrc()));
+			int fileCount = 0;
+
+			if (!cli.getSrc().equals("")) {
+				String[] srcDirectories = cli.getSrc().split(FindFileUtils.COMMA_SPLITTER);
+				for (String srcDir : srcDirectories) {
+					fileCount += IOAndFileUtils.getJavaFileCount(Paths.get(cli.getProjectBaseDir(), srcDir));
+				}
+			}
+			if (cli.getIndividualMode().isJavascript()) {
+				fileCount += IOAndFileUtils.getFileCountWithExt(Paths.get(cli.getProjectBaseDir(), cli.getWebapp()), "js");
+			}
+			if (cli.getIndividualMode().isCss()) {
+				fileCount += IOAndFileUtils.getFileCountWithExt(Paths.get(cli.getProjectBaseDir(), cli.getWebapp()), "css", "less", "scss");
+			}
+			if (cli.getIndividualMode().isHtml()) {
+				fileCount += IOAndFileUtils.getFileCountWithExt(Paths.get(cli.getProjectBaseDir(), cli.getWebapp()), "htm", "html", "jsp");
+			}
 			LOGGER.info("Approximate number of files : {}", fileCount);
 			sonarProgressChecker = new SonarProgressEventChecker(cli.getIndividualMode(), this, fileCount);
 
@@ -308,7 +352,7 @@ public class App {
 	private void runComplexity(CliParser cli) {
 		ComplexityAnalysis pmdComplexity = new ComplexityAnalysisLauncher();
 
-		String dir = cli.getProjectBaseDir() + File.separator + cli.getSrc();
+		String dir = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getSrc());
 		if (cli.getMode() == MeasurementMode.ComplexityMode) {
 			try {
 				dir = FindFileUtils.getDirectoryWithFilenamePattern(dir, cli.getClassForCCMeasurement());
@@ -321,7 +365,7 @@ public class App {
 			if ("".equals(cli.getIncludes())) {
 				pmdComplexity.addOption("-dir", dir);
 			} else {
-				SourceFileHandler pathHandler = new SourceFileHandler(cli.getProjectBaseDir(), cli.getSrc());
+				SourceFileHandler pathHandler = new SourceFileHandler(cli.getProjectBaseDir(), cli.getSrc().split(FindFileUtils.COMMA_SPLITTER));
 
 				pmdComplexity.addOption("-dir", pathHandler.getPathStringWithInclude(cli.getIncludes()));
 			}
@@ -345,10 +389,12 @@ public class App {
 	private void runPmd(CliParser cli) {
 		PmdAnalysis pmdViolation = new PmdAnalysisLauncher();
 
+		String dir = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getSrc());
+
 		if ("".equals(cli.getIncludes())) {
-			pmdViolation.addOption("-dir", cli.getProjectBaseDir() + File.separator + cli.getSrc());
+			pmdViolation.addOption("-dir", dir);
 		} else {
-			SourceFileHandler pathHandler = new SourceFileHandler(cli.getProjectBaseDir(), cli.getSrc());
+			SourceFileHandler pathHandler = new SourceFileHandler(cli.getProjectBaseDir(), cli.getSrc().split(FindFileUtils.COMMA_SPLITTER));
 
 			pmdViolation.addOption("-dir", pathHandler.getPathStringWithInclude(cli.getIncludes()));
 		}
@@ -377,23 +423,38 @@ public class App {
 	}
 
 	private void runFindBugs(CliParser cli) {
-		FindBugsAnalysis findBugsViolation = new FindBugsAnalysisLauncher();
-
-		findBugsViolation.setTarget(cli.getProjectBaseDir() + File.separator + cli.getBinary());
-
 		if (cli.isDebug()) {
 			System.setProperty("findbugs.debug", "true");
 		}
 
-		if (cli.getRuleSetFileForFindBugs() != null && !cli.getRuleSetFileForFindBugs().equals("")) {
-			findBugsViolation.addOption("-include", cli.getRuleSetFileForFindBugs());
+		String[] binaryDirectories = FindFileUtils.getFullDirectories(cli.getProjectBaseDir(), cli.getBinary());
 
-			MeasuredResult.getInstance(cli.getInstanceKey()).setFindBugsRules(XmlElementUtil.getElementCount(cli.getRuleSetFileForFindBugs(), "Match"));
-		} else {
-			MeasuredResult.getInstance(cli.getInstanceKey()).setFindBugsRules(Version.FINDBUGS_DEFAULT_RULES);
+		boolean isFirstRun = true;
+
+		for (String binary : binaryDirectories) {
+
+			LOGGER.info("FindBugs Target : {}", binary);
+
+			FindBugsAnalysis findBugsViolation = new FindBugsAnalysisLauncher();
+
+			findBugsViolation.setTarget(binary);
+
+			if (cli.getRuleSetFileForFindBugs() != null && !cli.getRuleSetFileForFindBugs().equals("")) {
+				findBugsViolation.addOption("-include", cli.getRuleSetFileForFindBugs());
+
+				if (isFirstRun) {
+					MeasuredResult.getInstance(cli.getInstanceKey()).setFindBugsRules(XmlElementUtil.getElementCount(cli.getRuleSetFileForFindBugs(), "Match"));
+				}
+			} else {
+				if (isFirstRun) {
+					MeasuredResult.getInstance(cli.getInstanceKey()).setFindBugsRules(Version.FINDBUGS_DEFAULT_RULES);
+				}
+			}
+
+			findBugsViolation.run(cli.getInstanceKey());
+
+			isFirstRun = false;
 		}
-
-		findBugsViolation.run(cli.getInstanceKey());
 
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.FINDBUGS_COMPLETE));
@@ -401,15 +462,19 @@ public class App {
 	}
 
 	private void runFindSecBugs(CliParser cli) {
-		FindBugsAnalysis findBugsViolation = new FindSecBugsAnalysisLauncher();
-
-		findBugsViolation.setTarget(cli.getProjectBaseDir() + File.separator + cli.getBinary());
-
 		if (cli.isDebug()) {
 			System.setProperty("findbugs.debug", "true");
 		}
 
-		findBugsViolation.run(cli.getInstanceKey());
+		String[] binaryDirectories = FindFileUtils.getFullDirectories(cli.getProjectBaseDir(), cli.getBinary());
+
+		for (String binary : binaryDirectories) {
+			FindBugsAnalysis findBugsViolation = new FindSecBugsAnalysisLauncher();
+
+			findBugsViolation.setTarget(binary);
+
+			findBugsViolation.run(cli.getInstanceKey());
+		}
 
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.FINDSECBUGS_COMPLETE));
@@ -419,9 +484,15 @@ public class App {
 	private void runJDepend(CliParser cli) {
 		JDependAnalysis jdepend = new JDependAnalysisLauncher();
 
-		jdepend.setTarget(cli.getProjectBaseDir() + File.separator + cli.getBinary());
+		String dirs = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getBinary());
 
-		List<String> packageList = PackageUtils.getProjectPackages(cli.getProjectBaseDir() + File.separator + cli.getBinary());
+		jdepend.setTarget(dirs);
+
+		List<String> packageList = new ArrayList<>();
+
+		for (String dir : FindFileUtils.getFullDirectories(cli.getProjectBaseDir(), cli.getBinary())) {
+			packageList.addAll(PackageUtils.getProjectPackages(dir));
+		}
 
 		LOGGER.debug("Package List");
 		for (String packageName : MeasuredResult.getInstance(cli.getInstanceKey()).getPackageList()) {
@@ -482,6 +553,8 @@ public class App {
 			} else {
 				outputFile = new File(cli.getOutput());
 			}
+
+            MeasuredResult.getInstance(cli.getInstanceKey()).calculateElapsedTime();
 
 			ResultProcessor.saveResultOutputFile(outputFile, cli, MeasuredResult.getInstance(cli.getInstanceKey()));
 		}
