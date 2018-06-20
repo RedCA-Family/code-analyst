@@ -160,6 +160,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println();
 		}
 		if (result.getIndividualMode().isFindSecBugs()) {
+			writer.println("FindSecBugsRules = " + result.getFindSecBugsRules());
 			writer.println("FindSecBugs = " + result.getFindSecBugsCountAll());
 			writer.println();
 		}

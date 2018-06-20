@@ -29,9 +29,10 @@ public class Version {
 	// 2.1.1 : FindSecBugs plugin 이중 로딩 오류 수정
 	// 2.2.0 : mode 옵션에 제외("-") 지정 기능, Web Resource 점검 분리, src/binary multi 지정, SonarJS SDS 표준 반영, SonarQube (6.7.1 -> 6.7.4) 변경,
 	//         전체 분석 시간 기록, SonarQube plugin 다운로드 세분화 (속도 개선), 순환참조 중복 제거 등
+	// 2.3.0 : FindSecBugs SDS 표준 반영
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "2.2.0";
-	public static final String DOCUMENT_VERSION = "2.2";
+	public static final String CODE_ANALYST = "2.3.0";
+	public static final String DOCUMENT_VERSION = "2.3";
 
 	public static final String SONAR_SCANNER = "2.10.0.1189";
 	public static final String SONAR_SERVER = "6.7.4";
@@ -47,7 +48,7 @@ public class Version {
 	
 	public static final String PMD_RULESET = "91 ruleset (v5.4, SDS Std. Ruleset, '18.03)";
 	public static final String FINDBUGS_RULESET = "214 ruleset (v3.0.1, SDS Std. Ruleset, '18.03)";
-	public static final String FINDSECBUGS_RULESET = "121 ruleset (v1.7.1)";
+	public static final String FINDSECBUGS_RULESET = "81 rules (v1.7.1, SDS Std. Ruleset, '18.06)";
 	public static final String SONAR_JAVA_RULESET = "227 ruleset (v4.15, SDS Std. Ruleset, '18.03)";
 	public static final String SONAR_JS_RULESET = "109 ruleset (v4.1, SDS Std. Ruleset, '18.05)";
 	public static final String SONAR_CSS_RULESET = "CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)";
@@ -56,6 +57,7 @@ public class Version {
 	public static final int SONAR_JAVA_DEFAULT_RULES = 227;
 	public static final int PMD_DEFAULT_RULES = 91;
 	public static final int FINDBUGS_DEFAULT_RULES = 214;
+	public static final int FINDSECBUGS_DEFAULT_RULES = 81;
 	public static final int SONAR_JS_DEFAULT_RULES = 109;
 	
 	public static void printVersionInfo() {

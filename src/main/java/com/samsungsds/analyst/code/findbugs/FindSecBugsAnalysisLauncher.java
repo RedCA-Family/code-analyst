@@ -16,7 +16,7 @@ public class FindSecBugsAnalysisLauncher extends FindBugsAnalysisLauncher {
 	private static final Logger LOGGER = LogManager.getLogger(FindSecBugsAnalysisLauncher.class);
 	
 	private static final String PLUGIN_FILE = "/statics/findsecbugs-plugin-1.7.1.jar";
-	private static final String BUG_SEC_RULESET_FILE = "/statics/FindSecBugs.xml";
+	private static final String BUG_SEC_RULESET_FILE = "/statics/FindSecBugs-include-filter_81.xml";
 	
 	private static boolean firstRun = true;
 	

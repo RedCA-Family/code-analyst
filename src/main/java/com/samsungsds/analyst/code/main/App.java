@@ -468,10 +468,16 @@ public class App {
 
 		String[] binaryDirectories = FindFileUtils.getFullDirectories(cli.getProjectBaseDir(), cli.getBinary());
 
+		boolean isFirstRun = true;
+
 		for (String binary : binaryDirectories) {
 			FindBugsAnalysis findBugsViolation = new FindSecBugsAnalysisLauncher();
 
 			findBugsViolation.setTarget(binary);
+
+			if (isFirstRun) {
+				MeasuredResult.getInstance(cli.getInstanceKey()).setFindSecBugsRules(Version.FINDSECBUGS_DEFAULT_RULES);
+			}
 
 			findBugsViolation.run(cli.getInstanceKey());
 		}

@@ -163,6 +163,8 @@ public class MeasuredResult implements Serializable {
 	@Expose
 	private int findBugsRules = 0;
 	@Expose
+	private int findSecBugsRules = 0;
+	@Expose
 	private int sonarJSRules = 0;
 
 	@Expose
@@ -810,6 +812,14 @@ public class MeasuredResult implements Serializable {
 
 	public void setFindBugsRules(int findBugsRules) {
 		this.findBugsRules = findBugsRules;
+	}
+
+	public int getFindSecBugsRules() {
+		return findSecBugsRules;
+	}
+
+	public void setFindSecBugsRules(int findSecBugsRules) {
+		this.findSecBugsRules = findSecBugsRules;
 	}
 
 	public int getSonarJSRules() {
