@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.samsungsds.analyst.code.util.FindFileUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,9 +47,10 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 
 	@Override
 	public void run(String instanceKey) {
-		
 		try {
-			analyzer.addDirectory(directory);
+			for (String dir : directory.split(FindFileUtils.COMMA_SPLITTER)) {
+				analyzer.addDirectory(dir);
+			}
 		} catch (IOException ioe) {
 			throw new IllegalArgumentException(ioe);
 		}
@@ -116,21 +118,20 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 	     
 	        JavaPackage headPackage = Collections.min(currentCycle, Comparator.comparing(JavaPackage::getName));
 	        
-	        while(currentCycle.get(0) != headPackage) {
+	        while (currentCycle.get(0) != headPackage) {
 	        	Collections.rotate(currentCycle, 1);
 	        }
 
 	        boolean isDuplicatedCycle = false;
 	      
-	        for(List<JavaPackage> cycle : cycleList) {      	
-	        	if(CollectionUtils.isEqualCollection(currentCycle, cycle))
-		        {
+	        for (List<JavaPackage> cycle : cycleList) {
+	        	if(CollectionUtils.isEqualCollection(currentCycle, cycle)) {
 	        		isDuplicatedCycle = true;
 	        		break;
 		        }
 	        }
 	        
-	        if(isDuplicatedCycle == false) {
+	        if (isDuplicatedCycle == false) {
 	        	cycleList.add(currentCycle);
 	        }
 	        
@@ -146,12 +147,11 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
 	        	int i = 0;
 	        	
 	        	for (JavaPackage pkg : cycle) {
-	        		if(i++ == 0) {
+	        		if (i++ == 0) {
 	        			print.append(pkg.getName());
 		        		LOGGER.info("{}", pkg.getName());
 		                LOGGER.info("{}|", tab());
-	        		}
-	        		else {
+	        		} else {
 	        			print.append(" | " + pkg.getName());
 	                	if (filter.include(pkg.getName())) {
 	                		LOGGER.info("{}|   {}", tab(), pkg.getName());
@@ -170,7 +170,7 @@ public class JDependAnalysisLauncher implements JDependAnalysis {
             		isSkipedCycle = true;
             	}
 	        	 
-            	if(!isSkipedCycle) {
+            	if (!isSkipedCycle) {
             		MeasuredResult.getInstance(instanceKey).addAcyclicDependency(print.toString());
             	}
 	        }

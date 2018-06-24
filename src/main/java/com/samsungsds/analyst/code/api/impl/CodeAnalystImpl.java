@@ -219,7 +219,13 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		argumentList.add("--timeout");
 		argumentList.add(Integer.toString(argument.getTimeout()));
 
-		String includeString = getIncludeString(targetFile);
+		String includeString;
+		if (isValidated(argument.getInclude())) {
+			includeString = String.join(",", argument.getInclude(), getIncludeString(targetFile));
+		} else {
+			includeString = getIncludeString(targetFile);
+		}
+
 		if (!includeString.equals("")) {
 			argumentList.add("-include");
 			argumentList.add(includeString);

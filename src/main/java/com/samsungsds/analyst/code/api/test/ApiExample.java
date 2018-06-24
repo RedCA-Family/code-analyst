@@ -63,6 +63,9 @@ public class ApiExample {
 
 		// argument.setExclude("com/samsungsds/analyst/code/main/filter/*");
 
+		argument.setInclude("**/com/samsungsds/**");
+		// include와 TargetFileInfo가 같이 들어오면 "and"로 처리됨
+
 		TargetFileInfo targetFile = new TargetFileInfo();
 
 		// addPackage() 또는 addFile()로 점검 대상 지정 (or 조건으로 처리됨)

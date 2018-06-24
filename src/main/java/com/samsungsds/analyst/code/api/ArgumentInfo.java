@@ -11,6 +11,7 @@ public class ArgumentInfo {
 	private String findBugsRuleFile;		// Findbugs ruleset xml file (if omitted, SDS Standard Ruleset used)
 	private String sonarRuleFile;			// SonarQube Issue exclude xml file (if omitted, all SDS Standard Rules included)
 	private int timeout = 10 * 60 * 10;		// 100 minutes
+	private String include;					// include pattern(Ant-Style) with comma separated. (eg: com/sds/**/*VO.java)
 	private String exclude;					// exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)
 	private String webapp;					// webapp directory
 	
@@ -98,6 +99,14 @@ public class ArgumentInfo {
 
 	public void setTimeout(int timeout) {
 		this.timeout = timeout;
+	}
+
+	public String getInclude() {
+		return include;
+	}
+
+	public void setInclude(String include) {
+		this.include = include;
 	}
 
 	public String getExclude() {
