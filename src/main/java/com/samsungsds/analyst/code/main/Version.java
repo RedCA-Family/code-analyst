@@ -30,8 +30,9 @@ public class Version {
 	// 2.2.0 : mode 옵션에 제외("-") 지정 기능, Web Resource 점검 분리, src/binary multi 지정, SonarJS SDS 표준 반영, SonarQube (6.7.1 -> 6.7.4) 변경,
 	//         전체 분석 시간 기록, SonarQube plugin 다운로드 세분화 (속도 개선), 순환참조 중복 제거 등
 	// 2.3.0 : FindSecBugs SDS 표준 반영, JDepend mult directory 지정 오류 수정, API include 추가 (SonarQube Plugin에서 필요)
+	// 2.3.1 : SonarQube Plugin에서 호출 시 ".snoar" 삭제 문제 해결 (".sonar" 디렉토리 변경)
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "2.3.0";
+	public static final String CODE_ANALYST = "2.3.1";
 	public static final String DOCUMENT_VERSION = "2.3";
 
 	public static final String SONAR_SCANNER = "2.10.0.1189";

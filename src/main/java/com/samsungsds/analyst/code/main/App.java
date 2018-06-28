@@ -49,6 +49,7 @@ public class App {
 	private static final Logger LOGGER = LogManager.getLogger(App.class);
 
 	private static final String SONAR_VERBOSE = "sonar.verbose";
+	private static final String SONAR_TEMP = ".ca";
 
 	private List<ProgressObserver> observerList = new ArrayList<>();
 
@@ -247,6 +248,8 @@ public class App {
 		if (cli.isDebug()) {
 			sonar.addProperty(SONAR_VERBOSE, "true");
 		}
+
+		sonar.addProperty(ScannerProperties.WORK_DIR, SONAR_TEMP);
 
 		sonar.addProperty(ScannerProperties.HOST_URL, "http://localhost:" + port);
 
@@ -571,7 +574,7 @@ public class App {
 	public void cleanup(String instanceKey) {
 		MeasuredResult.getInstance(instanceKey).clear();
 
-		IOAndFileUtils.deleteDirectory(new File(".sonar"));
+		IOAndFileUtils.deleteDirectory(new File(SONAR_TEMP));
 
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.FINAL_COMPLETE));
