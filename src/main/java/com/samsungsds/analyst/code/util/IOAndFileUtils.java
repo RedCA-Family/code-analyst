@@ -171,4 +171,8 @@ public class IOAndFileUtils {
 
 		return false;
 	}
+
+	public static String getNormalizedPath(String path) {
+		return path.replace("/", File.separator).replace("\\", File.separator);
+	}
 }

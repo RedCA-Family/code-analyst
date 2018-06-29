@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Queue;
 
 import com.samsungsds.analyst.code.util.FindFileUtils;
+import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,20 +50,22 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	
 	@Override
 	public void setProjectBaseDir(String directory) {
-		this.projectBaseDir = directory;
+		this.projectBaseDir = IOAndFileUtils.getNormalizedPath(directory);
 	}
 	
 	@Override
 	public void setTargetSrc(String directory) {
 		LOGGER.debug("UnusedCode Target Src : {}", directory);
-		this.targetSrc = directory.replaceAll("/", "\\\\");
+		//this.targetSrc = directory.replaceAll("/", "\\\\");
+		this.targetSrc = IOAndFileUtils.getNormalizedPath(directory);
 	}
 
 
 	@Override
 	public void setTargetBinary(String directory) {
 		LOGGER.debug("UnusedCode Target Binary : {}", directory);
-		this.targetBinary = directory.replaceAll("/", "\\\\");
+		//this.targetBinary = directory.replaceAll("/", "\\\\");
+		this.targetBinary = IOAndFileUtils.getNormalizedPath(directory);
 	}
 
 	@Override
@@ -93,7 +96,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 
 					path = getPrefixRemovedPath(path, binary);
 
-					if (measuredResult.haveToSkip(path.replace(".class", ".java"), true)) {
+					if (measuredResult.haveToSkip(path.replace("\\", "/").replace(".class", ".java"), true)) {
 						continue;
 					}
 
@@ -232,6 +235,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	}
 
 	private String getPrefixRemovedPath(String path, String prefix) {
+		/*
 		path = path.replaceAll("\\\\", "/");
 		prefix = prefix.replaceAll("\\\\", "/");
 
@@ -241,6 +245,17 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		if (path.startsWith(prefix)) {
             path = path.substring(prefix.length());
         }
+        */
+
+		path = IOAndFileUtils.getNormalizedPath(path);
+		prefix = IOAndFileUtils.getNormalizedPath(prefix);
+
+		if (!prefix.endsWith(File.separator)) {
+			prefix += File.separator;
+		}
+		if (path.startsWith(prefix)) {
+			path = path.substring(prefix.length());
+		}
 
 		return path;
 	}
@@ -296,7 +311,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 				return new File(src);
 			}
 
-			File sourceFile = new File(src + "\\" + classFilePath.replace(".class", ".java"));
+			File sourceFile = new File(src + File.separator + classFilePath.replace(".class", ".java"));
 
 			LOGGER.debug("Check source file : {}", sourceFile);
 

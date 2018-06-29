@@ -28,25 +28,28 @@ public class ApiExample {
 
 		ArgumentInfo argument = new ArgumentInfo();
 		try {
-			argument.setProject(new File(".").getCanonicalPath());
+			argument.setProject(new File(".").getCanonicalPath().replace("\\", "/"));
+			//argument.setProject(new File(".").getCanonicalPath());
 		} catch (IOException ex) {
 			ex.printStackTrace();
 			return;
 		}
-		argument.setSrc("src/main/java,src/test/java");
-		argument.setBinary("target/classes,target/test-classes");
+		//argument.setSrc("src/main/java,src/test/java");
+		//argument.setBinary("target/classes,target/test-classes");
+		argument.setSrc("src/main/java");
+		argument.setBinary("target/classes");
 
 		argument.setEncoding("UTF-8"); // default
 		argument.setJavaVersion("1.8"); // default
 
 		AnalysisMode mode = new AnalysisMode();
-		mode.setCodeSize(true);
-		mode.setDuplication(true);
+		mode.setCodeSize(false);
+		mode.setDuplication(false);
 		mode.setComplexity(true);
-		mode.setSonarJava(true);
-		mode.setPmd(true);
-		mode.setFindBugs(true);
-		mode.setFindSecBugs(true);
+		mode.setSonarJava(false);
+		mode.setPmd(false);
+		mode.setFindBugs(false);
+		mode.setFindSecBugs(false);
 		mode.setDependency(true);
 		mode.setJavascript(false);
 		mode.setCss(false);
@@ -91,9 +94,9 @@ public class ApiExample {
         //targetFile.addFile("com.samsungsds.analyst.code.test", "Test.java");
 
 		// addFileExactly 테스트
-		targetFile.addFileExactly("com.samsungsds.analyst.code.test", "Test.java");
-		targetFile.addFileExactly("com.samsungsds.analyst.code.api.impl", "CodeAnalystImpl.java");
-		targetFile.addFileExactly("com.samsungsds.analyst.code.pmd", "ComplexityAnalysisLauncherTest.java");
+		//targetFile.addFileExactly("com.samsungsds.analyst.code.test", "Test.java");
+		//targetFile.addFileExactly("com.samsungsds.analyst.code.api.impl", "CodeAnalystImpl.java");
+		//targetFile.addFileExactly("com.samsungsds.analyst.code.pmd", "ComplexityAnalysisLauncherTest.java");
 
 		argument.setSaveCatalog(true);
 
