@@ -493,7 +493,7 @@ public class CliParser {
         			continue;
 				}
 
-				if (targets[j].contains(targets[i])) {
+				if (targets[j].startsWith(targets[i])) {
         			return true;
 				}
 			}

@@ -251,7 +251,7 @@ public class App {
 
 		sonar.addProperty(ScannerProperties.WORK_DIR, SONAR_TEMP);
 
-		sonar.addProperty(ScannerProperties.HOST_URL, "http://localhost:" + port);
+		sonar.addProperty(ScannerProperties.HOST_URL, "http://127.0.0.1:" + port);
 
 		sonar.addProperty(InternalProperties.SCANNER_APP, "SonarQubeScanner");
 

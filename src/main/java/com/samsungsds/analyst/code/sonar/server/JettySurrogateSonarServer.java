@@ -78,7 +78,7 @@ public class JettySurrogateSonarServer implements SurrogateSonarServer {
 	@Override
 	public void stop() {
 		try {
-			URL url = new URL("http://localhost:" + serverPort + "/shutdown?token=" + secretPassword.toString());
+			URL url = new URL("http://127.0.0.1:" + serverPort + "/shutdown?token=" + secretPassword.toString());
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
 			connection.getResponseCode();

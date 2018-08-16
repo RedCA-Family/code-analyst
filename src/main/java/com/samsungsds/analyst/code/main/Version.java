@@ -31,6 +31,7 @@ public class Version {
 	//         전체 분석 시간 기록, SonarQube plugin 다운로드 세분화 (속도 개선), 순환참조 중복 제거 등
 	// 2.3.0 : FindSecBugs SDS 표준 반영, JDepend mult directory 지정 오류 수정, API include 추가 (SonarQube Plugin에서 필요)
 	// 2.3.1 : SonarQube Plugin에서 호출 시 ".snoar" 삭제 문제 해결 (".sonar" 디렉토리 변경), Unused Path 형식 오류 수정
+	// 2.3.2 : localhost -> 127.0.0.1 변경 (일부 보안 시스템에 의해 차단되는 경우 발생), src 경로 중복 확인 오류 수정
 	//--------------------------------------------------
 	public static final String CODE_ANALYST = "2.3.1";
 	public static final String DOCUMENT_VERSION = "2.3";
