@@ -1,3 +1,18 @@
+/*
+Copyright 2018 Samsung SDS
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ */
 package com.samsungsds.analyst.code.api.test;
 
 import java.io.File;
@@ -34,10 +49,10 @@ public class ApiExample {
 			ex.printStackTrace();
 			return;
 		}
-		//argument.setSrc("src/main/java,src/test/java");
-		//argument.setBinary("target/classes,target/test-classes");
-		argument.setSrc("src/main/java");
-		argument.setBinary("target/classes");
+		argument.setSrc("src/main/java,src/test/java");
+		argument.setBinary("target/classes,target/test-classes");
+		//argument.setSrc("src/main/java");
+		//argument.setBinary("target/classes");
 
 		argument.setEncoding("UTF-8"); // default
 		argument.setJavaVersion("1.8"); // default
@@ -45,16 +60,16 @@ public class ApiExample {
 		AnalysisMode mode = new AnalysisMode();
 		mode.setCodeSize(false);
 		mode.setDuplication(false);
-		mode.setComplexity(true);
+		mode.setComplexity(false);
 		mode.setSonarJava(false);
-		mode.setPmd(false);
+		mode.setPmd(true);
 		mode.setFindBugs(false);
 		mode.setFindSecBugs(false);
-		mode.setDependency(true);
+		mode.setDependency(false);
 		mode.setJavascript(false);
 		mode.setCss(false);
 		mode.setHtml(false);
-		mode.setUnusedCode(true);
+		mode.setUnusedCode(false);
 
 		argument.setMode(mode);
 
@@ -66,7 +81,7 @@ public class ApiExample {
 
 		// argument.setExclude("com/samsungsds/analyst/code/main/filter/*");
 
-		argument.setInclude("**/com/samsungsds/**");
+		//argument.setInclude("**/com/samsungsds/**");
 		// include와 TargetFileInfo가 같이 들어오면 "and"로 처리됨
 
 		TargetFileInfo targetFile = new TargetFileInfo();
@@ -76,6 +91,7 @@ public class ApiExample {
 		// - addFile()은 선택된 소스
 
 		// targetFile.addPackage("com.samsungsds.analyst.code.main"); // include sub-packages
+		targetFile.addPackage("com.samsungsds.analyst.code.api"); // include sub-packages
 
 		// targetFile.addFile("com.samsungsds.analyst.code.main", "MeasuredResult.java");
 		// targetFile.addFile("com.samsungsds.analyst.code.main", "ResultProcessor.java");

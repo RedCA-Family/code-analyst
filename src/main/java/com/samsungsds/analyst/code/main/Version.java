@@ -1,3 +1,18 @@
+/*
+Copyright 2018 Samsung SDS
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ */
 package com.samsungsds.analyst.code.main;
 
 public class Version {
@@ -30,10 +45,11 @@ public class Version {
 	// 2.2.0 : mode 옵션에 제외("-") 지정 기능, Web Resource 점검 분리, src/binary multi 지정, SonarJS SDS 표준 반영, SonarQube (6.7.1 -> 6.7.4) 변경,
 	//         전체 분석 시간 기록, SonarQube plugin 다운로드 세분화 (속도 개선), 순환참조 중복 제거 등
 	// 2.3.0 : FindSecBugs SDS 표준 반영, JDepend mult directory 지정 오류 수정, API include 추가 (SonarQube Plugin에서 필요)
-	// 2.3.1 : SonarQube Plugin에서 호출 시 ".snoar" 삭제 문제 해결 (".sonar" 디렉토리 변경), Unused Path 형식 오류 수정
+	// 2.3.1 : SonarQube Plugin에서 호출 시 ".sonar" 삭제 문제 해결 (".sonar" 디렉토리 변경), Unused Path 형식 오류 수정
 	// 2.3.2 : localhost -> 127.0.0.1 변경 (일부 보안 시스템에 의해 차단되는 경우 발생), src 경로 중복 확인 오류 수정
+	// 2.4.0 : OSS(Open Source Software) Version release
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "2.3.1";
+	public static final String CODE_ANALYST = "2.4.0";
 	public static final String DOCUMENT_VERSION = "2.3";
 
 	public static final String SONAR_SCANNER = "2.10.0.1189";
@@ -48,11 +64,11 @@ public class Version {
 	public static final String SONAR_CSS = "3.1";
 	public static final String SONAR_WEB = "2.5.0.476";
 	
-	public static final String PMD_RULESET = "91 ruleset (v5.4, SDS Std. Ruleset, '18.03)";
-	public static final String FINDBUGS_RULESET = "214 ruleset (v3.0.1, SDS Std. Ruleset, '18.03)";
-	public static final String FINDSECBUGS_RULESET = "81 rules (v1.7.1, SDS Std. Ruleset, '18.06)";
-	public static final String SONAR_JAVA_RULESET = "227 ruleset (v4.15, SDS Std. Ruleset, '18.03)";
-	public static final String SONAR_JS_RULESET = "109 ruleset (v4.1, SDS Std. Ruleset, '18.05)";
+	public static final String PMD_RULESET = "91 ruleset (v5.4, RedCA Way Ruleset, '18.03)";
+	public static final String FINDBUGS_RULESET = "214 ruleset (v3.0.1, RedCA Way Ruleset, '18.03)";
+	public static final String FINDSECBUGS_RULESET = "81 rules (v1.7.1, RedCA Way Ruleset, '18.06)";
+	public static final String SONAR_JAVA_RULESET = "227 ruleset (v4.15, RedCA Way Ruleset, '18.03)";
+	public static final String SONAR_JS_RULESET = "109 ruleset (v4.1, RedCA Way Ruleset, '18.05)";
 	public static final String SONAR_CSS_RULESET = "CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)";
 	public static final String SONAR_WEB_RULESET = "16 ruleset (v2.5)";
 
