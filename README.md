@@ -1,5 +1,7 @@
 # Code Analyst Project
 
+[![Build Status](https://travis-ci.org/RedCA-Family/code-analyst.svg?branch=development)](https://travis-ci.org/RedCA-Family/code-analyst)
+
 Code Analyst는 코드 품질에 대한 다양한 지표를 통합적으로 확인할 수 있는 프로그램입니다. 
 
 기본적으로 측정되는 코드 규모(프로그램 개수, loc 등)뿐만 아니라 중복도, 복잡도, Inspection 결과(PMD, FindBugs) 등을 확인할 수 있습니다.
@@ -103,9 +105,12 @@ Code Analyst를 실행하기 위해서는 Java 1.8이 필요하며, 하나의 �
 
 보다 자세한 사항은 [Guide](GUIDE.md)를 참조해 주세요. 
 
+
 ## Contributing
 
-Please contact us at [codari@samsung.com](codari@samsung.com).
+버그 리포팅, 기능 개선 요청, pull request 요청 등은 [issue tracker](https://github.com/RedCA-Family/code-analyst/issues)를 활용해 주세요.
+
+* 기타 연락처 : [codari@samsung.com](codari@samsung.com)
 
 
 ## History
@@ -117,7 +122,7 @@ Please contact us at [codari@samsung.com](codari@samsung.com).
 
 ## License
 
-Code-Analyst is licensed under the version 2.0 of the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).   
+Code Analyst is licensed under the version 2.0 of the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).   
 See [LICENSE](./LICENSE.txt) for the Code-Analyst full license text.  
 Licenses about 3rd-party library are in [./src/main/resources/LICENSES](./src/main/resources/LICENSES).  
 
