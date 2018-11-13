@@ -40,7 +40,7 @@ public abstract class AbstractOutputFile {
 
 	public void process(File file, CliParser cli, MeasuredResult result) {
 		try {
-			writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file))));
+			writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8")));
 
 			open(result);
 

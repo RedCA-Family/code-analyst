@@ -194,7 +194,7 @@ public class JsonOutputFile extends AbstractOutputFile {
 		builder.excludeFieldsWithoutExposeAnnotation();
 		final Gson gson = builder.create();
 
-		try (PrintWriter jsonWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile))))) {
+		try (PrintWriter jsonWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile), "UTF-8")))) {
 
 			// String json = gson.toJson(list);
 			JsonArray jsonArray = gson.toJsonTree(list).getAsJsonArray();
