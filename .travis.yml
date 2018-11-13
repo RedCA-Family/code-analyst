@@ -1,2 +1,4 @@
 # .travis.yml
 language: java
+before_install:
+  - chmod +x mvnw
