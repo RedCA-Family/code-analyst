@@ -7,6 +7,32 @@
 	<artifactId>code</artifactId>
 	<version>2.4.0</version>
 
+	<name>Code-Analyst</name>
+	<description>Code Analyst to measure various code metrics</description>
+	<url>https://github.com/RedCA-Family/code-analyst</url>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Vincent Han</name>
+			<email>switchover@gmail.com</email>
+			<organization>Samsung SDS</organization>
+			<organizationUrl>http://www.samsungsds.com/</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:https://github.com/RedCA-Family/code-analyst.git</connection>
+		<developerConnection>scm:git:https://switchover@github.com/RedCA-Family/code-analyst.git</developerConnection>
+		<url>https://github.com/RedCA-Family/code-analyst</url>
+	</scm>
+
 	<properties>
 		<jarName>Code-Analyst</jarName>
 	</properties>
