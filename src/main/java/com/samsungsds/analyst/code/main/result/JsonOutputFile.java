@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -137,7 +138,15 @@ public class JsonOutputFile extends AbstractOutputFile {
 
 			writeListToJson(unusedCodeList, "unusedList", jsonFile);
 		}
+	}
 
+	@Override
+	protected void writeCkMetrics(List<CkMetricsResult> ckMetricsResultList) {
+		if (result.isSeperatedOutput()) {
+			String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-ckmetrics.json";
+
+			writeListToJson(ckMetricsResultList, "ckMetricsList", jsonFile);
+		}
 	}
 
 	@Override

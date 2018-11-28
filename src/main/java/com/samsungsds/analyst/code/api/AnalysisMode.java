@@ -29,6 +29,7 @@ public class AnalysisMode {
 	private boolean html = false;			// disabled by default
 	private boolean dependency = true;
 	private boolean unusedCode = true;
+	private boolean ckMetrics = true;
 
 	public boolean isSonarServer() {
 		return codeSize || duplication || sonarJava || javascript || css || html;
@@ -138,4 +139,11 @@ public class AnalysisMode {
 		this.unusedCode = unusedCode;
 	}
 
+	public boolean isCkMetrics() {
+		return ckMetrics;
+	}
+
+	public void setCkMetrics(boolean ckMetrics) {
+		this.ckMetrics = ckMetrics;
+	}
 }

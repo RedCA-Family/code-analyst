@@ -113,7 +113,7 @@ public class CliParser {
 		options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)");
 
 		options.addOption("m", "mode", true, "specify analysis items with comma separated. If '-' specified in each mode, the mode is excluded. " +
-				"(code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs, javascript, css, html, dependency, unusedcode)" +
+				"(code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs, javascript, css, html, dependency, unusedcode, ckmetrics)" +
 				"\n※ 'javascript', 'css' and 'html' will be disabled when 'webapp' option isn't set, and 'css' and 'html' are disabled by default");
 
 		options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occured, use JVM '-Xmx' option like '-Xmx1024m')");
@@ -459,9 +459,11 @@ public class CliParser {
 				individualMode.setDependency(includeOrExclude);
 			} else if (mode.equalsIgnoreCase("unusedcode")) {
 				individualMode.setUnusedCode(includeOrExclude);
+			} else if (mode.equalsIgnoreCase("ckmetrics")) {
+				individualMode.setCkMetrics(includeOrExclude);
 			} else {
 				throw new IllegalArgumentException("'mode' option can only have 'code-size', 'duplication', 'complexity', " +
-						"'sonarjava', 'pmd', 'findbugs', 'findsecbugs', 'javascript', 'css', 'html', 'dependency', and 'unusedcode' (with or without '-')");
+						"'sonarjava', 'pmd', 'findbugs', 'findsecbugs', 'javascript', 'css', 'html', 'dependency', 'unusedcode', and 'ckmetrics' (with or without '-')");
 			}
 		}
 	}

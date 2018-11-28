@@ -38,6 +38,9 @@ public class FilePathIncludeFilter extends FilePathAbstractFilter {
 		AntPathMatcher matcher = new AntPathMatcher();
 		
 		for (String filter : getFilters()) {
+			if (printPathFilter) {
+				System.out.println("[FilePathFilter] <<" + filter + ">>");
+			}
 			if (withoutFilename) {
 				filter = filter.substring(0, filter.lastIndexOf("/")) + "/*.java";
 			}

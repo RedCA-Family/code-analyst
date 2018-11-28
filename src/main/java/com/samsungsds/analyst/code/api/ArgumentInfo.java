@@ -30,7 +30,7 @@ public class ArgumentInfo {
 	private String exclude;					// exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)
 	private String webapp;					// webapp directory
 	
-	private AnalysisMode mode;				// code-size,duplication,complexity,sonarjava,pmd,findbugs,findsecbugs,javascript,css,html,dependency,unused
+	private AnalysisMode mode;				// code-size,duplication,complexity,sonarjava,pmd,findbugs,findsecbugs,javascript,css,html,dependency,unused,ckmetrics
 
 	private boolean detailAnalysis = false;	// Detail Analysis mode
 
