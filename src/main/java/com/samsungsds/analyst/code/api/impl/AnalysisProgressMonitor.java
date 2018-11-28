@@ -34,7 +34,8 @@ public class AnalysisProgressMonitor {
 			ProgressEvent.JAVASCRIPT_COMPLETE, ProgressEvent.CSS_COMPLETE, ProgressEvent.HTML_COMPLETE,
 			ProgressEvent.SONAR_ALL_COMPLETE,
 			ProgressEvent.PMD_COMPLETE, ProgressEvent.FINDBUGS_COMPLETE, ProgressEvent.FINDSECBUGS_COMPLETE,
-			ProgressEvent.DEPENDENCY_COMPLETE, ProgressEvent.UNUSED_COMPLETE, ProgressEvent.FINAL_COMPLETE };
+			ProgressEvent.DEPENDENCY_COMPLETE, ProgressEvent.UNUSED_COMPLETE, ProgressEvent.CK_METRICS_COMPLETE,
+			ProgressEvent.FINAL_COMPLETE };
 	private static Map<ProgressEvent, Integer> stepRates = new HashMap<>();
 	private static Map<ProgressEvent, String> stepProperties = new HashMap<>();
 	
@@ -62,6 +63,7 @@ public class AnalysisProgressMonitor {
 		stepRates.put(ProgressEvent.FINDSECBUGS_COMPLETE, 9_000);
 		stepRates.put(ProgressEvent.DEPENDENCY_COMPLETE, 1_700);
 		stepRates.put(ProgressEvent.UNUSED_COMPLETE, 1_500);
+		stepRates.put(ProgressEvent.CK_METRICS_COMPLETE, 1_500);
 		stepRates.put(ProgressEvent.FINAL_COMPLETE, 100);
 
 		stepProperties.put(ProgressEvent.SONAR_START_COMPLETE, "sonarServer");
@@ -78,6 +80,7 @@ public class AnalysisProgressMonitor {
 		stepProperties.put(ProgressEvent.FINDSECBUGS_COMPLETE, "findSecBugs");
 		stepProperties.put(ProgressEvent.DEPENDENCY_COMPLETE, "dependency");
 		stepProperties.put(ProgressEvent.UNUSED_COMPLETE, "unusedCode");
+		stepProperties.put(ProgressEvent.CK_METRICS_COMPLETE, "ckMetrics");
 	}
 	
 	public AnalysisProgressMonitor(AnalysisMode analysisMode) {

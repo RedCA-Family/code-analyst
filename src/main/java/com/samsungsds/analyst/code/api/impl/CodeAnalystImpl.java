@@ -390,6 +390,10 @@ public class CodeAnalystImpl implements CodeAnalyst {
 		if (mode.isUnusedCode()) {
 			addAnalysisItem(parameter, "unusedcode");
 		}
+
+		if (mode.isCkMetrics()) {
+			addAnalysisItem(parameter, "ckmetrics");
+		}
 		
 		return parameter.toString();
 	}

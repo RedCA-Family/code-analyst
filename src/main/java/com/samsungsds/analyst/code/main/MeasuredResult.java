@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -261,6 +262,9 @@ public class MeasuredResult implements Serializable {
 	private int unusedConstantCount = 0;
 
 	@Expose
+	private List<CkMetricsResult> ckMetricsResultList = null;
+
+	@Expose
 	private TechnicalDebtResult technicalDebtResult = null;
 
 	public static MeasuredResult getInstance(String instanceKey) {
@@ -305,6 +309,7 @@ public class MeasuredResult implements Serializable {
 			findSecBugsList = Collections.synchronizedList(new ArrayList<>());
 			webResourceList = Collections.synchronizedList(new ArrayList<>());
 			acyclicDependencyList = Collections.synchronizedList(new ArrayList<>());
+			ckMetricsResultList = Collections.synchronizedList(new ArrayList<>());
 		} else {
 			if (individualMode.isDuplication()) {
 				duplicationList = makeCSVFileCollectionList(DuplicationResult.class, this);
@@ -345,6 +350,11 @@ public class MeasuredResult implements Serializable {
 				acyclicDependencyList = makeCSVFileCollectionList(JDependResult.class, this);
 			} else {
 				acyclicDependencyList = new ArrayList<>(0);
+			}
+			if (individualMode.isCkMetrics()) {
+				ckMetricsResultList = makeCSVFileCollectionList(CkMetricsResult.class, this);
+			} else {
+				ckMetricsResultList = new ArrayList<>(0);
 			}
 		}
 	}
@@ -1056,6 +1066,16 @@ public class MeasuredResult implements Serializable {
 		return acyclicDependencyList.stream().map(s -> s.getAcyclicDependencies()).collect(MoreCollectors.toList());
 	}
 
+	public void addCkMetricsResultList(CkMetricsResult ckMetricsResult) {
+		ckMetricsResult.replaceFile(getConvertedFilePath(ckMetricsResult.getFile()));
+
+		ckMetricsResultList.add(ckMetricsResult);
+	}
+
+	public List<CkMetricsResult> getCkMetricsResultList() {
+		return ckMetricsResultList;
+	}
+
 	public void setMode(MeasurementMode mode) {
 		this.mode = mode;
 	}
@@ -1151,6 +1171,7 @@ public class MeasuredResult implements Serializable {
 			findBugsList.clear();
 			findSecBugsList.clear();
 			webResourceList.clear();
+			ckMetricsResultList.clear();
 		} else {
 			for (CSVFileCollectionList<?> list : closeTargetList) {
 				if (list.isTypeOf(JDependResult.class)) {
@@ -1172,6 +1193,7 @@ public class MeasuredResult implements Serializable {
 			findSecBugsList = null;
 			webResourceList = null;
 			unusedCodeList = null;
+			ckMetricsResultList = null;
 		}
 	}
 
@@ -1274,6 +1296,7 @@ public class MeasuredResult implements Serializable {
 			findSecBugsList.clear();
 			webResourceList.clear();
 			acyclicDependencyList.clear();
+			ckMetricsResultList.clear();
 		} else {
 			for (CSVFileCollectionList<?> list : closeTargetList) {
 				try {
@@ -1293,6 +1316,22 @@ public class MeasuredResult implements Serializable {
 		topFindBugsList = null;
 		technicalDebtResult = null;
 		unusedCodeList = null;
+		ckMetricsResultList = null;
 	}
 
+	public String getConvertedFilePath(String filePath) {
+		String path = filePath.replaceAll("\\\\", "/");
+
+		String project = getProjectDirectory().replaceAll("\\\\", "/");
+
+		if (!project.endsWith("/")) {
+			project += "/";
+		}
+
+		if (path.startsWith(project)) {
+			path = path.substring(project.length());
+		}
+
+		return path;
+	}
 }

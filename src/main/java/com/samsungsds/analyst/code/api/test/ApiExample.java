@@ -62,7 +62,7 @@ public class ApiExample {
 		mode.setDuplication(false);
 		mode.setComplexity(false);
 		mode.setSonarJava(false);
-		mode.setPmd(true);
+		mode.setPmd(false);
 		mode.setFindBugs(false);
 		mode.setFindSecBugs(false);
 		mode.setDependency(false);
@@ -70,6 +70,9 @@ public class ApiExample {
 		mode.setCss(false);
 		mode.setHtml(false);
 		mode.setUnusedCode(false);
+		mode.setCkMetrics(true);
+
+		//System.setProperty("print.path.filter", "true");
 
 		argument.setMode(mode);
 

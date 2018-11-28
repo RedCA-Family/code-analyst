@@ -23,6 +23,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.List;
 
+import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import org.apache.commons.io.IOUtils;
 
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
@@ -90,6 +91,10 @@ public abstract class AbstractOutputFile {
 				writeUnusedCode(result.getUnusedCodeList());
 			}
 
+			if (result.getIndividualMode().isCkMetrics()) {
+				writeCkMetrics(result.getCkMetricsResultList());
+			}
+
 			writeSeparator();
 
 			close(writer);
@@ -104,6 +109,8 @@ public abstract class AbstractOutputFile {
 	protected abstract void open(MeasuredResult result);
 
 	protected abstract void writeSeparator();
+
+	protected abstract void writeCkMetrics(List<CkMetricsResult> ckMetricsResultList);
 
 	protected abstract void writeAcyclicDependencies(List<String> acyclicDependencyList);
 

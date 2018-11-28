@@ -32,6 +32,7 @@ public class IndividualMode extends AnalysisMode {
 		setHtml(false);			// disabled by default
 		setDependency(true);
 		setUnusedCode(true);
+		setCkMetrics(true);
 	}
 
 	public void setUnsetAll() {
@@ -47,6 +48,7 @@ public class IndividualMode extends AnalysisMode {
 		setHtml(false);
 		setDependency(false);
 		setUnusedCode(false);
+		setCkMetrics(false);
 	}
 
 	@Override
@@ -88,6 +90,9 @@ public class IndividualMode extends AnalysisMode {
 		}
 		if (isUnusedCode()) {
 			builder.append("Unused Code, ");
+		}
+		if (isCkMetrics()) {
+			builder.append("CK Metrics, ");
 		}
 
 		return builder.substring(0, builder.length() - 2);

@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.List;
 
+import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -192,4 +193,53 @@ public class CSVSeperatedOutput {
 		LOGGER.info("Result seperated file saved : {}", csvFile);
 	}
 
+	public void writeCkMetrics(List<CkMetricsResult> list) {
+		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-ckmetrics.csv";
+
+		try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
+			csvWriter.println("No,File,Class,Type,CBO,WMC,DIT,NOC,RFC,LCOM,NOM,NOPM,NOSM,NOF,NOPF,NOSF,NOSI,LOC");
+
+			int count = 0;
+			synchronized (list) {
+				for (CkMetricsResult result : list) {
+					csvWriter.print(++count + ",");
+					csvWriter.print(getStringsWithComma(result.getFile(), result.getClassName(), result.getType()));
+					csvWriter.print(",");
+					csvWriter.print(result.getCbo());
+					csvWriter.print(",");
+					csvWriter.print(result.getWmc());
+					csvWriter.print(",");
+					csvWriter.print(result.getDit());
+					csvWriter.print(",");
+					csvWriter.print(result.getNoc());
+					csvWriter.print(",");
+					csvWriter.print(result.getRfc());
+					csvWriter.print(",");
+					csvWriter.print(result.getLcom());
+					csvWriter.print(",");
+					csvWriter.print(result.getNom());
+					csvWriter.print(",");
+					csvWriter.print(result.getNopm());
+					csvWriter.print(",");
+					csvWriter.print(result.getNosm());
+					csvWriter.print(",");
+					csvWriter.print(result.getNof());
+					csvWriter.print(",");
+					csvWriter.print(result.getNopf());
+					csvWriter.print(",");
+					csvWriter.print(result.getNosf());
+					csvWriter.print(",");
+					csvWriter.print(result.getNosi());
+					csvWriter.print(",");
+					csvWriter.print(result.getLoc());
+					csvWriter.println();
+				}
+			}
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
+
+		LOGGER.info("Result seperated file saved : {}", csvFile);
+
+	}
 }

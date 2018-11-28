@@ -25,6 +25,8 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysis;
+import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysisLauncher;
 import com.samsungsds.analyst.code.sonar.filter.SonarIssueFilter;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -210,6 +212,12 @@ public class App {
 					LOGGER.info("UnusedCode Analysis start...");
 
 					runUnusedCode(cli);
+				}
+
+				if (cli.getIndividualMode().isCkMetrics()) {
+					LOGGER.info("CK Metrics Analysis start...");
+
+					runCkMetrics(cli);
 				}
 			}
 
@@ -556,6 +564,18 @@ public class App {
 
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.UNUSED_COMPLETE));
+		}
+	}
+
+	private void runCkMetrics(CliParser cli) {
+		CkMetricsAnalysis ckMetricsAnalysis = new CkMetricsAnalysisLauncher();
+
+		ckMetricsAnalysis.setTarget(cli.getSrc());
+
+		ckMetricsAnalysis.run(cli.getInstanceKey());
+
+		if (progressMonitor != null) {
+			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.CK_METRICS_COMPLETE));
 		}
 	}
 
