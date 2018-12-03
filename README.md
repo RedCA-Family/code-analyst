@@ -27,7 +27,7 @@ API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 2
 	
 	<dependency>
 		<groupId>com.samsungsds.analyst</groupId>
-		<artifactId>code</artifactId>
+		<artifactId>code-analyst</artifactId>
 		<version>2.5.0</version>
 	</dependency>
 	<dependency>
