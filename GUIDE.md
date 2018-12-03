@@ -2,7 +2,7 @@
 
 ## 1. 기본 실행 ##
 
-	$> java -jar Code-Analyst-2.4.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+	$> java -jar Code-Analyst-2.5.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
 
 
 ### 결과 화면 
@@ -92,7 +92,7 @@
 | -w, --webapp <arg> | webapp root 디렉토리 지정  ※ webapp 옵션이 지정되지 않으며, mode에 javascript, css, html 점검항목은 적용되지 않음 |  | 2.2 | -w "src/main/webapp" |
 | -include <arg> | include 패턴 지정 (Ant-style로 comma로 구분되는 여러 패턴 지정 가능) |  | 1.2 | -include "com/sds/**/*.java" |
 | -exclude <arg> | exclude 패턴 지정 (Ant-style로 comma로 구분되는 여러 패턴 지정 가능) |  | 1.2 | -exclude "com/sds/**/*VO.java" |
-| -m, --mode <arg> | 점검 대상 선택 지정으로 code-size, duplication, sonarjava, complexity, pmd, findbugs, findsecbugs, javascript, css, html, dependency, unusedcode 지원 (comma로 구분)  (v2.2 이후) 점검 대상 앞에 "-"가 붙는 경우는 해당 항목 점검이 제외되며, 기존 webresource가 javascript, css, html로 분리됨  ※ sonarjava, webresource, unusedcode는 2.0부터 지원 | ※ 전체 (css, html은 제외) | 1.3 | -m "pmd,findbugs,findsecbugs" |
+| -m, --mode <arg> | 점검 대상 선택 지정으로 code-size, duplication, sonarjava, complexity, pmd, findbugs, findsecbugs, javascript, css, html, dependency, unusedcode, ckmetrics 지원 (comma로 구분)  (v2.2 이후) 점검 대상 앞에 "-"가 붙는 경우는 해당 항목 점검이 제외되며, 기존 webresource가 javascript, css, html로 분리됨  ※ sonarjava, webresource, unusedcode는 2.0부터, ckmetrics는 2.5부터 지원 | ※ 전체 (css, html은 제외) | 1.3 | -m "pmd,findbugs,findsecbugs" |
 | -a,--analysis | 세부 분석 모드로 "영향도 높은 중복 코드 블럭 식별" 등 추가   (내부적으로 좀더 많은 메모리를 사용하므로 OOM 발생 시, JVM의 '-Xmx' 옵션을 사용 권장, eg: -Xmx1024m) |  | 1.5 | -a |
 | -r,--rerun <arg> | 이전 실행된 결과 output(text)와 동일한 옵션을 지정하여 실행  영향을 받는 옵션 : 'project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', 'analysis', 'seperated', 'catalog' 및 'webap' |  | 1.5 | -r result.out |
 | -seperated | 중복도, 복잡도, PMD, FindBugs, FindSecBugs에 대한 결과 정보를 별도의 파일로 분리 |  | 1.5 | -seperated |
@@ -143,7 +143,7 @@ API의 analyze() 호출을 통해 코드 분석을 수행하며, 다음과 같�
 | timeout | 내부적으로 사용되는 jetty에 대한 timeout 지정 (개발자 모드) | 기본값 : 100분 |
 | exclude | 제외 패턴(ant-style, 여러 개인 경우 comma로 구분) |  |
 | webapp | webapp root 디렉토리 지정 (위 project 속성에 대한 상대경로 지정) |  |
-| mode | AnalysisMode로 점검하고자 하는 항목 지정 (codeSize, duplication, complexity, pmd, findBugs, findSecBugs, javascript, css, html, dependency) | css, html은 기본적으로 비활성화 |
+| mode | AnalysisMode로 점검하고자 하는 항목 지정 (codeSize, duplication, complexity, pmd, findBugs, findSecBugs, javascript, css, html, dependency, unused, ckmetrics) | css, html은 기본적으로 비활성화 |
 | detailAnalysis | 세부 분석 처리 (Top 10 분석 등) |  |
 | saveCatalog | 점검된 파일 목록 기록 |  |
 
@@ -168,6 +168,7 @@ API의 analyze() 호출을 통해 코드 분석을 수행하며, 다음과 같�
 | findSecBugsFile | FindSecBugs List 결과 파일 |
 | sonarJavaFile | SonarJava List 결과 파일 |
 | webResourceFile | Web Resource List 결과 파일 |
+| ckMetricsFile | CK Metrics List 결과 파일 |
 
 최정 return 정보는 where 하위에 생성된 결과 파일(json)에 대한 전체 경로로 "result-[yyyyMMddHHmmss].json" 형식으로 처리됩니다.
 
@@ -196,6 +197,8 @@ API의 analyze() 호출을 통해 코드 분석을 수행하며, 다음과 같�
 	mode.setFindSecBugs(false);
 	mode.setWebResource(false);
 	mode.setDependency(true);
+	mode.setUnused(true);
+	mode.setCkMetrics(true);
 	 
 	argument.setMode(mode);
 	 
@@ -317,4 +320,5 @@ ProgressObserver의 informProgress() 메소드에 의해 notify되며, AnalysisP
 * FINDSECBUGS_COMPLETE : FindSecBugs 점검 후 호출
 * DEPENDENCY_COMPLETE : 순환참조 점검 후 호출
 * UNUSED_COMPLTE : 미사용코드 점검 후 호출
+* CK_METRICS_COMPLETE : CK Metrics 점검 후 호출
 * FINAL_COMPLETE : 최종 점검 완료 후 호출

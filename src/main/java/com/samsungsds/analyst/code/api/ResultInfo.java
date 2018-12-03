@@ -24,6 +24,7 @@ public class ResultInfo {
 	private String findSecBugsFile;
 	private String sonarJavaFile;
 	private String webResourceFile;
+	private String ckMetricsFile;
 	
 	public String getOutputFile() {
 		return outputFile;
@@ -87,5 +88,13 @@ public class ResultInfo {
 
 	public void setWebResourceFile(String webResourceFile) {
 		this.webResourceFile = webResourceFile;
+	}
+
+	public String getCkMetricsFile() {
+		return ckMetricsFile;
+	}
+
+	public void setCkMetricsFile(String ckMetricsFile) {
+		this.ckMetricsFile = ckMetricsFile;
 	}
 }

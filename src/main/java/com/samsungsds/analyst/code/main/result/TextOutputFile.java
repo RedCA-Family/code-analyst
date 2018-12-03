@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
 import com.samsungsds.analyst.code.main.CliParser;
 import com.samsungsds.analyst.code.main.MeasuredResult;
@@ -509,6 +510,58 @@ public class TextOutputFile extends AbstractOutputFile {
 		}
 	}
 
+	@Override
+	protected void writeCkMetrics(List<CkMetricsResult> list) {
+		if (result.isSeperatedOutput()) {
+			csvOutput.writeCkMetrics(list);
+			return;
+		}
+		writer.println("[CKMetrics]");
+		writer.println("; file, class, type, cbo, wmc, dit, noc, rfc, lcom, nom, nopm, nosm, nof, nopf, nosf, nosi, loc");
+
+		int count = 0;
+		synchronized (list) {
+			for (CkMetricsResult result : list) {
+				writer.print(++count + " = ");
+				writer.print(getStringsWithComma(result.getFile(), result.getClassName(), result.getType()));
+				writer.print(",");
+				writer.print(result.getCbo());
+				writer.print(",");
+				writer.print(result.getWmc());
+				writer.print(",");
+				writer.print(result.getDit());
+				writer.print(",");
+				writer.print(result.getNoc());
+				writer.print(",");
+				writer.print(result.getRfc());
+				writer.print(",");
+				writer.print(result.getLcom());
+				writer.print(",");
+				writer.print(result.getNom());
+				writer.print(",");
+				writer.print(result.getNopm());
+				writer.print(",");
+				writer.print(result.getNosm());
+				writer.print(",");
+				writer.print(result.getNof());
+				writer.print(",");
+				writer.print(result.getNopf());
+				writer.print(",");
+				writer.print(result.getNosf());
+				writer.print(",");
+				writer.print(result.getNosi());
+				writer.print(",");
+				writer.print(result.getLoc());
+				writer.println();
+			}
+		}
+
+		writer.println();
+		writer.println("total = " + count);
+		writer.println();
+		writer.println();
+	}
+
 	private void writeTopMartinMetrics(List<MartinMetrics> topMartinMetrics) {
 		writer.println("[TopMartinMetrics]");
 		writer.println("; package, Ca, Ce, A, I, D");
@@ -541,5 +594,4 @@ public class TextOutputFile extends AbstractOutputFile {
 	protected void close(PrintWriter writer) {
 		// no-op
 	}
-
 }

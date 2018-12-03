@@ -1,5 +1,7 @@
 # Code Analyst Project
 
+[![Build Status](https://travis-ci.org/RedCA-Family/code-analyst.svg?branch=development)](https://travis-ci.org/RedCA-Family/code-analyst)
+
 Code Analyst는 코드 품질에 대한 다양한 지표를 통합적으로 확인할 수 있는 프로그램입니다. 
 
 기본적으로 측정되는 코드 규모(프로그램 개수, loc 등)뿐만 아니라 중복도, 복잡도, Inspection 결과(PMD, FindBugs) 등을 확인할 수 있습니다.
@@ -20,9 +22,27 @@ Code Analyst를 실행하기 위해서는 Java 1.8이 필요하며, 하나의 �
 생성된 jar 파일을 임의의 디렉토리에 위치시키고 아래 사용법 과 같이 실행하여 사용합니다.
 
 
-## Usage
+## API 사용 ##
+API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 2개의 dependency를 추가하면 됩니다. 
+	
+	<dependency>
+		<groupId>com.samsungsds.analyst</groupId>
+		<artifactId>code</artifactId>
+		<version>2.5.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.sonarsource.scanner.api</groupId>
+		<artifactId>sonar-scanner-api-batch</artifactId>
+		<version>2.10.0.1189</version>
+	</dependency>
 
-    $> java -jar Code-Analyst-2.4.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+API 활용에 대한 사항은 [Guide](GUIDE.md)를 참조해 주세요.
+  
+
+## Usage
+CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이 실행합니다.
+
+    $> java -jar Code-Analyst-2.5.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
  
 기본적으로 --project 옵션을 통해 분석하고자 하는 프로젝트 위치를 지정합니다. 
 
@@ -31,7 +51,7 @@ Code Analyst를 실행하기 위해서는 Java 1.8이 필요하며, 하나의 �
 
 ### Help
 
-	$> java -jar Code-Analyst-2.4.0.jar --help
+	$> java -jar Code-Analyst-2.5.0.jar --help
     usage: java -jar Code-Analyst-2.4.0.jar
      -h,--help               show help.
      -p,--project <arg>      specify project base directory. (default: ".")
@@ -60,7 +80,7 @@ Code Analyst를 실행하기 위해서는 Java 1.8이 필요하며, 하나의 �
      -exclude <arg>          specify exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)
      -m,--mode <arg>         specify analysis items with comma separated. If '-' specified in each mode, the mode is
                              excluded. (code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs,
-                             javascript, css, html, dependency, unusedcode)
+                             javascript, css, html, dependency, unusedcode, ckmetrics)
                              ※ 'javascript', 'css' and 'html' will be disabled when 'webapp' option isn't set, and 'css' and
                              'html' are disabled by default
      -a,--analysis           detailed analysis mode. (required more memory. If OOM exception occured, use JVM '-Xmx' option
@@ -74,8 +94,8 @@ Code Analyst를 실행하기 위해서는 Java 1.8이 필요하며, 하나의 �
 
 ### Version 정보
 
-	$> java -jar Code-Analyst-2.4.0.jar --version
-    Code Analyst : 2.4.0
+	$> java -jar Code-Analyst-2.5.0.jar --version
+    Code Analyst : 2.5.0
       - Sonar Scanner : 2.10.0.1189 (LGPL v3.0)
       - Sonar Server : 6.7.4 (LGPL v3.0)
          [Plugins]
@@ -103,9 +123,12 @@ Code Analyst를 실행하기 위해서는 Java 1.8이 필요하며, 하나의 �
 
 보다 자세한 사항은 [Guide](GUIDE.md)를 참조해 주세요. 
 
+
 ## Contributing
 
-Please contact us at [codari@samsung.com](codari@samsung.com).
+버그 리포팅, 기능 개선 요청, pull request 요청 등은 [issue tracker](https://github.com/RedCA-Family/code-analyst/issues)를 활용해 주세요.
+
+* 기타 연락처 : [codari@samsung.com](codari@samsung.com)
 
 
 ## History
@@ -113,11 +136,12 @@ Please contact us at [codari@samsung.com](codari@samsung.com).
 - (2017.05) Initial Version released (v1.0)
 - (2018.03) New Major Version released (v2.0)
 - (2018.10) OSS Version released (v2.4.0)
+- (2018.12) Design Metrics(CK Metrics) added (v2.5.0)
 
 
 ## License
 
-Code-Analyst is licensed under the version 2.0 of the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).   
+Code Analyst is licensed under the version 2.0 of the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).   
 See [LICENSE](./LICENSE.txt) for the Code-Analyst full license text.  
 Licenses about 3rd-party library are in [./src/main/resources/LICENSES](./src/main/resources/LICENSES).  
 

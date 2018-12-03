@@ -4,11 +4,50 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.samsungsds.analyst</groupId>
-	<artifactId>code</artifactId>
-	<version>2.4.0</version>
+	<artifactId>code-analyst</artifactId>
+	<version>2.5.0</version>
+
+	<name>Code-Analyst</name>
+	<description>Code Analyst to measure various code metrics</description>
+	<url>https://github.com/RedCA-Family/code-analyst</url>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Vincent Han</name>
+			<email>switchover@gmail.com</email>
+			<organization>Samsung SDS</organization>
+			<organizationUrl>http://www.samsungsds.com/</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:https://github.com/RedCA-Family/code-analyst.git</connection>
+		<developerConnection>scm:git:https://switchover@github.com/RedCA-Family/code-analyst.git</developerConnection>
+		<url>https://github.com/RedCA-Family/code-analyst</url>
+	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<jarName>Code-Analyst</jarName>
+		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
 	</properties>
 
 	<dependencies>
@@ -81,13 +120,13 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>9.4.2.v20170220</version>
+			<version>9.4.14.v20181114</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
-			<version>9.4.2.v20170220</version>
+			<version>9.4.14.v20181114</version>
 		</dependency>
 
 		<dependency>
@@ -147,7 +186,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>4.3.10.RELEASE</version>
+			<version>4.3.21.RELEASE</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>commons-logging</artifactId>
@@ -163,6 +202,12 @@
 			<version>1.7.1</version>
 		</dependency>
 		-->
+
+		<dependency>
+			<groupId>org.eclipse.jdt</groupId>
+			<artifactId>org.eclipse.jdt.core</artifactId>
+			<version>3.15.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -223,6 +268,7 @@
 				<version>1.8</version>
 				<executions>
 					<execution>
+						<id>antrun</id>
 						<phase>package</phase>
 						<configuration>
 							<tasks>
@@ -257,4 +303,79 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<!-- Profiles -->
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<finalName>${project.artifactId}-${project.version}</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>3.0.0</version>
+						<executions>
+							<execution>
+								<id>assemble-all</id>
+								<phase>none</phase>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<id>antrun</id>
+								<phase>none</phase>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.0.1</version>
+						<configuration>
+							<additionalJOption>-Xdoclint:none</additionalJOption>
+						</configuration>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

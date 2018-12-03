@@ -48,9 +48,10 @@ public class Version {
 	// 2.3.1 : SonarQube Plugin에서 호출 시 ".sonar" 삭제 문제 해결 (".sonar" 디렉토리 변경), Unused Path 형식 오류 수정
 	// 2.3.2 : localhost -> 127.0.0.1 변경 (일부 보안 시스템에 의해 차단되는 경우 발생), src 경로 중복 확인 오류 수정
 	// 2.4.0 : OSS(Open Source Software) Version release
+	// 2.5.0 : CK Metrics 추가
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "2.4.0";
-	public static final String DOCUMENT_VERSION = "2.3";
+	public static final String CODE_ANALYST = "2.5.0";
+	public static final String DOCUMENT_VERSION = "2.5";
 
 	public static final String SONAR_SCANNER = "2.10.0.1189";
 	public static final String SONAR_SERVER = "6.7.4";

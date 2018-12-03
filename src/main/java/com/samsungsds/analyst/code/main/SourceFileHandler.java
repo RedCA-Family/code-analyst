@@ -100,7 +100,9 @@ public class SourceFileHandler {
                         appendStringWithComma(ret, filePath.toString());
                     }
                 } else {
-                    appendStringWithComma(ret, filePath.toString());
+                    if (Files.exists(Paths.get(filePath.toString()))) {
+                        appendStringWithComma(ret, filePath.toString());
+                    }
                 }
             }
 

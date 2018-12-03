@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -137,7 +138,15 @@ public class JsonOutputFile extends AbstractOutputFile {
 
 			writeListToJson(unusedCodeList, "unusedList", jsonFile);
 		}
+	}
 
+	@Override
+	protected void writeCkMetrics(List<CkMetricsResult> ckMetricsResultList) {
+		if (result.isSeperatedOutput()) {
+			String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-ckmetrics.json";
+
+			writeListToJson(ckMetricsResultList, "ckMetricsList", jsonFile);
+		}
 	}
 
 	@Override
@@ -194,7 +203,7 @@ public class JsonOutputFile extends AbstractOutputFile {
 		builder.excludeFieldsWithoutExposeAnnotation();
 		final Gson gson = builder.create();
 
-		try (PrintWriter jsonWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile))))) {
+		try (PrintWriter jsonWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile), "UTF-8")))) {
 
 			// String json = gson.toJson(list);
 			JsonArray jsonArray = gson.toJsonTree(list).getAsJsonArray();
