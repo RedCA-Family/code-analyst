@@ -308,7 +308,7 @@
 								<copy file="${project.basedir}/target/${jarName}-${project.version}.jar"
 									  tofile="${project.basedir}/target/${jarName}-${project.version}-jar-with-dependencies.jar" />
 								-->
-								<move
+								<copy
 									file="${project.basedir}/target/${jarName}-${project.version}-jar-with-dependencies.jar"
 									tofile="${project.basedir}/target/${jarName}-${project.version}.jar" />
 							</tasks>
