@@ -203,14 +203,6 @@
 			</exclusions>
 		</dependency>
 
-		<!--
-		<dependency>
-			<groupId>com.h3xstream.findsecbugs</groupId>
-			<artifactId>findsecbugs-plugin</artifactId>
-			<version>1.7.1</version>
-		</dependency>
-		-->
-
 		<dependency>
 			<groupId>org.apache.bcel</groupId>
 			<artifactId>bcel</artifactId>
@@ -285,29 +277,6 @@
 						<phase>package</phase>
 						<configuration>
 							<tasks>
-								<!--
-								<move
-									file="${project.basedir}/target/${jarName}-${project.version}-jar-with-dependencies.jar"
-									tofile="${project.basedir}/target/${jarName}-${project.version}-temp.jar" />
-
-								<zip destfile="${project.basedir}/target/${jarName}-${project.version}.jar">
-									<zipfileset src="${project.basedir}/target/${jarName}-${project.version}-temp.jar">
-										<exclude name="statics/notBeIncluded/*.*"/>
-									</zipfileset>
-								</zip>
-
-								<jar
-									destfile="${project.basedir}/target/${jarName}-${project.version}.jar"
-									update="true">
-									<zipfileset includes="**/*.*"
-										src="${project.basedir}/lib/sonar-scanner-api-batch.jar" />
-								</jar>
-
-								<delete file="${project.basedir}/target/${jarName}-${project.version}-temp.jar"/>
-
-								<copy file="${project.basedir}/target/${jarName}-${project.version}.jar"
-									  tofile="${project.basedir}/target/${jarName}-${project.version}-jar-with-dependencies.jar" />
-								-->
 								<copy
 									file="${project.basedir}/target/${jarName}-${project.version}-jar-with-dependencies.jar"
 									tofile="${project.basedir}/target/${jarName}-${project.version}.jar" />
@@ -391,6 +360,17 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.8</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
