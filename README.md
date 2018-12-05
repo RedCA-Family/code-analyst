@@ -37,7 +37,7 @@ API 활용에 대한 사항은 [Guide](GUIDE.md)를 참조해 주세요.
 ## Usage
 CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이 실행합니다.
 
-    $> java -jar Code-Analyst-2.5.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+    $> java -jar Code-Analyst-2.5.1.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
  
 기본적으로 --project 옵션을 통해 분석하고자 하는 프로젝트 위치를 지정합니다. 
 
