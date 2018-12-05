@@ -1066,10 +1066,8 @@ public class MeasuredResult implements Serializable {
 		return acyclicDependencyList.stream().map(s -> s.getAcyclicDependencies()).collect(MoreCollectors.toList());
 	}
 
-	public void addCkMetricsResultList(CkMetricsResult ckMetricsResult) {
-		ckMetricsResult.replaceFile(getConvertedFilePath(ckMetricsResult.getFile()));
-
-		ckMetricsResultList.add(ckMetricsResult);
+	public void setCkMetricsResultList(List<CkMetricsResult> ckMetricsResultList) {
+		this.ckMetricsResultList = ckMetricsResultList;
 	}
 
 	public List<CkMetricsResult> getCkMetricsResultList() {

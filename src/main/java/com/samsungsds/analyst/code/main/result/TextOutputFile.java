@@ -517,41 +517,25 @@ public class TextOutputFile extends AbstractOutputFile {
 			return;
 		}
 		writer.println("[CKMetrics]");
-		writer.println("; file, class, type, cbo, wmc, dit, noc, rfc, lcom, nom, nopm, nosm, nof, nopf, nosf, nosi, loc");
+		writer.println("; className, WMC, NOC, RFC, CBO, DIT, LCOM");
 
 		int count = 0;
 		synchronized (list) {
 			for (CkMetricsResult result : list) {
 				writer.print(++count + " = ");
-				writer.print(getStringsWithComma(result.getFile(), result.getClassName(), result.getType()));
-				writer.print(",");
-				writer.print(result.getCbo());
+				writer.print(result.getQualifiedClassName());
 				writer.print(",");
 				writer.print(result.getWmc());
-				writer.print(",");
-				writer.print(result.getDit());
 				writer.print(",");
 				writer.print(result.getNoc());
 				writer.print(",");
 				writer.print(result.getRfc());
 				writer.print(",");
+				writer.print(result.getCbo());
+				writer.print(",");
+				writer.print(result.getDit());
+				writer.print(",");
 				writer.print(result.getLcom());
-				writer.print(",");
-				writer.print(result.getNom());
-				writer.print(",");
-				writer.print(result.getNopm());
-				writer.print(",");
-				writer.print(result.getNosm());
-				writer.print(",");
-				writer.print(result.getNof());
-				writer.print(",");
-				writer.print(result.getNopf());
-				writer.print(",");
-				writer.print(result.getNosf());
-				writer.print(",");
-				writer.print(result.getNosi());
-				writer.print(",");
-				writer.print(result.getLoc());
 				writer.println();
 			}
 		}
