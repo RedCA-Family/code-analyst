@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.samsungsds.analyst.code.ckm.gr.spinellis.ckjm;
+package com.samsungsds.analyst.code.ckmetrics.gr.spinellis.ckjm;
 
 import java.util.HashSet;
 
@@ -52,88 +52,138 @@ public class ClassMetrics {
 
     /** Default constructor. */
     ClassMetrics() {
-	wmc = 0;
-	noc = 0;
-	cbo = 0;
-	npm = 0;
-	visited = false;
-	afferentCoupledClasses = new HashSet<String>();
+        wmc = 0;
+        noc = 0;
+        cbo = 0;
+        npm = 0;
+        visited = false;
+        afferentCoupledClasses = new HashSet<>();
     }
 
     /** Increment the weighted methods count */
-    public void incWmc() { wmc++; }
+    public void incWmc() {
+        wmc++;
+    }
+
     /** Return the weighted methods per class metric */
-    public int getWmc() { return wmc; }
+    public int getWmc() {
+        return wmc;
+    }
 
     /** Increment the number of children */
-    public void incNoc() { noc++; }
+    public void incNoc() {
+        noc++;
+    }
+
     /** Return the number of children */
-    public int getNoc() { return noc; }
+    public int getNoc() {
+        return noc;
+    }
 
     /** Increment the Response for a Class */
-    public void setRfc(int r) { rfc = r; }
+    public void setRfc(int r) {
+        rfc = r;
+    }
+
     /** Return the Response for a Class */
-    public int getRfc() { return rfc; }
+    public int getRfc() {
+        return rfc;
+    }
 
     /** Set the depth of inheritence tree metric */
-    public void setDit(int d) { dit = d; }
-    /** Return the depth of the class's inheritance tree */
+    public void setDit(int d) {
+        dit = d;
+    }
+
+    /**
+     * Return the depth of the class's inheritance tree
+     */
     public int getDit() { return dit; }
 
     /** Set the coupling between object classes metric */
-    public void setCbo(int c) { cbo = c; }
+    public void setCbo(int c) {
+        cbo = c;
+    }
+
     /** Return the coupling between object classes metric */
-    public int getCbo() { return cbo; }
+    public int getCbo() {
+        return cbo;
+    }
 
     /** Return the class's lack of cohesion in methods metric */
-    public int getLcom() { return lcom; }
+    public int getLcom() {
+        return lcom;
+    }
+
     /** Set the class's lack of cohesion in methods metric */
-    public void setLcom(int l) { lcom = l; }
+    public void setLcom(int l) {
+        lcom = l;
+    }
 
     /** Return the class's afferent couplings metric */
-    public int getCa() { return afferentCoupledClasses.size(); }
+    public int getCa() {
+        return afferentCoupledClasses.size();
+    }
+
     /** Add a class to the set of classes that depend on this class */
-    public void addAfferentCoupling(String name) { afferentCoupledClasses.add(name); }
+    public void addAfferentCoupling(String name) {
+        afferentCoupledClasses.add(name);
+    }
 
     /** Increment the number of public methods count */
-    public void incNpm() { npm++; }
+    public void incNpm() {
+        npm++;
+    }
+
     /** Return the number of public methods metric */
-    public int getNpm() { return npm; }
+    public int getNpm() {
+        return npm;
+    }
 
     /** Return true if the class is public */
-    public boolean isPublic() { return isPublicClass; }
+    public boolean isPublic() {
+        return isPublicClass;
+    }
+
     /** Call to set the class as public */
-    public void setPublic() { isPublicClass = true; }
+    public void setPublic() {
+        isPublicClass = true;
+    }
 
     /** Return true if the class name is part of the Java SDK */
     public static boolean isJdkClass(String s) {
-	return (s.startsWith("java.") ||
-		s.startsWith("javax.") ||
-		s.startsWith("org.omg.") ||
-		s.startsWith("org.w3c.dom.") ||
-		s.startsWith("org.xml.sax."));
+        return (s.startsWith("java.") ||
+                s.startsWith("javax.") ||
+                s.startsWith("org.omg.") ||
+                s.startsWith("org.w3c.dom.") ||
+                s.startsWith("org.xml.sax."));
     }
 
     /** Return the 6 CK metrics plus Ce as a space-separated string */
     public String toString() {
-	return (
-		wmc +
-		" " + getDit() +
-		" " + noc +
-		" " + cbo +
-		" " + rfc +
-		" " + lcom +
-		" " + getCa()+
-		" " + npm);
+        return (
+            wmc +
+            " " + getDit() +
+            " " + noc +
+            " " + cbo +
+            " " + rfc +
+            " " + lcom +
+            " " + getCa()+
+            " " + npm);
     }
 
     /** Mark the instance as visited by the metrics analyzer */
-    public void setVisited() { visited = true; }
+    public void setVisited() {
+        visited = true;
+    }
+
     /**
      * Return true if the class has been visited by the metrics analyzer.
      * Classes may appear in the collection as a result of some kind
      * of coupling.  However, unless they are visited and analyzed,
      * we do not want them to appear in the output results.
      */
-    public boolean isVisited() { return visited; }
+    public boolean isVisited() {
+        return visited;
+    }
 }
