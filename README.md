@@ -28,12 +28,7 @@ API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 2
 	<dependency>
 		<groupId>com.samsungsds.analyst</groupId>
 		<artifactId>code-analyst</artifactId>
-		<version>2.5.0</version>
-	</dependency>
-	<dependency>
-		<groupId>org.sonarsource.scanner.api</groupId>
-		<artifactId>sonar-scanner-api-batch</artifactId>
-		<version>2.10.0.1189</version>
+		<version>2.5.1</version>
 	</dependency>
 
 API 활용에 대한 사항은 [Guide](GUIDE.md)를 참조해 주세요.
@@ -51,7 +46,7 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
 
 ### Help
 
-	$> java -jar Code-Analyst-2.5.0.jar --help
+	$> java -jar Code-Analyst-2.5.1.jar --help
     usage: java -jar Code-Analyst-2.4.0.jar
      -h,--help               show help.
      -p,--project <arg>      specify project base directory. (default: ".")
@@ -94,8 +89,8 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
 
 ### Version 정보
 
-	$> java -jar Code-Analyst-2.5.0.jar --version
-    Code Analyst : 2.5.0
+	$> java -jar Code-Analyst-10.jar --version
+    Code Analyst : 2.5.1
       - Sonar Scanner : 2.10.0.1189 (LGPL v3.0)
       - Sonar Server : 6.7.4 (LGPL v3.0)
          [Plugins]
@@ -107,6 +102,7 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
       - FindBugs : 3.0.1 (LGPL v3.0)
       - FindSecBugs : 1.7.1 (LGPL v3.0)
       - JDepend : 2.9.1-based modification (BSD-style)
+      - CKJM : 1.9 (Apache v2.0)
     
     Default RuleSet
       - PMD : 91 ruleset (v5.4, RedCA Way Ruleset, '18.03)
@@ -135,8 +131,8 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
 
 - (2017.05) Initial Version released (v1.0)
 - (2018.03) New Major Version released (v2.0)
-- (2018.10) OSS Version released (v2.4.0)
-- (2018.12) Design Metrics(CK Metrics) added (v2.5.0)
+- (2018.10) OSS Version released (v2.4)
+- (2018.12) Design Metrics(CK Metrics) added (v2.5)
 
 
 ## License

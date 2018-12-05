@@ -87,8 +87,10 @@
 			<groupId>org.sonarsource.scanner.api</groupId>
 			<artifactId>sonar-scanner-api-batch</artifactId>
 			<version>2.10.0.1189</version>
+			<!--
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/sonar-scanner-api-batch.jar</systemPath>
+			-->
 		</dependency>
 
 		<!-- Next dependencies will be replaced with sonar-scanner-engine-shaded -->

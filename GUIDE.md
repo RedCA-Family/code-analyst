@@ -2,7 +2,7 @@
 
 ## 1. 기본 실행 ##
 
-	$> java -jar Code-Analyst-2.5.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+	$> java -jar Code-Analyst-2.5.1.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
 
 
 ### 결과 화면 
@@ -253,7 +253,7 @@ V2.2부터 web 리소스 분석을 별도의 analyzeWebResource() 메소드로 �
 | addDirectory(String directory) | 디렉토리를 추가 지정 |
 | addFile(String filePath) | 파일을 추가 추가 |
 
-* ncludeCssAndHtml : CSS 및 HTML 추가 점검 지정
+* includeCssAndHtml : CSS 및 HTML 추가 점검 지정
 
 분석 요청의 예는 다음과 같습니다.
 
