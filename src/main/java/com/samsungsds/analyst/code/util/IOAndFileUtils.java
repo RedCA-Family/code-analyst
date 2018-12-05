@@ -190,4 +190,19 @@ public class IOAndFileUtils {
 	public static String getNormalizedPath(String path) {
 		return path.replace("/", File.separator).replace("\\", File.separator);
 	}
+
+	public static String getPrefixRemovedPath(String path, String prefix) {
+
+		path = IOAndFileUtils.getNormalizedPath(path);
+		prefix = IOAndFileUtils.getNormalizedPath(prefix);
+
+		if (!prefix.endsWith(File.separator)) {
+			prefix += File.separator;
+		}
+		if (path.startsWith(prefix)) {
+			path = path.substring(prefix.length());
+		}
+
+		return path;
+	}
 }

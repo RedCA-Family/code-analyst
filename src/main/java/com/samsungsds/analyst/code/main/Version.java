@@ -49,8 +49,9 @@ public class Version {
 	// 2.3.2 : localhost -> 127.0.0.1 변경 (일부 보안 시스템에 의해 차단되는 경우 발생), src 경로 중복 확인 오류 수정
 	// 2.4.0 : OSS(Open Source Software) Version release
 	// 2.5.0 : CK Metrics 추가
+	// 2.5.1 : CK Metrics 처리 방식 변경 (eclipse JDT Parser -> BCEL 사용 CKJM)
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "2.5.0";
+	public static final String CODE_ANALYST = "2.5.1";
 	public static final String DOCUMENT_VERSION = "2.5";
 
 	public static final String SONAR_SCANNER = "2.10.0.1189";
@@ -59,6 +60,7 @@ public class Version {
 	public static final String FINDBUGS = "3.0.1";
 	public static final String FINDSECBUGS = "1.7.1";
 	public static final String JDEPEND = "2.9.1";
+	public static final String CKJM = "1.9";
 
 	public static final String SONAR_JAVA = "5.1.1.13214";
 	public static final String SONAR_JS = "4.1.0.6085";
@@ -92,6 +94,7 @@ public class Version {
 		System.out.println("  - FindBugs : " + FINDBUGS + " (LGPL v3.0)");
 		System.out.println("  - FindSecBugs : " + FINDSECBUGS + " (LGPL v3.0)");
 		System.out.println("  - JDepend : " + JDEPEND +"-based modification" + " (BSD-style) ");
+		System.out.println("  - CKJM : " + CKJM + " (Apache v2.0) ");
 		System.out.println();
 		System.out.println("Default RuleSet");
 		System.out.println("  - PMD : " + PMD_RULESET);

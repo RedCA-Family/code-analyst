@@ -106,10 +106,10 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 					if (!f.getName().contains(".class")) continue;
 					if (f.getName().contains("$")) continue;    // skip additional classes that share a source file
 
-					String path = getPrefixRemovedPath(f.getPath(), projectBinary);
-					String binary = getPrefixRemovedPath(projectBinary, projectBaseDir);
+					String path = IOAndFileUtils.getPrefixRemovedPath(f.getPath(), projectBinary);
+					String binary = IOAndFileUtils.getPrefixRemovedPath(projectBinary, projectBaseDir);
 
-					path = getPrefixRemovedPath(path, binary);
+					path = IOAndFileUtils.getPrefixRemovedPath(path, binary);
 
 					if (measuredResult.haveToSkip(path.replace("\\", "/").replace(".class", ".java"), true)) {
 						continue;
@@ -247,32 +247,6 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		}
 
 		return list.toArray(new String[0]);
-	}
-
-	private String getPrefixRemovedPath(String path, String prefix) {
-		/*
-		path = path.replaceAll("\\\\", "/");
-		prefix = prefix.replaceAll("\\\\", "/");
-
-		if (!prefix.endsWith("/")) {
-			prefix += "/";
-        }
-		if (path.startsWith(prefix)) {
-            path = path.substring(prefix.length());
-        }
-        */
-
-		path = IOAndFileUtils.getNormalizedPath(path);
-		prefix = IOAndFileUtils.getNormalizedPath(prefix);
-
-		if (!prefix.endsWith(File.separator)) {
-			prefix += File.separator;
-		}
-		if (path.startsWith(prefix)) {
-			path = path.substring(prefix.length());
-		}
-
-		return path;
 	}
 
 	private boolean isNotExistInSource(CAType caType) {

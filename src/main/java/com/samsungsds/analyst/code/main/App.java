@@ -570,7 +570,8 @@ public class App {
 	private void runCkMetrics(CliParser cli) {
 		CkMetricsAnalysis ckMetricsAnalysis = new CkMetricsAnalysisLauncher();
 
-		ckMetricsAnalysis.setTarget(cli.getSrc());
+		ckMetricsAnalysis.setProjectBaseDir(cli.getProjectBaseDir());
+		ckMetricsAnalysis.setBinaryDirectories(cli.getBinary());
 
 		ckMetricsAnalysis.run(cli.getInstanceKey());
 

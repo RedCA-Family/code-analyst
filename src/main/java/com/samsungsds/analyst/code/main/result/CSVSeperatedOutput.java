@@ -197,41 +197,25 @@ public class CSVSeperatedOutput {
 		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-ckmetrics.csv";
 
 		try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
-			csvWriter.println("No,File,Class,Type,CBO,WMC,DIT,NOC,RFC,LCOM,NOM,NOPM,NOSM,NOF,NOPF,NOSF,NOSI,LOC");
+			csvWriter.println("No,FQCN,WMC,NOC,RFC,CBO,DIT,LCOM");
 
 			int count = 0;
 			synchronized (list) {
 				for (CkMetricsResult result : list) {
 					csvWriter.print(++count + ",");
-					csvWriter.print(getStringsWithComma(result.getFile(), result.getClassName(), result.getType()));
-					csvWriter.print(",");
-					csvWriter.print(result.getCbo());
+					csvWriter.print(result.getQualifiedClassName());
 					csvWriter.print(",");
 					csvWriter.print(result.getWmc());
-					csvWriter.print(",");
-					csvWriter.print(result.getDit());
 					csvWriter.print(",");
 					csvWriter.print(result.getNoc());
 					csvWriter.print(",");
 					csvWriter.print(result.getRfc());
 					csvWriter.print(",");
+					csvWriter.print(result.getCbo());
+					csvWriter.print(",");
+					csvWriter.print(result.getDit());
+					csvWriter.print(",");
 					csvWriter.print(result.getLcom());
-					csvWriter.print(",");
-					csvWriter.print(result.getNom());
-					csvWriter.print(",");
-					csvWriter.print(result.getNopm());
-					csvWriter.print(",");
-					csvWriter.print(result.getNosm());
-					csvWriter.print(",");
-					csvWriter.print(result.getNof());
-					csvWriter.print(",");
-					csvWriter.print(result.getNopf());
-					csvWriter.print(",");
-					csvWriter.print(result.getNosf());
-					csvWriter.print(",");
-					csvWriter.print(result.getNosi());
-					csvWriter.print(",");
-					csvWriter.print(result.getLoc());
 					csvWriter.println();
 				}
 			}
