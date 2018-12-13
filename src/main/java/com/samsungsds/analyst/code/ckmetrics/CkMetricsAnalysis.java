@@ -18,6 +18,8 @@ package com.samsungsds.analyst.code.ckmetrics;
 public interface CkMetricsAnalysis {
     void setProjectBaseDir(String directory);
 
+    void setSourceDirectories(String directories);
+
     void setBinaryDirectories(String directories);
 
     void run(String instanceKey);

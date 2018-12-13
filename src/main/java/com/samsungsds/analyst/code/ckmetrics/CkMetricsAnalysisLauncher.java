@@ -19,27 +19,30 @@ import com.samsungsds.analyst.code.ckmetrics.gr.spinellis.ckjm.ClassMetricsConta
 import com.samsungsds.analyst.code.ckmetrics.gr.spinellis.ckjm.MetricsFilter;
 import com.samsungsds.analyst.code.ckmetrics.utils.JarUtils;
 import com.samsungsds.analyst.code.main.MeasuredResult;
+import com.samsungsds.analyst.code.main.subject.TargetFile;
+import com.samsungsds.analyst.code.main.subject.TargetManager;
 import com.samsungsds.analyst.code.util.FindFileUtils;
-import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CkMetricsAnalysisLauncher implements CkMetricsAnalysis {
     private static final Logger LOGGER = LogManager.getLogger(CkMetricsAnalysisLauncher.class);
 
     private String projectBaseDir;
+    private String sourceDirectories;
     private String binaryDirectories;
 
     @Override
     public void setProjectBaseDir(String directory) {
         this.projectBaseDir = directory;
+    }
+
+    @Override
+    public void setSourceDirectories(String directories) {
+        this.sourceDirectories = directories;
     }
 
     @Override
@@ -51,22 +54,21 @@ public class CkMetricsAnalysisLauncher implements CkMetricsAnalysis {
     public void run(String instanceKey) {
         MeasuredResult result = MeasuredResult.getInstance(instanceKey);
 
-        List<String> fileListInPath = getFileListInPath(result);
+        List<TargetFile> targetFileList = TargetManager.getInstance(instanceKey).getTargetFileList(projectBaseDir, sourceDirectories, binaryDirectories, result);
 
-        LOGGER.info("CK Metrics Target Files : {}", fileListInPath.size());
+        LOGGER.info("CK Metrics Target Files : {}", targetFileList.size());
 
-        File jar = getJarFileFrombinaryDirectories();
+        File jar = getJarFileFromBinaryDirectories();
 
         MetricsFilter.setRepositoryClassPath(jar.toString());
 
         ClassMetricsContainer cm = new ClassMetricsContainer();
-        for (String targetFile : fileListInPath) {
-            targetFile = IOAndFileUtils.getPrefixRemovedPath(targetFile, projectBaseDir);
-            for (String target : binaryDirectories.split(FindFileUtils.COMMA_SPLITTER)) {
-                targetFile = IOAndFileUtils.getPrefixRemovedPath(targetFile, target);
+        for (TargetFile targetFile : targetFileList) {
+            if (targetFile.isBinaryFileExists()) {
+                MetricsFilter.processClass(cm, jar.toString() + " " + targetFile.getBinaryFilePath().replace("\\", "/"));
+            } else {
+                LOGGER.warn("No binary file : {}", targetFile.getSourceFilePath());
             }
-
-            MetricsFilter.processClass(cm, jar.toString() + " " + targetFile.replace("\\", "/"));
         }
 
         CkMetricsResultHandler handler = new CkMetricsResultHandler();
@@ -79,8 +81,8 @@ public class CkMetricsAnalysisLauncher implements CkMetricsAnalysis {
 
     }
 
-    private File getJarFileFrombinaryDirectories() {
-        StringBuffer classpaths = new StringBuffer();
+    private File getJarFileFromBinaryDirectories() {
+        StringBuilder classpaths = new StringBuilder();
         for (String target : binaryDirectories.split(FindFileUtils.COMMA_SPLITTER)) {
             if (classpaths.length() != 0) {
                 classpaths.append(System.getProperty("path.separator"));
@@ -89,51 +91,8 @@ public class CkMetricsAnalysisLauncher implements CkMetricsAnalysis {
         }
         File jar = JarUtils.getJarFromClasspathDirectories(classpaths.toString());
         LOGGER.info("Jar file : {}", jar);
+
         return jar;
     }
 
-    private List<String> getFileListInPath(MeasuredResult result) {
-        List<String> fileList = new ArrayList<>();
-
-        for (String target : binaryDirectories.split(FindFileUtils.COMMA_SPLITTER)) {
-            ProcessFile fileProcessor = new ProcessFile(target, result);
-            try {
-                Files.walkFileTree(Paths.get(projectBaseDir + File.separator + target), fileProcessor);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            fileList.addAll(fileProcessor.getFileList());
-        }
-
-        return fileList;
-    }
-
-    private final class ProcessFile extends SimpleFileVisitor<Path> {
-        final String target;
-        final MeasuredResult result;
-        final List<String> fileList = new ArrayList<>();
-
-        ProcessFile(String target, MeasuredResult result) {
-            this.target = target;
-            this.result = result;
-        }
-
-        List<String> getFileList() {
-            return fileList;
-        }
-
-        @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-            if (file.toString().endsWith(".class") && !file.getFileName().toString().contains("$")) {
-                String path = IOAndFileUtils.getPrefixRemovedPath(file.toString(), projectBaseDir);
-                path = IOAndFileUtils.getPrefixRemovedPath(path, projectBaseDir);
-                path = IOAndFileUtils.getPrefixRemovedPath(path, target);
-
-                if (!result.haveToSkip(path.replace("\\", "/").replace(".class", ".java"), true)) {
-                    fileList.add(file.toString());
-                }
-            }
-            return FileVisitResult.CONTINUE;
-        }
-    }
 }

@@ -50,7 +50,7 @@ import com.samsungsds.analyst.code.sonar.WebResourceResult;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtResult;
 
-public class MeasuredResult implements Serializable {
+public class MeasuredResult implements Serializable, FileSkipChecker {
 	private static final Logger LOGGER = LogManager.getLogger(MeasuredResult.class);
 
 	private static final long serialVersionUID = 1L;
@@ -556,14 +556,14 @@ public class MeasuredResult implements Serializable {
 		return haveToSkip(path, false, false);
 	}
 
-	public boolean haveToSkip(String path, boolean withSrcPrefix) {
-		return haveToSkip(path, withSrcPrefix, false);
+	public boolean haveToSkip(String path, boolean addSrcPrefix) {
+		return haveToSkip(path, addSrcPrefix, false);
 	}
 
-	public boolean haveToSkip(String path, boolean withSrcPrefix, boolean withoutFilename) {
-		String[] pathArray = null;
+	public boolean haveToSkip(String path, boolean addSrcPrefix, boolean withoutFilename) {
+		String[] pathArray;
 
-		if (withSrcPrefix) {
+		if (addSrcPrefix) {
 			String[] sourceDirectories = source.split(FindFileUtils.COMMA_SPLITTER);
 
 			pathArray = new String[sourceDirectories.length];
