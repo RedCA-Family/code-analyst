@@ -24,9 +24,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysis;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysisLauncher;
+import com.samsungsds.analyst.code.main.subject.TargetFile;
+import com.samsungsds.analyst.code.main.subject.TargetManager;
 import com.samsungsds.analyst.code.sonar.filter.SonarIssueFilter;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -152,6 +153,19 @@ public class App {
 				runComplexity(cli);
 
 			} else {
+
+				TargetManager targetManager = TargetManager.getInstance(cli.getInstanceKey());
+
+				try {
+					List<TargetFile> targetFileList = targetManager.getTargetFileList(project.getCanonicalPath(), cli.getSrc(), cli.getBinary(),
+							MeasuredResult.getInstance(cli.getInstanceKey()));
+
+					LOGGER.info("Target File Count From Target Manager : {}", targetFileList.size());
+				} catch (IOException e) {
+					LOGGER.error("Project Directory Error : {}", cli.getProjectBaseDir());
+					return;
+				}
+
 				if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isSonarJava() || cli.getIndividualMode().isWebResources()) {
 					List<String> sonarAnalysisModeList = new ArrayList<>();
 					if (cli.getIndividualMode().isCodeSize()) {
@@ -571,6 +585,7 @@ public class App {
 		CkMetricsAnalysis ckMetricsAnalysis = new CkMetricsAnalysisLauncher();
 
 		ckMetricsAnalysis.setProjectBaseDir(cli.getProjectBaseDir());
+		ckMetricsAnalysis.setSourceDirectories(cli.getSrc());
 		ckMetricsAnalysis.setBinaryDirectories(cli.getBinary());
 
 		ckMetricsAnalysis.run(cli.getInstanceKey());
