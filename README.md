@@ -1,6 +1,8 @@
 # Code Analyst Project
 
+[![](https://img.shields.io/github/tag/RedCA-Family/code-analyst.svg?style=flat&label=release)](https://github.com/RedCA-Family/code-analyst/releases)
 [![Build Status](https://travis-ci.org/RedCA-Family/code-analyst.svg?branch=development)](https://travis-ci.org/RedCA-Family/code-analyst)
+![License](https://img.shields.io/github/license/RedCA-Family/code-analyst.svg?style=flat)
 
 Code Analyst는 코드 품질에 대한 다양한 지표를 통합적으로 확인할 수 있는 프로그램입니다. 
 
@@ -23,7 +25,7 @@ Code Analyst를 실행하기 위해서는 Java 1.8이 필요하며, 하나의 �
 
 
 ## API 사용 ##
-API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 2개의 dependency를 추가하면 됩니다. 
+API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 dependency를 추가하면 됩니다. 
 	
 	<dependency>
 		<groupId>com.samsungsds.analyst</groupId>
@@ -117,7 +119,7 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
     Copyright(c) 2018 By Samsung SDS (Code Quality Group)
 
 
-보다 자세한 사항은 [Guide](GUIDE.md)를 참조해 주세요. 
+보다 **자세한 사항은 [Guide](GUIDE.md)를 참조**해 주세요. 
 
 
 ## Contributing
