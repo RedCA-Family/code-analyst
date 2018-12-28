@@ -2,7 +2,7 @@
 
 [![](https://img.shields.io/github/tag/RedCA-Family/code-analyst.svg?style=flat&label=release)](https://github.com/RedCA-Family/code-analyst/releases)
 [![Build Status](https://travis-ci.org/RedCA-Family/code-analyst.svg?branch=development)](https://travis-ci.org/RedCA-Family/code-analyst)
-![License](https://img.shields.io/github/license/RedCA-Family/code-analyst.svg?style=flat)
+[![License](https://img.shields.io/github/license/RedCA-Family/code-analyst.svg?style=flat)](https://raw.githubusercontent.com/RedCA-Family/code-analyst/master/LICENSE.txt)
 
 Code Analyst는 코드 품질에 대한 다양한 지표를 통합적으로 확인할 수 있는 프로그램입니다. 
 
