@@ -2,7 +2,7 @@
 
 ## 1. 기본 실행 ##
 
-	$> java -jar Code-Analyst-2.5.1.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+	$> java -jar Code-Analyst-2.6.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
 
 
 ### 결과 화면 
@@ -97,6 +97,8 @@
 | -r,--rerun <arg> | 이전 실행된 결과 output(text)와 동일한 옵션을 지정하여 실행  영향을 받는 옵션 : 'project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', 'analysis', 'seperated', 'catalog' 및 'webap' |  | 1.5 | -r result.out |
 | -seperated | 중복도, 복잡도, PMD, FindBugs, FindSecBugs에 대한 결과 정보를 별도의 파일로 분리 |  | 1.5 | -seperated |
 | -catalog | 점검된 파일 목록 |  | 2.1 | -catalog |
+| -duplication <arg> | 중복 점검 방식 지정 ('statement' 또는 'token' 방식) | statement  | 2.6 | -duplication token |
+| -tokens <arg> | token 중복 점검 방식의 token 기준값 지정 | 100 | 2.6 | -tokens 50 |
 
 
 ## 3. API 활용 가이드

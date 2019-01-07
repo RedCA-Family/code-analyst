@@ -28,6 +28,7 @@ import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysis;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysisLauncher;
 import com.samsungsds.analyst.code.main.subject.TargetFile;
 import com.samsungsds.analyst.code.main.subject.TargetManager;
+import com.samsungsds.analyst.code.pmd.*;
 import com.samsungsds.analyst.code.sonar.filter.SonarIssueFilter;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -50,10 +51,6 @@ import com.samsungsds.analyst.code.findbugs.FindSecBugsAnalysisLauncher;
 import com.samsungsds.analyst.code.jdepend.JDependAnalysis;
 import com.samsungsds.analyst.code.jdepend.JDependAnalysisLauncher;
 import com.samsungsds.analyst.code.main.result.OutputFileFormat;
-import com.samsungsds.analyst.code.pmd.ComplexityAnalysis;
-import com.samsungsds.analyst.code.pmd.ComplexityAnalysisLauncher;
-import com.samsungsds.analyst.code.pmd.PmdAnalysis;
-import com.samsungsds.analyst.code.pmd.PmdAnalysisLauncher;
 import com.samsungsds.analyst.code.sonar.SonarAnalysis;
 import com.samsungsds.analyst.code.sonar.SonarAnalysisLauncher;
 import com.samsungsds.analyst.code.sonar.server.JettySurrogateSonarServer;
@@ -116,10 +113,14 @@ public class App {
 
 			MeasuredResult.getInstance(cli.getInstanceKey()).setMode(cli.getMode());
 
+			MeasuredResult.getInstance(cli.getInstanceKey()).setTokenBased(cli.isTokenBased());
+			MeasuredResult.getInstance(cli.getInstanceKey()).setMinimumTokens(cli.getMinimumTokens());
+
 			processFilterString(cli);
 
 			if (cli.isDebug()) {
 				LOGGER.info("Debugging enabled");
+				LogUtils.setDebugLevel();
 			} else {
 				LogUtils.unsetDebugLevel();
 			}
@@ -190,6 +191,10 @@ public class App {
 					LOGGER.info(sonarAnalysisMode + " Analysis start...");
 
 					runSonarAnalysis(cli);
+				}
+
+				if (cli.getIndividualMode().isDuplication() && cli.isTokenBased()) {
+					runPmdCpd(cli);
 				}
 
 				if (cli.getIndividualMode().isComplexity()) {
@@ -387,6 +392,21 @@ public class App {
 		if (progressMonitor != null) {
 			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.SONAR_ALL_COMPLETE));
 		}
+	}
+
+	private void runPmdCpd(CliParser cli) {
+		PmdCpd cpd = new PmdCpdLauncher();
+
+		cpd.addOption("--encoding", cli.getEncoding());
+		cpd.addOption("--format", "csv");
+		cpd.addOption("-failOnViolation", "false");
+
+		cpd.addOption("--minimum-tokens", Integer.toString(cli.getMinimumTokens()));
+
+		String dirs = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getSrc());
+		cpd.addOption("--files", dirs);
+
+		cpd.run(cli.getInstanceKey());
 	}
 
 	private void runComplexity(CliParser cli) {

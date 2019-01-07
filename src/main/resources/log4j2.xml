@@ -7,10 +7,10 @@
     </Console>
   </Appenders>
   <Loggers>
-  	<Logger name="com.samsungsds.analyst.code" level="debug" additivity="false">
+  	<Logger name="com.samsungsds.analyst.code" level="info" additivity="false">
   		<AppenderRef ref="Console"/>
   	</Logger>
-  	<Logger name="org.sonar" level="debug" additivity="false">
+  	<Logger name="org.sonar" level="info" additivity="false">
   		<AppenderRef ref="Console"/>
   	</Logger>
   	<Logger name="org.eclipse.jetty" level="error" additivity="false">

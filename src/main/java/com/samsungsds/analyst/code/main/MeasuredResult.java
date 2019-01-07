@@ -267,6 +267,13 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	@Expose
 	private TechnicalDebtResult technicalDebtResult = null;
 
+	@Expose
+	@SerializedName("tokenBasedCPD")
+	private boolean tokenBased = false;
+
+	@Expose
+	private int minimumTokens = 100;
+
 	public static MeasuredResult getInstance(String instanceKey) {
 		if (!instances.containsKey(instanceKey)) {
 			synchronized (MeasuredResult.class) {
@@ -1228,6 +1235,22 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
             throw new IllegalStateException("Date format error", ex);
         }
     }
+
+	public boolean isTokenBased() {
+		return tokenBased;
+	}
+
+	public void setTokenBased(boolean tokenBased) {
+		this.tokenBased = tokenBased;
+	}
+
+	public int getMinimumTokens() {
+		return minimumTokens;
+	}
+
+	public void setMinimumTokens(int minimumTokens) {
+		this.minimumTokens = minimumTokens;
+	}
 
 	public void clear() {
 		directories = 0;
