@@ -48,8 +48,8 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
 
 ### Help
 
-	$> java -jar Code-Analyst-2.5.1.jar --help
-    usage: java -jar Code-Analyst-2.4.0.jar
+	$> java -jar Code-Analyst-2.6.0.jar --help
+    usage: java -jar Code-Analyst-2.6.0.jar
      -h,--help               show help.
      -p,--project <arg>      specify project base directory. (default: ".")
      -s,--src <arg>          specify source directories with comma separated. (default: "${project}\src\main\java")
@@ -102,7 +102,7 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
            - SonarJS : 4.1.0.6085 (LGPL v3.0)
            - CSS/SCSS/Less : 3.1 (LGPL v3.0)
            - Web : 2.5.0.476 (Apache v2.0)
-      - PMD : 5.4.6 (BSD-style)
+      - PMD : 5.8.1 (BSD-style)
       - FindBugs : 3.0.1 (LGPL v3.0)
       - FindSecBugs : 1.7.1 (LGPL v3.0)
       - JDepend : 2.9.1-based modification (BSD-style)

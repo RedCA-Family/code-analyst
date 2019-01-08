@@ -379,7 +379,7 @@ public class TextOutputFile extends AbstractOutputFile {
 	@Override
 	protected void writeUnusedCode(List<UnusedCodeResult> list) {
 		if (result.isSeperatedOutput()) {
-			// csvOutput.writePmd(list);
+			csvOutput.writeUnusedCode(list);
 		} else {
 			writer.println("[Unused Code]");
 			writer.println("; type, package, class, line, name, description");

@@ -317,6 +317,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			webResourceList = Collections.synchronizedList(new ArrayList<>());
 			acyclicDependencyList = Collections.synchronizedList(new ArrayList<>());
 			ckMetricsResultList = Collections.synchronizedList(new ArrayList<>());
+			unusedCodeList = Collections.synchronizedList(new ArrayList<>());
 		} else {
 			if (individualMode.isDuplication()) {
 				duplicationList = makeCSVFileCollectionList(DuplicationResult.class, this);
@@ -362,6 +363,9 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 				ckMetricsResultList = makeCSVFileCollectionList(CkMetricsResult.class, this);
 			} else {
 				ckMetricsResultList = new ArrayList<>(0);
+			}
+			if (individualMode.isUnusedCode()) {
+				unusedCodeList = makeCSVFileCollectionList(UnusedCodeResult.class, this);
 			}
 		}
 	}
@@ -1177,6 +1181,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			findSecBugsList.clear();
 			webResourceList.clear();
 			ckMetricsResultList.clear();
+			unusedCodeList.clear();
 		} else {
 			for (CSVFileCollectionList<?> list : closeTargetList) {
 				if (list.isTypeOf(JDependResult.class)) {
@@ -1199,6 +1204,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			webResourceList = null;
 			unusedCodeList = null;
 			ckMetricsResultList = null;
+			unusedCodeList = null;
 		}
 	}
 
@@ -1318,6 +1324,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			webResourceList.clear();
 			acyclicDependencyList.clear();
 			ckMetricsResultList.clear();
+			unusedCodeList.clear();
 		} else {
 			for (CSVFileCollectionList<?> list : closeTargetList) {
 				try {
@@ -1338,6 +1345,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		technicalDebtResult = null;
 		unusedCodeList = null;
 		ckMetricsResultList = null;
+		unusedCodeList = null;
 	}
 
 	public String getConvertedFilePath(String filePath) {
