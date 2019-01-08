@@ -155,6 +155,11 @@ public class CliParser {
 
 			if (cmd.hasOption("p")) {
 				projectBaseDir = cmd.getOptionValue("p");
+
+				if (checkProjectBaseDir()) {
+					System.out.println(errorMessage);
+					return false;
+				}
 			}
 
 			if (cmd.hasOption("s")) {
@@ -299,7 +304,7 @@ public class CliParser {
 		}
 	}
 
-    private void preprocessArgs() {
+	private void preprocessArgs() {
 		for (int i = 0; i < args.length - 1; i++) {
 			if (args[i].equals("-m") || args[i].equals("--mode")) {
 				if (args[i+1].startsWith("-")) {
@@ -521,8 +526,8 @@ public class CliParser {
 	}
 
     private boolean checkSourceDuplication() {
-		String[] srcDirectories = null;
-		String[] targets = null;
+		String[] srcDirectories;
+		String[] targets;
 
 		if (src.equals("")) {
 			srcDirectories = new String[0];
@@ -561,6 +566,18 @@ public class CliParser {
 
 		return false;
     }
+
+	private boolean checkProjectBaseDir() {
+		if (projectBaseDir.contains(",")) {
+			errorMessage = "The 'project' directory contains a comma.\n" +
+					"In this case, go to the project directory and run again without the 'project' option.";
+
+			return true;
+		}
+
+		return false;
+	}
+
 
 	public String getSrc() {
 		return src;

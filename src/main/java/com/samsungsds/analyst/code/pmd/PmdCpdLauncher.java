@@ -17,7 +17,6 @@ package com.samsungsds.analyst.code.pmd;
 
 import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
-import com.samsungsds.analyst.code.util.FindFileUtils;
 import net.sourceforge.pmd.cpd.CPDCommandLineInterface;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -26,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PmdCpdLauncher implements PmdCpd {
@@ -70,7 +70,7 @@ public class PmdCpdLauncher implements PmdCpd {
     private void processResultCSVFile(File csvFile, String instanceKey) {
         try (Reader in = new FileReader(csvFile)) {
 
-            StringBuilder builder = new StringBuilder();
+
             Iterable<CSVRecord> records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
 
             for (CSVRecord record : records) {
@@ -90,17 +90,17 @@ public class PmdCpdLauncher implements PmdCpd {
                     int targetStartLine = Integer.parseInt(record.get(i));
                     String targetPath = record.get(i+1);
 
-                    builder.append(path.replaceAll(",", ":")).append(",");
-                    builder.append(startLine).append(",");
-                    builder.append(startLine + lines - 1).append(",");
+                    String[] data = new String[6];
 
-                    builder.append(targetPath.replaceAll(",",":")).append(",");
-                    builder.append(targetStartLine).append(",");
-                    builder.append(targetStartLine + lines - 1);
+                    data[0] = path;
+                    data[1] = String.valueOf(startLine);
+                    data[2] = String.valueOf(startLine + lines - 1);
 
-                    addResult(builder.toString(), instanceKey);
+                    data[3] = targetPath;
+                    data[4] = String.valueOf(targetStartLine);
+                    data[5] = String.valueOf(targetStartLine + lines - 1);
 
-                    builder.setLength(0);
+                    addResult(data, instanceKey);
                 }
             }
         } catch (IOException ex) {
@@ -108,13 +108,15 @@ public class PmdCpdLauncher implements PmdCpd {
         }
     }
 
-    private void addResult(String line, String instanceKey) {
-        String[] data = line.split(FindFileUtils.COMMA_SPLITTER);
-
+    private void addResult(String[] data, String instanceKey) {
         DuplicationResult result;
 
         data[0] = PmdResult.getConvertedFilePath(data[0], instanceKey).replaceAll("^\\./", "");
         data[3] = PmdResult.getConvertedFilePath(data[3], instanceKey).replaceAll("^\\./", "");
+
+        if (data[3].equals(data[0])) {
+            data[3] = DuplicationResult.DUPLICATED_FILE_SAME_MARK;
+        }
 
         if (data.length == 6) {
             result = new DuplicationResult(data[0], Integer.parseInt(data[1]), Integer.parseInt(data[2]),
@@ -123,7 +125,7 @@ public class PmdCpdLauncher implements PmdCpd {
             result = new DuplicationResult(data[0], Integer.parseInt(data[1]), Integer.parseInt(data[2]),
                     DuplicationResult.DUPLICATED_FILE_SAME_MARK, Integer.parseInt(data[3]), Integer.parseInt(data[4]));
         } else {
-            throw new RuntimeException("Duplication Process Error : " + line);
+            throw new RuntimeException("Duplication Process Error : " + Arrays.toString(data));
         }
 
         MeasuredResult.getInstance(instanceKey).addDuplicationResult(result);
