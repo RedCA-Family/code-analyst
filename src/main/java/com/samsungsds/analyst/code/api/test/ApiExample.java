@@ -49,7 +49,7 @@ public class ApiExample {
 			ex.printStackTrace();
 			return;
 		}
-		argument.setSrc("src/main/java,src/test/java");
+		argument.setSrc("/src/main/java,/src/test/java");
 		argument.setBinary("target/classes,target/test-classes");
 		//argument.setSrc("src/main/java");
 		//argument.setBinary("target/classes");
@@ -58,7 +58,7 @@ public class ApiExample {
 		argument.setJavaVersion("1.8"); // default
 
 		AnalysisMode mode = new AnalysisMode();
-		mode.setCodeSize(false);
+		mode.setCodeSize(true);
 		mode.setDuplication(false);
 		mode.setComplexity(false);
 		mode.setSonarJava(false);
