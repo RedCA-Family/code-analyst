@@ -92,6 +92,10 @@ public class TextOutputFile extends AbstractOutputFile {
 		if (result.isSaveCatalog()) {
 			writer.println("saveCatalog = true");
 		}
+		if (result.isTokenBased()) {
+			writer.println("duplication = token");
+			writer.println("tokens = " + result.getMinimumTokens());
+		}
 		writer.println("version = " + result.getVersion());
 		writer.println("engineVersion = " + result.getEngineVersion());
 		writer.println();
@@ -375,7 +379,7 @@ public class TextOutputFile extends AbstractOutputFile {
 	@Override
 	protected void writeUnusedCode(List<UnusedCodeResult> list) {
 		if (result.isSeperatedOutput()) {
-			// csvOutput.writePmd(list);
+			csvOutput.writeUnusedCode(list);
 		} else {
 			writer.println("[Unused Code]");
 			writer.println("; type, package, class, line, name, description");

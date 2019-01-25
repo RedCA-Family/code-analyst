@@ -50,13 +50,14 @@ public class Version {
 	// 2.4.0 : OSS(Open Source Software) Version release
 	// 2.5.0 : CK Metrics 추가
 	// 2.5.1 : CK Metrics 처리 방식 변경 (eclipse JDT Parser -> BCEL 사용 CKJM)
+	// 2.6.0 : Duplication 점검 방식 추가 (token 기반), PMD 버전 번경 (5.X 최종 적용), Unused Code CSV output 오류 수정
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "2.5.1";
-	public static final String DOCUMENT_VERSION = "2.5";
+	public static final String CODE_ANALYST = "2.6.0";
+	public static final String DOCUMENT_VERSION = "2.6";
 
 	public static final String SONAR_SCANNER = "2.10.0.1189";
 	public static final String SONAR_SERVER = "6.7.4";
-	public static final String PMD = "5.4.6";
+	public static final String PMD = "5.8.1";
 	public static final String FINDBUGS = "3.0.1";
 	public static final String FINDSECBUGS = "1.7.1";
 	public static final String JDEPEND = "2.9.1";
@@ -94,7 +95,7 @@ public class Version {
 		System.out.println("  - FindBugs : " + FINDBUGS + " (LGPL v3.0)");
 		System.out.println("  - FindSecBugs : " + FINDSECBUGS + " (LGPL v3.0)");
 		System.out.println("  - JDepend : " + JDEPEND +"-based modification" + " (BSD-style) ");
-		System.out.println("  - CKJM : " + CKJM + " (Apache v2.0) ");
+		System.out.println("  - CKJM : " + CKJM + "-based modification" + " (Apache v2.0) ");
 		System.out.println();
 		System.out.println("Default RuleSet");
 		System.out.println("  - PMD : " + PMD_RULESET);

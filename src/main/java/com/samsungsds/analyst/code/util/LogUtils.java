@@ -28,4 +28,12 @@ public class LogUtils {
         conf.getLoggerConfig("org.sonar").setLevel(Level.INFO);
         ctx.updateLoggers(conf);
     }
+
+    public static void setDebugLevel() {
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        Configuration conf = ctx.getConfiguration();
+        conf.getLoggerConfig("com.samsungsds.analyst.code").setLevel(Level.DEBUG);
+        conf.getLoggerConfig("org.sonar").setLevel(Level.DEBUG);
+        ctx.updateLoggers(conf);
+    }
 }

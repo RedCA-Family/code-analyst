@@ -78,6 +78,10 @@ public class CliParser {
 
 	private boolean saveCatalog = false;
 
+	private boolean tokenBased = false;
+
+	private int minimumTokens = 100;
+
 	public CliParser(String[] args) {
 		this.args = args;
 
@@ -109,21 +113,24 @@ public class CliParser {
 				"If it's not specified, 'javascript', 'css', 'html' analysis items will be disabled." +
                 "\n※ webapp directory should not overlap the src directories.");
 
-        options.addOption("include", true, "specify include pattern(Ant-style) with comma separated. (eg: com/sds/**/*.java)");
-		options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)");
+        options.addOption("include", true, "specify include pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*.java)");
+		options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*VO.java)");
 
 		options.addOption("m", "mode", true, "specify analysis items with comma separated. If '-' specified in each mode, the mode is excluded. " +
 				"(code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs, javascript, css, html, dependency, unusedcode, ckmetrics)" +
 				"\n※ 'javascript', 'css' and 'html' will be disabled when 'webapp' option isn't set, and 'css' and 'html' are disabled by default");
 
-		options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occured, use JVM '-Xmx' option like '-Xmx1024m')");
+		options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occurred, use JVM '-Xmx' option like '-Xmx1024m')");
 
 		options.addOption("r", "rerun", true, "specify previous output file to rerun with same options. "
-				+ "('project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', 'analysis', 'seperated', 'catalog' and 'webapp')");
+				+ "('project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', 'analysis', 'seperated', 'catalog', 'duplication', 'token' and 'webapp')");
 
 		options.addOption("seperated", false, "specify seperated output mode.");
 
 		options.addOption("catalog", false, "specify file catalog saving mode.");
+
+		options.addOption("duplication", true,"specify duplication detection mode. ('statement' or 'token', default : statement)");
+		options.addOption("tokens", true, "specify the minimum number of tokens when token-based duplication detection mode. (default : 100)");
 	}
 
 	public boolean parse() {
@@ -148,6 +155,11 @@ public class CliParser {
 
 			if (cmd.hasOption("p")) {
 				projectBaseDir = cmd.getOptionValue("p");
+
+				if (checkProjectBaseDir()) {
+					System.out.println(errorMessage);
+					return false;
+				}
 			}
 
 			if (cmd.hasOption("s")) {
@@ -258,6 +270,24 @@ public class CliParser {
 				setSaveCatalog(true);
 			}
 
+			if (cmd.hasOption("duplication")) {
+				String duplicationMode = cmd.getOptionValue("duplication");
+				if (duplicationMode.equalsIgnoreCase("statement")) {
+					tokenBased = false;
+				} else if (duplicationMode.equalsIgnoreCase("token")) {
+					tokenBased = true;
+				} else {
+					errorMessage = "Option Error : 'duplication' option's value has to be 'statement' or 'token'";
+					System.out.println(errorMessage);
+					help();
+					return false;
+				}
+			}
+
+			if (cmd.hasOption("tokens")) {
+				minimumTokens = Integer.parseInt(cmd.getOptionValue("tokens"));
+			}
+
 			if (checkSourceDuplication()) {
                 errorMessage = "Source Directories(include webapp dir.) overlapped. : " + src + (webapp.equals("") ? "" : "," + webapp);
 				System.out.println(errorMessage);
@@ -274,7 +304,7 @@ public class CliParser {
 		}
 	}
 
-    private void preprocessArgs() {
+	private void preprocessArgs() {
 		for (int i = 0; i < args.length - 1; i++) {
 			if (args[i].equals("-m") || args[i].equals("--mode")) {
 				if (args[i+1].startsWith("-")) {
@@ -356,6 +386,18 @@ public class CliParser {
 			saveCatalog = true;
 		}
 
+		String duplication = getCheckedString(ini, "Project", "duplication", true);
+
+		if (duplication.equals("token")) {
+			tokenBased = true;
+		}
+
+		String tokens = getCheckedString(ini, "Project", "tokens", true);
+
+		if (!tokens.equals("")) {
+			minimumTokens = Integer.parseInt(tokens);
+		}
+
 		LOGGER.info("Rerun with following options");
 		LOGGER.info(" - project : {}", projectBaseDir);
 		LOGGER.info(" - src : {}", src);
@@ -391,6 +433,12 @@ public class CliParser {
 		}
 		if (catalog.equals("true")) {
 			LOGGER.info("- saveCatalog = true");
+		}
+		if (!duplication.equals("")) {
+			LOGGER.info("- duplication = {}", duplication);
+		}
+		if (!tokens.equals("")) {
+			LOGGER.info("- tokens = {}", tokens);
 		}
 	}
 
@@ -478,8 +526,8 @@ public class CliParser {
 	}
 
     private boolean checkSourceDuplication() {
-		String[] srcDirectories = null;
-		String[] targets = null;
+		String[] srcDirectories;
+		String[] targets;
 
 		if (src.equals("")) {
 			srcDirectories = new String[0];
@@ -518,6 +566,18 @@ public class CliParser {
 
 		return false;
     }
+
+	private boolean checkProjectBaseDir() {
+		if (projectBaseDir.contains(",")) {
+			errorMessage = "The 'project' directory contains a comma.\n" +
+					"In this case, go to the project directory and run again without the 'project' option.";
+
+			return true;
+		}
+
+		return false;
+	}
+
 
 	public String getSrc() {
 		return src;
@@ -674,4 +734,19 @@ public class CliParser {
 		this.saveCatalog = saveCatalog;
 	}
 
+	public boolean isTokenBased() {
+		return tokenBased;
+	}
+
+	public void setTokenBased(boolean tokenBased) {
+		this.tokenBased = tokenBased;
+	}
+
+	public int getMinimumTokens() {
+		return minimumTokens;
+	}
+
+	public void setMinimumTokens(int minimumTokens) {
+		this.minimumTokens = minimumTokens;
+	}
 }

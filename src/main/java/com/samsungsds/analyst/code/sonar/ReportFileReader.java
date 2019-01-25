@@ -87,7 +87,9 @@ public class ReportFileReader implements Closeable {
 				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isCodeSize()) {
 					calculateCodeSize(component);
 				}
-				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isDuplication() && reader.hasCoverage(component.getRef())) {
+				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isDuplication()
+						&& reader.hasCoverage(component.getRef())
+						&& !MeasuredResult.getInstance(instanceKey).isTokenBased()) {
 					try (CloseableIterator<ScannerReport.Duplication> it = reader.readComponentDuplications(component.getRef())) {
 						while (it.hasNext()) {
 							ScannerReport.Duplication dup = it.next();

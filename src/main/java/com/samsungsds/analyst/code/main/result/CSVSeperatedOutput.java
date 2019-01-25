@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
+import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -225,5 +226,36 @@ public class CSVSeperatedOutput {
 
 		LOGGER.info("Result seperated file saved : {}", csvFile);
 
+	}
+
+	public void writeUnusedCode(List<UnusedCodeResult> list) {
+		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-unusedcode.csv";
+
+		try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
+			csvWriter.println("No,type,package,class,line,name,description");
+
+			int count = 0;
+			synchronized (list) {
+				for (UnusedCodeResult result : list) {
+					csvWriter.print(++count + ",");
+					csvWriter.print(result.getType());
+					csvWriter.print(",");
+					csvWriter.print(result.getPackageName());
+					csvWriter.print(",");
+					csvWriter.print(result.getClassName());
+					csvWriter.print(",");
+					csvWriter.print(result.getLine());
+					csvWriter.print(",");
+					csvWriter.print(result.getName());
+					csvWriter.print(",");
+					csvWriter.print(getStringsWithComma(result.getDescription()));
+					csvWriter.println();
+				}
+			}
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
+
+		LOGGER.info("Result seperated file saved : {}", csvFile);
 	}
 }

@@ -51,7 +51,7 @@ public class DuplicationApp {
 
 		LogUtils.unsetDebugLevel();
 
-		List<String> list = null;
+		List<String> list;
 		if (type == Type.OUT) {
 			list = getDuplicationListFromIni();
 		} else if (type == Type.CSV) {
@@ -60,7 +60,7 @@ public class DuplicationApp {
 			list = getDuplicationListFromCPD();
 		}
 
-		IndividualMode individualMode = new IndividualMode();
+		//IndividualMode individualMode = new IndividualMode();
 		MeasuredResult.getInstance(INSTANCE_KEY).initialize(true, false);
 
 		System.out.println("Duplicated lines : " + getDuplicatedLines(list));
@@ -217,7 +217,7 @@ public class DuplicationApp {
 
 			StringBuilder builder = new StringBuilder();
 			Iterable<CSVRecord> records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
-			int index = 1;
+			//int index = 1;
 			for (CSVRecord record : records) {
 				if (record.get(0).equals("")) {
 					continue;
@@ -266,7 +266,6 @@ public class DuplicationApp {
 			showHelp();
 			return;
 		}
-
 
 		Type type = null;
 		if (args[1].equalsIgnoreCase("out")) {

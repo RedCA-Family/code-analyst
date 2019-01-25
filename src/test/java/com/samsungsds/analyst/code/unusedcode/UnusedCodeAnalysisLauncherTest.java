@@ -112,7 +112,7 @@ public class UnusedCodeAnalysisLauncherTest {
 
 	//@Ignore("package not supported since V2.2")
 	@Test public void
-	should_detect_1_unused_constant_when_lancher_analysis_unusedcode_package_with_filter() {
+	should_detect_2_unused_constant_when_lancher_analysis_unusedcode_package_with_filter() {
 		String src = "src/main/java/com/samsungsds/analyst/code/unusedcode";
 		String binary = "target/classes/com/samsungsds/analyst/code/unusedcode";
 		
@@ -124,7 +124,7 @@ public class UnusedCodeAnalysisLauncherTest {
 
 		unusedCodeAnalysisLauncher.run(testInstanceKey);
 		
-		assertThat(measuredResult.getUnusedConstantCount(), is(1));
+		assertThat(measuredResult.getUnusedConstantCount(), is(2));
 	}
 	
 	@Test public void

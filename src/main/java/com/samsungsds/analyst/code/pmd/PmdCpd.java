@@ -13,14 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-package com.samsungsds.analyst.code.ckmetrics;
+package com.samsungsds.analyst.code.pmd;
 
-public interface CkMetricsAnalysis {
-    void setProjectBaseDir(String directory);
-
-    void setSourceDirectories(String directories);
-
-    void setBinaryDirectories(String directories);
+public interface PmdCpd {
+    void addOption(String option, String value);
 
     void run(String instanceKey);
 }

@@ -1,6 +1,8 @@
 # Code Analyst Project
 
+[![](https://img.shields.io/github/tag/RedCA-Family/code-analyst.svg?style=flat&label=release)](https://github.com/RedCA-Family/code-analyst/releases)
 [![Build Status](https://travis-ci.org/RedCA-Family/code-analyst.svg?branch=development)](https://travis-ci.org/RedCA-Family/code-analyst)
+[![License](https://img.shields.io/github/license/RedCA-Family/code-analyst.svg?style=flat)](https://raw.githubusercontent.com/RedCA-Family/code-analyst/master/LICENSE.txt)
 
 Code Analyst는 코드 품질에 대한 다양한 지표를 통합적으로 확인할 수 있는 프로그램입니다. 
 
@@ -17,27 +19,27 @@ Code Analyst를 실행하기 위해서는 Java 1.8이 필요하며, 하나의 �
 
 	git clone https://github.com/RedCA-Family/code-analyst.git
 	cd code-analyst
-	mvn clean package
+	mvnw clean package
 
 생성된 jar 파일을 임의의 디렉토리에 위치시키고 아래 사용법 과 같이 실행하여 사용합니다.
 
 
 ## API 사용 ##
-API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 2개의 dependency를 추가하면 됩니다. 
+API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 dependency를 추가하면 됩니다. 
 	
 	<dependency>
 		<groupId>com.samsungsds.analyst</groupId>
 		<artifactId>code-analyst</artifactId>
-		<version>2.5.1</version>
+		<version>2.6.0</version>
 	</dependency>
 
-API 활용에 대한 사항은 [Guide](GUIDE.md)를 참조해 주세요.
+**API 활용에 대한 사항은 [Guide](GUIDE.md)를 참조**해 주세요.
   
 
 ## Usage
 CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이 실행합니다.
 
-    $> java -jar Code-Analyst-2.5.1.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+    $> java -jar Code-Analyst-2.6.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
  
 기본적으로 --project 옵션을 통해 분석하고자 하는 프로젝트 위치를 지정합니다. 
 
@@ -46,8 +48,8 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
 
 ### Help
 
-	$> java -jar Code-Analyst-2.5.1.jar --help
-    usage: java -jar Code-Analyst-2.4.0.jar
+	$> java -jar Code-Analyst-2.6.0.jar --help
+    usage: java -jar Code-Analyst-2.6.0.jar
      -h,--help               show help.
      -p,--project <arg>      specify project base directory. (default: ".")
      -s,--src <arg>          specify source directories with comma separated. (default: "${project}\src\main\java")
@@ -82,15 +84,17 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
                              like '-Xmx1024m')
      -r,--rerun <arg>        specify previous output file to rerun with same options. ('project', 'src', 'binary',
                              'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', 'analysis', 'seperated',
-                             'catalog' and 'webapp')
+                             'catalog', 'duplication', 'token' and 'webapp')
      -seperated              specify seperated output mode.
      -catalog                specify file catalog saving mode.
-
+     -duplication <arg>      specify duplication detection mode. ('statement' or 'token', default : statement)
+     -tokens <arg>           specify the minimum number of tokens when token-based duplication detection mode. (default :
+                             100)
 
 ### Version 정보
 
-	$> java -jar Code-Analyst-10.jar --version
-    Code Analyst : 2.5.1
+	$> java -jar Code-Analyst-2.6.0.jar --version
+    Code Analyst : 2.6.0
       - Sonar Scanner : 2.10.0.1189 (LGPL v3.0)
       - Sonar Server : 6.7.4 (LGPL v3.0)
          [Plugins]
@@ -98,11 +102,11 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
            - SonarJS : 4.1.0.6085 (LGPL v3.0)
            - CSS/SCSS/Less : 3.1 (LGPL v3.0)
            - Web : 2.5.0.476 (Apache v2.0)
-      - PMD : 5.4.6 (BSD-style)
+      - PMD : 5.8.1 (BSD-style)
       - FindBugs : 3.0.1 (LGPL v3.0)
       - FindSecBugs : 1.7.1 (LGPL v3.0)
       - JDepend : 2.9.1-based modification (BSD-style)
-      - CKJM : 1.9 (Apache v2.0)
+      - CKJM : 1.9-based modification (Apache v2.0)
     
     Default RuleSet
       - PMD : 91 ruleset (v5.4, RedCA Way Ruleset, '18.03)
@@ -117,7 +121,7 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
     Copyright(c) 2018 By Samsung SDS (Code Quality Group)
 
 
-보다 자세한 사항은 [Guide](GUIDE.md)를 참조해 주세요. 
+보다 **자세한 사항은 [Guide](GUIDE.md)를 참조**해 주세요. 
 
 
 ## Contributing
@@ -133,6 +137,7 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
 - (2018.03) New Major Version released (v2.0)
 - (2018.10) OSS Version released (v2.4)
 - (2018.12) Design Metrics(CK Metrics) added (v2.5)
+- (2019.01) Token based duplication detection mode added (v2.6)
 
 
 ## License

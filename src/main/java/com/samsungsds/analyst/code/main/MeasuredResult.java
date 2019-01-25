@@ -50,7 +50,7 @@ import com.samsungsds.analyst.code.sonar.WebResourceResult;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtResult;
 
-public class MeasuredResult implements Serializable {
+public class MeasuredResult implements Serializable, FileSkipChecker {
 	private static final Logger LOGGER = LogManager.getLogger(MeasuredResult.class);
 
 	private static final long serialVersionUID = 1L;
@@ -267,6 +267,13 @@ public class MeasuredResult implements Serializable {
 	@Expose
 	private TechnicalDebtResult technicalDebtResult = null;
 
+	@Expose
+	@SerializedName("tokenBasedCPD")
+	private boolean tokenBased = false;
+
+	@Expose
+	private int minimumTokens = 100;
+
 	public static MeasuredResult getInstance(String instanceKey) {
 		if (!instances.containsKey(instanceKey)) {
 			synchronized (MeasuredResult.class) {
@@ -310,6 +317,7 @@ public class MeasuredResult implements Serializable {
 			webResourceList = Collections.synchronizedList(new ArrayList<>());
 			acyclicDependencyList = Collections.synchronizedList(new ArrayList<>());
 			ckMetricsResultList = Collections.synchronizedList(new ArrayList<>());
+			unusedCodeList = Collections.synchronizedList(new ArrayList<>());
 		} else {
 			if (individualMode.isDuplication()) {
 				duplicationList = makeCSVFileCollectionList(DuplicationResult.class, this);
@@ -355,6 +363,9 @@ public class MeasuredResult implements Serializable {
 				ckMetricsResultList = makeCSVFileCollectionList(CkMetricsResult.class, this);
 			} else {
 				ckMetricsResultList = new ArrayList<>(0);
+			}
+			if (individualMode.isUnusedCode()) {
+				unusedCodeList = makeCSVFileCollectionList(UnusedCodeResult.class, this);
 			}
 		}
 	}
@@ -556,14 +567,14 @@ public class MeasuredResult implements Serializable {
 		return haveToSkip(path, false, false);
 	}
 
-	public boolean haveToSkip(String path, boolean withSrcPrefix) {
-		return haveToSkip(path, withSrcPrefix, false);
+	public boolean haveToSkip(String path, boolean addSrcPrefix) {
+		return haveToSkip(path, addSrcPrefix, false);
 	}
 
-	public boolean haveToSkip(String path, boolean withSrcPrefix, boolean withoutFilename) {
-		String[] pathArray = null;
+	public boolean haveToSkip(String path, boolean addSrcPrefix, boolean withoutFilename) {
+		String[] pathArray;
 
-		if (withSrcPrefix) {
+		if (addSrcPrefix) {
 			String[] sourceDirectories = source.split(FindFileUtils.COMMA_SPLITTER);
 
 			pathArray = new String[sourceDirectories.length];
@@ -1170,6 +1181,7 @@ public class MeasuredResult implements Serializable {
 			findSecBugsList.clear();
 			webResourceList.clear();
 			ckMetricsResultList.clear();
+			unusedCodeList.clear();
 		} else {
 			for (CSVFileCollectionList<?> list : closeTargetList) {
 				if (list.isTypeOf(JDependResult.class)) {
@@ -1192,6 +1204,7 @@ public class MeasuredResult implements Serializable {
 			webResourceList = null;
 			unusedCodeList = null;
 			ckMetricsResultList = null;
+			unusedCodeList = null;
 		}
 	}
 
@@ -1228,6 +1241,22 @@ public class MeasuredResult implements Serializable {
             throw new IllegalStateException("Date format error", ex);
         }
     }
+
+	public boolean isTokenBased() {
+		return tokenBased;
+	}
+
+	public void setTokenBased(boolean tokenBased) {
+		this.tokenBased = tokenBased;
+	}
+
+	public int getMinimumTokens() {
+		return minimumTokens;
+	}
+
+	public void setMinimumTokens(int minimumTokens) {
+		this.minimumTokens = minimumTokens;
+	}
 
 	public void clear() {
 		directories = 0;
@@ -1295,6 +1324,7 @@ public class MeasuredResult implements Serializable {
 			webResourceList.clear();
 			acyclicDependencyList.clear();
 			ckMetricsResultList.clear();
+			unusedCodeList.clear();
 		} else {
 			for (CSVFileCollectionList<?> list : closeTargetList) {
 				try {
@@ -1315,6 +1345,7 @@ public class MeasuredResult implements Serializable {
 		technicalDebtResult = null;
 		unusedCodeList = null;
 		ckMetricsResultList = null;
+		unusedCodeList = null;
 	}
 
 	public String getConvertedFilePath(String filePath) {

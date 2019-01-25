@@ -24,9 +24,11 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysis;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysisLauncher;
+import com.samsungsds.analyst.code.main.subject.TargetFile;
+import com.samsungsds.analyst.code.main.subject.TargetManager;
+import com.samsungsds.analyst.code.pmd.*;
 import com.samsungsds.analyst.code.sonar.filter.SonarIssueFilter;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -49,10 +51,6 @@ import com.samsungsds.analyst.code.findbugs.FindSecBugsAnalysisLauncher;
 import com.samsungsds.analyst.code.jdepend.JDependAnalysis;
 import com.samsungsds.analyst.code.jdepend.JDependAnalysisLauncher;
 import com.samsungsds.analyst.code.main.result.OutputFileFormat;
-import com.samsungsds.analyst.code.pmd.ComplexityAnalysis;
-import com.samsungsds.analyst.code.pmd.ComplexityAnalysisLauncher;
-import com.samsungsds.analyst.code.pmd.PmdAnalysis;
-import com.samsungsds.analyst.code.pmd.PmdAnalysisLauncher;
 import com.samsungsds.analyst.code.sonar.SonarAnalysis;
 import com.samsungsds.analyst.code.sonar.SonarAnalysisLauncher;
 import com.samsungsds.analyst.code.sonar.server.JettySurrogateSonarServer;
@@ -115,10 +113,14 @@ public class App {
 
 			MeasuredResult.getInstance(cli.getInstanceKey()).setMode(cli.getMode());
 
+			MeasuredResult.getInstance(cli.getInstanceKey()).setTokenBased(cli.isTokenBased());
+			MeasuredResult.getInstance(cli.getInstanceKey()).setMinimumTokens(cli.getMinimumTokens());
+
 			processFilterString(cli);
 
 			if (cli.isDebug()) {
 				LOGGER.info("Debugging enabled");
+				LogUtils.setDebugLevel();
 			} else {
 				LogUtils.unsetDebugLevel();
 			}
@@ -152,6 +154,19 @@ public class App {
 				runComplexity(cli);
 
 			} else {
+
+				TargetManager targetManager = TargetManager.getInstance(cli.getInstanceKey());
+
+				try {
+					List<TargetFile> targetFileList = targetManager.getTargetFileList(project.getCanonicalPath(), cli.getSrc(), cli.getBinary(),
+							MeasuredResult.getInstance(cli.getInstanceKey()));
+
+					LOGGER.info("Target File Count From Target Manager : {}", targetFileList.size());
+				} catch (IOException e) {
+					LOGGER.error("Project Directory Error : {}", cli.getProjectBaseDir());
+					return;
+				}
+
 				if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isSonarJava() || cli.getIndividualMode().isWebResources()) {
 					List<String> sonarAnalysisModeList = new ArrayList<>();
 					if (cli.getIndividualMode().isCodeSize()) {
@@ -176,6 +191,10 @@ public class App {
 					LOGGER.info(sonarAnalysisMode + " Analysis start...");
 
 					runSonarAnalysis(cli);
+				}
+
+				if (cli.getIndividualMode().isDuplication() && cli.isTokenBased()) {
+					runPmdCpd(cli);
 				}
 
 				if (cli.getIndividualMode().isComplexity()) {
@@ -375,6 +394,21 @@ public class App {
 		}
 	}
 
+	private void runPmdCpd(CliParser cli) {
+		PmdCpd cpd = new PmdCpdLauncher();
+
+		cpd.addOption("--encoding", cli.getEncoding());
+		cpd.addOption("--format", "csv");
+		cpd.addOption("-failOnViolation", "false");
+
+		cpd.addOption("--minimum-tokens", Integer.toString(cli.getMinimumTokens()));
+
+		String dirs = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getSrc());
+		cpd.addOption("--files", dirs);
+
+		cpd.run(cli.getInstanceKey());
+	}
+
 	private void runComplexity(CliParser cli) {
 		ComplexityAnalysis pmdComplexity = new ComplexityAnalysisLauncher();
 
@@ -571,6 +605,7 @@ public class App {
 		CkMetricsAnalysis ckMetricsAnalysis = new CkMetricsAnalysisLauncher();
 
 		ckMetricsAnalysis.setProjectBaseDir(cli.getProjectBaseDir());
+		ckMetricsAnalysis.setSourceDirectories(cli.getSrc());
 		ckMetricsAnalysis.setBinaryDirectories(cli.getBinary());
 
 		ckMetricsAnalysis.run(cli.getInstanceKey());
