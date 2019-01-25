@@ -380,17 +380,19 @@ public class App {
 			sonarProgressChecker.start();
 		}
 
-		sonar.run(cli.getInstanceKey());
+		try {
+			sonar.run(cli.getInstanceKey());
+		} finally {
+			LOGGER.info("Surrogate Sonar Server stopping...");
+			server.stop();
 
-		LOGGER.info("Surrogate Sonar Server stopping...");
-		server.stop();
+			if (sonarProgressChecker != null) {
+				sonarProgressChecker.stop();
+			}
 
-		if (sonarProgressChecker != null) {
-			sonarProgressChecker.stop();
-		}
-
-		if (progressMonitor != null) {
-			notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.SONAR_ALL_COMPLETE));
+			if (progressMonitor != null) {
+				notifyObservers(progressMonitor.getNextAnalysisProgress(ProgressEvent.SONAR_ALL_COMPLETE));
+			}
 		}
 	}
 
