@@ -2,7 +2,7 @@
 
 ## 1. 기본 실행 ##
 
-	$> java -jar Code-Analyst-2.6.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+	$> java -jar Code-Analyst-2.6.1.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
 
 
 ### 결과 화면 

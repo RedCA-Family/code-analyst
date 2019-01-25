@@ -30,7 +30,7 @@ API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 d
 	<dependency>
 		<groupId>com.samsungsds.analyst</groupId>
 		<artifactId>code-analyst</artifactId>
-		<version>2.6.0</version>
+		<version>2.6.1</version>
 	</dependency>
 
 **API 활용에 대한 사항은 [Guide](GUIDE.md)를 참조**해 주세요.
@@ -39,7 +39,7 @@ API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 d
 ## Usage
 CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이 실행합니다.
 
-    $> java -jar Code-Analyst-2.6.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+    $> java -jar Code-Analyst-2.6.1.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
  
 기본적으로 --project 옵션을 통해 분석하고자 하는 프로젝트 위치를 지정합니다. 
 
@@ -48,8 +48,8 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
 
 ### Help
 
-	$> java -jar Code-Analyst-2.6.0.jar --help
-    usage: java -jar Code-Analyst-2.6.0.jar
+	$> java -jar Code-Analyst-2.6.1.jar --help
+    usage: java -jar Code-Analyst-2.6.1.jar
      -h,--help               show help.
      -p,--project <arg>      specify project base directory. (default: ".")
      -s,--src <arg>          specify source directories with comma separated. (default: "${project}\src\main\java")
@@ -93,8 +93,8 @@ CLI(Command Line Interface) 형태로 사용하기 위해서는 다음과 같이
 
 ### Version 정보
 
-	$> java -jar Code-Analyst-2.6.0.jar --version
-    Code Analyst : 2.6.0
+	$> java -jar Code-Analyst-2.6.1.jar --version
+    Code Analyst : 2.6.1
       - Sonar Scanner : 2.10.0.1189 (LGPL v3.0)
       - Sonar Server : 6.7.4 (LGPL v3.0)
          [Plugins]
