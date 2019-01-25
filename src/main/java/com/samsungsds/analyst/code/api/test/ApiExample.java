@@ -57,6 +57,8 @@ public class ApiExample {
 		argument.setEncoding("UTF-8"); // default
 		argument.setJavaVersion("1.8"); // default
 
+		//argument.setDebug(true);
+
 		AnalysisMode mode = new AnalysisMode();
 		mode.setCodeSize(true);
 		mode.setDuplication(false);
