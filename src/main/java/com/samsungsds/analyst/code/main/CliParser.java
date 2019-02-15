@@ -254,6 +254,8 @@ public class CliParser {
 
 			checkWebAppOption();
 
+			checkAndModifyDirectories();
+
 			if (cmd.hasOption("a")) {
 				setDetailAnalysis(true);
 			}
@@ -302,6 +304,28 @@ public class CliParser {
 			help();
 			return false;
 		}
+	}
+
+	private void checkAndModifyDirectories() {
+		src = getModifiedDirectories(src);
+		binary = getModifiedDirectories(binary);
+	}
+
+	private String getModifiedDirectories(String directories) {
+		StringBuilder builder = new StringBuilder();
+
+		for (String dir : directories.split(FindFileUtils.COMMA_SPLITTER)) {
+			if (builder.length() != 0) {
+				builder.append(",");
+			}
+			if (dir.startsWith("\\") || dir.startsWith("/")) {
+				builder.append(dir.substring(1));
+			} else {
+				builder.append(dir);
+			}
+		}
+
+		return builder.toString();
 	}
 
 	private void preprocessArgs() {
