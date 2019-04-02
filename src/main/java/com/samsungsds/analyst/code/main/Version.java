@@ -52,8 +52,9 @@ public class Version {
 	// 2.5.1 : CK Metrics 처리 방식 변경 (eclipse JDT Parser -> BCEL 사용 CKJM)
 	// 2.6.0 : Duplication 점검 방식 추가 (token 기반), PMD 버전 번경 (5.X 최종 적용), Unused Code CSV output 오류 수정
 	// 2.6.1 : source 경로 오류('/' 또는 '\'를 prefix로 갖는 경우), API Progress Event 미완료 오류 수정
+	// 2.7.0 : SonarJS plugin upgrade(4.1.0 -> 5.1.1, ruleset 조정 포함)
 	//--------------------------------------------------
-	public static final String CODE_ANALYST = "2.6.1";
+	public static final String CODE_ANALYST = "2.7.0";
 	public static final String DOCUMENT_VERSION = "2.6";
 
 	public static final String SONAR_SCANNER = "2.10.0.1189";
@@ -65,7 +66,7 @@ public class Version {
 	public static final String CKJM = "1.9";
 
 	public static final String SONAR_JAVA = "5.1.1.13214";
-	public static final String SONAR_JS = "4.1.0.6085";
+	public static final String SONAR_JS = "5.1.1.7506";
 	public static final String SONAR_CSS = "3.1";
 	public static final String SONAR_WEB = "2.5.0.476";
 	
@@ -73,7 +74,7 @@ public class Version {
 	public static final String FINDBUGS_RULESET = "214 ruleset (v3.0.1, RedCA Way Ruleset, '18.03)";
 	public static final String FINDSECBUGS_RULESET = "81 rules (v1.7.1, RedCA Way Ruleset, '18.06)";
 	public static final String SONAR_JAVA_RULESET = "227 ruleset (v4.15, RedCA Way Ruleset, '18.03)";
-	public static final String SONAR_JS_RULESET = "109 ruleset (v4.1, RedCA Way Ruleset, '18.05)";
+	public static final String SONAR_JS_RULESET = "95 ruleset (v5.0, RedCA Way Ruleset, '18.11)";
 	public static final String SONAR_CSS_RULESET = "CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)";
 	public static final String SONAR_WEB_RULESET = "16 ruleset (v2.5)";
 
@@ -81,7 +82,7 @@ public class Version {
 	public static final int PMD_DEFAULT_RULES = 91;
 	public static final int FINDBUGS_DEFAULT_RULES = 214;
 	public static final int FINDSECBUGS_DEFAULT_RULES = 81;
-	public static final int SONAR_JS_DEFAULT_RULES = 109;
+	public static final int SONAR_JS_DEFAULT_RULES = 95;
 	
 	public static void printVersionInfo() {
 		System.out.println("Code Analyst : " + CODE_ANALYST);
