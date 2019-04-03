@@ -52,7 +52,7 @@ public class Version {
 	// 2.5.1 : CK Metrics 처리 방식 변경 (eclipse JDT Parser -> BCEL 사용 CKJM)
 	// 2.6.0 : Duplication 점검 방식 추가 (token 기반), PMD 버전 번경 (5.X 최종 적용), Unused Code CSV output 오류 수정
 	// 2.6.1 : source 경로 오류('/' 또는 '\'를 prefix로 갖는 경우), API Progress Event 미완료 오류 수정
-	// 2.7.0 : SonarJS plugin upgrade(4.1.0 -> 5.1.1, ruleset 조정 포함)
+	// 2.7.0 : SonarJS plugin upgrade(4.1.0 -> 5.1.1, ruleset 조정 포함), Node 실행환경 제공 (Sonar 분석 부분 분리)
 	//--------------------------------------------------
 	public static final String CODE_ANALYST = "2.7.0";
 	public static final String DOCUMENT_VERSION = "2.6";
@@ -64,6 +64,8 @@ public class Version {
 	public static final String FINDSECBUGS = "1.7.1";
 	public static final String JDEPEND = "2.9.1";
 	public static final String CKJM = "1.9";
+
+	public static final String NODE_JS = "10.15.3 LTS";
 
 	public static final String SONAR_JAVA = "5.1.1.13214";
 	public static final String SONAR_JS = "5.1.1.7506";
@@ -96,8 +98,10 @@ public class Version {
 		System.out.println("  - PMD : " + PMD + " (BSD-style)");
 		System.out.println("  - FindBugs : " + FINDBUGS + " (LGPL v3.0)");
 		System.out.println("  - FindSecBugs : " + FINDSECBUGS + " (LGPL v3.0)");
-		System.out.println("  - JDepend : " + JDEPEND +"-based modification" + " (BSD-style) ");
-		System.out.println("  - CKJM : " + CKJM + "-based modification" + " (Apache v2.0) ");
+		System.out.println("  - JDepend : " + JDEPEND +"-based modification" + " (BSD-style)");
+		System.out.println("  - CKJM : " + CKJM + "-based modification" + " (Apache v2.0)");
+		System.out.println("  - Node.js : " + NODE_JS + " (MIT)");
+		System.out.println("    ※ Supported Platform : Windows/MacOS/Linux(x64)");
 		System.out.println();
 		System.out.println("Default RuleSet");
 		System.out.println("  - PMD : " + PMD_RULESET);

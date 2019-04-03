@@ -48,7 +48,7 @@ public class ApiWebExample {
 
         argument.setWebapp("src/main/webapp");
 
-        argument.setDebug(true);
+        // argument.setDebug(true);
 
         // argument.setExclude("**/test.js");
 
