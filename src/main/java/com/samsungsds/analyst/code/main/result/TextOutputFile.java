@@ -26,6 +26,7 @@ import java.util.List;
 
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
+import com.samsungsds.analyst.code.main.App;
 import com.samsungsds.analyst.code.main.CliParser;
 import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.main.detailed.Duplication;
@@ -35,7 +36,7 @@ import com.samsungsds.analyst.code.main.issue.IssueType;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
-import com.samsungsds.analyst.code.sonar.SonarJavaResult;
+import com.samsungsds.analyst.code.sonar.SonarIssueResult;
 import com.samsungsds.analyst.code.sonar.WebResourceResult;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 
@@ -59,6 +60,7 @@ public class TextOutputFile extends AbstractOutputFile {
 	@Override
 	protected void writeProjectInfo(CliParser cli, MeasuredResult result) {
 		writer.println("[Project]");
+		writer.println("Language = " + cli.getLanguage());
 		writer.println("Target = " + result.getProjectDirectory());
 		writer.println("Source = " + cli.getSrc());
 		writer.println("Binary = " + cli.getBinary());
@@ -110,7 +112,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("Directories = " + result.getDirectories());
 			writer.println("Classes = " + result.getClasses());
 			writer.println("Functions = " + result.getFunctions());
-			writer.println("lines = " + result.getLines());
+			writer.println("Lines = " + result.getLines());
 			writer.println("CommentLines = " + result.getCommentLines());
 			writer.println("Ncloc = " + result.getNcloc());
 			writer.println("Statements = " + result.getStatements());
@@ -130,20 +132,27 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("ComplexityEqualOrOver50 = " + result.getComplexityEqualOrOver50());
 			writer.println();
 		}
-		if (result.getIndividualMode().isSonarJava()) {
-			writer.println("SonarJavaRules = " + result.getSonarJavaRules());
-			writer.println("SonarJava = " + result.getSonarJavaCountAll());
-			writer.println("SonarJava1Priority = " + result.getSonarJavaCount(1));
-			writer.println("SonarJava2Priority = " + result.getSonarJavaCount(2));
-			writer.println("SonarJava3Priority = " + result.getSonarJavaCount(3));
-			writer.println("SonarJava4Priority = " + result.getSonarJavaCount(4));
-			writer.println("SonarJava5Priority = " + result.getSonarJavaCount(5));
+		if (result.getIndividualMode().isSonarJava()
+				|| (result.getIndividualMode().getLanguageType() == App.Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
+			String name = result.getIndividualMode().isSonarJava() ? "SonarJava" : "SonarJS";
+
+			if (result.getIndividualMode().getLanguageType() == App.Language.JAVA) {
+				writer.println(name + "Rules = " + result.getSonarJavaRules());
+			} else {
+				writer.println(name + "Rules = " + result.getSonarJSRules());
+			}
+			writer.println(name + " = " + result.getSonarIssueCountAll());
+			writer.println(name + "1Priority = " + result.getSonarIssueCount(1));
+			writer.println(name + "2Priority = " + result.getSonarIssueCount(2));
+			writer.println(name + "3Priority = " + result.getSonarIssueCount(3));
+			writer.println(name + "4Priority = " + result.getSonarIssueCount(4));
+			writer.println(name + "5Priority = " + result.getSonarIssueCount(5));
 			writer.println();
 
-			writer.println("SonarJavaBug = " + result.getSonarJavaType(IssueType.BUG.getTypeIndex()));
-			writer.println("SonarJavaVulnerability = " + result.getSonarJavaType(IssueType.VULNERABILITY.getTypeIndex()));
-			writer.println("SonarJavaCodeSmell = " + result.getSonarJavaType(IssueType.CODE_SMELL.getTypeIndex()));
-			writer.println("SonarJavaNA = " + result.getSonarJavaType(IssueType.NA.getTypeIndex()));
+			writer.println(name + "Bug = " + result.getSonarIssueType(IssueType.BUG.getTypeIndex()));
+			writer.println(name + "Vulnerability = " + result.getSonarIssueType(IssueType.VULNERABILITY.getTypeIndex()));
+			writer.println(name + "CodeSmell = " + result.getSonarIssueType(IssueType.CODE_SMELL.getTypeIndex()));
+			writer.println(name + "NA = " + result.getSonarIssueType(IssueType.NA.getTypeIndex()));
 			writer.println();
 
 		}
@@ -317,16 +326,18 @@ public class TextOutputFile extends AbstractOutputFile {
 	}
 
 	@Override
-	protected void writeSonarJava(List<SonarJavaResult> sonarJavaList) {
+	protected void writeSonarIssue(List<SonarIssueResult> sonarIssueList) {
+		String name = result.getLanguageType() == App.Language.JAVA ? "SonarJava" : "SonarJS";
+
 		if (result.isSeperatedOutput()) {
-			csvOutput.writeSonarJava(sonarJavaList);
+			csvOutput.writeSonarIssue(sonarIssueList);
 		} else {
-			writer.println("[SonarJava]");
+			writer.println("[" + name +"]");
 			writer.println("; type, path, rule, message, priority, start line, start offset, end line, end offset");
 
 			int count = 0;
-			synchronized (sonarJavaList) {
-				for (SonarJavaResult result : sonarJavaList) {
+			synchronized (sonarIssueList) {
+				for (SonarIssueResult result : sonarIssueList) {
 					writer.print(++count + " = ");
 					writer.print(getStringsWithComma(result.getIssueType().toString(),
 							result.getPath(), result.getRuleRepository() + ":" + result.getRuleKey(), result.getMsg(),
@@ -343,7 +354,7 @@ public class TextOutputFile extends AbstractOutputFile {
 		}
 		
 		if (result.isDetailAnalysis()) {
-			writeTopInspection(result.getTopSonarJavaList(), "TopSonarJavaList");
+			writeTopInspection(result.getTopSonarIssueList(), "Top" + name + "List");
 		}
 	}
 

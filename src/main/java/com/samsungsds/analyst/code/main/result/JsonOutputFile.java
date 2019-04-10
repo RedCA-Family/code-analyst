@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
+import com.samsungsds.analyst.code.main.App;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,7 +44,7 @@ import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
-import com.samsungsds.analyst.code.sonar.SonarJavaResult;
+import com.samsungsds.analyst.code.sonar.SonarIssueResult;
 import com.samsungsds.analyst.code.sonar.WebResourceResult;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
@@ -105,11 +106,17 @@ public class JsonOutputFile extends AbstractOutputFile {
 	}
 
 	@Override
-	protected void writeSonarJava(List<SonarJavaResult> sonarJavaList) {
+	protected void writeSonarIssue(List<SonarIssueResult> sonarIssueList) {
 		if (result.isSeperatedOutput()) {
-			String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjava.json";
+			if (result.getLanguageType() == App.Language.JAVA) {
+				String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjava.json";
 
-			writeListToJson(sonarJavaList, "sonarJavaList", jsonFile);
+				writeListToJson(sonarIssueList, "sonarJavaList", jsonFile);
+			} else {
+				String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjs.json";
+
+				writeListToJson(sonarIssueList, "sonarJSList", jsonFile);
+			}
 		}
 	}
 
@@ -215,7 +222,7 @@ public class JsonOutputFile extends AbstractOutputFile {
 			throw new RuntimeException(ex);
 		}
 
-		LOGGER.info("Result seperated file saved : {}", jsonFile);
+		LOGGER.info("Result separated file saved : {}", jsonFile);
 	}
 
 }

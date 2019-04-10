@@ -49,6 +49,8 @@ import com.samsungsds.analyst.code.unusedcode.UnusedCodeAnalysisLauncher;
 public class App {
 	private static final Logger LOGGER = LogManager.getLogger(App.class);
 
+	private Language language = Language.JAVA;
+
 	private ObserverManager observerManager = new ObserverManager();
 
 	private List<DelayWork> delayWorkList = new ArrayList<>();
@@ -60,6 +62,8 @@ public class App {
 		SystemInfo.print();
 
 		if (cli.parse()) {
+
+			LOGGER.info("Language : {}", cli.getLanguage());
 
 			if (cli.getMode() == MeasurementMode.DefaultMode) {
 				LOGGER.info("Mode : {}", cli.getIndividualMode());
@@ -93,6 +97,8 @@ public class App {
 			}
 
 			MeasuredResult.getInstance(cli.getInstanceKey()).setProjectInfo(cli);
+
+			MeasuredResult.getInstance(cli.getInstanceKey()).changeSerializedName(cli);
 
 			MeasuredResult.getInstance(cli.getInstanceKey()).setMode(cli.getMode());
 
@@ -505,7 +511,9 @@ public class App {
 	}
 
 	public static void main(String[] args) {
-		CliParser cli = new CliParser(args);
+		Language language = findLanguageOption(args);
+
+		CliParser cli = new CliParser(args, language);
 
 		String instanceKey = App.class.getName();
 
@@ -521,5 +529,29 @@ public class App {
 			app.cleanup(instanceKey);
 			System.exit(0);
 		}
+	}
+
+	private static Language findLanguageOption(String[] args) {
+		for (int i = 0; i < args.length - 1; i++) {
+			if (args[i].equals("--language") || args[i].equals("-l")) {
+				String language = args[i+1];
+				if (language.equalsIgnoreCase("java")) {
+					return Language.JAVA;
+				} else if (language.equalsIgnoreCase("javascript")) {
+					return Language.JAVASCRIPT;
+				} else {
+					System.out.println("Error in 'language' option. ('Java' or 'JavaScript')");
+					System.out.println("usage : java -jar " + Version.APPLICATION_JAR);
+					System.out.println("\t -l,--language <arg> ...	specify the language to analyze. ('Java' or 'JavaScript', default : \"Java\")");
+					System.exit(-1);
+				}
+			}
+		}
+
+		return Language.JAVA;
+	}
+
+	public enum Language {
+		JAVA, JAVASCRIPT
 	}
 }

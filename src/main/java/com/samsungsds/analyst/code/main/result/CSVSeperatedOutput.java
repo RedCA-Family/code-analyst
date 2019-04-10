@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
+import com.samsungsds.analyst.code.main.App;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +37,7 @@ import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
-import com.samsungsds.analyst.code.sonar.SonarJavaResult;
+import com.samsungsds.analyst.code.sonar.SonarIssueResult;
 import com.samsungsds.analyst.code.sonar.WebResourceResult;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
@@ -99,15 +100,17 @@ public class CSVSeperatedOutput {
 		LOGGER.info("Result seperated file saved : {}", csvFile);
 	}
 
-	public void writeSonarJava(List<SonarJavaResult> list) {
-		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjava.csv";
+	public void writeSonarIssue(List<SonarIssueResult> list) {
+		String name = result.getLanguageType() == App.Language.JAVA ? "sonarjava.csv" : "sonarjs.csv";
+
+		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-" + name;
 
 		try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
 			csvWriter.println("No,Type,Path,Rule,Message,Priority,Start line,Start offset,End line,End offset");
 
 			int count = 0;
 			synchronized (list) {
-				for (SonarJavaResult result : list) {
+				for (SonarIssueResult result : list) {
 					csvWriter.print(++count + ",");
 					csvWriter.print(getStringsWithComma(result.getIssueType().toString(),
 							result.getPath(), result.getRuleRepository() + ":" + result.getRuleKey(), result.getMsg(),

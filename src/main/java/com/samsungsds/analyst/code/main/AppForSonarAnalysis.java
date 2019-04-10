@@ -93,14 +93,21 @@ public class AppForSonarAnalysis implements DelayWork {
         sonar.addProperty(CoreProperties.PROJECT_KEY_PROPERTY, "local");
 
         sonar.addProperty("sonar.projectBaseDir", cli.getProjectBaseDir());
-        sonar.addProperty("sonar.java.binaries", cli.getBinary());
-        sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, src);
-        sonar.addProperty("sonar.java.source", cli.getJavaVersion());
+
+        if (cli.getLanguageType() == App.Language.JAVA) {
+            sonar.addProperty("sonar.java.binaries", cli.getBinary());
+            sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, src);
+            sonar.addProperty("sonar.java.source", cli.getJavaVersion());
+        } else if (cli.getLanguageType() == App.Language.JAVASCRIPT) {
+            sonar.addProperty("sonar.language", "js");
+
+            sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, src);
+        }
 
         // BatchWSClient timeout
         sonar.addProperty("sonar.ws.timeout", cli.getTimeout());
 
-        if (!cli.getLibrary().equals("")) {
+        if (cli.getLanguageType() == App.Language.JAVA && !cli.getLibrary().equals("")) {
             sonar.addProperty("sonar.java.libraries", cli.getLibrary());
         }
 

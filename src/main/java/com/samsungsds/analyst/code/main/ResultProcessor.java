@@ -96,22 +96,25 @@ public class ResultProcessor {
 		}
 	}
 
-	private static void printSonarJavaSummary(MeasuredResult result) {
-		if (result.getIndividualMode().isSonarJava()) {
-			System.out.println("SonarJava violations : " + getFormattedNumber(result.getSonarJavaCountAll()));
-			System.out.println("SonarJava 1 priority : " + getFormattedNumber(result.getSonarJavaCount(1)));
-			System.out.println("SonarJava 2 priority : " + getFormattedNumber(result.getSonarJavaCount(2)));
-			System.out.println("SonarJava 3 priority : " + getFormattedNumber(result.getSonarJavaCount(3)));
-			System.out.println("SonarJava 4 priority : " + getFormattedNumber(result.getSonarJavaCount(4)));
-			System.out.println("SonarJava 5 priority : " + getFormattedNumber(result.getSonarJavaCount(5)));
+	private static void printSonarIssueSummary(MeasuredResult result) {
+		if (result.getIndividualMode().isSonarJava()
+				|| (result.getIndividualMode().getLanguageType() == App.Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
+			String name = result.getIndividualMode().isSonarJava() ? "SonarJava" : "SonarJS";
+
+			System.out.println(name + " violations : " + getFormattedNumber(result.getSonarIssueCountAll()));
+			System.out.println(name + " 1 priority : " + getFormattedNumber(result.getSonarIssueCount(1)));
+			System.out.println(name + " 2 priority : " + getFormattedNumber(result.getSonarIssueCount(2)));
+			System.out.println(name + " 3 priority : " + getFormattedNumber(result.getSonarIssueCount(3)));
+			System.out.println(name + " 4 priority : " + getFormattedNumber(result.getSonarIssueCount(4)));
+			System.out.println(name + " 5 priority : " + getFormattedNumber(result.getSonarIssueCount(5)));
 			System.out.println();
 
-			System.out.println("SonarJava Bug Type : " + result.getSonarJavaType(IssueType.BUG.getTypeIndex()));
-			System.out.println("SonarJava Vulnerability Type : " + result.getSonarJavaType(IssueType.VULNERABILITY.getTypeIndex()));
-			System.out.println("SonarJava Code Smell Type : " + result.getSonarJavaType(IssueType.CODE_SMELL.getTypeIndex()));
+			System.out.println(name + " Bug Type : " + result.getSonarIssueType(IssueType.BUG.getTypeIndex()));
+			System.out.println(name + " Vulnerability Type : " + result.getSonarIssueType(IssueType.VULNERABILITY.getTypeIndex()));
+			System.out.println(name + " Code Smell Type : " + result.getSonarIssueType(IssueType.CODE_SMELL.getTypeIndex()));
 
-			if (result.getSonarJavaType(IssueType.NA.getTypeIndex()) > 0) {
-				System.out.println("* SonarJava N/A Type : " + result.getSonarJavaType(IssueType.NA.getTypeIndex()));
+			if (result.getSonarIssueType(IssueType.NA.getTypeIndex()) > 0) {
+				System.out.println("* " + name + " N/A Type : " + result.getSonarIssueType(IssueType.NA.getTypeIndex()));
 			}
 			System.out.println();
 		}
@@ -224,7 +227,7 @@ public class ResultProcessor {
 
 		if (result.getMode() == MeasurementMode.DefaultMode) {
 			printComplexitySummary(result);
-			printSonarJavaSummary(result);
+			printSonarIssueSummary(result);
 			printPmdSummary(result);
 			printFindBugsSummary(result);
 			printFindSecBugsSummary(result);

@@ -1,6 +1,5 @@
 package com.samsungsds.analyst.code.main;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -138,7 +137,7 @@ public class CliParserTest {
 	@Test
 	public void testForMinorOptions() {
 		// arrange
-		String[] args = new String[] { "-l", "library", "-w", "webapp", "-d", "-e", "euc-kr", "-j", "1.6", "-o",
+		String[] args = new String[] { "-library", "library", "-w", "webapp", "-d", "-e", "euc-kr", "-j", "1.6", "-o",
 				"output", "-t", "100" };
 
 		CliParser cli = new CliParser(args);

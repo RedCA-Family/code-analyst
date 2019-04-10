@@ -112,7 +112,7 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 	}
 
 	private double calculateSonarJavaDebt() {
-		return measuredResult.getSonarJavaCountAll() * COST_TO_FIX_ONE_VIOLATION;
+		return measuredResult.getSonarIssueCountAll() * COST_TO_FIX_ONE_VIOLATION;
 	}
 
 	private double calculatePmdDebt() {

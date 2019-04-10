@@ -23,26 +23,26 @@ import java.util.stream.Collectors;
 
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
-import com.samsungsds.analyst.code.sonar.SonarJavaResult;
+import com.samsungsds.analyst.code.sonar.SonarIssueResult;
 
 public class InspectionDetailAnalyst {
 
 	public static final int TOP = 10;
-	private Map<Inspection, Integer> sonarJavaList = new HashMap<>();
+	private Map<Inspection, Integer> sonarIssueList = new HashMap<>();
 	private Map<Inspection, Integer> pmdList = new HashMap<>();
 	private Map<Inspection, Integer> findBugsList = new HashMap<>();
 
-	public void add(SonarJavaResult result) {
+	public void add(SonarIssueResult result) {
 		Inspection sonarJava = getInspection(result);
 
-		if (sonarJavaList.get(sonarJava) == null) {
-			sonarJavaList.put(sonarJava, 1);
+		if (sonarIssueList.get(sonarJava) == null) {
+			sonarIssueList.put(sonarJava, 1);
 		} else {
-			sonarJavaList.put(sonarJava, sonarJavaList.get(sonarJava) + 1);
+			sonarIssueList.put(sonarJava, sonarIssueList.get(sonarJava) + 1);
 		}
 	}
 
-	protected Inspection getInspection(SonarJavaResult result) {
+	protected Inspection getInspection(SonarIssueResult result) {
 		return new Inspection(result.getRuleRepository() + ":" + result.getRuleKey(), result.getIssueType().toString());
 	}
 
@@ -74,8 +74,8 @@ public class InspectionDetailAnalyst {
 		return new Inspection(result.getPatternKey(), result.getIssueType().toString());
 	}
 
-	public List<Inspection> getTopSonarJavaList() {
-		return getTopList(sonarJavaList);
+	public List<Inspection> getTopSonarIssueList() {
+		return getTopList(sonarIssueList);
 	}
 
 	public List<Inspection> getTopPmdList() {

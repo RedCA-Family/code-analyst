@@ -19,6 +19,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 
+import com.samsungsds.analyst.code.main.App;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.sonar.api.utils.ZipUtils;
@@ -77,24 +78,29 @@ public class ReportFileReader implements Closeable {
 	protected void readComponent(Component component) {
 		LOGGER.debug("Component : {}", component.getPath());
 
+		MeasuredResult instance = MeasuredResult.getInstance(instanceKey);
+
 		if (component.getType().equals(ComponentType.DIRECTORY)) {
-			MeasuredResult.getInstance(instanceKey).addDirectories(1);
+			instance.addDirectories(1);
 		} else if (component.getType().equals(ComponentType.FILE)) {
 
-			MeasuredResult.getInstance(instanceKey).addFilePathList(component.getPath());
+			instance.addFilePathList(component.getPath());
 
-			if ("java".equals(component.getLanguage())) {
-				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isCodeSize()) {
+			// js의 경우 *.js, *.jsx, *.vue 파일 분석이 되나, language는 "js"만 리턴됨
+			if ((instance.getLanguageType() == App.Language.JAVA && "java".equals(component.getLanguage()))
+					|| (instance.getLanguageType() == App.Language.JAVASCRIPT && "js".equals(component.getLanguage()))) {
+
+				if (instance.getIndividualMode().isCodeSize()) {
 					calculateCodeSize(component);
 				}
-				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isDuplication()
+				if (instance.getIndividualMode().isDuplication()
 						&& reader.hasCoverage(component.getRef())
-						&& !MeasuredResult.getInstance(instanceKey).isTokenBased()) {
+						&& !instance.isTokenBased()) {
 					try (CloseableIterator<ScannerReport.Duplication> it = reader.readComponentDuplications(component.getRef())) {
 						while (it.hasNext()) {
 							ScannerReport.Duplication dup = it.next();
 							
-							MeasuredResult.getInstance(instanceKey).addDuplicatedBlocks();
+							instance.addDuplicatedBlocks();
 							
 							String path = component.getPath();
 							int startLine = dup.getOriginPosition().getStartLine();
@@ -109,37 +115,39 @@ public class ReportFileReader implements Closeable {
 								}
 								DuplicationResult result = new DuplicationResult(path, startLine, endLine, duplicatedPath, d.getRange().getStartLine(), d.getRange().getEndLine());
 								
-								MeasuredResult.getInstance(instanceKey).addDuplicationResult(result);
+								instance.addDuplicationResult(result);
 							}
 						}
 					}
 				}
-				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isSonarJava()) {
+				if ((instance.getLanguageType() == App.Language.JAVA && instance.getIndividualMode().isSonarJava())
+						|| (instance.getLanguageType() == App.Language.JAVASCRIPT && instance.getIndividualMode().isJavascript())) {
 					try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
 						while (it.hasNext()) {
 							ScannerReport.Issue issue = it.next();
-							SonarJavaResult sonarJavaResult = new SonarJavaResult(component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
-							MeasuredResult.getInstance(instanceKey).addSonarJavaResult(sonarJavaResult);
+							SonarIssueResult sonarJavaResult = new SonarIssueResult(component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
+							instance.addSonarIssueResult(sonarJavaResult);
 						}
 					} catch (Exception e) {
 						throw new IllegalStateException("Can't read issues for " + component, e);
 					}
 				}
 			}
-			if ("js".equals(component.getLanguage()) || "web".equals(component.getLanguage()) || "css".equals(component.getLanguage()) || "less".equals(component.getLanguage()) || "scss".equals(component.getLanguage())) {
-				if ("js".equals(component.getLanguage()) && MeasuredResult.getInstance(instanceKey).getIndividualMode().isWebResourcesOnly()) {
-					calculateCodeSize(component);
-				}
-				try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
-					while (it.hasNext()) {
-						ScannerReport.Issue issue = it.next();
-						WebResourceResult webResourceResult = new WebResourceResult(component.getLanguage(), component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
-						MeasuredResult.getInstance(instanceKey).addWebResourceResult(webResourceResult);
+			if (instance.getLanguageType() == App.Language.JAVA) {
+				if ("js".equals(component.getLanguage()) || "web".equals(component.getLanguage()) || "css".equals(component.getLanguage()) || "less".equals(component.getLanguage()) || "scss".equals(component.getLanguage())) {
+					if ("js".equals(component.getLanguage()) && instance.getIndividualMode().isWebResourcesOnly()) {
+						calculateCodeSize(component);
 					}
-				} catch (Exception e) {
-					throw new IllegalStateException("Can't read issues for " + component, e);
+					try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
+						while (it.hasNext()) {
+							ScannerReport.Issue issue = it.next();
+							WebResourceResult webResourceResult = new WebResourceResult(component.getLanguage(), component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
+							instance.addWebResourceResult(webResourceResult);
+						}
+					} catch (Exception e) {
+						throw new IllegalStateException("Can't read issues for " + component, e);
+					}
 				}
-
 			}
 		}
 
