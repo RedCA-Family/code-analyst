@@ -91,7 +91,11 @@ public class ResultProcessor {
 			System.out.println("Complexity Over 15(%) : " + result.getComplexityOver15Percent() + " (" + getFormattedNumber(result.getComplexityOver15()) + ")");
 			System.out.println("Complexity Over 20(%) : " + result.getComplexityOver20Percent() + " (" + getFormattedNumber(result.getComplexityOver20()) + ")");
 			System.out.println("Complexity Equal Or Over 50(%) : " + result.getComplexityEqualOrOver50Percent() + " (" + getFormattedNumber(result.getComplexityEqualOrOver50()) + ")");
-			System.out.println("- The complexity is calculated by PMD's Modified Cyclomatic Complexity method");
+			if (result.getLanguageType() == App.Language.JAVA) {
+				System.out.println("- The complexity is calculated by PMD's Modified Cyclomatic Complexity method");
+			} else if (result.getLanguageType() == App.Language.JAVASCRIPT) {
+				System.out.println("- The complexity is calculated by ESLint's Complexity rule");
+			}
 			System.out.println();
 		}
 	}

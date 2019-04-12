@@ -286,6 +286,9 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	@Expose
 	private int minimumTokens = 100;
 
+	private String nodeExecutablePath;
+	private String nodeVersion;
+
 	public static MeasuredResult getInstance(String instanceKey) {
 		if (!instances.containsKey(instanceKey)) {
 			synchronized (MeasuredResult.class) {
@@ -1306,6 +1309,22 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		this.minimumTokens = minimumTokens;
 	}
 
+	public String getNodeExecutablePath() {
+		return nodeExecutablePath;
+	}
+
+	public void setNodeExecutablePath(String nodeExecutablePath) {
+		this.nodeExecutablePath = nodeExecutablePath;
+	}
+
+	public String getNodeVersion() {
+		return nodeVersion;
+	}
+
+	public void setNodeVersion(String nodeVersion) {
+		this.nodeVersion = nodeVersion;
+	}
+
 	public void clear() {
 		directories = 0;
 		files = 0;
@@ -1396,10 +1415,10 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		unusedCodeList = null;
 	}
 
-	public String getConvertedFilePath(String filePath) {
+	public static String getConvertedFilePath(String filePath, String projectDirectory) {
 		String path = filePath.replaceAll("\\\\", "/");
 
-		String project = getProjectDirectory().replaceAll("\\\\", "/");
+		String project = projectDirectory.replaceAll("\\\\", "/");
 
 		if (!project.endsWith("/")) {
 			project += "/";

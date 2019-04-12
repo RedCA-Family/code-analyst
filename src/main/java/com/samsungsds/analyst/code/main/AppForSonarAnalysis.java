@@ -149,17 +149,8 @@ public class AppForSonarAnalysis implements DelayWork {
 
         // Node JS runtime
         if (cli.getIndividualMode().isJavascript()) {
-            LOGGER.info("Find 'node' runtime...");
             try {
-                // To perform analysis SonarJS requires Node.js >=6
-                NodeRuntime nodeRuntime = new NodeRuntime(6);
-
-                String path = nodeRuntime.getNodeExecutablePath();
-                String version = nodeRuntime.getVersionString();
-
-                LOGGER.info("Node({}) : {}", path, version);
-
-                sonar.addProperty("sonar.nodejs.executable", path);
+                sonar.addProperty("sonar.nodejs.executable", NodeRuntime.findNodeRuntimePath(cli.getInstanceKey()));
             } catch (NodeRuntimeException ex) {
                 LOGGER.error(ex);
             }

@@ -41,7 +41,18 @@ public class ComplexityResult extends TargetPackageResult implements Serializabl
 	private String methodName;
 	@Expose
 	private int complexity;
-	
+
+	public ComplexityResult() {
+		// no-op
+	}
+
+	public ComplexityResult(String path, int line, String methodName, int complexity) {
+		this.path = path;
+		this.line = line;
+		this.methodName = methodName;
+		this.complexity = complexity;
+	}
+
 	@Override
 	public int getColumnSize() {
 		return 4;
@@ -85,9 +96,9 @@ public class ComplexityResult extends TargetPackageResult implements Serializabl
 		return complexity;
 	}
 
-	public static ComplexityResult convertComplexitResult(PmdResult result) {
+	public static ComplexityResult convertComplexityResult(PmdResult result) {
 		ComplexityResult converted = new ComplexityResult();
-		
+
 		converted.path = result.getPath();
 		converted.fileName = result.getFile();
 		
@@ -116,14 +127,14 @@ public class ComplexityResult extends TargetPackageResult implements Serializabl
 		return converted;
 	}
 	
-	public static List<ComplexityResult> convertComplexitResult(List<PmdResult> resultList) {
+	public static List<ComplexityResult> convertComplexityResult(List<PmdResult> resultList) {
 		List<ComplexityResult> list = new ArrayList<>();
 		
 		for (PmdResult result : resultList) {
-			ComplexityResult converted = convertComplexitResult(result);
+			ComplexityResult converted = convertComplexityResult(result);
 			
 			if (converted != null) {
-				LOGGER.debug("file : {}, method : {}, line : {}, complexity : {}", converted.fileName, converted.methodName, converted.line, converted.complexity );
+				LOGGER.debug("file : {}, method : {}, line : {}, complexity : {}", converted.fileName, converted.methodName, converted.line, converted.complexity);
 				list.add(converted);
 			}
 		}

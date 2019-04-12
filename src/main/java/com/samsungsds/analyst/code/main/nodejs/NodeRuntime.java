@@ -17,6 +17,7 @@ package com.samsungsds.analyst.code.main.nodejs;
 
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.main.Version;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -53,6 +54,28 @@ public class NodeRuntime {
     private int majorVersion;
     private int minorVersion;
     private int patchVersion;
+
+    public static String findNodeRuntimePath(String instanceKey) throws NodeRuntimeException {
+        String nodeRuntimePath = MeasuredResult.getInstance(instanceKey).getNodeExecutablePath();
+
+        if (nodeRuntimePath != null) {
+            return nodeRuntimePath;
+        }
+
+        LOGGER.info("Find 'node' runtime...");
+        // To perform analysis SonarJS requires Node.js >=6
+        NodeRuntime nodeRuntime = new NodeRuntime(6);
+
+        String path = nodeRuntime.getNodeExecutablePath();
+        String version = nodeRuntime.getVersionString();
+
+        LOGGER.info("Node({}) : {}", path, version);
+
+        MeasuredResult.getInstance(instanceKey).setNodeExecutablePath(path);
+        MeasuredResult.getInstance(instanceKey).setNodeVersion(version);
+
+        return path;
+    }
 
     public NodeRuntime(int requiredMajorVersion) throws NodeRuntimeException {
         try {

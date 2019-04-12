@@ -27,6 +27,7 @@ import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysisLauncher;
 import com.samsungsds.analyst.code.main.delay.DelayWork;
 import com.samsungsds.analyst.code.main.subject.TargetFile;
 import com.samsungsds.analyst.code.main.subject.TargetManager;
+import com.samsungsds.analyst.code.node_modules.eslint.ComplexityAnalysisESLintLauncher;
 import com.samsungsds.analyst.code.pmd.*;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -125,7 +126,7 @@ public class App {
 
 				LOGGER.info("Complexity Analysis start...");
 
-				runComplexity(cli);
+				runComplexityForJava(cli);	// for only Java
 
 			} else {
 
@@ -141,7 +142,8 @@ public class App {
 					return;
 				}
 
-				if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isSonarJava() || cli.getIndividualMode().isWebResources()) {
+				if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isSonarJava()
+						|| cli.getIndividualMode().isJavascript() || cli.getIndividualMode().isWebResources()) {
 					List<String> sonarAnalysisModeList = new ArrayList<>();
 					if (cli.getIndividualMode().isCodeSize()) {
 						sonarAnalysisModeList.add("Code Size");
@@ -174,7 +176,11 @@ public class App {
 				if (cli.getIndividualMode().isComplexity()) {
 					LOGGER.info("Complexity Analysis start...");
 
-					runComplexity(cli);
+					if (cli.getLanguageType() == Language.JAVA) {
+						runComplexityForJava(cli);
+					} else {
+						runComplexityForJavascript(cli);
+					}
 				}
 
 				if (cli.getIndividualMode().isPmd()) {
@@ -263,7 +269,7 @@ public class App {
 		cpd.run(cli.getInstanceKey());
 	}
 
-	private void runComplexity(CliParser cli) {
+	private void runComplexityForJava(CliParser cli) {
 		ComplexityAnalysis pmdComplexity = new ComplexityAnalysisLauncher();
 
 		String dir = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getSrc());
@@ -294,6 +300,28 @@ public class App {
 		pmdComplexity.addOption("-language", "java");
 
 		pmdComplexity.run(cli.getInstanceKey());
+
+		observerManager.notifyObservers(ProgressEvent.COMPLEXITY_COMPLETE);
+	}
+
+	private void runComplexityForJavascript(CliParser cli) {
+		ComplexityAnalysis eslintComplexity = new ComplexityAnalysisESLintLauncher();
+
+		String dir = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getSrc());
+
+		if ("".equals(cli.getIncludes())) {
+			eslintComplexity.addOption("-dir", dir);
+		} else {
+			SourceFileHandler pathHandler = new SourceFileHandler(cli.getProjectBaseDir(), cli.getSrc().split(FindFileUtils.COMMA_SPLITTER));
+
+			eslintComplexity.addOption("-dir", pathHandler.getPathStringWithInclude(cli.getIncludes()));
+		}
+
+		if (cli.isDebug()) {
+			eslintComplexity.addOption("-debug", "");
+		}
+
+		eslintComplexity.run(cli.getInstanceKey());
 
 		observerManager.notifyObservers(ProgressEvent.COMPLEXITY_COMPLETE);
 	}

@@ -1,0 +1,10 @@
+{
+    "rules": {
+        "complexity": ["error", 1]
+    },
+    "env": {
+        "es6": true,
+        "node": true,
+        "browser": false
+    }
+}

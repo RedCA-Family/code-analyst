@@ -24,6 +24,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 
 public class CliParseProcessorForJavaScript extends AbstractCliParseProcessor {
     private static final Logger LOGGER = LogManager.getLogger(CliParseProcessorForJavaScript.class);
@@ -208,6 +210,16 @@ public class CliParseProcessorForJavaScript extends AbstractCliParseProcessor {
                 System.out.println(parsedValue.getErrorMessage());
                 help(options, cmd);
                 return false;
+            }
+
+            if (".".equals(parsedValue.getProjectBaseDir())) {
+                File current = new File(".");
+
+                try {
+                    parsedValue.setProjectBaseDir(current.getCanonicalPath());
+                } catch (IOException ex) {
+                    throw new UncheckedIOException(ex);
+                }
             }
 
             return true;

@@ -59,9 +59,9 @@ public class ComplexityAnalysisLauncher extends AbstractPmdAnalysis implements C
 		
 		List<PmdResult> resultList = parseCSV(reportFile, instanceKey);
 		
-		List<ComplexityResult> complexitList = ComplexityResult.convertComplexitResult(resultList);
+		List<ComplexityResult> complexityList = ComplexityResult.convertComplexityResult(resultList);
 		
-		MeasuredResult.getInstance(instanceKey).putComplexityList(complexitList);
+		MeasuredResult.getInstance(instanceKey).putComplexityList(complexityList);
 	}
 
 }

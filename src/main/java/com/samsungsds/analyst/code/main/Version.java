@@ -68,6 +68,7 @@ public class Version {
 	public static final String CKJM = "1.9";
 
 	public static final String NODE_JS = "10.15.3 LTS";
+	public static final String ESLINT = "5.16.0";
 
 	public static final String SONAR_JAVA = "5.1.1.13214";
 	public static final String SONAR_JS = "5.1.1.7506";
@@ -104,6 +105,7 @@ public class Version {
 		System.out.println("  - CKJM : " + CKJM + "-based modification" + " (Apache v2.0)");
 		System.out.println("  - Node.js : " + NODE_JS + " (MIT)");
 		System.out.println("    ※ Supported Platform : Windows/MacOS/Linux(x64)");
+		System.out.println("  - ESLint : " + ESLINT + " (MIT)");
 		System.out.println();
 		System.out.println("Default RuleSet");
 		System.out.println("  - PMD : " + PMD_RULESET);
