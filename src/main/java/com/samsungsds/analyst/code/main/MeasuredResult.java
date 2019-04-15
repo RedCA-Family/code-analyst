@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.logging.log4j.LogManager;
@@ -62,7 +63,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	@Expose
 	private String language;
 
-	private App.Language languageType;
+	private Language languageType;
 
 	@Expose
 	@SerializedName("target")
@@ -422,7 +423,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	}
 
 	public void changeSerializedName(CliParser cli) {
-		if (cli.getLanguageType() == App.Language.JAVASCRIPT) {
+		if (cli.getLanguageType() == Language.JAVASCRIPT) {
 			changeSerializedName("sonarIssueList", "sonarJSList");
 			changeSerializedName("sonarIssueCount", "sonarJSCount");
 			changeSerializedName("sonarIssueType", "sonarJSType");
@@ -450,7 +451,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		return language;
 	}
 
-	public App.Language getLanguageType() {
+	public Language getLanguageType() {
 		return languageType;
 	}
 

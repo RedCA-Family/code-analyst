@@ -19,6 +19,7 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.List;
 
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.main.issue.IssueType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -91,9 +92,9 @@ public class ResultProcessor {
 			System.out.println("Complexity Over 15(%) : " + result.getComplexityOver15Percent() + " (" + getFormattedNumber(result.getComplexityOver15()) + ")");
 			System.out.println("Complexity Over 20(%) : " + result.getComplexityOver20Percent() + " (" + getFormattedNumber(result.getComplexityOver20()) + ")");
 			System.out.println("Complexity Equal Or Over 50(%) : " + result.getComplexityEqualOrOver50Percent() + " (" + getFormattedNumber(result.getComplexityEqualOrOver50()) + ")");
-			if (result.getLanguageType() == App.Language.JAVA) {
+			if (result.getLanguageType() == Language.JAVA) {
 				System.out.println("- The complexity is calculated by PMD's Modified Cyclomatic Complexity method");
-			} else if (result.getLanguageType() == App.Language.JAVASCRIPT) {
+			} else if (result.getLanguageType() == Language.JAVASCRIPT) {
 				System.out.println("- The complexity is calculated by ESLint's Complexity rule");
 			}
 			System.out.println();
@@ -102,7 +103,7 @@ public class ResultProcessor {
 
 	private static void printSonarIssueSummary(MeasuredResult result) {
 		if (result.getIndividualMode().isSonarJava()
-				|| (result.getIndividualMode().getLanguageType() == App.Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
+				|| (result.getIndividualMode().getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
 			String name = result.getIndividualMode().isSonarJava() ? "SonarJava" : "SonarJS";
 
 			System.out.println(name + " violations : " + getFormattedNumber(result.getSonarIssueCountAll()));

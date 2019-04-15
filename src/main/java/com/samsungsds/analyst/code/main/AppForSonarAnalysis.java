@@ -16,6 +16,7 @@ limitations under the License.
 package com.samsungsds.analyst.code.main;
 
 import com.google.gson.Gson;
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.api.ProgressEvent;
 import com.samsungsds.analyst.code.main.delay.DelayWork;
 import com.samsungsds.analyst.code.main.nodejs.NodeRuntime;
@@ -94,11 +95,11 @@ public class AppForSonarAnalysis implements DelayWork {
 
         sonar.addProperty("sonar.projectBaseDir", cli.getProjectBaseDir());
 
-        if (cli.getLanguageType() == App.Language.JAVA) {
+        if (cli.getLanguageType() == Language.JAVA) {
             sonar.addProperty("sonar.java.binaries", cli.getBinary());
             sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, src);
             sonar.addProperty("sonar.java.source", cli.getJavaVersion());
-        } else if (cli.getLanguageType() == App.Language.JAVASCRIPT) {
+        } else if (cli.getLanguageType() == Language.JAVASCRIPT) {
             sonar.addProperty("sonar.language", "js");
 
             sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, src);
@@ -107,7 +108,7 @@ public class AppForSonarAnalysis implements DelayWork {
         // BatchWSClient timeout
         sonar.addProperty("sonar.ws.timeout", cli.getTimeout());
 
-        if (cli.getLanguageType() == App.Language.JAVA && !cli.getLibrary().equals("")) {
+        if (cli.getLanguageType() == Language.JAVA && !cli.getLibrary().equals("")) {
             sonar.addProperty("sonar.java.libraries", cli.getLibrary());
         }
 

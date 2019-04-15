@@ -26,8 +26,8 @@ import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.List;
 
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
-import com.samsungsds.analyst.code.main.App;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -101,7 +101,7 @@ public class CSVSeperatedOutput {
 	}
 
 	public void writeSonarIssue(List<SonarIssueResult> list) {
-		String name = result.getLanguageType() == App.Language.JAVA ? "sonarjava.csv" : "sonarjs.csv";
+		String name = result.getLanguageType() == Language.JAVA ? "sonarjava.csv" : "sonarjs.csv";
 
 		String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-" + name;
 

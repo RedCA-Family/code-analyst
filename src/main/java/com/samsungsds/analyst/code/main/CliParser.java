@@ -15,6 +15,7 @@ limitations under the License.
  */
 package com.samsungsds.analyst.code.main;
 
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.main.cli.CliParseProcessor;
 import com.samsungsds.analyst.code.main.cli.CliParseProcessorFactory;
 import com.samsungsds.analyst.code.main.cli.CliParsedValueObject;
@@ -32,19 +33,19 @@ public class CliParser {
 	private final String[] args;
 	private final Options options = new Options();
 
-	private final App.Language languageType;
+	private final Language languageType;
 
 	private final CliParsedValueObject parsedValue = new CliParsedValueObject();
 
 	/**
-	 * @deprecated  This constructor has to be replaced by {@link #CliParser(String[], App.Language)}
+	 * @deprecated  This constructor has to be replaced by {@link #CliParser(String[], Language)}
 	 */
 	@Deprecated
 	public CliParser(String[] args) {
-		this(args, App.Language.JAVA);
+		this(args, Language.JAVA);
 	}
 
-	public CliParser(String[] args, App.Language language) {
+	public CliParser(String[] args, Language language) {
 		this.args = args;
 		this.languageType = language;
 
@@ -64,7 +65,7 @@ public class CliParser {
 		parsedValue.setInstanceKey(instanceKey);
 	}
 
-	public App.Language getLanguageType() {
+	public Language getLanguageType() {
 		return languageType;
 	}
 

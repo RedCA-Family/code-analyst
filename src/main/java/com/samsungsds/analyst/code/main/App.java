@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysis;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysisLauncher;
 import com.samsungsds.analyst.code.main.delay.DelayWork;
@@ -579,7 +580,4 @@ public class App {
 		return Language.JAVA;
 	}
 
-	public enum Language {
-		JAVA, JAVASCRIPT
-	}
 }

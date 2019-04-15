@@ -24,9 +24,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
-import com.samsungsds.analyst.code.main.App;
 import com.samsungsds.analyst.code.main.CliParser;
 import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.main.detailed.Duplication;
@@ -133,10 +133,10 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println();
 		}
 		if (result.getIndividualMode().isSonarJava()
-				|| (result.getIndividualMode().getLanguageType() == App.Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
+				|| (result.getIndividualMode().getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
 			String name = result.getIndividualMode().isSonarJava() ? "SonarJava" : "SonarJS";
 
-			if (result.getIndividualMode().getLanguageType() == App.Language.JAVA) {
+			if (result.getIndividualMode().getLanguageType() == Language.JAVA) {
 				writer.println(name + "Rules = " + result.getSonarJavaRules());
 			} else {
 				writer.println(name + "Rules = " + result.getSonarJSRules());
@@ -327,7 +327,7 @@ public class TextOutputFile extends AbstractOutputFile {
 
 	@Override
 	protected void writeSonarIssue(List<SonarIssueResult> sonarIssueList) {
-		String name = result.getLanguageType() == App.Language.JAVA ? "SonarJava" : "SonarJS";
+		String name = result.getLanguageType() == Language.JAVA ? "SonarJava" : "SonarJS";
 
 		if (result.isSeperatedOutput()) {
 			csvOutput.writeSonarIssue(sonarIssueList);

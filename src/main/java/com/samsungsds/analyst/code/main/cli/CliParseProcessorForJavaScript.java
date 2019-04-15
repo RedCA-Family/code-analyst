@@ -15,7 +15,7 @@ limitations under the License.
  */
 package com.samsungsds.analyst.code.main.cli;
 
-import com.samsungsds.analyst.code.main.App;
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.main.CliParser;
 import com.samsungsds.analyst.code.main.Version;
 import com.samsungsds.analyst.code.main.result.OutputFileFormat;
@@ -71,7 +71,7 @@ public class CliParseProcessorForJavaScript extends AbstractCliParseProcessor {
         options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occurred, use JVM '-Xmx' option like '-Xmx1024m')");
 
         options.addOption("r", "rerun", true, "specify previous output file to rerun with same options. "
-                + "('project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', 'analysis', 'seperated', 'catalog', 'duplication', 'token' and 'webapp')");
+                + "('project', 'src', 'encoding', 'sonar', 'include', 'exclude', 'mode', 'analysis', 'seperated', and 'catalog')");
 
         options.addOption("seperated", false, "specify seperated output mode.");
 
@@ -80,7 +80,7 @@ public class CliParseProcessorForJavaScript extends AbstractCliParseProcessor {
 
     @Override
     public void setDefaultIndividualModeAfterParsing(CliParsedValueObject parsedValue) {
-        parsedValue.getIndividualMode().setLanguageType(App.Language.JAVASCRIPT);
+        parsedValue.getIndividualMode().setLanguageType(Language.JAVASCRIPT);
 
         parsedValue.getIndividualMode().setSonarJava(false);
         parsedValue.getIndividualMode().setPmd(false);

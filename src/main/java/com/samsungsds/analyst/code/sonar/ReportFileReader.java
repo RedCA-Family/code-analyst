@@ -19,7 +19,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 
-import com.samsungsds.analyst.code.main.App;
+import com.samsungsds.analyst.code.api.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.sonar.api.utils.ZipUtils;
@@ -87,8 +87,8 @@ public class ReportFileReader implements Closeable {
 			instance.addFilePathList(component.getPath());
 
 			// js의 경우 *.js, *.jsx, *.vue 파일 분석이 되나, language는 "js"만 리턴됨
-			if ((instance.getLanguageType() == App.Language.JAVA && "java".equals(component.getLanguage()))
-					|| (instance.getLanguageType() == App.Language.JAVASCRIPT && "js".equals(component.getLanguage()))) {
+			if ((instance.getLanguageType() == Language.JAVA && "java".equals(component.getLanguage()))
+					|| (instance.getLanguageType() == Language.JAVASCRIPT && "js".equals(component.getLanguage()))) {
 
 				if (instance.getIndividualMode().isCodeSize()) {
 					calculateCodeSize(component);
@@ -120,8 +120,8 @@ public class ReportFileReader implements Closeable {
 						}
 					}
 				}
-				if ((instance.getLanguageType() == App.Language.JAVA && instance.getIndividualMode().isSonarJava())
-						|| (instance.getLanguageType() == App.Language.JAVASCRIPT && instance.getIndividualMode().isJavascript())) {
+				if ((instance.getLanguageType() == Language.JAVA && instance.getIndividualMode().isSonarJava())
+						|| (instance.getLanguageType() == Language.JAVASCRIPT && instance.getIndividualMode().isJavascript())) {
 					try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
 						while (it.hasNext()) {
 							ScannerReport.Issue issue = it.next();
@@ -133,7 +133,7 @@ public class ReportFileReader implements Closeable {
 					}
 				}
 			}
-			if (instance.getLanguageType() == App.Language.JAVA) {
+			if (instance.getLanguageType() == Language.JAVA) {
 				if ("js".equals(component.getLanguage()) || "web".equals(component.getLanguage()) || "css".equals(component.getLanguage()) || "less".equals(component.getLanguage()) || "scss".equals(component.getLanguage())) {
 					if ("js".equals(component.getLanguage()) && instance.getIndividualMode().isWebResourcesOnly()) {
 						calculateCodeSize(component);

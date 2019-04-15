@@ -16,25 +16,35 @@ limitations under the License.
 package com.samsungsds.analyst.code.api;
 
 public class ArgumentInfo {
-	private String project;					// project base directory
-	private String src;						// source directory (relative path of project base dir.)
-	private String binary;					// binary directory (relative path of project base dir.)
+	private Language language = Language.JAVA;	// Language ('Java' or 'JavaScript')
+
+	private String project;						// project base directory
+	private String src;							// source directory (relative path of project base dir.)
+	private String binary;						// binary directory (relative path of project base dir.)
 	private boolean debug = false;			
-	private String encoding = "UTF-8";		// source file encoding
-	private String javaVersion = "1.8";		// java source version
-	private String pmdRuleFile;				// PMD ruleset xml file (if omitted, SDS Standard Ruleset used)
-	private String findBugsRuleFile;		// Findbugs ruleset xml file (if omitted, SDS Standard Ruleset used)
-	private String sonarRuleFile;			// SonarQube Issue exclude xml file (if omitted, all SDS Standard Rules included)
-	private int timeout = 10 * 60 * 10;		// 100 minutes
-	private String include;					// include pattern(Ant-Style) with comma separated. (eg: com/sds/**/*VO.java)
-	private String exclude;					// exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)
-	private String webapp;					// webapp directory
+	private String encoding = "UTF-8";			// source file encoding
+	private String javaVersion = "1.8";			// java source version
+	private String pmdRuleFile;					// PMD ruleset xml file (if omitted, SDS Standard Ruleset used)
+	private String findBugsRuleFile;			// Findbugs ruleset xml file (if omitted, SDS Standard Ruleset used)
+	private String sonarRuleFile;				// SonarQube Issue exclude xml file (if omitted, all SDS Standard Rules included)
+	private int timeout = 10 * 60 * 10;			// 100 minutes
+	private String include;						// include pattern(Ant-Style) with comma separated. (eg: com/sds/**/*VO.java)
+	private String exclude;						// exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)
+	private String webapp;						// webapp directory
 	
-	private AnalysisMode mode;				// code-size,duplication,complexity,sonarjava,pmd,findbugs,findsecbugs,javascript,css,html,dependency,unused,ckmetrics
+	private AnalysisMode mode;					// (Java) code-size,duplication,complexity,sonarjava,pmd,findbugs,findsecbugs,javascript,css,html,dependency,unused,ckmetrics
+												// (JavaScript) code-size,duplication,complexity,sonarjs
+	private boolean detailAnalysis = false;		// Detail Analysis mode
 
-	private boolean detailAnalysis = false;	// Detail Analysis mode
+	private boolean saveCatalog = false;		// Save target file list
 
-	private boolean saveCatalog = false;	// Save target file list
+	public Language getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(Language language) {
+		this.language = language;
+	}
 
 	public String getProject() {
 		return project;

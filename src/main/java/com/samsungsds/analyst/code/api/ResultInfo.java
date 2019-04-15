@@ -23,6 +23,7 @@ public class ResultInfo {
 	private String findBugsFile;
 	private String findSecBugsFile;
 	private String sonarJavaFile;
+	private String sonarJsFile;
 	private String webResourceFile;
 	private String ckMetricsFile;
 	
@@ -80,6 +81,14 @@ public class ResultInfo {
 
 	public void setSonarJavaFile(String sonarJavaFile) {
 		this.sonarJavaFile = sonarJavaFile;
+	}
+
+	public String getSonarJsFile() {
+		return sonarJsFile;
+	}
+
+	public void setSonarJsFile(String sonarJsFile) {
+		this.sonarJsFile = sonarJsFile;
 	}
 
 	public String getWebResourceFile() {

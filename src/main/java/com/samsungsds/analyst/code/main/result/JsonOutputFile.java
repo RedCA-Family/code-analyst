@@ -23,8 +23,8 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
-import com.samsungsds.analyst.code.main.App;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -108,7 +108,7 @@ public class JsonOutputFile extends AbstractOutputFile {
 	@Override
 	protected void writeSonarIssue(List<SonarIssueResult> sonarIssueList) {
 		if (result.isSeperatedOutput()) {
-			if (result.getLanguageType() == App.Language.JAVA) {
+			if (result.getLanguageType() == Language.JAVA) {
 				String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjava.json";
 
 				writeListToJson(sonarIssueList, "sonarJavaList", jsonFile);

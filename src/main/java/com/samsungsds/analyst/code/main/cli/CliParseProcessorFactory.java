@@ -15,11 +15,11 @@ limitations under the License.
  */
 package com.samsungsds.analyst.code.main.cli;
 
-import com.samsungsds.analyst.code.main.App;
+import com.samsungsds.analyst.code.api.Language;
 
 public class CliParseProcessorFactory {
-    public static CliParseProcessor getCliParseProcessor(App.Language language) {
-        if (language == App.Language.JAVA) {
+    public static CliParseProcessor getCliParseProcessor(Language language) {
+        if (language == Language.JAVA) {
             return new CliParseProcessorForJava();
         } else {
             return new CliParseProcessorForJavaScript();

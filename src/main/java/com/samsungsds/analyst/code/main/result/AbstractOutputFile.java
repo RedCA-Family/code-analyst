@@ -23,8 +23,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.List;
 
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
-import com.samsungsds.analyst.code.main.App;
 import org.apache.commons.io.IOUtils;
 
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
@@ -65,7 +65,7 @@ public abstract class AbstractOutputFile {
 			}
 
 			if (result.getIndividualMode().isSonarJava()
-					|| (result.getIndividualMode().getLanguageType() == App.Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
+					|| (result.getIndividualMode().getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
 				writeSonarIssue(result.getSonarIssueList());
 			}
 

@@ -15,10 +15,8 @@ limitations under the License.
  */
 package com.samsungsds.analyst.code.api;
 
-import com.samsungsds.analyst.code.main.App;
-
 public class AnalysisMode {
-	private App.Language languageType = App.Language.JAVA;	// default
+	private Language languageType = Language.JAVA;	// default
 
 	private boolean codeSize = true;
 	private boolean duplication = true;
@@ -34,11 +32,11 @@ public class AnalysisMode {
 	private boolean unusedCode = true;
 	private boolean ckMetrics = true;
 
-	public void setLanguageType(App.Language languageType) {
+	public void setLanguageType(Language languageType) {
 		this.languageType = languageType;
 	}
 
-	public App.Language getLanguageType() {
+	public Language getLanguageType() {
 		return languageType;
 	}
 
@@ -47,7 +45,7 @@ public class AnalysisMode {
 	}
 
 	public boolean isWebResources() {
-		if (languageType == App.Language.JAVA) {
+		if (languageType == Language.JAVA) {
 			return javascript || css || html;
 		} else {
 			return false;
@@ -120,6 +118,14 @@ public class AnalysisMode {
 
 	public void setJavascript(boolean javascript) {
 		this.javascript = javascript;
+	}
+
+	public boolean isSonarJS() {
+		return javascript;
+	}
+
+	public void setSonarJS(boolean sonarJS) {
+		this.javascript = sonarJS;
 	}
 
 	public boolean isCss() {
