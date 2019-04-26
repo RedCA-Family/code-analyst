@@ -150,7 +150,8 @@ public abstract class AbstractCliParseProcessor implements CliParseProcessor {
     }
 
     protected void checkWebAppOption(CliParsedValueObject parsedValue) {
-        if (parsedValue.getWebapp().equals("") && (parsedValue.getIndividualMode().isWebResources())) {
+        if (parsedValue.getWebapp().equals("") &&
+                (parsedValue.getIndividualMode().isJavascript() || parsedValue.getIndividualMode().isWebResources())) {
             LOGGER.info("webapp option not found => disable Web Resources inspection");
             parsedValue.getIndividualMode().setJavascript(false);
             parsedValue.getIndividualMode().setCss(false);

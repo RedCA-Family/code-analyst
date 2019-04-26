@@ -102,9 +102,11 @@ public class ResultProcessor {
 	}
 
 	private static void printSonarIssueSummary(MeasuredResult result) {
-		if (result.getIndividualMode().isSonarJava()
-				|| (result.getIndividualMode().getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
-			String name = result.getIndividualMode().isSonarJava() ? "SonarJava" : "SonarJS";
+		if ((result.getLanguageType() == Language.JAVA && result.getIndividualMode().isSonarJava())
+				|| (result.getLanguageType() == Language.JAVA && result.getIndividualMode().isJavascript())
+				|| (result.getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isSonarJS())) {
+
+			String name = result.getSonarIssueTitle();
 
 			System.out.println(name + " violations : " + getFormattedNumber(result.getSonarIssueCountAll()));
 			System.out.println(name + " 1 priority : " + getFormattedNumber(result.getSonarIssueCount(1)));

@@ -27,7 +27,8 @@ public class SonarIssueResult implements Serializable, CSVFileResult {
 
 	@Expose
 	private IssueType type;
-
+	@Expose
+	private String language;
 	@Expose
 	private String path;
 	@Expose
@@ -49,7 +50,8 @@ public class SonarIssueResult implements Serializable, CSVFileResult {
 
 	public SonarIssueResult() {
 		// default constructor (CSV)
-		// column : path, ruleRepository, ruleKey, msg, severity, startLine, startOffset, endLine, endOffset, type
+		// column : lanuage, path, ruleRepository, ruleKey, msg, severity, startLine, startOffset, endLine, endOffset, type
+		language = "";
 		path = "";
 		ruleRepository = "";
 		ruleKey = "";
@@ -63,22 +65,23 @@ public class SonarIssueResult implements Serializable, CSVFileResult {
 
 	@Override
 	public int getColumnSize() {
-		return 10;
+		return 11;
 	}
 
 	@Override
 	public String getDataIn(int columnIndex) {
 		switch (columnIndex) {
-		case 0: return path;
-		case 1: return ruleRepository;
-		case 2: return ruleKey;
-		case 3: return msg;
-		case 4: return String.valueOf(severity);
-		case 5: return String.valueOf(startLine);
-		case 6: return String.valueOf(startOffset);
-		case 7: return String.valueOf(endLine);
-		case 8: return String.valueOf(endOffset);
-		case 9: return type.toString();
+		case 0: return language;
+		case 1: return path;
+		case 2: return ruleRepository;
+		case 3: return ruleKey;
+		case 4: return msg;
+		case 5: return String.valueOf(severity);
+		case 6: return String.valueOf(startLine);
+		case 7: return String.valueOf(startOffset);
+		case 8: return String.valueOf(endLine);
+		case 9: return String.valueOf(endOffset);
+		case 10: return type.toString();
 		default: throw new IndexOutOfBoundsException("Index: " + columnIndex);
 		}
 	}
@@ -86,21 +89,23 @@ public class SonarIssueResult implements Serializable, CSVFileResult {
 	@Override
 	public void setDataIn(int columnIndex, String data) {
 		switch (columnIndex) {
-		case 0: path = data; break;
-		case 1: ruleRepository = data; break;
-		case 2: ruleKey = data; break;
-		case 3: msg = data; break;
-		case 4: severity = Integer.parseInt(data); break;
-		case 5: startLine = Integer.parseInt(data); break;
-		case 6: startOffset = Integer.parseInt(data); break;
-		case 7: endLine = Integer.parseInt(data); break;
-		case 8: endOffset = Integer.parseInt(data); break;
-		case 9: type = IssueType.getIssueTypeOf(data); break;
+		case 0: language = data; break;
+		case 1: path = data; break;
+		case 2: ruleRepository = data; break;
+		case 3: ruleKey = data; break;
+		case 4: msg = data; break;
+		case 5: severity = Integer.parseInt(data); break;
+		case 6: startLine = Integer.parseInt(data); break;
+		case 7: startOffset = Integer.parseInt(data); break;
+		case 8: endLine = Integer.parseInt(data); break;
+		case 9: endOffset = Integer.parseInt(data); break;
+		case 10: type = IssueType.getIssueTypeOf(data); break;
 		default: throw new IndexOutOfBoundsException("Index: " + columnIndex);
 		}
 	}
 
-	public SonarIssueResult(String path, String ruleRepository, String ruleKey, String msg, int severity, int startLine, int startOffset, int endLine, int endOffset) {
+	public SonarIssueResult(String language, String path, String ruleRepository, String ruleKey, String msg, int severity, int startLine, int startOffset, int endLine, int endOffset) {
+		this.language = language;
 		this.path = path;
 		this.ruleRepository = ruleRepository;
 		this.ruleKey = ruleKey;
@@ -112,6 +117,14 @@ public class SonarIssueResult implements Serializable, CSVFileResult {
 		this.endOffset = endOffset;
 
 		this.type = IssueTypeRepository.getIssueType(ruleRepository, ruleKey);
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	public String getPath() {
@@ -189,5 +202,4 @@ public class SonarIssueResult implements Serializable, CSVFileResult {
 	public IssueType getIssueType() {
 		return type;
 	}
-
 }

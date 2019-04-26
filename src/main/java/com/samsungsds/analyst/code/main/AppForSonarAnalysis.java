@@ -62,7 +62,7 @@ public class AppForSonarAnalysis implements DelayWork {
 
         LOGGER.info("Sonar Scanner starting...");
         String src = cli.getSrc();
-        if (cli.getIndividualMode().isWebResources()) {
+        if (cli.getIndividualMode().isJavascript() || cli.getIndividualMode().isWebResources()) {
             if (src.equals("")) {
                 src = cli.getWebapp();
             } else if (!"".equals(cli.getWebapp())) {

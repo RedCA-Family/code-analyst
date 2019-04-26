@@ -43,13 +43,13 @@ import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 public class TextOutputFile extends AbstractOutputFile {
 	MeasuredResult result;
 
-	CSVSeperatedOutput csvOutput;
+	CSVSeparatedOutput csvOutput;
 
 	@Override
 	protected void open(MeasuredResult result) {
 		this.result = result;
 
-		csvOutput = new CSVSeperatedOutput(result);
+		csvOutput = new CSVSeparatedOutput(result);
 	}
 
 	@Override
@@ -132,12 +132,20 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("ComplexityEqualOrOver50 = " + result.getComplexityEqualOrOver50());
 			writer.println();
 		}
-		if (result.getIndividualMode().isSonarJava()
-				|| (result.getIndividualMode().getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
-			String name = result.getIndividualMode().isSonarJava() ? "SonarJava" : "SonarJS";
+		if ((result.getLanguageType() == Language.JAVA && result.getIndividualMode().isSonarJava())
+				|| (result.getLanguageType() == Language.JAVA && result.getIndividualMode().isJavascript())
+				|| (result.getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isSonarJS())) {
 
-			if (result.getIndividualMode().getLanguageType() == Language.JAVA) {
-				writer.println(name + "Rules = " + result.getSonarJavaRules());
+			String name = result.getSonarIssueTitle();
+
+			if (result.getLanguageType() == Language.JAVA) {
+				if (result.getIndividualMode().isJavascript()) {
+					writer.println(name + "Rules = " + (result.getSonarJavaRules() + result.getSonarJSRules()));
+					writer.println(name + "Rules-Java = " + result.getSonarJavaRules());
+					writer.println(name + "Rules-JS = " + result.getSonarJSRules());
+				} else {
+					writer.println(name + "Rules = " + result.getSonarJavaRules());
+				}
 			} else {
 				writer.println(name + "Rules = " + result.getSonarJSRules());
 			}
@@ -327,19 +335,19 @@ public class TextOutputFile extends AbstractOutputFile {
 
 	@Override
 	protected void writeSonarIssue(List<SonarIssueResult> sonarIssueList) {
-		String name = result.getLanguageType() == Language.JAVA ? "SonarJava" : "SonarJS";
+		String name = result.getSonarIssueTitle();
 
 		if (result.isSeperatedOutput()) {
 			csvOutput.writeSonarIssue(sonarIssueList);
 		} else {
 			writer.println("[" + name +"]");
-			writer.println("; type, path, rule, message, priority, start line, start offset, end line, end offset");
+			writer.println("; lang, type, path, rule, message, priority, start line, start offset, end line, end offset");
 
 			int count = 0;
 			synchronized (sonarIssueList) {
 				for (SonarIssueResult result : sonarIssueList) {
 					writer.print(++count + " = ");
-					writer.print(getStringsWithComma(result.getIssueType().toString(),
+					writer.print(getStringsWithComma(result.getLanguage(), result.getIssueType().toString(),
 							result.getPath(), result.getRuleRepository() + ":" + result.getRuleKey(), result.getMsg(),
 							getString(result.getSeverity()), getString(result.getStartLine()),
 							getString(result.getStartOffset()), getString(result.getEndLine()), getString(result.getEndOffset())));

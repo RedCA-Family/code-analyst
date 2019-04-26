@@ -46,14 +46,10 @@ public class AnalysisMode {
 
 	public boolean isWebResources() {
 		if (languageType == Language.JAVA) {
-			return javascript || css || html;
+			return css || html;
 		} else {
 			return false;
 		}
-	}
-
-	public boolean isWebResourcesOnly() {
-		return !codeSize && javascript;
 	}
 
 	public boolean isCodeSize() {

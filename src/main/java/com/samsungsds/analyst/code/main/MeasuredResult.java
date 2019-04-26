@@ -428,6 +428,25 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			changeSerializedName("sonarIssueCount", "sonarJSCount");
 			changeSerializedName("sonarIssueType", "sonarJSType");
 			changeSerializedName("topSonarIssueList", "topSonarJSList");
+		} else {	// Language.JAVA
+			if (cli.getIndividualMode().isSonarJava() && cli.getIndividualMode().isJavascript()) {
+				changeSerializedName("sonarIssueList", "sonarIssueList");
+				changeSerializedName("sonarIssueCount", "sonarIssueCount");
+				changeSerializedName("sonarIssueType", "sonarIssueType");
+				changeSerializedName("topSonarIssueList", "topSonarIssueList");
+			} else if (cli.getIndividualMode().isSonarJava()) {
+				changeSerializedName("sonarIssueList", "sonarJavaList");
+				changeSerializedName("sonarIssueCount", "sonarJavaCount");
+				changeSerializedName("sonarIssueType", "sonarJavaType");
+				changeSerializedName("topSonarIssueList", "topSonarJavaList");
+			} else if (cli.getIndividualMode().isJavascript()) {
+				changeSerializedName("sonarIssueList", "sonarJSList");
+				changeSerializedName("sonarIssueCount", "sonarJSCount");
+				changeSerializedName("sonarIssueType", "sonarJSType");
+				changeSerializedName("topSonarIssueList", "topSonarJSList");
+			} else {
+				throw new RuntimeException("Language & individual mode error...");
+			}
 		}
 	}
 
@@ -969,6 +988,18 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 
 	public int getSonarIssueType(int index) {
 		return sonarIssueType[index];
+	}
+
+	public String getSonarIssueTitle() {
+		if (languageType == Language.JAVASCRIPT) {
+			return "SonarJS";
+		} else {	// Language.JAVA
+			if (individualMode.isJavascript()) {
+				return "SonarIssue";
+			} else {
+				return "SonarJava";
+			}
+		}
 	}
 
 	public List<PmdResult> getPmdList() {

@@ -64,8 +64,9 @@ public abstract class AbstractOutputFile {
 				writeComplexity(result.getComplexityList());
 			}
 
-			if (result.getIndividualMode().isSonarJava()
-					|| (result.getIndividualMode().getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
+			if ((result.getLanguageType() == Language.JAVA && result.getIndividualMode().isSonarJava())
+					|| (result.getLanguageType() == Language.JAVA && result.getIndividualMode().isJavascript())
+					|| (result.getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
 				writeSonarIssue(result.getSonarIssueList());
 			}
 

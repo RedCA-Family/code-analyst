@@ -109,9 +109,21 @@ public class JsonOutputFile extends AbstractOutputFile {
 	protected void writeSonarIssue(List<SonarIssueResult> sonarIssueList) {
 		if (result.isSeperatedOutput()) {
 			if (result.getLanguageType() == Language.JAVA) {
-				String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjava.json";
+				if (result.getIndividualMode().isSonarJava() && result.getIndividualMode().isJavascript()) {
+					String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarissue.json";
 
-				writeListToJson(sonarIssueList, "sonarJavaList", jsonFile);
+					writeListToJson(sonarIssueList, "sonarIssueList", jsonFile);
+				} else if (result.getIndividualMode().isSonarJava()) {
+					String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjava.json";
+
+					writeListToJson(sonarIssueList, "sonarJavaList", jsonFile);
+				} else if (result.getIndividualMode().isJavascript()) {
+					String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjs.json";
+
+					writeListToJson(sonarIssueList, "sonarJSList", jsonFile);
+				} else {
+					throw new RuntimeException("Language & individual mode error...");
+				}
 			} else {
 				String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjs.json";
 

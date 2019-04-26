@@ -302,6 +302,27 @@ public class App {
 
 		pmdComplexity.run(cli.getInstanceKey());
 
+		// Complexity Check for JavaScript
+		if (cli.getIndividualMode().isJavascript()) {
+			ComplexityAnalysis eslintComplexity = new ComplexityAnalysisESLintLauncher();
+
+			String webapp = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getWebapp());
+
+			if ("".equals(cli.getIncludes())) {
+				eslintComplexity.addOption("-dir", webapp);
+			} else {
+				SourceFileHandler pathHandler = new SourceFileHandler(cli.getProjectBaseDir(), cli.getWebapp().split(FindFileUtils.COMMA_SPLITTER));
+
+				eslintComplexity.addOption("-dir", pathHandler.getPathStringWithInclude(cli.getIncludes()));
+			}
+
+			if (cli.isDebug()) {
+				eslintComplexity.addOption("-debug", "");
+			}
+
+			eslintComplexity.run(cli.getInstanceKey());
+		}
+
 		observerManager.notifyObservers(ProgressEvent.COMPLEXITY_COMPLETE);
 	}
 

@@ -67,7 +67,9 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 		if (measuredResult.getIndividualMode().isDuplication()) {
 			calculateDuplicationDebt();
 		}
-		if (measuredResult.getIndividualMode().isSonarJava() || measuredResult.getIndividualMode().isPmd() || measuredResult.getIndividualMode().isFindBugs() || measuredResult.getIndividualMode().isFindSecBugs() || measuredResult.getIndividualMode().isWebResources()) {
+		if (measuredResult.getIndividualMode().isSonarJava() || measuredResult.getIndividualMode().isPmd() ||
+				measuredResult.getIndividualMode().isFindBugs() || measuredResult.getIndividualMode().isFindSecBugs() ||
+				measuredResult.getIndividualMode().isJavascript() || measuredResult.getIndividualMode().isWebResources()) {
 			calculateViolationDebt();
 		}
 		if (measuredResult.getIndividualMode().isComplexity()) {
