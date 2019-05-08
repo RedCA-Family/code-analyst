@@ -209,7 +209,7 @@ public class JsonOutputFile extends AbstractOutputFile {
 
 		builder.registerTypeAdapter(jdependListType, serializer);
 
-		builder.excludeFieldsWithoutExposeAnnotation();
+		builder.excludeFieldsWithoutExposeAnnotation().serializeSpecialFloatingPointValues();
 		final Gson gson = builder.create();
 
 		String json = gson.toJson(result);
@@ -219,7 +219,7 @@ public class JsonOutputFile extends AbstractOutputFile {
 
 	private void writeListToJson(List<?> list, String name, String jsonFile) {
 		final GsonBuilder builder = new GsonBuilder();
-		builder.excludeFieldsWithoutExposeAnnotation();
+		builder.excludeFieldsWithoutExposeAnnotation().serializeSpecialFloatingPointValues();
 		final Gson gson = builder.create();
 
 		try (PrintWriter jsonWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile), "UTF-8")))) {

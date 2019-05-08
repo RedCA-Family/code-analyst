@@ -444,8 +444,6 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 				changeSerializedName("sonarIssueCount", "sonarJSCount");
 				changeSerializedName("sonarIssueType", "sonarJSType");
 				changeSerializedName("topSonarIssueList", "topSonarJSList");
-			} else {
-				throw new RuntimeException("Language & individual mode error...");
 			}
 		}
 	}
