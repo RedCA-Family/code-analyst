@@ -16,6 +16,7 @@ limitations under the License.
 package com.samsungsds.analyst.code.sonar.server.servlets;
 
 import com.google.gson.Gson;
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.main.IndividualMode;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -70,11 +71,11 @@ public class PluginInstalledResServlet extends HttpServlet {
 
             IOAndFileUtils.writeString(outStream, "{\n" + "\t\"plugins\": [\n");
 
-            if (individualMode.isCodeSize() || individualMode.isDuplication() || individualMode.isSonarJava()) {
+            if (individualMode.getLanguageType() == Language.JAVA && (individualMode.isCodeSize() || individualMode.isDuplication() || individualMode.isSonarJava())) {
                 IOAndFileUtils.write(outStream, "/statics/plugin_java.json");
                 isWritten = true;
             }
-            if (individualMode.isJavascript()) {
+            if (individualMode.getLanguageType() == Language.JAVASCRIPT || individualMode.isJavascript()) {
                 if (isWritten) {
                     IOAndFileUtils.writeString(outStream, ",\n");
                 }

@@ -19,6 +19,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 
+import com.samsungsds.analyst.code.api.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.sonar.api.utils.ZipUtils;
@@ -77,69 +78,61 @@ public class ReportFileReader implements Closeable {
 	protected void readComponent(Component component) {
 		LOGGER.debug("Component : {}", component.getPath());
 
+		MeasuredResult instance = MeasuredResult.getInstance(instanceKey);
+
 		if (component.getType().equals(ComponentType.DIRECTORY)) {
-			MeasuredResult.getInstance(instanceKey).addDirectories(1);
+			if (instance.getIndividualMode().isCodeSize()) {
+				instance.addDirectories(1);
+			}
 		} else if (component.getType().equals(ComponentType.FILE)) {
 
-			MeasuredResult.getInstance(instanceKey).addFilePathList(component.getPath());
+			instance.addFilePathList(component.getPath());
 
-			if ("java".equals(component.getLanguage())) {
-				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isCodeSize()) {
+			// js의 경우 *.js, *.jsx, *.vue 파일 분석이 되나, language는 "js"만 리턴됨
+			if ((instance.getLanguageType() == Language.JAVA && "java".equals(component.getLanguage()))
+					|| (instance.getLanguageType() == Language.JAVA && instance.getIndividualMode().isJavascript() && "js".equals(component.getLanguage()))
+					|| (instance.getLanguageType() == Language.JAVASCRIPT && "js".equals(component.getLanguage()))) {
+
+				// Code Size
+				if (instance.getIndividualMode().isCodeSize()) {
 					calculateCodeSize(component);
 				}
-				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isDuplication()
+
+				// Duplication
+				if (instance.getIndividualMode().isDuplication()
 						&& reader.hasCoverage(component.getRef())
-						&& !MeasuredResult.getInstance(instanceKey).isTokenBased()) {
-					try (CloseableIterator<ScannerReport.Duplication> it = reader.readComponentDuplications(component.getRef())) {
-						while (it.hasNext()) {
-							ScannerReport.Duplication dup = it.next();
-							
-							MeasuredResult.getInstance(instanceKey).addDuplicatedBlocks();
-							
-							String path = component.getPath();
-							int startLine = dup.getOriginPosition().getStartLine();
-							int endLine = dup.getOriginPosition().getEndLine();
-							
-							for (Duplicate d : dup.getDuplicateList()) {
-								String duplicatedPath = null;
-								try {
-									duplicatedPath = reader.readComponent(d.getOtherFileRef()).getPath();
-								} catch (IllegalStateException ise) { // Unable to find report for component #...
-									duplicatedPath = DuplicationResult.DUPLICATED_FILE_SAME_MARK;
-								}
-								DuplicationResult result = new DuplicationResult(path, startLine, endLine, duplicatedPath, d.getRange().getStartLine(), d.getRange().getEndLine());
-								
-								MeasuredResult.getInstance(instanceKey).addDuplicationResult(result);
-							}
-						}
-					}
+						&& !instance.isTokenBased()) {
+					calculateDuplication(component);
 				}
-				if (MeasuredResult.getInstance(instanceKey).getIndividualMode().isSonarJava()) {
+
+				// Issue
+				if ((instance.getLanguageType() == Language.JAVA && instance.getIndividualMode().isSonarJava())
+						|| (instance.getLanguageType() == Language.JAVA && instance.getIndividualMode().isJavascript())
+						|| (instance.getLanguageType() == Language.JAVASCRIPT && instance.getIndividualMode().isSonarJS())) {
 					try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
 						while (it.hasNext()) {
 							ScannerReport.Issue issue = it.next();
-							SonarJavaResult sonarJavaResult = new SonarJavaResult(component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
-							MeasuredResult.getInstance(instanceKey).addSonarJavaResult(sonarJavaResult);
+							SonarIssueResult sonarJavaResult = new SonarIssueResult(component.getLanguage(), component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(),	reverseSeverity(issue.getSeverityValue()),
+									issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
+							instance.addSonarIssueResult(sonarJavaResult);
 						}
 					} catch (Exception e) {
 						throw new IllegalStateException("Can't read issues for " + component, e);
 					}
 				}
 			}
-			if ("js".equals(component.getLanguage()) || "web".equals(component.getLanguage()) || "css".equals(component.getLanguage()) || "less".equals(component.getLanguage()) || "scss".equals(component.getLanguage())) {
-				if ("js".equals(component.getLanguage()) && MeasuredResult.getInstance(instanceKey).getIndividualMode().isWebResourcesOnly()) {
-					calculateCodeSize(component);
-				}
-				try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
-					while (it.hasNext()) {
-						ScannerReport.Issue issue = it.next();
-						WebResourceResult webResourceResult = new WebResourceResult(component.getLanguage(), component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
-						MeasuredResult.getInstance(instanceKey).addWebResourceResult(webResourceResult);
+			if (instance.getLanguageType() == Language.JAVA) {
+				if ("web".equals(component.getLanguage()) || "css".equals(component.getLanguage()) || "less".equals(component.getLanguage()) || "scss".equals(component.getLanguage())) {
+					try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
+						while (it.hasNext()) {
+							ScannerReport.Issue issue = it.next();
+							WebResourceResult webResourceResult = new WebResourceResult(component.getLanguage(), component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()), issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
+							instance.addWebResourceResult(webResourceResult);
+						}
+					} catch (Exception e) {
+						throw new IllegalStateException("Can't read issues for " + component, e);
 					}
-				} catch (Exception e) {
-					throw new IllegalStateException("Can't read issues for " + component, e);
 				}
-
 			}
 		}
 
@@ -172,6 +165,32 @@ public class ReportFileReader implements Closeable {
 			}
 		} catch (Exception e) {
 			throw new IllegalStateException("Can't read measures for " + component, e);
+		}
+	}
+
+	private void calculateDuplication(Component component) {
+		try (CloseableIterator<ScannerReport.Duplication> it = reader.readComponentDuplications(component.getRef())) {
+			while (it.hasNext()) {
+				ScannerReport.Duplication dup = it.next();
+
+				MeasuredResult.getInstance(instanceKey).addDuplicatedBlocks();
+
+				String path = component.getPath();
+				int startLine = dup.getOriginPosition().getStartLine();
+				int endLine = dup.getOriginPosition().getEndLine();
+
+				for (Duplicate d : dup.getDuplicateList()) {
+					String duplicatedPath = null;
+					try {
+						duplicatedPath = reader.readComponent(d.getOtherFileRef()).getPath();
+					} catch (IllegalStateException ise) { // Unable to find report for component #...
+						duplicatedPath = DuplicationResult.DUPLICATED_FILE_SAME_MARK;
+					}
+					DuplicationResult result = new DuplicationResult(path, startLine, endLine, duplicatedPath, d.getRange().getStartLine(), d.getRange().getEndLine());
+
+					MeasuredResult.getInstance(instanceKey).addDuplicationResult(result);
+				}
+			}
 		}
 	}
 

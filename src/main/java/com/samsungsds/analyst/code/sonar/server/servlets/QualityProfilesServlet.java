@@ -53,7 +53,7 @@ public class QualityProfilesServlet extends HttpServlet {
 			resourceName = "/statics/search.protobuf";
 		} else if (url.equals("/api/rules/search.protobuf")) {
 			// URL 호출
-			// JavaScript : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJparXCQBOyaqowaxt&p=1&ps=500
+			// JavaScript : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWncZv1RIhyt1CDWUP11&p=1&ps=500
 			// CSS        : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJooCyCQBOyaqowaiw&p=1&ps=500
 			// Java       : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJpVp5CQBOyaqowaql&p=1&ps=500
 			// Less       : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJoogvCQBOyaqowapc&p=1&ps=500
@@ -65,8 +65,8 @@ public class QualityProfilesServlet extends HttpServlet {
 				throw new IllegalArgumentException("Request URL parameter error ('p' isn't 1");
 			}
 
-			if (queryString.contains("qprofile=AWPJparXCQBOyaqowaxt")) {		// JavaScript
-				resourceName = "/statics/AWPJparXCQBOyaqowaxt.protobuf";
+			if (queryString.contains("qprofile=AWncZv1RIhyt1CDWUP11")) {		// JavaScript
+				resourceName = "/statics/AWncZv1RIhyt1CDWUP11.protobuf";
 			} else if (queryString.contains("qprofile=AWPJooCyCQBOyaqowaiw")) {	// CSS
 				resourceName = "/statics/AWPJooCyCQBOyaqowaiw.protobuf";
 			} else if (queryString.contains("qprofile=AWPJpVp5CQBOyaqowaql")) {	// Java

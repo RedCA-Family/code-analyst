@@ -116,7 +116,7 @@ public class WebResourceResult implements Serializable, CSVFileResult {
 		this.endLine = endLine;
 		this.endOffset = endOffset;
 
-		this.type = IssueTypeRepository.getIssueType("javascript", ruleKey);
+		this.type = IssueTypeRepository.getIssueType(ruleRepository, ruleKey);
 	}
 
 	public String getPath() {

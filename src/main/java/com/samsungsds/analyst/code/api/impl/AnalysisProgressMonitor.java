@@ -45,7 +45,7 @@ public class AnalysisProgressMonitor {
 	
 	private AnalysisProgress currentProgress = null;
 	
-	private long time = 0l;
+	private long time = 0L;
 	
 	static {
 		stepRates.put(ProgressEvent.PREPARE_COMPLETE, 50);
@@ -54,7 +54,7 @@ public class AnalysisProgressMonitor {
 		stepRates.put(ProgressEvent.DUPLICATION_COMPLETE, 9_000);
 		stepRates.put(ProgressEvent.COMPLEXITY_COMPLETE, 1_500);
 		stepRates.put(ProgressEvent.SONARJAVA_COMPLETE, 8_000);
-		stepRates.put(ProgressEvent.JAVASCRIPT_COMPLETE, 4_000);
+		stepRates.put(ProgressEvent.JAVASCRIPT_COMPLETE, 24_000);
 		stepRates.put(ProgressEvent.CSS_COMPLETE, 2_000);
 		stepRates.put(ProgressEvent.HTML_COMPLETE, 2_000);
 		stepRates.put(ProgressEvent.SONAR_ALL_COMPLETE, 5_000);

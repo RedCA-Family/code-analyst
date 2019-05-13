@@ -23,6 +23,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.List;
 
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import org.apache.commons.io.IOUtils;
 
@@ -32,7 +33,7 @@ import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
-import com.samsungsds.analyst.code.sonar.SonarJavaResult;
+import com.samsungsds.analyst.code.sonar.SonarIssueResult;
 import com.samsungsds.analyst.code.sonar.WebResourceResult;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 
@@ -63,8 +64,10 @@ public abstract class AbstractOutputFile {
 				writeComplexity(result.getComplexityList());
 			}
 
-			if (result.getIndividualMode().isSonarJava()) {
-				writeSonarJava(result.getSonarJavaList());
+			if ((result.getLanguageType() == Language.JAVA && result.getIndividualMode().isSonarJava())
+					|| (result.getLanguageType() == Language.JAVA && result.getIndividualMode().isJavascript())
+					|| (result.getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
+				writeSonarIssue(result.getSonarIssueList());
 			}
 
 			if (result.getIndividualMode().isPmd()) {
@@ -120,7 +123,7 @@ public abstract class AbstractOutputFile {
 
 	protected abstract void writeFindSecBugs(List<FindBugsResult> findSecBugsList);
 
-	protected abstract void writeSonarJava(List<SonarJavaResult> sonarJavaList);
+	protected abstract void writeSonarIssue(List<SonarIssueResult> sonarJavaList);
 
 	protected abstract void writePmd(List<PmdResult> pmdList);
 

@@ -16,6 +16,7 @@ limitations under the License.
 package com.samsungsds.analyst.code.api;
 
 public class AnalysisMode {
+	private Language languageType = Language.JAVA;	// default
 
 	private boolean codeSize = true;
 	private boolean duplication = true;
@@ -31,16 +32,24 @@ public class AnalysisMode {
 	private boolean unusedCode = true;
 	private boolean ckMetrics = true;
 
+	public void setLanguageType(Language languageType) {
+		this.languageType = languageType;
+	}
+
+	public Language getLanguageType() {
+		return languageType;
+	}
+
 	public boolean isSonarServer() {
 		return codeSize || duplication || sonarJava || javascript || css || html;
 	}
 
 	public boolean isWebResources() {
-		return javascript || css || html;
-	}
-
-	public boolean isWebResourcesOnly() {
-		return !codeSize && javascript;
+		if (languageType == Language.JAVA) {
+			return css || html;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean isCodeSize() {
@@ -105,6 +114,14 @@ public class AnalysisMode {
 
 	public void setJavascript(boolean javascript) {
 		this.javascript = javascript;
+	}
+
+	public boolean isSonarJS() {
+		return javascript;
+	}
+
+	public void setSonarJS(boolean sonarJS) {
+		this.javascript = sonarJS;
 	}
 
 	public boolean isCss() {
