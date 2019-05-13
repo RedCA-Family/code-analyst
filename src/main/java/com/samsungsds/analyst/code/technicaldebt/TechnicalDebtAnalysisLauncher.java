@@ -67,7 +67,9 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 		if (measuredResult.getIndividualMode().isDuplication()) {
 			calculateDuplicationDebt();
 		}
-		if (measuredResult.getIndividualMode().isSonarJava() || measuredResult.getIndividualMode().isPmd() || measuredResult.getIndividualMode().isFindBugs() || measuredResult.getIndividualMode().isFindSecBugs() || measuredResult.getIndividualMode().isWebResources()) {
+		if (measuredResult.getIndividualMode().isSonarJava() || measuredResult.getIndividualMode().isPmd() ||
+				measuredResult.getIndividualMode().isFindBugs() || measuredResult.getIndividualMode().isFindSecBugs() ||
+				measuredResult.getIndividualMode().isJavascript() || measuredResult.getIndividualMode().isWebResources()) {
 			calculateViolationDebt();
 		}
 		if (measuredResult.getIndividualMode().isComplexity()) {
@@ -112,7 +114,7 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 	}
 
 	private double calculateSonarJavaDebt() {
-		return measuredResult.getSonarJavaCountAll() * COST_TO_FIX_ONE_VIOLATION;
+		return measuredResult.getSonarIssueCountAll() * COST_TO_FIX_ONE_VIOLATION;
 	}
 
 	private double calculatePmdDebt() {

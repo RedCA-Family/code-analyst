@@ -19,6 +19,7 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.List;
 
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.main.issue.IssueType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -91,27 +92,36 @@ public class ResultProcessor {
 			System.out.println("Complexity Over 15(%) : " + result.getComplexityOver15Percent() + " (" + getFormattedNumber(result.getComplexityOver15()) + ")");
 			System.out.println("Complexity Over 20(%) : " + result.getComplexityOver20Percent() + " (" + getFormattedNumber(result.getComplexityOver20()) + ")");
 			System.out.println("Complexity Equal Or Over 50(%) : " + result.getComplexityEqualOrOver50Percent() + " (" + getFormattedNumber(result.getComplexityEqualOrOver50()) + ")");
-			System.out.println("- The complexity is calculated by PMD's Modified Cyclomatic Complexity method");
+			if (result.getLanguageType() == Language.JAVA) {
+				System.out.println("- The complexity is calculated by PMD's Modified Cyclomatic Complexity method");
+			} else if (result.getLanguageType() == Language.JAVASCRIPT) {
+				System.out.println("- The complexity is calculated by ESLint's Complexity rule");
+			}
 			System.out.println();
 		}
 	}
 
-	private static void printSonarJavaSummary(MeasuredResult result) {
-		if (result.getIndividualMode().isSonarJava()) {
-			System.out.println("SonarJava violations : " + getFormattedNumber(result.getSonarJavaCountAll()));
-			System.out.println("SonarJava 1 priority : " + getFormattedNumber(result.getSonarJavaCount(1)));
-			System.out.println("SonarJava 2 priority : " + getFormattedNumber(result.getSonarJavaCount(2)));
-			System.out.println("SonarJava 3 priority : " + getFormattedNumber(result.getSonarJavaCount(3)));
-			System.out.println("SonarJava 4 priority : " + getFormattedNumber(result.getSonarJavaCount(4)));
-			System.out.println("SonarJava 5 priority : " + getFormattedNumber(result.getSonarJavaCount(5)));
+	private static void printSonarIssueSummary(MeasuredResult result) {
+		if ((result.getLanguageType() == Language.JAVA && result.getIndividualMode().isSonarJava())
+				|| (result.getLanguageType() == Language.JAVA && result.getIndividualMode().isJavascript())
+				|| (result.getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isSonarJS())) {
+
+			String name = result.getSonarIssueTitle();
+
+			System.out.println(name + " violations : " + getFormattedNumber(result.getSonarIssueCountAll()));
+			System.out.println(name + " 1 priority : " + getFormattedNumber(result.getSonarIssueCount(1)));
+			System.out.println(name + " 2 priority : " + getFormattedNumber(result.getSonarIssueCount(2)));
+			System.out.println(name + " 3 priority : " + getFormattedNumber(result.getSonarIssueCount(3)));
+			System.out.println(name + " 4 priority : " + getFormattedNumber(result.getSonarIssueCount(4)));
+			System.out.println(name + " 5 priority : " + getFormattedNumber(result.getSonarIssueCount(5)));
 			System.out.println();
 
-			System.out.println("SonarJava Bug Type : " + result.getSonarJavaType(IssueType.BUG.getTypeIndex()));
-			System.out.println("SonarJava Vulnerability Type : " + result.getSonarJavaType(IssueType.VULNERABILITY.getTypeIndex()));
-			System.out.println("SonarJava Code Smell Type : " + result.getSonarJavaType(IssueType.CODE_SMELL.getTypeIndex()));
+			System.out.println(name + " Bug Type : " + result.getSonarIssueType(IssueType.BUG.getTypeIndex()));
+			System.out.println(name + " Vulnerability Type : " + result.getSonarIssueType(IssueType.VULNERABILITY.getTypeIndex()));
+			System.out.println(name + " Code Smell Type : " + result.getSonarIssueType(IssueType.CODE_SMELL.getTypeIndex()));
 
-			if (result.getSonarJavaType(IssueType.NA.getTypeIndex()) > 0) {
-				System.out.println("* SonarJava N/A Type : " + result.getSonarJavaType(IssueType.NA.getTypeIndex()));
+			if (result.getSonarIssueType(IssueType.NA.getTypeIndex()) > 0) {
+				System.out.println("* " + name + " N/A Type : " + result.getSonarIssueType(IssueType.NA.getTypeIndex()));
 			}
 			System.out.println();
 		}
@@ -224,7 +234,7 @@ public class ResultProcessor {
 
 		if (result.getMode() == MeasurementMode.DefaultMode) {
 			printComplexitySummary(result);
-			printSonarJavaSummary(result);
+			printSonarIssueSummary(result);
 			printPmdSummary(result);
 			printFindBugsSummary(result);
 			printFindSecBugsSummary(result);

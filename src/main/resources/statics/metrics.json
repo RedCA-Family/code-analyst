@@ -1235,6 +1235,15 @@
 			"custom": false
 		},
 		{
+			"id": "145",
+			"key": "sonarjava_feedback",
+			"type": "DATA",
+			"name": "SonarJava feedback",
+			"direction": 0,
+			"qualitative": false,
+			"custom": false
+		},
+		{
 			"id": "123",
 			"key": "development_cost",
 			"type": "STRING",
@@ -1434,7 +1443,7 @@
 			"custom": false
 		}
 	],
-	"total": 144,
+	"total": 145,
 	"p": 1,
 	"ps": 500
 }

@@ -2,10 +2,13 @@
 
 ## 1. 기본 실행 ##
 
-	$> java -jar Code-Analyst-2.6.1.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+### [Java]
+	$> java -jar Code-Analyst-2.7.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
 
+### [JavaScript]
+	$> java -jar Code-Analyst-2.7.0.jar -l javascript -p "프로젝트 위치" -s "."
 
-### 결과 화면 
+### 결과 화면 (예시)
 	
 	14:28:28.929 INFO  c.s.a.c.m.App - Project Directory : C:\Workspace\Project
 	14:28:28.935 INFO  c.s.a.c.m.App - Code Size Analysis start...
@@ -73,8 +76,10 @@
 
 ## 2. 세부 옵션
 
+### [Java]
 | Option | Description | Default | since | Example |
 | ------ | ----------- | ------- | :---: | ------- |
+| -l, --language <arg> | 분석 대상 언어 지정 ('Java' 또는 'JavaScript', 지정되지 않으면 Java로 처리) | 'Java' | 2.7 | -l "java" |
 | -p, --project <arg> | 프로젝트 기본 위치 지정 (지정되지 않으면 현재 디렉토리로 처리) | . | 1.0 | -p "C:\Workspace\Project" |
 | -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | src\main\java, src(v2.2 이전) | 1.0 | -s "src\main\java" | 
 | -b, --binary <arg> | binary 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | target\classes | 1.0 | -b "binary" |
@@ -99,6 +104,27 @@
 | -catalog | 점검된 파일 목록 |  | 2.1 | -catalog |
 | -duplication <arg> | 중복 점검 방식 지정 ('statement' 또는 'token' 방식) | statement  | 2.6 | -duplication token |
 | -tokens <arg> | token 중복 점검 방식의 token 기준값 지정 | 100 | 2.6 | -tokens 50 |
+
+### [JavaScript]
+| Option | Description | Default | since | Example |
+| ------ | ----------- | ------- | :---: | ------- |
+| -l, --language <arg> | 분석 대상 언어 지정 ('Java' 또는 'JavaScript', 지정되지 않으면 Java로 처리) | 'Java' | 2.7 | -l "javascript" |
+| -p, --project <arg> | 프로젝트 기본 위치 지정 (지정되지 않으면 현재 디렉토리로 처리) | . | 2.7 | -p "C:\Workspace\Project" |
+| -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | . | 2.7 | -s "app" | 
+| -d, --debug | 디버그 모드 |  | 2.7 | -d |
+| -e, --encoding <arg> | 소스에 대한 파일 encoding 지정 | 	UTF-8 | 2.7 | -e UTF-8 |
+| -sonar <arg> | SonarQube exclude 파일(XML)  형식 :  <SonarIssueFilter>  <Exclude key="common-js:DuplicatedBlocks"/>  </SonarIssueFilter> |  | 2.7 | -sonar "C:\SonarIssueFilter.xml" |
+| -o, --output <arg> | 결과 저장 파일명 지정  미지정시, 현재날짜를 포함하는 파일명 사용 | result-[yyyyMMddHHmmss].[out|json] | 2.7 | -o result.txt |
+| -f, --format <arg> | 결과 파일 형식 지정 (json, text, none)  * none의 경우 summary 결과만 표시하고 결과 파일을 저장하지 않음 | json | 2.7 | -f text |
+| -v, --version | 버전 정보 표시 (사용 library 및 버전, 적용 inspection rule 포함) |  | 2.7 | -v |
+| -t, --timeout <arg> | 내부적으로 사용되는 web service에 대한 timeout | 100분 | 2.7 | -t 160 |
+| -include <arg> | include 패턴 지정 (Ant-style로 comma로 구분되는 여러 패턴 지정 가능) |  | 2.7 | -include "app/**/*.js" |
+| -exclude <arg> | exclude 패턴 지정 (Ant-style로 comma로 구분되는 여러 패턴 지정 가능) |  | 2.7 | -exclude "tests/**,tests-*/**,*-tests/**" |
+| -m, --mode <arg> | 점검 대상 선택 지정으로 code-size, duplication, complexity, sonarjs (comma로 구분)  점검 대상 앞에 "-"가 붙는 경우는 해당 항목 점검이 제외됨 | ※ 전체 | 2.7 | -m "sonarjs" |
+| -a,--analysis | 세부 분석 모드로 "영향도 높은 중복 코드 블럭 식별" 등 추가   (내부적으로 좀더 많은 메모리를 사용하므로 OOM 발생 시, JVM의 '-Xmx' 옵션을 사용 권장, eg: -Xmx1024m) |  | 2.7 | -a |
+| -r,--rerun <arg> | 이전 실행된 결과 output(text)와 동일한 옵션을 지정하여 실행  영향을 받는 옵션 : 'project', 'src', 'encoding', 'sonar', 'include', 'exclude', 'mode', 'analysis', 'seperated' alc 'catalog' |  | 2.7 | -r result.out |
+| -seperated | 중복도, 복잡도, SonarJS에 대한 결과 정보를 별도의 파일로 분리 |  | 2.7 | -seperated |
+| -catalog | 점검된 파일 목록 |  | 2.7 | -catalog |
 
 
 ## 3. API 활용 가이드
@@ -131,6 +157,7 @@ API의 analyze() 호출을 통해 코드 분석을 수행하며, 다음과 같�
 * where : 결과 파일(json) 저장 위치 지정 (eg: eclipse plugin의 경우, workspace의 metadata 하위 디렉토리 지정 등)
 * ArgumentInfo : 코드 분석을 위한 호출 정보로 다음과 같은 property를 지정
 
+#### [Java]
 | Property | Description | Remarks |
 | -------- | ----------- | ------- |
 | project | project 기본 디렉토리 지정 | 필수 |
@@ -148,6 +175,23 @@ API의 analyze() 호출을 통해 코드 분석을 수행하며, 다음과 같�
 | mode | AnalysisMode로 점검하고자 하는 항목 지정 (codeSize, duplication, complexity, pmd, findBugs, findSecBugs, javascript, css, html, dependency, unused, ckmetrics) | css, html은 기본적으로 비활성화 |
 | detailAnalysis | 세부 분석 처리 (Top 10 분석 등) |  |
 | saveCatalog | 점검된 파일 목록 기록 |  |
+
+#### [JavaScript]
+| Property | Description | Remarks |
+| -------- | ----------- | ------- |
+| project | project 기본 디렉토리 지정 | 필수 |
+| src | 점검 대상 소스 디렉토리 (위 project 속성에 대한 상대경로 지정) | 필수 |
+| debug | Debug 모드 (개발자 모드) | 기본값 : false |
+| encoding | 소스 인코딩 | 기본값 : UTF-8 |
+| sonarRuleFile | SonarJava 등 SonarQube plugin exclude 처리 xml (생략되면 최종 RedCA Way ruleset 전체 적용) |  |
+| timeout | 내부적으로 사용되는 jetty에 대한 timeout 지정 (개발자 모드) | 기본값 : 100분 |
+| exclude | 제외 패턴(ant-style, 여러 개인 경우 comma로 구분) |  |
+| mode | AnalysisMode로 점검하고자 하는 항목 지정 (codeSize, duplication, complexity, sonarjs) | 기본 : 전체 |
+| detailAnalysis | 세부 분석 처리 (Top 10 분석 등) |  |
+| saveCatalog | 점검된 파일 목록 기록 |  |
+
+
+#### 공통 (Java, JavaScript)
 
 * TargetFileInfo : 분석 대상 폴더 및 소스 파일 지정 (addPackage() 또는 addFile()/addFileExactly()을 통해 분석 대상 소스 지정)
 
@@ -169,12 +213,13 @@ API의 analyze() 호출을 통해 코드 분석을 수행하며, 다음과 같�
 | findBugsFile | FindBugs List 결과 파일 |
 | findSecBugsFile | FindSecBugs List 결과 파일 |
 | sonarJavaFile | SonarJava List 결과 파일 |
+| sonarJsFile | SonarJs List 결과 파일 |
 | webResourceFile | Web Resource List 결과 파일 |
 | ckMetricsFile | CK Metrics List 결과 파일 |
 
 최정 return 정보는 where 하위에 생성된 결과 파일(json)에 대한 전체 경로로 "result-[yyyyMMddHHmmss].json" 형식으로 처리됩니다.
 
-분석 요청에 대한 예는 다음과 같습니다.
+Java language 모드에서 분석 요청에 대한 예는 다음과 같습니다.
 
 ```java
 	CodeAnalyst analyst = CodeAnalystFactory.create();
@@ -225,12 +270,51 @@ API의 analyze() 호출을 통해 코드 분석을 수행하며, 다음과 같�
 	String resultFile = analyst.analyze("C:\\Temp", argument, targetFile);
 ```
 
+JavaScript language 모드에서 분석 요청에 대한 예는 다음과 같습니다. (```CodeAnalystFactory.create()``` 호출 시 Language 파라미터 추가 지정)
+
+```java
+    CodeAnalyst analyst = CodeAnalystFactory.create(Language.JAVASCRIPT);
+
+    ArgumentInfo argument = new ArgumentInfo();
+    try {
+        argument.setProject(new File(".").getCanonicalPath());
+    } catch (IOException ex) {
+        ex.printStackTrace();
+        return;
+    }
+
+    argument.setEncoding("UTF-8"); // default
+
+    argument.setSrc("app");
+
+    AnalysisMode mode = new AnalysisMode();
+    mode.setCodeSize(true);
+    mode.setDuplication(true);
+    mode.setComplexity(true);
+    mode.setSonarJS(true);
+
+    argument.setMode(mode);
+
+    TargetFileInfo targetFile = new TargetFileInfo();
+
+    File temp = new File(TEMP_DIRECTORY);
+    if (!temp.exists()) {
+        temp.mkdirs();
+    }
+
+    String resultFile = analyst.analyze("C:\\Temp", argument, targetFile);
+
+    System.out.println("Result File : " + resultFile);
+```
+
+
 ※ TargetFileInfo의 addPackage()는 특정 패키지의 하위 소스가 점검 대상으로 추가하며, addFile()로 특정 패키지의 특정 파일을 추가할 수 있습니다. (각 조건은 "or" 조건으로 처리)
 
 
 ### 3.3 Web 리소스 분석(JavaScript, CSS, HTML)
 
-V2.2부터 web 리소스 분석을 별도의 analyzeWebResource() 메소드로 분리하였으며 다음과 같이 4개의 파라미터와 함께 호출합니다.
+V2.2부터 web 리소스 분석을 별도의 analyzeWebResource() 메소드로 분리하였으며 다음과 같이 4개의 파라미터와 함께 호출합니다.  
+※ Web 리소스 분석은 'Java' language 모드에서 동작함
 
 * where : 결과 파일(json) 저장 위치 지정 (eg: eclipse plugin의 경우, workspace의 metadata 하위 디렉토리 지정 등)
 * WebArgumentInfo : 코드 분석을 위한 호출 정보로 다음과 같은 property를 지정
@@ -316,7 +400,7 @@ ProgressObserver의 informProgress() 메소드에 의해 notify되며, AnalysisP
 * JAVASCRIPT_COMPLETE : SonarJS 분석 후 호출
 * CSS_COMPLETE : CSS(Sonar) 분석 후 호출
 * HTML_COMPLETE : Sonar Web 분석 후 호출
-* SONAR_ALL_COMPLTE: Sonar 관련 전체 분석 후 호출
+* SONAR_ALL_COMPLETE: Sonar 관련 전체 분석 후 호출
 * PMD_COMPLETE : PMD 점검 후 호출
 * FINDBUGS_COMPLETE : FindBugs 점검 후 호출
 * FINDSECBUGS_COMPLETE : FindSecBugs 점검 후 호출
