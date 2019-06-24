@@ -73,6 +73,7 @@ public class ApiExample {
 		mode.setHtml(false);
 		mode.setUnusedCode(false);
 		mode.setCkMetrics(true);
+		mode.setCheckStyle(true);
 
 		//System.setProperty("print.path.filter", "true");
 

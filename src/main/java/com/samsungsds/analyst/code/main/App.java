@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.samsungsds.analyst.code.api.Language;
+import com.samsungsds.analyst.code.checkstyle.CheckStyleAnalysis;
+import com.samsungsds.analyst.code.checkstyle.CheckStyleAnalysisLauncher;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysis;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsAnalysisLauncher;
 import com.samsungsds.analyst.code.main.delay.DelayWork;
@@ -219,6 +221,12 @@ public class App {
 
 					runCkMetrics(cli);
 				}
+
+				if (cli.getIndividualMode().isCheckStyle()) {
+				    LOGGER.info("CheckStyle Analysis start...");
+
+				    runCheckStyle(cli);
+                }
 			}
 
 			LOGGER.info("TechnicalDebt Analysis start...");
@@ -504,6 +512,25 @@ public class App {
 
 		observerManager.notifyObservers(ProgressEvent.CK_METRICS_COMPLETE);
 	}
+
+    private void runCheckStyle(CliParser cli) {
+        CheckStyleAnalysis checkStyleAnalysis = new CheckStyleAnalysisLauncher();
+
+        checkStyleAnalysis.setProjectBaseDir(cli.getProjectBaseDir());
+        checkStyleAnalysis.setSourceDirectories(cli.getSrc());
+
+        if (cli.isDebug()) {
+            checkStyleAnalysis.addOption("-debug", "");
+        }
+
+        if (!cli.getRuleSetFileForCheckStyle().equals("")) {
+            checkStyleAnalysis.addOption("-c", cli.getRuleSetFileForCheckStyle());
+        }
+
+        checkStyleAnalysis.run(cli.getInstanceKey());
+
+        observerManager.notifyObservers(ProgressEvent.CHECKSTYLE_COMPLETE);
+    }
 
 	private void runTechnicalDebt(CliParser cli) {
 		TechnicalDebtAnalysis technicalDebt = new TechnicalDebtAnalysisLauncher();

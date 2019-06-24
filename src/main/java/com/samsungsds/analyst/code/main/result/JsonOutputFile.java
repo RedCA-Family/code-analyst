@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import com.samsungsds.analyst.code.api.Language;
+import com.samsungsds.analyst.code.checkstyle.CheckStyleResult;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -168,7 +169,16 @@ public class JsonOutputFile extends AbstractOutputFile {
 		}
 	}
 
-	@Override
+    @Override
+    protected void writeCheckStyle(List<CheckStyleResult> checkStyleList) {
+        if (result.isSeperatedOutput()) {
+            String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-checkstyle.json";
+
+            writeListToJson(checkStyleList, "checkStyleList", jsonFile);
+        }
+    }
+
+    @Override
 	protected void writeSummary(MeasuredResult result) {
 		// no-op
 	}

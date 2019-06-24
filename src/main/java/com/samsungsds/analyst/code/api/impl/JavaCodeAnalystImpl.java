@@ -341,6 +341,10 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 		if (mode.isCkMetrics()) {
 			addAnalysisItem(parameter, "ckmetrics");
 		}
+
+		if (mode.isCheckStyle()) {
+		    addAnalysisItem(parameter, "checkstyle");
+        }
 		
 		return parameter.toString();
 	}

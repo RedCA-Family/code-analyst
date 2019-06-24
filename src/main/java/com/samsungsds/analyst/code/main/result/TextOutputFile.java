@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.samsungsds.analyst.code.api.Language;
+import com.samsungsds.analyst.code.checkstyle.CheckStyleResult;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
 import com.samsungsds.analyst.code.main.CliParser;
@@ -225,6 +226,10 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println("UnusedCode = " + result.getUnusedCodeList().size());
 			writer.println();
 		}
+		if (result.getIndividualMode().isCheckStyle()) {
+            writer.println("CheckStyle = " + result.getCheckStyleList().size());
+            writer.println();
+        }
 
 		writer.println("TechnicalDebt(Total) = " + result.getTechnicalDebt().getTotalDebt() + "MH");
 		writer.println("TechnicalDebt(Duplication) = " + result.getTechnicalDebt().getDuplicationDebt() + "MH");
@@ -597,7 +602,38 @@ public class TextOutputFile extends AbstractOutputFile {
 		writer.println();
 	}
 
-	@Override
+    @Override
+    protected void writeCheckStyle(List<CheckStyleResult> list) {
+        if (result.isSeperatedOutput()) {
+            csvOutput.writeCheckStyle(list);
+            return;
+        }
+        writer.println("[CheckStyle]");
+        writer.println("; path, line, severity, message, checker");
+
+        int count = 0;
+        synchronized (list) {
+            for (CheckStyleResult result : list) {
+                writer.print(++count + " = ");
+                writer.print(result.getPath());
+                writer.print(",");
+                writer.print(result.getLine());
+                writer.print(",");
+                writer.print(result.getSeverity());
+                writer.print(",");
+                writer.print(result.getMessage());
+                writer.print(",");
+                writer.print(result.getChecker());
+                writer.println();
+            }
+        }
+        writer.println();
+        writer.println("total = " + count);
+        writer.println();
+        writer.println();
+    }
+
+    @Override
 	protected void close(PrintWriter writer) {
 		// no-op
 	}

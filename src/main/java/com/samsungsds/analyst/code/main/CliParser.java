@@ -113,6 +113,10 @@ public class CliParser {
 		return parsedValue.getRuleSetFileForSonar();
 	}
 
+	public String getRuleSetFileForCheckStyle() {
+	    return parsedValue.getRuleSetFileForCheckStyle();
+    }
+
 	public String getOutput() {
 		return parsedValue.getOutput();
 	}

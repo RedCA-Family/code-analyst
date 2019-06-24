@@ -54,9 +54,10 @@ public class Version {
 	// 2.6.1 : source 경로 오류('/' 또는 '\'를 prefix로 갖는 경우), API Progress Event 미완료 오류 수정
 	// 2.7.0 : SonarJS plugin upgrade(4.1.0 -> 5.1.1, ruleset 조정 포함), Node 실행환경 제공 (Sonar 분석 부분 분리),
 	//         Language 옵션 및 JavaScript language(Node.js) 추가
-	//--------------------------------------------------
-	public static final String CODE_ANALYST = "2.7.0";
-	public static final String DOCUMENT_VERSION = "2.7";
+    // 2.8.0 : CheckStyle 적용
+    // --------------------------------------------------
+	public static final String CODE_ANALYST = "2.8.0";
+	public static final String DOCUMENT_VERSION = "2.8";
 	public static final String APPLICATION_JAR = "Code-Analyst-" + CODE_ANALYST + ".jar";
 
 	public static final String SONAR_SCANNER = "2.10.0.1189";
@@ -74,6 +75,8 @@ public class Version {
 	public static final String SONAR_JS = "5.1.1.7506";
 	public static final String SONAR_CSS = "3.1";
 	public static final String SONAR_WEB = "2.5.0.476";
+
+	public static final String CHECKSTYLE = "8.21";
 	
 	public static final String PMD_RULESET = "91 ruleset (v5.4, RedCA Way Ruleset, '18.03)";
 	public static final String FINDBUGS_RULESET = "214 ruleset (v3.0.1, RedCA Way Ruleset, '18.03)";
@@ -82,6 +85,7 @@ public class Version {
 	public static final String SONAR_JS_RULESET = "95 ruleset (v5.0, RedCA Way Ruleset, '18.11)";
 	public static final String SONAR_CSS_RULESET = "CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)";
 	public static final String SONAR_WEB_RULESET = "16 ruleset (v2.5)";
+	public static final String CHECKSTYLE_RULESET = "58 ruleset (RedCA Way Ruleset, '19.06)";
 
 	public static final int SONAR_JAVA_DEFAULT_RULES = 227;
 	public static final int PMD_DEFAULT_RULES = 91;
@@ -106,6 +110,7 @@ public class Version {
 		System.out.println("  - Node.js : " + NODE_JS + " (MIT)");
 		System.out.println("    ※ Supported Platform : Windows/MacOS/Linux(x64)");
 		System.out.println("  - ESLint : " + ESLINT + " (MIT)");
+		System.out.println("  - CheckStyle : " + CHECKSTYLE + " (LGPL v2.1)");
 		System.out.println();
 		System.out.println("Default RuleSet");
 		System.out.println("  - PMD : " + PMD_RULESET);
@@ -116,6 +121,7 @@ public class Version {
 		System.out.println("      - JS : " + SONAR_JS_RULESET);
 		System.out.println("      - CSS : " + SONAR_CSS_RULESET);
 		System.out.println("      - HTML : " + SONAR_WEB_RULESET);
+		System.out.println("  - CheckStyle : " + CHECKSTYLE_RULESET);
 		System.out.println();
 		System.out.println("Copyright(c) 2018 By Samsung SDS (Code Quality Group)");
 	}
