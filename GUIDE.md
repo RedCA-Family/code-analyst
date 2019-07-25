@@ -3,10 +3,10 @@
 ## 1. 기본 실행 ##
 
 ### [Java]
-	$> java -jar Code-Analyst-2.7.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+	$> java -jar Code-Analyst-2.8.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
 
 ### [JavaScript]
-	$> java -jar Code-Analyst-2.7.0.jar -l javascript -p "프로젝트 위치" -s "."
+	$> java -jar Code-Analyst-2.8.0.jar -l javascript -p "프로젝트 위치" -s "."
 
 ### 결과 화면 (예시)
 	
@@ -89,6 +89,7 @@
 | -pmd <arg> | PMD ruleset 파일(XML)  미지정시 SDS 표준 Ruleset(v5.4, 147개 rule)으로 처리 |  | 1.0 | -pmd "C:\pmd-rules.xml" |
 | -findbugs <arg> | FindBugs ruleset 파일(XML)  미지정시 SDS 표준 Ruleset(v3.0.1, 246개 rule)으로 처리 |  | 1.0 | -findbugs "C:\FindBugs-include.xml" |
 | -sonar <arg> | SonarQube exclude 파일(XML)  형식 :  <SonarIssueFilter>  <Exclude key="common-java:DuplicatedBlocks"/>  </SonarIssueFilter> |  | 2.1 | -sonar "C:\SonarIssueFilter.xml" |
+| -checkstyle <arg> | CheckStyle 설정 파일 지정   미지정시 자체 표준 Ruleset(58개 rule)으로 처리 |  | 2.8 | -checkstyle "C:\checkstyle.xml" |
 | -o, --output <arg> | 결과 저장 파일명 지정  미지정시, 현재날짜를 포함하는 파일명 사용 | result-[yyyyMMddHHmmss].[out|json] | 1.0 | -o result.txt |
 | -f, --format <arg> | 결과 파일 형식 지정 (json, text, none)  * none의 경우 summary 결과만 표시하고 결과 파일을 저장하지 않음 | json | 1.2 | -f text |
 | -v, --version | 버전 정보 표시 (사용 library 및 버전, 적용 inspection rule 포함) |  | 1.0 | -v |
@@ -169,10 +170,11 @@ API의 analyze() 호출을 통해 코드 분석을 수행하며, 다음과 같�
 | pmdRuleFile | PMD ruleset xml 파일 (생략되면 최종 RedCA Way ruleset 사용) |  |
 | findBugsRuleFile | FindBugs ruleset xml 파일 (생략되면 최종 RedCA Way ruleset 사용)
 | sonarRuleFile | SonarJava 등 SonarQube plugin exclude 처리 xml (생략되면 최종 RedCA Way ruleset 전체 적용) |  |
+| checkStyleRuleFile | CheckStyle configuration xml (생략되면 최종 RedCA Way ruleset 적용) |  |
 | timeout | 내부적으로 사용되는 jetty에 대한 timeout 지정 (개발자 모드) | 기본값 : 100분 |
 | exclude | 제외 패턴(ant-style, 여러 개인 경우 comma로 구분) |  |
 | webapp | webapp root 디렉토리 지정 (위 project 속성에 대한 상대경로 지정) |  |
-| mode | AnalysisMode로 점검하고자 하는 항목 지정 (codeSize, duplication, complexity, pmd, findBugs, findSecBugs, javascript, css, html, dependency, unused, ckmetrics) | css, html은 기본적으로 비활성화 |
+| mode | AnalysisMode로 점검하고자 하는 항목 지정 (codeSize, duplication, complexity, pmd, findBugs, findSecBugs, javascript, css, html, dependency, unused, ckmetrics, checkstyle) | css, html은 기본적으로 비활성화 |
 | detailAnalysis | 세부 분석 처리 (Top 10 분석 등) |  |
 | saveCatalog | 점검된 파일 목록 기록 |  |
 
@@ -216,6 +218,7 @@ API의 analyze() 호출을 통해 코드 분석을 수행하며, 다음과 같�
 | sonarJsFile | SonarJs List 결과 파일 |
 | webResourceFile | Web Resource List 결과 파일 |
 | ckMetricsFile | CK Metrics List 결과 파일 |
+| checkStyleFile | CheckStyle List 결과 파일 |
 
 최정 return 정보는 where 하위에 생성된 결과 파일(json)에 대한 전체 경로로 "result-[yyyyMMddHHmmss].json" 형식으로 처리됩니다.
 
@@ -407,4 +410,5 @@ ProgressObserver의 informProgress() 메소드에 의해 notify되며, AnalysisP
 * DEPENDENCY_COMPLETE : 순환참조 점검 후 호출
 * UNUSED_COMPLTE : 미사용코드 점검 후 호출
 * CK_METRICS_COMPLETE : CK Metrics 점검 후 호출
+* CHECKSTYLE_COMPLETE : CheckStyle 점검 후 호출
 * FINAL_COMPLETE : 최종 점검 완료 후 호출
