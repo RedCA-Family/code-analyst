@@ -187,7 +187,7 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
 - (2018.12) Design Metrics(CK Metrics) added (v2.5)
 - (2019.01) Token based duplication detection mode added (v2.6)
 - (2019.04) JavaScript language mode added & Node.js runtime provided for JavaScript/SonarJS analysis  (v2.7)
-= (2019.07) CheckStyle check mode added (v2.8)
+- (2019.07) CheckStyle check mode added (v2.8)
 
 
 ## License
