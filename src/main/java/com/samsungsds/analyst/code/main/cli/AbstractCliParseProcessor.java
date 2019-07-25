@@ -142,9 +142,12 @@ public abstract class AbstractCliParseProcessor implements CliParseProcessor {
                 parsedValue.getIndividualMode().setUnusedCode(includeOrExclude);
             } else if (mode.equalsIgnoreCase("ckmetrics")) {
                 parsedValue.getIndividualMode().setCkMetrics(includeOrExclude);
+            } else if (mode.equalsIgnoreCase("checkstyle")) {
+                parsedValue.getIndividualMode().setCheckStyle(includeOrExclude);
             } else {
                 throw new IllegalArgumentException("'mode' option can only have 'code-size', 'duplication', 'complexity', " +
-                        "'sonarjava', 'pmd', 'findbugs', 'findsecbugs', 'javascript'(sonarjs), 'css', 'html', 'dependency', 'unusedcode', and 'ckmetrics' (with or without '-')");
+                        "'sonarjava', 'pmd', 'findbugs', 'findsecbugs', 'javascript'(sonarjs), 'css', 'html', 'dependency', 'unusedcode', 'ckmetrics', " +
+                        "and 'checkstyle' (with or without '-')");
             }
         }
     }

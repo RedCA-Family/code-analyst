@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import com.samsungsds.analyst.code.api.Language;
+import com.samsungsds.analyst.code.checkstyle.CheckStyleResult;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.logging.log4j.LogManager;
@@ -258,6 +259,9 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	private List<UnusedCodeResult> unusedCodeList = null;
 
 	@Expose
+	private int unusedCodeCount = 0;
+
+	@Expose
 	private int ucTotalClassCount = 0;
 	@Expose
 	private int ucTotalMethodCount = 0;
@@ -276,6 +280,12 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 
 	@Expose
 	private List<CkMetricsResult> ckMetricsResultList = null;
+
+    @Expose
+    private List<CheckStyleResult> checkStyleList = null;
+
+    @Expose
+    private int checkStyleCount = 0;
 
 	@Expose
 	private TechnicalDebtResult technicalDebtResult = null;
@@ -334,6 +344,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			acyclicDependencyList = Collections.synchronizedList(new ArrayList<>());
 			ckMetricsResultList = Collections.synchronizedList(new ArrayList<>());
 			unusedCodeList = Collections.synchronizedList(new ArrayList<>());
+			checkStyleList = Collections.synchronizedList(new ArrayList<>());
 		} else {
 			if (individualMode.isDuplication()) {
 				duplicationList = makeCSVFileCollectionList(DuplicationResult.class, this);
@@ -382,7 +393,14 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			}
 			if (individualMode.isUnusedCode()) {
 				unusedCodeList = makeCSVFileCollectionList(UnusedCodeResult.class, this);
-			}
+			} else {
+                unusedCodeList = new ArrayList<>(0);
+            }
+			if (individualMode.isCheckStyle()) {
+			    checkStyleList = makeCSVFileCollectionList(CheckStyleResult.class, this);
+            } else {
+                checkStyleList = new ArrayList<>(0);
+            }
 		}
 	}
 
@@ -1076,13 +1094,18 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 
 	public void putUnusedCodeList(List<UnusedCodeResult> unusedCodeResultList) {
 		this.unusedCodeList = unusedCodeResultList;
+		this.unusedCodeCount = unusedCodeResultList.size();
 	}
 
 	public List<UnusedCodeResult> getUnusedCodeList() {
 		return this.unusedCodeList;
 	}
 
-	public int getUcTotalClassCount() {
+    public int getUnusedCodeCount() {
+        return unusedCodeCount;
+    }
+
+    public int getUcTotalClassCount() {
 		return ucTotalClassCount;
 	}
 
@@ -1165,6 +1188,26 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	public List<CkMetricsResult> getCkMetricsResultList() {
 		return ckMetricsResultList;
 	}
+
+    public synchronized void putCheckStyleList(List<CheckStyleResult> list) {
+        for (CheckStyleResult result : list) {
+            if (haveToSkip(result.getPath())) {
+                continue;
+            }
+
+            checkStyleList.add(result);
+            checkStyleCount++;
+            LOGGER.debug("file : {}, line : {}, severity : {}, message : {}, checker : {}", result.getPath(), result.getLine(), result.getSeverity(), result.getMessage(), result.getChecker());
+        }
+    }
+
+    public List<CheckStyleResult> getCheckStyleList() {
+        return checkStyleList;
+    }
+
+    public int getCheckStyleCount() {
+        return checkStyleCount;
+    }
 
 	public void setMode(MeasurementMode mode) {
 		this.mode = mode;
@@ -1263,6 +1306,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			webResourceList.clear();
 			ckMetricsResultList.clear();
 			unusedCodeList.clear();
+			checkStyleList.clear();
 		} else {
 			for (CSVFileCollectionList<?> list : closeTargetList) {
 				if (list.isTypeOf(JDependResult.class)) {
@@ -1286,6 +1330,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			unusedCodeList = null;
 			ckMetricsResultList = null;
 			unusedCodeList = null;
+			checkStyleList = null;
 		}
 	}
 
@@ -1403,6 +1448,9 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			webResourceCount[i] = 0;
 		}
 
+        unusedCodeCount = 0;
+        checkStyleCount = 0;
+
 		filePathFilterList.clear();
 
 		withDefaultPackageClasses = false;
@@ -1422,6 +1470,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			acyclicDependencyList.clear();
 			ckMetricsResultList.clear();
 			unusedCodeList.clear();
+			checkStyleList.clear();
 		} else {
 			for (CSVFileCollectionList<?> list : closeTargetList) {
 				try {
@@ -1443,6 +1492,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		unusedCodeList = null;
 		ckMetricsResultList = null;
 		unusedCodeList = null;
+		checkStyleList = null;
 	}
 
 	public static String getConvertedFilePath(String filePath, String projectDirectory) {

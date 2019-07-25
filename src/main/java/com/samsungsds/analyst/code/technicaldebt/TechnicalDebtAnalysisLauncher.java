@@ -49,7 +49,7 @@ public class TechnicalDebtAnalysisLauncher implements TechnicalDebtAnalysis {
 	private static Map<String, Double> pmdEffortMap = new HashMap<>();
 	private static Map<String, Double> findBugsEffortMap = new HashMap<>();
 
-	private final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();;
+	private final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 	private MeasuredResult measuredResult;
 	private double duplicationDebt;
 	private double violationDebt;

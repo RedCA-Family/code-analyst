@@ -206,10 +206,17 @@ public class ResultProcessor {
 
 	protected static void printUnusedCodeSummary(MeasuredResult result) {
 		if (result.getIndividualMode().isUnusedCode()) {
-			System.out.println("UnusedCode : " + getFormattedNumber(result.getUnusedCodeList().size()));
+			System.out.println("UnusedCode : " + getFormattedNumber(result.getUnusedCodeCount()));
 			System.out.println();
 		}
 	}
+
+	protected static void printCheckStyleSummary(MeasuredResult result) {
+        if (result.getIndividualMode().isCheckStyle()) {
+            System.out.println("CheckStyle : " + getFormattedNumber(result.getCheckStyleCount()));
+            System.out.println();
+        }
+    }
 
 	private static void printTechnicalDebtSummary(MeasuredResult result) {
 		System.out.println("Technical Debt : " + result.getTechnicalDebt().getTotalDebt() + "MH");
@@ -241,6 +248,7 @@ public class ResultProcessor {
 			printWebResourceSummary(result);
 			printAcyclicDependSummary(result);
 			printUnusedCodeSummary(result);
+			printCheckStyleSummary(result);
 			printTechnicalDebtSummary(result);
 		} else if (result.getMode() == MeasurementMode.ComplexityMode) {
 			printComplexity(result.getComplexityAllList());

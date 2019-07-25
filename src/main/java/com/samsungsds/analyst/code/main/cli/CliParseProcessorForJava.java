@@ -58,6 +58,7 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
                 "\n<SonarIssueFilter>" +
                 "\n    <Exclude key=\"common-java:DuplicatedBlocks\"/>" +
                 "\n</SonarIssueFilter>");
+        options.addOption("checkstyle", true, "specify CheckStyle configuration xml file.");
 
         options.addOption("o", "output", true, "specify result output file. (default : \"result-[yyyyMMddHHmmss].[out|json]\")");
         options.addOption("f", "format", true, "specify result output file format(json, text, none). (default : text)");
@@ -74,7 +75,7 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
         options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*VO.java)");
 
         options.addOption("m", "mode", true, "specify analysis items with comma separated. If '-' specified in each mode, the mode is excluded. " +
-                "(code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs, javascript, css, html, dependency, unusedcode, ckmetrics)" +
+                "(code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs, javascript, css, html, dependency, unusedcode, ckmetrics, checkstyle)" +
                 "\n※ 'javascript', 'css' and 'html' will be disabled when 'webapp' option isn't set, and 'css' and 'html' are disabled by default");
 
         options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occurred, use JVM '-Xmx' option like '-Xmx1024m')");
@@ -167,6 +168,10 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
 
             if (cmd.hasOption("sonar")) {
                 parsedValue.setRuleSetFileForSonar(cmd.getOptionValue("sonar"));
+            }
+
+            if (cmd.hasOption("checkstyle")) {
+                parsedValue.setRuleSetFileForCheckStyle(cmd.getOptionValue("checkstyle"));
             }
 
             if (cmd.hasOption("o")) {
