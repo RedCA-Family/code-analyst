@@ -358,13 +358,16 @@ public abstract class AbstractCliParseProcessor implements CliParseProcessor {
 
         for (int i = 0; i < srcDirectories.length; i++) {
             targets[i] = srcDirectories[i].replaceAll("\\\\", "/");
-            if (targets[i].endsWith("/")) {
-                targets[i] = targets[i].substring(0, targets[i].length() - 1);
+            if (!targets[i].endsWith("/")) {
+                targets[i] += "/";
             }
         }
 
         if (!parsedValue.getWebapp().equals("")) {
-            targets[srcDirectories.length] = parsedValue.getWebapp();
+            targets[srcDirectories.length] = parsedValue.getWebapp().replaceAll("\\\\", "/");
+            if (!targets[srcDirectories.length].endsWith("/")) {
+                targets[srcDirectories.length] += "/";
+            }
         }
 
         for (int i = 0; i < targets.length; i++) {

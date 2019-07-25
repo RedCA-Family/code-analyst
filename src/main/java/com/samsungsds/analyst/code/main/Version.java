@@ -28,9 +28,9 @@ public class Version {
 	// 1.4.1 : 다중 호출 시 문제 보완
 	// 1.4.2 : API CodeAnalyst Factory 추가
 	// 1.4.3 : CSV 형식 문자 처리 (목록 부분), 여러 instance 호출 가능
-	// 1.4.4 : CSV Excel 형식 지원 ("," 뒤 공백 제거), Mac 임시 디렉토리 생성 권한 오류 조치, 
+	// 1.4.4 : CSV Excel 형식 지원 ("," 뒤 공백 제거), Mac 임시 디렉토리 생성 권한 오류 조치,
 	//         default package class를 갖는 경우 Warning 표시
-	// 1.5.0 : 세부 분석 옵션 추가, MeasuredResult instance remove 호출 (GC), 복잡도 목록 대상 변경 (10 -> 20), 
+	// 1.5.0 : 세부 분석 옵션 추가, MeasuredResult instance remove 호출 (GC), 복잡도 목록 대상 변경 (10 -> 20),
 	//         기존 out 파일 재실행 기능 추가, 결과 파일 분리 옵션 추가 (API 포함)
 	// 1.5.1 : separated mode가 아닌 경우에도 분리된 json 저장 오류 수정
 	// 1.5.2 : 복잡도 Top 10 분석 개선
@@ -54,7 +54,7 @@ public class Version {
 	// 2.6.1 : source 경로 오류('/' 또는 '\'를 prefix로 갖는 경우), API Progress Event 미완료 오류 수정
 	// 2.7.0 : SonarJS plugin upgrade(4.1.0 -> 5.1.1, ruleset 조정 포함), Node 실행환경 제공 (Sonar 분석 부분 분리),
 	//         Language 옵션 및 JavaScript language(Node.js) 추가
-    // 2.8.0 : CheckStyle 적용
+    // 2.8.0 : CheckStyle 적용, 소스 디렉토리 중복 체크 오류 수정, CKJM bcel lambda 함수 관련 오류 수정
     // --------------------------------------------------
 	public static final String CODE_ANALYST = "2.8.0";
 	public static final String DOCUMENT_VERSION = "2.8";
@@ -77,7 +77,7 @@ public class Version {
 	public static final String SONAR_WEB = "2.5.0.476";
 
 	public static final String CHECKSTYLE = "8.21";
-	
+
 	public static final String PMD_RULESET = "91 ruleset (v5.4, RedCA Way Ruleset, '18.03)";
 	public static final String FINDBUGS_RULESET = "214 ruleset (v3.0.1, RedCA Way Ruleset, '18.03)";
 	public static final String FINDSECBUGS_RULESET = "81 rules (v1.7.1, RedCA Way Ruleset, '18.06)";
@@ -92,7 +92,7 @@ public class Version {
 	public static final int FINDBUGS_DEFAULT_RULES = 214;
 	public static final int FINDSECBUGS_DEFAULT_RULES = 81;
 	public static final int SONAR_JS_DEFAULT_RULES = 95;
-	
+
 	public static void printVersionInfo() {
 		System.out.println("Code Analyst : " + CODE_ANALYST);
 		System.out.println("  - Sonar Scanner : " + SONAR_SCANNER + " (LGPL v3.0)");
