@@ -40,30 +40,30 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 	public String analyze(String where, ArgumentInfo argument, TargetFileInfo targetFile) {
 		return analyze(where, argument, targetFile, false);
 	}
-	
+
 	public String analyze(String where, ArgumentInfo argument, AbstractFileInfo targetFile, boolean withSeperatedOutput) {
 		checkDirectoryAndArgument(where, argument, targetFile.isWebResourceAnalysis());
-		
+
 		String[] arguments = getArguments(where, argument, targetFile, withSeperatedOutput);
 
 		System.out.println("* Arguments : " + getArgumentsString(arguments));
-		
+
 		if (withSeperatedOutput) {
 			System.out.println(" - with seperated output option");
 		}
-		
+
 		CliParser cli = new CliParser(arguments);
-		
+
 		cli.setInstanceKey(getUniqueId());
-		
+
 		LOGGER.info("Instance Key : {}", cli.getInstanceKey());
-    	
+
     	App app = new App();
-    	
+
     	for (ProgressObserver observer : observerList) {
     		app.addProgressObserver(observer);
     	}
-    	
+
     	try {
     		app.process(cli);
     	} catch (Throwable ex) {
@@ -72,7 +72,7 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
     	} finally {
     		app.cleanup(cli.getInstanceKey());
     	}
-    	
+
     	if (app.hasParsingError()) {
     		throw new RuntimeException(app.getParsingErrorMessage());
     	} else {
@@ -96,6 +96,8 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 		info.setFindSecBugsFile(fileWithoutExt + "-findsecbugs.json");
 		info.setSonarJavaFile(fileWithoutExt + "-sonarjava.json");
 		info.setWebResourceFile(fileWithoutExt + "-webresource.json");
+		info.setCkMetricsFile(fileWithoutExt + "-ckmetrics.json");
+		info.setCheckStyleFile(fileWithoutExt + "-checkstyle.json");
 
 		return info;
 	}
@@ -146,13 +148,15 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 		}
 		mode.setDependency(false);
 		mode.setUnusedCode(false);
+		mode.setCkMetrics(false);
+		mode.setCheckStyle(false);
 
 		return mode;
 	}
 
 	private String[] getArguments(String where, ArgumentInfo argument, AbstractFileInfo targetFile, boolean withSeperatedOutput) {
 		List<String> argumentList = new ArrayList<>();
-		
+
 		argumentList.add("--project");
 		argumentList.add(argument.getProject());
 
@@ -161,38 +165,43 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 
 		argumentList.add("--binary");
 		argumentList.add(argument.getBinary());
-		
+
 		if (argument.isDebug()) {
 			argumentList.add("--debug");
 		}
-		
+
 		argumentList.add("--encoding");
 		argumentList.add(argument.getEncoding());
-		
+
 		argumentList.add("--java");
 		argumentList.add(argument.getJavaVersion());
-		
+
 		if (isValidated(argument.getPmdRuleFile())) {
 			argumentList.add("-pmd");
 			argumentList.add(argument.getPmdRuleFile());
 		}
-		
+
 		if (isValidated(argument.getFindBugsRuleFile())) {
 			argumentList.add("-findbugs");
 			argumentList.add(argument.getFindBugsRuleFile());
 		}
 
 		if (isValidated(argument.getSonarRuleFile())) {
-			argumentList.add("-sonar");
-			argumentList.add(argument.getSonarRuleFile());
-		}
-		
+            argumentList.add("-sonar");
+            argumentList.add(argument.getSonarRuleFile());
+        }
+
+        if (isValidated(argument.getCheckStyleRuleFile())) {
+            argumentList.add("-checkstyle");
+            argumentList.add(argument.getCheckStyleRuleFile());
+        }
+
 		argumentList.add("--output");
 		argumentList.add(outputFilePath = getOutputFile(where, "json"));
-		
+
 		argumentList.add("--format");
 		argumentList.add("json");
-		
+
 		argumentList.add("--timeout");
 		argumentList.add(Integer.toString(argument.getTimeout()));
 
@@ -207,12 +216,12 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 			argumentList.add("-include");
 			argumentList.add(includeString);
 		}
-		
+
 		if (isValidated(argument.getExclude())) {
 			argumentList.add("-exclude");
 			argumentList.add(argument.getExclude());
 		}
-		
+
 		argumentList.add("--mode");
 		argumentList.add(getModeParameter(argument.getMode(), isValidated(argument.getWebapp())));
 
@@ -220,7 +229,7 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 			argumentList.add("--webapp");
 			argumentList.add(argument.getWebapp());
 		}
-		
+
 		if (withSeperatedOutput) {
 			argumentList.add("-seperated");
 		}
@@ -232,13 +241,13 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 		if (argument.isSaveCatalog()) {
 			argumentList.add("-catalog");
 		}
-		
+
 		return argumentList.toArray(new String[0]);
 	}
-	
+
 	private String getIncludeString(AbstractFileInfo targetFile) {
 		StringBuilder builder = new StringBuilder();
-		
+
 		for (String file : targetFile.getFiles()) {
 			if (builder.length() != 0) {
 				builder.append(",");
@@ -249,19 +258,19 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 				builder.append(file);
 			}
 		}
-		
+
 		System.out.println("* Target file patterns : " + builder.toString());
-		
+
 		return builder.toString();
 	}
 
 	private void checkDirectoryAndArgument(String where, ArgumentInfo argument, boolean isWebResourceAnalysis) {
 		File dir = new File(where);
-		
+
 		if (!dir.exists() || !dir.isDirectory()) {
 			throw new IllegalArgumentException("Check target directory : " + where);
-		} 
-		
+		}
+
 		if (isNotValidated(argument.getProject())) {
 			throw new IllegalArgumentException("Project directory is needed...");
 		}
@@ -279,39 +288,39 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 				throw new IllegalArgumentException("Binary directory is needed...");
 			}
 		}
-		
+
 		if (argument.getMode() == null) {
 			throw new IllegalArgumentException("Analysis Mode is needed...");
 		}
 	}
-	
+
 	private String getModeParameter(AnalysisMode mode, boolean hasWebappAugument) {
 		StringBuilder parameter = new StringBuilder();
-		
+
 		if (mode.isCodeSize()) {
 			addAnalysisItem(parameter, "code-size");
 		}
-		
+
 		if (mode.isDuplication()) {
 			addAnalysisItem(parameter, "duplication");
 		}
-		
+
 		if (mode.isComplexity()) {
 			addAnalysisItem(parameter, "complexity");
 		}
-		
+
 		if (mode.isSonarJava()) {
 			addAnalysisItem(parameter, "sonarjava");
 		}
-		
+
 		if (mode.isPmd()) {
 			addAnalysisItem(parameter, "pmd");
 		}
-		
+
 		if (mode.isFindBugs()) {
 			addAnalysisItem(parameter, "findbugs");
 		}
-		
+
 		if (mode.isFindSecBugs()) {
 			addAnalysisItem(parameter, "findsecbugs");
 		}
@@ -329,11 +338,11 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 				addAnalysisItem(parameter, "html");
 			}
 		}
-		
+
 		if (mode.isDependency()) {
 			addAnalysisItem(parameter, "dependency");
 		}
-		
+
 		if (mode.isUnusedCode()) {
 			addAnalysisItem(parameter, "unusedcode");
 		}
@@ -345,7 +354,7 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 		if (mode.isCheckStyle()) {
 		    addAnalysisItem(parameter, "checkstyle");
         }
-		
+
 		return parameter.toString();
 	}
 }
