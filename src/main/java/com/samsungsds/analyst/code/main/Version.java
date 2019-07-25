@@ -54,7 +54,7 @@ public class Version {
 	// 2.6.1 : source 경로 오류('/' 또는 '\'를 prefix로 갖는 경우), API Progress Event 미완료 오류 수정
 	// 2.7.0 : SonarJS plugin upgrade(4.1.0 -> 5.1.1, ruleset 조정 포함), Node 실행환경 제공 (Sonar 분석 부분 분리),
 	//         Language 옵션 및 JavaScript language(Node.js) 추가
-    // 2.8.0 : CheckStyle 적용, 소스 디렉토리 중복 체크 오류 수정
+    // 2.8.0 : CheckStyle 적용, 소스 디렉토리 중복 체크 오류 수정, CKJM bcel lambda 함수 관련 오류 수정
     // --------------------------------------------------
 	public static final String CODE_ANALYST = "2.8.0";
 	public static final String DOCUMENT_VERSION = "2.8";
