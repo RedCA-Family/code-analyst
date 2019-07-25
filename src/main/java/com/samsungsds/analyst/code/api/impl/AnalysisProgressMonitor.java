@@ -64,6 +64,7 @@ public class AnalysisProgressMonitor {
 		stepRates.put(ProgressEvent.DEPENDENCY_COMPLETE, 1_700);
 		stepRates.put(ProgressEvent.UNUSED_COMPLETE, 1_500);
 		stepRates.put(ProgressEvent.CK_METRICS_COMPLETE, 1_500);
+        stepRates.put(ProgressEvent.CHECKSTYLE_COMPLETE, 1_500);
 		stepRates.put(ProgressEvent.FINAL_COMPLETE, 100);
 
 		stepProperties.put(ProgressEvent.SONAR_START_COMPLETE, "sonarServer");
@@ -81,6 +82,7 @@ public class AnalysisProgressMonitor {
 		stepProperties.put(ProgressEvent.DEPENDENCY_COMPLETE, "dependency");
 		stepProperties.put(ProgressEvent.UNUSED_COMPLETE, "unusedCode");
 		stepProperties.put(ProgressEvent.CK_METRICS_COMPLETE, "ckMetrics");
+        stepProperties.put(ProgressEvent.CHECKSTYLE_COMPLETE, "checkStyle");
 	}
 	
 	public AnalysisProgressMonitor(AnalysisMode analysisMode) {

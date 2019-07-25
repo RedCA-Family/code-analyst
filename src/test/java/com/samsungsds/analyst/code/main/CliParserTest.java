@@ -1,9 +1,8 @@
 package com.samsungsds.analyst.code.main;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -11,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UncheckedIOException;
 
+import com.samsungsds.analyst.code.api.Language;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -82,7 +82,7 @@ public class CliParserTest {
 		assertThat(cli.getProjectBaseDir(), is("."));
 		assertThat(cli.getSrc(), is("src" + File.separator + "main" + File.separator + "java"));
 		assertThat(cli.getBinary(), is("target" + File.separator + "classes"));
-		
+
 		assertThat(cli.isDetailAnalysis(), is(false));
 		assertThat(cli.isSeperatedOutput(), is(false));
 		assertThat(cli.isSaveCatalog(), is(false));
@@ -280,7 +280,7 @@ public class CliParserTest {
 		assertThat(cli.getIndividualMode().isDuplication(), is(false));
 		assertThat(cli.getIndividualMode().isComplexity(), is(true));	// default
 	}
-	
+
 	@Test
 	public void testForModeDefult() {
 		// arrange
@@ -334,7 +334,7 @@ public class CliParserTest {
 		assertThat(cli.getIndividualMode().isUnusedCode(), is(true));
 		assertThat(cli.getIndividualMode().isCkMetrics(), is(true));
 	}
-	
+
 	@Test
 	public void testForModeWithOneMinusPrefix() {
 		// arrange
@@ -361,7 +361,7 @@ public class CliParserTest {
 		assertThat(cli.getIndividualMode().isUnusedCode(), is(true));
 		assertThat(cli.getIndividualMode().isCkMetrics(), is(true));
 	}
-	
+
 	@Test
 	public void testForModeWithAllOptions() {
 		// arrange
@@ -388,7 +388,7 @@ public class CliParserTest {
 		assertThat(cli.getIndividualMode().isUnusedCode(), is(false));	// false
 		assertThat(cli.getIndividualMode().isCkMetrics(), is(false));	// false
 	}
-	
+
 	@Test
 	public void testForEtcOptions() {
 		// arrange
@@ -405,14 +405,14 @@ public class CliParserTest {
 		assertThat(cli.isSeperatedOutput(), is(true));
 		assertThat(cli.isSaveCatalog(), is(true));
 	}
-	
+
 	@Test
 	public void testForRerunAllMode() {
 		// arrange
 		String result = saveTempFile("all");
-		
+
 		String[] args = new String[] { "-r", result };
-		
+
 		CliParser cli = new CliParser(args);
 
 		// act
@@ -425,27 +425,27 @@ public class CliParserTest {
 		assertThat(cli.getBinary(), is("target\\classes"));
 		assertThat(cli.getJavaVersion(), is("1.8"));
 		assertThat(cli.getJavaVersion(), is("1.8"));
-		
+
 		assertThat(cli.isDetailAnalysis(), is(false));
 		assertThat(cli.isSeperatedOutput(), is(false));
 		assertThat(cli.isSaveCatalog(), is(false));
 		assertThat(cli.isTokenBased(), is(false));
 		assertThat(cli.getMinimumTokens(), is(100));
 	}
-		
+
 	@Test
 	public void testForRerunAllModeWithOtherOptions() {
 		// arrange
-		String result = saveTempFile("all", 
+		String result = saveTempFile("all",
 				"detailAnalysis = true",
 				"seperatedOutput = true",
 				"saveCatalog = true",
 				"duplication = token",
 				"tokens = 200"
 				);
-		
+
 		String[] args = new String[] { "-r", result };
-		
+
 		CliParser cli = new CliParser(args);
 
 		// act
@@ -458,21 +458,21 @@ public class CliParserTest {
 		assertThat(cli.getBinary(), is("target\\classes"));
 		assertThat(cli.getJavaVersion(), is("1.8"));
 		assertThat(cli.getJavaVersion(), is("1.8"));
-		
+
 		assertThat(cli.isDetailAnalysis(), is(true));
 		assertThat(cli.isSeperatedOutput(), is(true));
 		assertThat(cli.isSaveCatalog(), is(true));
 		assertThat(cli.isTokenBased(), is(true));
 		assertThat(cli.getMinimumTokens(), is(200));
 	}
-	
+
 	@Test
 	public void testForRerunIndiviualMode() {
 		// arrange
 		String result = saveTempFile("code-size,-duplication" );
-		
+
 		String[] args = new String[] { "-r", result };
-		
+
 		CliParser cli = new CliParser(args);
 
 		// act
@@ -483,12 +483,12 @@ public class CliParserTest {
 		assertThat(cli.getIndividualMode().isCodeSize(), is(true));
 		assertThat(cli.getIndividualMode().isDuplication(), is(false));
 	}
-	
+
 	@Test
 	public void testForDuplicationStatementMethod() {
 		// arrange
 		String[] args = new String[] { "-duplication", "statement" };
-		
+
 		CliParser cli = new CliParser(args);
 
 		// act
@@ -498,12 +498,12 @@ public class CliParserTest {
 		assertThat(ret, is(equalTo(true)));
 		assertThat(cli.isTokenBased(), is(false));
 	}
-	
+
 	@Test
 	public void testForDuplicationTokenMethod() {
 		// arrange
 		String[] args = new String[] { "-duplication", "token" };
-		
+
 		CliParser cli = new CliParser(args);
 
 		// act
@@ -514,12 +514,12 @@ public class CliParserTest {
 		assertThat(cli.isTokenBased(), is(true));
 		assertThat(cli.getMinimumTokens(), is(100));
 	}
-	
+
 	@Test
 	public void testForDuplicationMethodError() {
 		// arrange
 		String[] args = new String[] { "-duplication", "error" };
-		
+
 		CliParser cli = new CliParser(args);
 
 		// act
@@ -529,12 +529,12 @@ public class CliParserTest {
 		assertThat(ret, is(equalTo(false)));
 		assertThat(outputContent.toString(), startsWith("Option Error :"));
 	}
-	
+
 	@Test
 	public void testForDuplicationTokenModified() {
 		// arrange
 		String[] args = new String[] { "-duplication", "token", "-tokens", "150" };
-		
+
 		CliParser cli = new CliParser(args);
 
 		// act
@@ -545,12 +545,12 @@ public class CliParserTest {
 		assertThat(cli.isTokenBased(), is(true));
 		assertThat(cli.getMinimumTokens(), is(150));
 	}
-	
+
 	@Test
 	public void testForCheckDuplication() {
 		// arrange
 		String[] args = new String[] { "-s", "abc/,def", "-w", "def" };
-		
+
 		CliParser cli = new CliParser(args);
 
 		// act
@@ -560,12 +560,12 @@ public class CliParserTest {
 		assertThat(ret, is(equalTo(false)));
 		assertThat(outputContent.toString(), startsWith("Source Directories(include webapp dir.) overlapped. :"));
 	}
-	
+
 	@Test
 	public void testForParseError() {
 		// arrange
 		String[] args = new String[] { "-p", "-s" };
-		
+
 		CliParser cli = new CliParser(args);
 
 		// act
@@ -575,12 +575,12 @@ public class CliParserTest {
 		assertThat(ret, is(equalTo(false)));
 		assertThat(cli.getErrorMessage(), is("Failed to parse command line"));
 	}
-	
+
 	@Test
 	public void testForDirectoriesModified() {
 		// arrange
 		String[] args = new String[] { "-s", "/abc/def" };
-		
+
 		CliParser cli = new CliParser(args);
 
 		// act
@@ -590,15 +590,15 @@ public class CliParserTest {
 		assertThat(ret, is(equalTo(true)));
 		assertThat(cli.getSrc(), is("abc/def"));
 	}
-	
+
 	private String saveTempFile(String mode, String... addStrings) {
 		File tmp;
 		try {
 			tmp = File.createTempFile("result-", "ini");
 			tmp.deleteOnExit();
-			
+
 			StringBuilder data = new StringBuilder();
-			
+
 			data.append("[Project]").append("\n");
 			data.append("Target = C:\\Project").append("\n");
 			data.append("Source = src\\main\\java").append("\n");
@@ -611,16 +611,50 @@ public class CliParserTest {
 			data.append("mode = ").append(mode).append("\n");
 			data.append("version = 2.7").append("\n");
 			data.append("engineVersion = 2.7.0").append("\n");
-			
+
 			for (String add : addStrings) {
 				data.append(add).append("\n");
 			}
-			
+
 			FileUtils.writeStringToFile(tmp, data.toString());
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
-		
+
 		return tmp.getPath();
 	}
+
+    @Test
+    public void testForCheckSourceDuplicationWithGoodCase() {
+        // arrange
+        String[] args = {
+            "-s", "/src/main/java,/src/main/java-test"
+        };
+
+        CliParser cliParser = new CliParser(args, Language.JAVA);
+
+        // act
+        boolean result = cliParser.parse();
+
+        // assert
+        assertTrue(result);
+        assertThat(cliParser.getErrorMessage(), not(containsString("Source Directories(include webapp dir.) overlapped. :")));
+    }
+
+    @Test
+    public void testForCheckSourceDuplicationWithBadCase() {
+        // arrange
+        String[] args = {
+            "-s", "/src/main/java,/src/main/java/some"
+        };
+
+        CliParser cliParser = new CliParser(args, Language.JAVA);
+
+        // act
+        boolean result = cliParser.parse();
+
+        // assert
+        assertFalse(result);
+        assertThat(cliParser.getErrorMessage(), containsString("Source Directories(include webapp dir.) overlapped. :"));
+    }
 }

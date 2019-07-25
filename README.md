@@ -30,7 +30,7 @@ API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 d
 	<dependency>
 		<groupId>com.samsungsds.analyst</groupId>
 		<artifactId>code-analyst</artifactId>
-		<version>2.7.0</version>
+		<version>2.8.0</version>
 	</dependency>
 
 **API 활용에 대한 사항은 [Guide](GUIDE.md)를 참조**해 주세요.
@@ -42,7 +42,7 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
 
 ### Java 언어 점검
 
-    $> java -jar Code-Analyst-2.7.0.jar -l java -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+    $> java -jar Code-Analyst-2.8.0.jar -l java -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
     
 ※ 참고로 ```-l,--language``` 지정이 없으면, Java 언어를 기본 점검 대상으로 합니다.
 
@@ -53,8 +53,8 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
 
 #### Help (Java)
 
-	$> java -jar Code-Analyst-2.7.0.jar --help
-    usage: java -jar Code-Analyst-2.7.0.jar
+	$> java -jar Code-Analyst-2.8.0.jar --help
+    usage: java -jar Code-Analyst-2.8.0.jar
      ※ To see individual language-specific option usages, specify the '-l' or '--language' option
      -l,--language <arg>     specify the language to analyze. ('Java' or 'JavaScript', default : "Java")
      -h,--help               show help.
@@ -72,6 +72,7 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
                              <SonarIssueFilter>
                              <Exclude key="common-java:DuplicatedBlocks"/>
                              </SonarIssueFilter>
+     -checkstyle <arg>       specify CheckStyle configuration xml file.
      -o,--output <arg>       specify result output file. (default : "result-[yyyyMMddHHmmss].[out|json]")
      -f,--format <arg>       specify result output file format(json, text, none). (default : text)
      -v,--version            display version info.
@@ -84,7 +85,7 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
      -exclude <arg>          specify exclude pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*VO.java)
      -m,--mode <arg>         specify analysis items with comma separated. If '-' specified in each mode, the mode is
                              excluded. (code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs,
-                             javascript, css, html, dependency, unusedcode, ckmetrics)
+                             javascript, css, html, dependency, unusedcode, ckmetrics, checkstyle)
                              ※ 'javascript', 'css' and 'html' will be disabled when 'webapp' option isn't set, and 'css' and
                              'html' are disabled by default
      -a,--analysis           detailed analysis mode. (required more memory. If OOM exception occurred, use JVM '-Xmx' option
@@ -100,12 +101,12 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
 
 ### JavaScript 언어 점검
 
-    $> java -jar Code-Analyst-2.7.0.jar -l javascript -p "프로젝트 위치" -s "."
+    $> java -jar Code-Analyst-2.8.0.jar -l javascript -p "프로젝트 위치" -s "."
     
 #### Help (JavaScript)
 
-    $> java -jar Code-Analyst-2.7.0.jar -l javascript --help
-    usage: java -jar Code-Analyst-2.7.0.jar
+    $> java -jar Code-Analyst-2.8.0.jar -l javascript --help
+    usage: java -jar Code-Analyst-2.8.0.jar
      -l,--language <arg>   specify the language to analyze. ('Java' or 'JavaScript', default : "Java")
      -h,--help             show help.
      -p,--project <arg>    specify project base directory. (default: ".")
@@ -135,8 +136,8 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
 
 ### Version 정보
 
-	$> java -jar Code-Analyst-2.7.0.jar --version
-    Code Analyst : 2.7.0
+	$> java -jar Code-Analyst-2.8.0.jar --version
+    Code Analyst : 2.8.0
       - Sonar Scanner : 2.10.0.1189 (LGPL v3.0)
       - Sonar Server : 6.7.4 (LGPL v3.0)
          [Plugins]
@@ -152,6 +153,7 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
       - Node.js : 10.15.3 LTS (MIT)
         ※ Supported Platform : Windows/MacOS/Linux(x64)
       - ESLint : 5.16.0 (MIT)
+      - CheckStyle : 8.21 (LGPL v2.1)
     
     Default RuleSet
       - PMD : 91 ruleset (v5.4, RedCA Way Ruleset, '18.03)
@@ -162,6 +164,7 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
           - JS : 95 ruleset (v5.0, RedCA Way Ruleset, '18.11)
           - CSS : CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)
           - HTML : 16 ruleset (v2.5)
+      - CheckStyle : 58 ruleset (RedCA Way Ruleset, '19.06)
     
     Copyright(c) 2018 By Samsung SDS (Code Quality Group)
 
@@ -184,6 +187,7 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
 - (2018.12) Design Metrics(CK Metrics) added (v2.5)
 - (2019.01) Token based duplication detection mode added (v2.6)
 - (2019.04) JavaScript language mode added & Node.js runtime provided for JavaScript/SonarJS analysis  (v2.7)
+= (2019.07) CheckStyle check mode added (v2.8)
 
 
 ## License

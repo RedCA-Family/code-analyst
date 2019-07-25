@@ -31,6 +31,7 @@ public class AnalysisMode {
 	private boolean dependency = true;
 	private boolean unusedCode = true;
 	private boolean ckMetrics = true;
+	private boolean checkStyle = true;
 
 	public void setLanguageType(Language languageType) {
 		this.languageType = languageType;
@@ -163,4 +164,12 @@ public class AnalysisMode {
 	public void setCkMetrics(boolean ckMetrics) {
 		this.ckMetrics = ckMetrics;
 	}
+
+    public boolean isCheckStyle() {
+        return checkStyle;
+    }
+
+    public void setCheckStyle(boolean checkStyle) {
+        this.checkStyle = checkStyle;
+    }
 }

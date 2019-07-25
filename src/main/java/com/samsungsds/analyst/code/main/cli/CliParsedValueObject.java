@@ -35,6 +35,7 @@ public class CliParsedValueObject {
     private String ruleSetFileForPMD = "";
     private String ruleSetFileForFindBugs = "";
     private String ruleSetFileForSonar = "";
+    private String ruleSetFileForCheckStyle = "";
 
     private String output = "";
     private OutputFileFormat format = OutputFileFormat.TEXT;
@@ -153,6 +154,14 @@ public class CliParsedValueObject {
 
     public void setRuleSetFileForSonar(String ruleSetFileForSonar) {
         this.ruleSetFileForSonar = ruleSetFileForSonar;
+    }
+
+    public String getRuleSetFileForCheckStyle() {
+        return ruleSetFileForCheckStyle;
+    }
+
+    public void setRuleSetFileForCheckStyle(String ruleSetFileForCheckStyle) {
+        this.ruleSetFileForCheckStyle = ruleSetFileForCheckStyle;
     }
 
     public String getOutput() {

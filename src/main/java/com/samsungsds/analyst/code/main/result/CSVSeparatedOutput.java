@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.samsungsds.analyst.code.api.Language;
+import com.samsungsds.analyst.code.checkstyle.CheckStyleResult;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import org.apache.logging.log4j.LogManager;
@@ -262,4 +263,33 @@ public class CSVSeparatedOutput {
 
 		LOGGER.info("Result separated file saved : {}", csvFile);
 	}
+
+    public void writeCheckStyle(List<CheckStyleResult> list) {
+        String csvFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-checkstyle.csv";
+
+        try (PrintWriter csvWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile))))) {
+            csvWriter.println("No,path,line,severity,message,checker");
+
+            int count = 0;
+            synchronized (list) {
+                for (CheckStyleResult result : list) {
+                    csvWriter.print(++count + ",");
+                    csvWriter.print(result.getPath());
+                    csvWriter.print(",");
+                    csvWriter.print(result.getLine());
+                    csvWriter.print(",");
+                    csvWriter.print(result.getSeverity());
+                    csvWriter.print(",");
+                    csvWriter.print(getStringsWithComma(result.getMessage()));
+                    csvWriter.print(",");
+                    csvWriter.print(result.getChecker());
+                    csvWriter.println();
+                }
+            }
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        LOGGER.info("Result separated file saved : {}", csvFile);
+    }
 }

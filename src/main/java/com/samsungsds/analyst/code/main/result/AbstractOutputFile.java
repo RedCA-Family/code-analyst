@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import com.samsungsds.analyst.code.api.Language;
+import com.samsungsds.analyst.code.checkstyle.CheckStyleResult;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import org.apache.commons.io.IOUtils;
 
@@ -98,6 +99,10 @@ public abstract class AbstractOutputFile {
 				writeCkMetrics(result.getCkMetricsResultList());
 			}
 
+			if (result.getIndividualMode().isCheckStyle()) {
+                writeCheckStyle(result.getCheckStyleList());
+            }
+
 			writeSeparator();
 
 			close(writer);
@@ -132,6 +137,8 @@ public abstract class AbstractOutputFile {
 	protected abstract void writeDuplication(List<DuplicationResult> dulicationList);
 
 	protected abstract void writeUnusedCode(List<UnusedCodeResult> unusedCodeList);
+
+	protected abstract void writeCheckStyle(List<CheckStyleResult> checkStyleList);
 
 	protected abstract void writeSummary(MeasuredResult result);
 
