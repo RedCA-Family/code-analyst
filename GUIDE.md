@@ -106,6 +106,13 @@
 | -duplication <arg> | 중복 점검 방식 지정 ('statement' 또는 'token' 방식) | statement  | 2.6 | -duplication token |
 | -tokens <arg> | token 중복 점검 방식의 token 기준값 지정 | 100 | 2.6 | -tokens 50 |
 
+※ 'include' 또는 'exclude' 옵션 지정 시, ```@file``` 형태로 파일 지정이 가능합니다. (since v2.8)
+이때 파일은 다음과 같은 형식으로 지정하면 됩니다. (여러 라인으로 구성되며, 각 라인은 콤마 없이 하나의 패턴을 지정)
+```
+com/sds/**/*.java
+com/samsung/**/*.java
+```
+
 ### [JavaScript]
 | Option | Description | Default | since | Example |
 | ------ | ----------- | ------- | :---: | ------- |
@@ -127,6 +134,12 @@
 | -seperated | 중복도, 복잡도, SonarJS에 대한 결과 정보를 별도의 파일로 분리 |  | 2.7 | -seperated |
 | -catalog | 점검된 파일 목록 |  | 2.7 | -catalog |
 
+※ 'include' 또는 'exclude' 옵션 지정 시, ```@file``` 형태로 파일 지정이 가능합니다. (since v2.8)
+이때 파일은 다음과 같은 형식으로 지정하면 됩니다. (여러 라인으로 구성되며, 각 라인은 콤마 없이 하나의 패턴을 지정)
+```
+com/sds/**/*.java
+com/samsung/**/*.java
+```
 
 ## 3. API 활용 가이드
 

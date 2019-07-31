@@ -72,7 +72,8 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
                 "\n※ webapp directory should not overlap the src directories.");
 
         options.addOption("include", true, "specify include pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*.java)");
-        options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*VO.java)");
+        options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*VO.java)" +
+                "\n※ If 'include' or 'exclude' option starts with '@' and has file name, the option value is read from the file");
 
         options.addOption("m", "mode", true, "specify analysis items with comma separated. If '-' specified in each mode, the mode is excluded. " +
                 "(code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs, javascript, css, html, dependency, unusedcode, ckmetrics, checkstyle)" +
@@ -201,11 +202,11 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
             }
 
             if (cmd.hasOption("include")) {
-                parsedValue.setIncludes(cmd.getOptionValue("include"));
+                parsedValue.setIncludes(FileArgumentUtil.getFileArgument(cmd.getOptionValue("include")));
             }
 
             if (cmd.hasOption("exclude")) {
-                parsedValue.setExcludes(cmd.getOptionValue("exclude"));
+                parsedValue.setExcludes(FileArgumentUtil.getFileArgument(cmd.getOptionValue("exclude")));
             }
 
             if (cmd.hasOption("m")) {

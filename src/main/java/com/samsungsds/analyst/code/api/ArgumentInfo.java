@@ -140,6 +140,9 @@ public class ArgumentInfo {
 	}
 
 	public void setInclude(String include) {
+        if (include.startsWith("@")) {
+            throw new IllegalArgumentException("'@file' feature not available in API mode");
+        }
 		this.include = include;
 	}
 
@@ -148,6 +151,9 @@ public class ArgumentInfo {
 	}
 
 	public void setExclude(String exclude) {
+	    if (exclude.startsWith("@")) {
+	        throw new IllegalArgumentException("'@file' feature not available in API mode");
+        }
 		this.exclude = exclude;
 	}
 
