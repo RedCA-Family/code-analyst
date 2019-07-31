@@ -83,6 +83,8 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
                              ※ webapp directory should not overlap the src directories.
      -include <arg>          specify include pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*.java)
      -exclude <arg>          specify exclude pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*VO.java)
+                             ※ If 'include' or 'exclude' option starts with '@' and has file name, the option value is read
+                             from the file
      -m,--mode <arg>         specify analysis items with comma separated. If '-' specified in each mode, the mode is
                              excluded. (code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs,
                              javascript, css, html, dependency, unusedcode, ckmetrics, checkstyle)
@@ -124,6 +126,8 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
      -t,--timeout <arg>    specify internal ws timeout. (default : 100 min.)
      -include <arg>        specify include pattern(Ant-style) with comma separated. (e.g.: app/**/*.js)
      -exclude <arg>        specify exclude pattern(Ant-style) with comma separated. (e.g.: tests/**,tests-*/**,*-tests/**)
+                             ※ If 'include' or 'exclude' option starts with '@' and has file name, the option value is read
+                             from the file
      -m,--mode <arg>       specify analysis items with comma separated. If '-' specified in each mode, the mode is excluded.
                            (code-size, duplication, complexity, sonarjs)
      -a,--analysis         detailed analysis mode. (required more memory. If OOM exception occurred, use JVM '-Xmx' option
