@@ -73,6 +73,7 @@ public class ApiExample {
 		mode.setHtml(false);
 		mode.setUnusedCode(false);
 		mode.setCkMetrics(true);
+		mode.setCheckStyle(true);
 
 		//System.setProperty("print.path.filter", "true");
 
@@ -85,6 +86,7 @@ public class ApiExample {
 		// argument.setDebug(true);
 
 		// argument.setExclude("com/samsungsds/analyst/code/main/filter/*");
+        argument.setExclude("@./include-files.txt");
 
 		//argument.setInclude("**/com/samsungsds/**");
 		// include와 TargetFileInfo가 같이 들어오면 "and"로 처리됨
@@ -96,7 +98,7 @@ public class ApiExample {
 		// - addFile()은 선택된 소스
 
 		// targetFile.addPackage("com.samsungsds.analyst.code.main"); // include sub-packages
-		targetFile.addPackage("com.samsungsds.analyst.code.api"); // include sub-packages
+		targetFile.addPackage("com.samsungsds.analyst.code"); // include sub-packages
 
 		// targetFile.addFile("com.samsungsds.analyst.code.main", "MeasuredResult.java");
 		// targetFile.addFile("com.samsungsds.analyst.code.main", "ResultProcessor.java");

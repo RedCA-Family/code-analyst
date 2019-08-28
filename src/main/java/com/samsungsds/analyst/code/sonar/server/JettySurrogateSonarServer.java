@@ -33,6 +33,22 @@ import org.eclipse.jetty.servlet.ServletHandler;
 import com.samsungsds.analyst.code.main.CliParser;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
+/*
+Request 처리 예시
+- Load global settings : /api/settings/values.protobuf
+- Load plugins index : /api/plugins/installed
+- Load project repositories : /batch/project.protobuf?key=local%3Acom.samsungsds.analyst.code.main.App
+- Load quality profiles : /api/qualityprofiles/search.protobuf?projectKey=local%3Acom.samsungsds.analyst.code.main.App/api/qualityprofiles/search.protobuf?projectKey=local%3Acom.samsungsds.analyst.code.main.App
+- Load active rules (변경된 quality profile만 위 search.protobuf에서 ID 반영, QualityProfilesServlet.java도 반영 필요)
+	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWncZv1RIhyt1CDWUP11&p=1&ps=500
+	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJooCyCQBOyaqowaiw&p=1&ps=500
+	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJpVp5CQBOyaqowaql&p=1&ps=500
+	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJoogvCQBOyaqowapc&p=1&ps=500
+	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJooTrCQBOyaqowal7&p=1&ps=500
+	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJooQ2CQBOyaqowakX&p=1&ps=500
+- Load metrics repository : /api/metrics/search?f=name,description,direction,qualitative,custom&ps=500&p=1
+- Load server rules : /api/rules/list.protobuf
+ */
 public class JettySurrogateSonarServer implements SurrogateSonarServer {
 
 	private static final Logger LOGGER = LogManager.getLogger(JettySurrogateSonarServer.class);
@@ -104,5 +120,4 @@ public class JettySurrogateSonarServer implements SurrogateSonarServer {
 			throw new RuntimeException(ex);
 		}
 	}
-
 }

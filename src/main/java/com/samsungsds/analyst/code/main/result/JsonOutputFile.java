@@ -23,6 +23,8 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import com.samsungsds.analyst.code.api.Language;
+import com.samsungsds.analyst.code.checkstyle.CheckStyleResult;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,7 +45,7 @@ import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
-import com.samsungsds.analyst.code.sonar.SonarJavaResult;
+import com.samsungsds.analyst.code.sonar.SonarIssueResult;
 import com.samsungsds.analyst.code.sonar.WebResourceResult;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
@@ -105,11 +107,29 @@ public class JsonOutputFile extends AbstractOutputFile {
 	}
 
 	@Override
-	protected void writeSonarJava(List<SonarJavaResult> sonarJavaList) {
+	protected void writeSonarIssue(List<SonarIssueResult> sonarIssueList) {
 		if (result.isSeperatedOutput()) {
-			String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjava.json";
+			if (result.getLanguageType() == Language.JAVA) {
+				if (result.getIndividualMode().isSonarJava() && result.getIndividualMode().isJavascript()) {
+					String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarissue.json";
 
-			writeListToJson(sonarJavaList, "sonarJavaList", jsonFile);
+					writeListToJson(sonarIssueList, "sonarIssueList", jsonFile);
+				} else if (result.getIndividualMode().isSonarJava()) {
+					String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjava.json";
+
+					writeListToJson(sonarIssueList, "sonarJavaList", jsonFile);
+				} else if (result.getIndividualMode().isJavascript()) {
+					String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjs.json";
+
+					writeListToJson(sonarIssueList, "sonarJSList", jsonFile);
+				} else {
+					throw new RuntimeException("Language & individual mode error...");
+				}
+			} else {
+				String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjs.json";
+
+				writeListToJson(sonarIssueList, "sonarJSList", jsonFile);
+			}
 		}
 	}
 
@@ -149,7 +169,16 @@ public class JsonOutputFile extends AbstractOutputFile {
 		}
 	}
 
-	@Override
+    @Override
+    protected void writeCheckStyle(List<CheckStyleResult> checkStyleList) {
+        if (result.isSeperatedOutput()) {
+            String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-checkstyle.json";
+
+            writeListToJson(checkStyleList, "checkStyleList", jsonFile);
+        }
+    }
+
+    @Override
 	protected void writeSummary(MeasuredResult result) {
 		// no-op
 	}
@@ -190,7 +219,7 @@ public class JsonOutputFile extends AbstractOutputFile {
 
 		builder.registerTypeAdapter(jdependListType, serializer);
 
-		builder.excludeFieldsWithoutExposeAnnotation();
+		builder.excludeFieldsWithoutExposeAnnotation().serializeSpecialFloatingPointValues();
 		final Gson gson = builder.create();
 
 		String json = gson.toJson(result);
@@ -200,7 +229,7 @@ public class JsonOutputFile extends AbstractOutputFile {
 
 	private void writeListToJson(List<?> list, String name, String jsonFile) {
 		final GsonBuilder builder = new GsonBuilder();
-		builder.excludeFieldsWithoutExposeAnnotation();
+		builder.excludeFieldsWithoutExposeAnnotation().serializeSpecialFloatingPointValues();
 		final Gson gson = builder.create();
 
 		try (PrintWriter jsonWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile), "UTF-8")))) {
@@ -215,7 +244,7 @@ public class JsonOutputFile extends AbstractOutputFile {
 			throw new RuntimeException(ex);
 		}
 
-		LOGGER.info("Result seperated file saved : {}", jsonFile);
+		LOGGER.info("Result separated file saved : {}", jsonFile);
 	}
 
 }

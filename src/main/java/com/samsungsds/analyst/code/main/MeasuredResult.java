@@ -18,12 +18,15 @@ package com.samsungsds.analyst.code.main;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import com.samsungsds.analyst.code.api.Language;
+import com.samsungsds.analyst.code.checkstyle.CheckStyleResult;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.logging.log4j.LogManager;
@@ -45,10 +48,11 @@ import com.samsungsds.analyst.code.main.filter.FilePathIncludeFilter;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.pmd.PmdResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
-import com.samsungsds.analyst.code.sonar.SonarJavaResult;
+import com.samsungsds.analyst.code.sonar.SonarIssueResult;
 import com.samsungsds.analyst.code.sonar.WebResourceResult;
 import com.samsungsds.analyst.code.unusedcode.UnusedCodeResult;
 import com.samsungsds.analyst.code.technicaldebt.TechnicalDebtResult;
+import xdean.jex.util.reflect.AnnotationUtil;
 
 public class MeasuredResult implements Serializable, FileSkipChecker {
 	private static final Logger LOGGER = LogManager.getLogger(MeasuredResult.class);
@@ -56,6 +60,11 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	private static final long serialVersionUID = 1L;
 
 	private static Map<String, MeasuredResult> instances = new HashMap<>();
+
+	@Expose
+	private String language;
+
+	private Language languageType;
 
 	@Expose
 	@SerializedName("target")
@@ -130,7 +139,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	private int statements = 0;
 
 	@Expose
-	private List<String> filePathList = Collections.synchronizedList(new ArrayList<>());;
+	private List<String> filePathList = Collections.synchronizedList(new ArrayList<>());
 
 	@Expose
 	private List<DuplicationResult> duplicationList = null;
@@ -184,11 +193,15 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	private int sonarJSRules = 0;
 
 	@Expose
-	private List<SonarJavaResult> sonarJavaList = null;
+	@SerializedName("sonarJavaList")
+	private List<SonarIssueResult> sonarIssueList = null;
+
 	@Expose
-	private int[] sonarJavaCount = new int[6]; // 0 : 전체, 1 ~ 5 (Priority)
+	@SerializedName("sonarJavaCount")
+	private int[] sonarIssueCount = new int[6]; // 0 : 전체, 1 ~ 5 (Priority)
 	@Expose
-	private int[] sonarJavaType = new int[4];	// 0 : NA, 1 : Bug, 2 : Vulnerability, 3 : Code Smell
+	@SerializedName("sonarJavaType")
+	private int[] sonarIssueType = new int[4];	// 0 : NA, 1 : Bug, 2 : Vulnerability, 3 : Code Smell
 
 	@Expose
 	private List<PmdResult> pmdList = null;
@@ -233,7 +246,8 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	private InspectionDetailAnalyst inspectionDetailAnalyst = new InspectionDetailAnalyst();
 
 	@Expose
-	private List<Inspection> topSonarJavaList = null;
+	@SerializedName("topSonarJavaList")
+	private List<Inspection> topSonarIssueList = null;
 
 	@Expose
 	private List<Inspection> topPmdList = null;
@@ -243,6 +257,9 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 
 	@Expose
 	private List<UnusedCodeResult> unusedCodeList = null;
+
+	@Expose
+	private int unusedCodeCount = 0;
 
 	@Expose
 	private int ucTotalClassCount = 0;
@@ -264,6 +281,12 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	@Expose
 	private List<CkMetricsResult> ckMetricsResultList = null;
 
+    @Expose
+    private List<CheckStyleResult> checkStyleList = null;
+
+    @Expose
+    private int checkStyleCount = 0;
+
 	@Expose
 	private TechnicalDebtResult technicalDebtResult = null;
 
@@ -273,6 +296,9 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 
 	@Expose
 	private int minimumTokens = 100;
+
+	private String nodeExecutablePath;
+	private String nodeVersion;
 
 	public static MeasuredResult getInstance(String instanceKey) {
 		if (!instances.containsKey(instanceKey)) {
@@ -310,7 +336,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		if (detailAnalysis) {
 			duplicationList = Collections.synchronizedList(new ArrayList<>());
 			complexityListOver20 = Collections.synchronizedList(new ArrayList<>());
-			sonarJavaList = Collections.synchronizedList(new ArrayList<>());
+			sonarIssueList = Collections.synchronizedList(new ArrayList<>());
 			pmdList = Collections.synchronizedList(new ArrayList<>());
 			findBugsList = Collections.synchronizedList(new ArrayList<>());
 			findSecBugsList = Collections.synchronizedList(new ArrayList<>());
@@ -318,6 +344,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			acyclicDependencyList = Collections.synchronizedList(new ArrayList<>());
 			ckMetricsResultList = Collections.synchronizedList(new ArrayList<>());
 			unusedCodeList = Collections.synchronizedList(new ArrayList<>());
+			checkStyleList = Collections.synchronizedList(new ArrayList<>());
 		} else {
 			if (individualMode.isDuplication()) {
 				duplicationList = makeCSVFileCollectionList(DuplicationResult.class, this);
@@ -330,9 +357,9 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 				complexityListOver20 = new ArrayList<>(0);
 			}
 			if (individualMode.isSonarJava()) {
-				sonarJavaList = makeCSVFileCollectionList(SonarJavaResult.class, this);
+				sonarIssueList = makeCSVFileCollectionList(SonarIssueResult.class, this);
 			} else {
-				sonarJavaList = new ArrayList<>(0);
+				sonarIssueList = new ArrayList<>(0);
 			}
 			if (individualMode.isPmd()) {
 				pmdList = makeCSVFileCollectionList(PmdResult.class, this);
@@ -366,7 +393,14 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			}
 			if (individualMode.isUnusedCode()) {
 				unusedCodeList = makeCSVFileCollectionList(UnusedCodeResult.class, this);
-			}
+			} else {
+                unusedCodeList = new ArrayList<>(0);
+            }
+			if (individualMode.isCheckStyle()) {
+			    checkStyleList = makeCSVFileCollectionList(CheckStyleResult.class, this);
+            } else {
+                checkStyleList = new ArrayList<>(0);
+            }
 		}
 	}
 
@@ -379,6 +413,9 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	}
 
 	public void setProjectInfo(CliParser cli) {
+		language = cli.getLanguage();
+		languageType = cli.getLanguageType();
+
 		source = cli.getSrc();
 		binary = cli.getBinary();
 		encoding = cli.getEncoding();
@@ -401,6 +438,56 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		}
 
 		webapp = cli.getWebapp();
+	}
+
+	public void changeSerializedName(CliParser cli) {
+		if (cli.getLanguageType() == Language.JAVASCRIPT) {
+			changeSerializedName("sonarIssueList", "sonarJSList");
+			changeSerializedName("sonarIssueCount", "sonarJSCount");
+			changeSerializedName("sonarIssueType", "sonarJSType");
+			changeSerializedName("topSonarIssueList", "topSonarJSList");
+		} else {	// Language.JAVA
+			if (cli.getIndividualMode().isSonarJava() && cli.getIndividualMode().isJavascript()) {
+				changeSerializedName("sonarIssueList", "sonarIssueList");
+				changeSerializedName("sonarIssueCount", "sonarIssueCount");
+				changeSerializedName("sonarIssueType", "sonarIssueType");
+				changeSerializedName("topSonarIssueList", "topSonarIssueList");
+			} else if (cli.getIndividualMode().isSonarJava()) {
+				changeSerializedName("sonarIssueList", "sonarJavaList");
+				changeSerializedName("sonarIssueCount", "sonarJavaCount");
+				changeSerializedName("sonarIssueType", "sonarJavaType");
+				changeSerializedName("topSonarIssueList", "topSonarJavaList");
+			} else if (cli.getIndividualMode().isJavascript()) {
+				changeSerializedName("sonarIssueList", "sonarJSList");
+				changeSerializedName("sonarIssueCount", "sonarJSCount");
+				changeSerializedName("sonarIssueType", "sonarJSType");
+				changeSerializedName("topSonarIssueList", "topSonarJSList");
+			}
+		}
+	}
+
+	private void changeSerializedName(String fieldName, String newSerializedName) {
+		try {
+			Field declaredAnnotations = MeasuredResult.class.getDeclaredField(fieldName);
+			declaredAnnotations.setAccessible(true);
+			SerializedName serializedName = declaredAnnotations.getAnnotation(SerializedName.class);
+			String oldName = serializedName.value();
+
+			AnnotationUtil.changeAnnotationValue(serializedName, "value", newSerializedName);
+
+			String newName = MeasuredResult.class.getDeclaredField(fieldName).getAnnotation(SerializedName.class).value();
+			LOGGER.debug("SerializedName changed from {} to {}", oldName, newName);
+		} catch (NoSuchFieldException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public Language getLanguageType() {
+		return languageType;
 	}
 
 	public boolean isSaveCatalog() {
@@ -870,53 +957,65 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		return webapp;
 	}
 
-	public List<SonarJavaResult> getSonarJavaList() {
-		processTopSonarJavaList();
+	public List<SonarIssueResult> getSonarIssueList() {
+		processTopSonarIssueList();
 
-		return sonarJavaList;
+		return sonarIssueList;
 	}
 
-	private void processTopSonarJavaList() {
-		if (topSonarJavaList == null) {
-			topSonarJavaList = inspectionDetailAnalyst.getTopSonarJavaList();
+	private void processTopSonarIssueList() {
+		if (topSonarIssueList == null) {
+			topSonarIssueList = inspectionDetailAnalyst.getTopSonarIssueList();
 		}
 	}
 
-	public List<Inspection> getTopSonarJavaList() {
+	public List<Inspection> getTopSonarIssueList() {
 		if (detailAnalysis) {
-			return topSonarJavaList;
+			return topSonarIssueList;
 		} else {
-			throw new IllegalStateException("getTopSonarJavaList() can be called only detailed analysis mode.");
+			throw new IllegalStateException("getTopSonarIssueList() can be called only detailed analysis mode.");
 		}
 	}
 
-	public void addSonarJavaResult(SonarJavaResult sonarJavaResult) {
-		String ruleKey = sonarJavaResult.getRuleRepository() + ":" + sonarJavaResult.getRuleKey();
+	public void addSonarIssueResult(SonarIssueResult sonarIssueResult) {
+		String ruleKey = sonarIssueResult.getRuleRepository() + ":" + sonarIssueResult.getRuleKey();
 		if (sonarIssueFilterSet.contains(ruleKey)) {
-			LOGGER.debug("SonarJava Rule exclude : {}", ruleKey);
+			LOGGER.debug("SonarJava(JS) Rule exclude : {}", ruleKey);
 			return;
 		}
-		sonarJavaList.add(sonarJavaResult);
-		sonarJavaCount[0]++;
-		sonarJavaCount[sonarJavaResult.getSeverity()]++;
+		sonarIssueList.add(sonarIssueResult);
+		sonarIssueCount[0]++;
+		sonarIssueCount[sonarIssueResult.getSeverity()]++;
 
-		sonarJavaType[sonarJavaResult.getIssueType().getTypeIndex()]++;
+		sonarIssueType[sonarIssueResult.getIssueType().getTypeIndex()]++;
 
 		if (detailAnalysis) {
-			inspectionDetailAnalyst.add(sonarJavaResult);
+			inspectionDetailAnalyst.add(sonarIssueResult);
 		}
 	}
 
-	public int getSonarJavaCountAll() {
-		return sonarJavaCount[0];
+	public int getSonarIssueCountAll() {
+		return sonarIssueCount[0];
 	}
 
-	public int getSonarJavaCount(int priority) {
-		return sonarJavaCount[priority];
+	public int getSonarIssueCount(int priority) {
+		return sonarIssueCount[priority];
 	}
 
-	public int getSonarJavaType(int index) {
-		return sonarJavaType[index];
+	public int getSonarIssueType(int index) {
+		return sonarIssueType[index];
+	}
+
+	public String getSonarIssueTitle() {
+		if (languageType == Language.JAVASCRIPT) {
+			return "SonarJS";
+		} else {	// Language.JAVA
+			if (individualMode.isJavascript()) {
+				return "SonarIssue";
+			} else {
+				return "SonarJava";
+			}
+		}
 	}
 
 	public List<PmdResult> getPmdList() {
@@ -940,12 +1039,12 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	}
 
 	public List<FindBugsResult> getFindBugsList() {
-		processtopFindBugsList();
+		processTopFindBugsList();
 
 		return findBugsList;
 	}
 
-	private void processtopFindBugsList() {
+	private void processTopFindBugsList() {
 		if (topFindBugsList == null) {
 			topFindBugsList = inspectionDetailAnalyst.getTopFindBugsList();
 		}
@@ -995,13 +1094,18 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 
 	public void putUnusedCodeList(List<UnusedCodeResult> unusedCodeResultList) {
 		this.unusedCodeList = unusedCodeResultList;
+		this.unusedCodeCount = unusedCodeResultList.size();
 	}
 
 	public List<UnusedCodeResult> getUnusedCodeList() {
 		return this.unusedCodeList;
 	}
 
-	public int getUcTotalClassCount() {
+    public int getUnusedCodeCount() {
+        return unusedCodeCount;
+    }
+
+    public int getUcTotalClassCount() {
 		return ucTotalClassCount;
 	}
 
@@ -1084,6 +1188,26 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	public List<CkMetricsResult> getCkMetricsResultList() {
 		return ckMetricsResultList;
 	}
+
+    public synchronized void putCheckStyleList(List<CheckStyleResult> list) {
+        for (CheckStyleResult result : list) {
+            if (haveToSkip(result.getPath())) {
+                continue;
+            }
+
+            checkStyleList.add(result);
+            checkStyleCount++;
+            LOGGER.debug("file : {}, line : {}, severity : {}, message : {}, checker : {}", result.getPath(), result.getLine(), result.getSeverity(), result.getMessage(), result.getChecker());
+        }
+    }
+
+    public List<CheckStyleResult> getCheckStyleList() {
+        return checkStyleList;
+    }
+
+    public int getCheckStyleCount() {
+        return checkStyleCount;
+    }
 
 	public void setMode(MeasurementMode mode) {
 		this.mode = mode;
@@ -1175,13 +1299,14 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		if (detailAnalysis) {
 			duplicationList.clear();
 			complexityListOver20.clear();
-			sonarJavaList.clear();
+			sonarIssueList.clear();
 			pmdList.clear();
 			findBugsList.clear();
 			findSecBugsList.clear();
 			webResourceList.clear();
 			ckMetricsResultList.clear();
 			unusedCodeList.clear();
+			checkStyleList.clear();
 		} else {
 			for (CSVFileCollectionList<?> list : closeTargetList) {
 				if (list.isTypeOf(JDependResult.class)) {
@@ -1197,7 +1322,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 
 			duplicationList = null;
 			complexityListOver20 = null;
-			sonarJavaList = null;
+			sonarIssueList = null;
 			pmdList = null;
 			findBugsList = null;
 			findSecBugsList = null;
@@ -1205,6 +1330,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			unusedCodeList = null;
 			ckMetricsResultList = null;
 			unusedCodeList = null;
+			checkStyleList = null;
 		}
 	}
 
@@ -1258,6 +1384,22 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		this.minimumTokens = minimumTokens;
 	}
 
+	public String getNodeExecutablePath() {
+		return nodeExecutablePath;
+	}
+
+	public void setNodeExecutablePath(String nodeExecutablePath) {
+		this.nodeExecutablePath = nodeExecutablePath;
+	}
+
+	public String getNodeVersion() {
+		return nodeVersion;
+	}
+
+	public void setNodeVersion(String nodeVersion) {
+		this.nodeVersion = nodeVersion;
+	}
+
 	public void clear() {
 		directories = 0;
 		files = 0;
@@ -1306,6 +1448,9 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			webResourceCount[i] = 0;
 		}
 
+        unusedCodeCount = 0;
+        checkStyleCount = 0;
+
 		filePathFilterList.clear();
 
 		withDefaultPackageClasses = false;
@@ -1317,7 +1462,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		if (detailAnalysis) {
 			duplicationList.clear();
 			complexityListOver20.clear();
-			sonarJavaList.clear();
+			sonarIssueList.clear();
 			pmdList.clear();
 			findBugsList.clear();
 			findSecBugsList.clear();
@@ -1325,6 +1470,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			acyclicDependencyList.clear();
 			ckMetricsResultList.clear();
 			unusedCodeList.clear();
+			checkStyleList.clear();
 		} else {
 			for (CSVFileCollectionList<?> list : closeTargetList) {
 				try {
@@ -1339,19 +1485,20 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		}
 
 		topDuplicationList = null;
-		topSonarJavaList = null;
+		topSonarIssueList = null;
 		topPmdList = null;
 		topFindBugsList = null;
 		technicalDebtResult = null;
 		unusedCodeList = null;
 		ckMetricsResultList = null;
 		unusedCodeList = null;
+		checkStyleList = null;
 	}
 
-	public String getConvertedFilePath(String filePath) {
+	public static String getConvertedFilePath(String filePath, String projectDirectory) {
 		String path = filePath.replaceAll("\\\\", "/");
 
-		String project = getProjectDirectory().replaceAll("\\\\", "/");
+		String project = projectDirectory.replaceAll("\\\\", "/");
 
 		if (!project.endsWith("/")) {
 			project += "/";

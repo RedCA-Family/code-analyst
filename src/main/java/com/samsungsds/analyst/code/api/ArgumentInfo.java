@@ -16,25 +16,36 @@ limitations under the License.
 package com.samsungsds.analyst.code.api;
 
 public class ArgumentInfo {
-	private String project;					// project base directory
-	private String src;						// source directory (relative path of project base dir.)
-	private String binary;					// binary directory (relative path of project base dir.)
-	private boolean debug = false;			
-	private String encoding = "UTF-8";		// source file encoding
-	private String javaVersion = "1.8";		// java source version
-	private String pmdRuleFile;				// PMD ruleset xml file (if omitted, SDS Standard Ruleset used)
-	private String findBugsRuleFile;		// Findbugs ruleset xml file (if omitted, SDS Standard Ruleset used)
-	private String sonarRuleFile;			// SonarQube Issue exclude xml file (if omitted, all SDS Standard Rules included)
-	private int timeout = 10 * 60 * 10;		// 100 minutes
-	private String include;					// include pattern(Ant-Style) with comma separated. (eg: com/sds/**/*VO.java)
-	private String exclude;					// exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)
-	private String webapp;					// webapp directory
-	
-	private AnalysisMode mode;				// code-size,duplication,complexity,sonarjava,pmd,findbugs,findsecbugs,javascript,css,html,dependency,unused,ckmetrics
+	private Language language = Language.JAVA;	// Language ('Java' or 'JavaScript')
 
-	private boolean detailAnalysis = false;	// Detail Analysis mode
+	private String project;						// project base directory
+	private String src;							// source directory (relative path of project base dir.)
+	private String binary;						// binary directory (relative path of project base dir.)
+	private boolean debug = false;
+	private String encoding = "UTF-8";			// source file encoding
+	private String javaVersion = "1.8";			// java source version
+	private String pmdRuleFile;					// PMD ruleset xml file (if omitted, SDS Standard Ruleset used)
+	private String findBugsRuleFile;			// Findbugs ruleset xml file (if omitted, SDS Standard Ruleset used)
+	private String sonarRuleFile;				// SonarQube Issue exclude xml file (if omitted, all SDS Standard Rules included)
+    private String checkStyleRuleFile;          // CheckStyle configuration xml file (if omitted, our own standard ruleset used)
+	private int timeout = 10 * 60 * 10;			// 100 minutes
+	private String include;						// include pattern(Ant-Style) with comma separated. (eg: com/sds/**/*VO.java)
+	private String exclude;						// exclude pattern(Ant-style) with comma separated. (eg: com/sds/**/*VO.java)
+	private String webapp;						// webapp directory
 
-	private boolean saveCatalog = false;	// Save target file list
+	private AnalysisMode mode;					// (Java) code-size,duplication,complexity,sonarjava,pmd,findbugs,findsecbugs,javascript,css,html,dependency,unused,ckmetrics
+												// (JavaScript) code-size,duplication,complexity,sonarjs
+	private boolean detailAnalysis = false;		// Detail Analysis mode
+
+	private boolean saveCatalog = false;		// Save target file list
+
+	public Language getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(Language language) {
+		this.language = language;
+	}
 
 	public String getProject() {
 		return project;
@@ -108,7 +119,15 @@ public class ArgumentInfo {
 		return sonarRuleFile;
 	}
 
-	public int getTimeout() {
+    public String getCheckStyleRuleFile() {
+        return checkStyleRuleFile;
+    }
+
+    public void setCheckStyleRuleFile(String checkStyleRuleFile) {
+        this.checkStyleRuleFile = checkStyleRuleFile;
+    }
+
+    public int getTimeout() {
 		return timeout;
 	}
 
@@ -121,6 +140,9 @@ public class ArgumentInfo {
 	}
 
 	public void setInclude(String include) {
+        if (include.startsWith("@")) {
+            throw new IllegalArgumentException("'@file' feature not available in API mode");
+        }
 		this.include = include;
 	}
 
@@ -129,6 +151,9 @@ public class ArgumentInfo {
 	}
 
 	public void setExclude(String exclude) {
+	    if (exclude.startsWith("@")) {
+	        throw new IllegalArgumentException("'@file' feature not available in API mode");
+        }
 		this.exclude = exclude;
 	}
 

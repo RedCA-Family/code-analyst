@@ -31,7 +31,7 @@ public class SonarProgressEventChecker implements Runnable {
     private AtomicBoolean running = new AtomicBoolean(false);
     private AtomicBoolean stopped = new AtomicBoolean(true);
 
-    private App app;
+    private ObserverManager observerManager;
 
     private int intervalMillisecond = DEFAULT_INTERVAL_MILLISECOND;
     private double increaseRate = DEFAULT_INCREASE_RATE;
@@ -43,8 +43,8 @@ public class SonarProgressEventChecker implements Runnable {
     private AtomicBoolean cssCompleted = new AtomicBoolean(false);
     private AtomicBoolean htmlCompleted = new AtomicBoolean(false);
 
-    public SonarProgressEventChecker(IndividualMode mode, App app, int targetFiles) {
-        this(mode, app);
+    public SonarProgressEventChecker(IndividualMode mode, ObserverManager observerManager, int targetFiles) {
+        this(mode, observerManager);
         this.intervalMillisecond = (int)(DEFAULT_INTERVAL_MILLISECOND * (targetFiles / 100.0));
 
         if (targetFiles > 1_000) {
@@ -52,8 +52,8 @@ public class SonarProgressEventChecker implements Runnable {
         }
     }
 
-    public SonarProgressEventChecker(IndividualMode mode, App app) {
-        this.app = app;
+    public SonarProgressEventChecker(IndividualMode mode, ObserverManager observerManager) {
+        this.observerManager = observerManager;
 
         if (!mode.isCodeSize()) {
             codeSizeCompleted.set(true);
@@ -95,42 +95,42 @@ public class SonarProgressEventChecker implements Runnable {
         synchronized(codeSizeCompleted) {
             if (!codeSizeCompleted.get()) {
                 codeSizeCompleted.set(true);
-                app.notifyObservers(ProgressEvent.CODE_SIZE_COMPLETE);
+                observerManager.notifyObservers(ProgressEvent.CODE_SIZE_COMPLETE);
             }
         }
 
         synchronized(duplicationCompleted) {
             if (!duplicationCompleted.get()) {
                 duplicationCompleted.set(true);
-                app.notifyObservers(ProgressEvent.DUPLICATION_COMPLETE);
+                observerManager.notifyObservers(ProgressEvent.DUPLICATION_COMPLETE);
             }
         }
 
         synchronized(sonarJavaCompleted) {
             if (!sonarJavaCompleted.get()) {
                 sonarJavaCompleted.set(true);
-                app.notifyObservers(ProgressEvent.SONARJAVA_COMPLETE);
+                observerManager.notifyObservers(ProgressEvent.SONARJAVA_COMPLETE);
             }
         }
 
         synchronized(javascriptCompleted) {
             if (!javascriptCompleted.get()) {
                 javascriptCompleted.set(true);
-                app.notifyObservers(ProgressEvent.JAVASCRIPT_COMPLETE);
+                observerManager.notifyObservers(ProgressEvent.JAVASCRIPT_COMPLETE);
             }
         }
 
         synchronized(cssCompleted) {
             if (!cssCompleted.get()) {
                 cssCompleted.set(true);
-                app.notifyObservers(ProgressEvent.CSS_COMPLETE);
+                observerManager.notifyObservers(ProgressEvent.CSS_COMPLETE);
             }
         }
 
         synchronized(htmlCompleted) {
             if (!htmlCompleted.get()) {
                 htmlCompleted.set(true);
-                app.notifyObservers(ProgressEvent.HTML_COMPLETE);
+                observerManager.notifyObservers(ProgressEvent.HTML_COMPLETE);
             }
         }
     }
@@ -171,7 +171,7 @@ public class SonarProgressEventChecker implements Runnable {
         synchronized(codeSizeCompleted) {
             if (!codeSizeCompleted.get()) {
                 codeSizeCompleted.set(true);
-                app.notifyObservers(ProgressEvent.CODE_SIZE_COMPLETE);
+                observerManager.notifyObservers(ProgressEvent.CODE_SIZE_COMPLETE);
 
                 return;
             }
@@ -180,7 +180,7 @@ public class SonarProgressEventChecker implements Runnable {
         synchronized(duplicationCompleted) {
             if (!duplicationCompleted.get()) {
                 duplicationCompleted.set(true);
-                app.notifyObservers(ProgressEvent.DUPLICATION_COMPLETE);
+                observerManager.notifyObservers(ProgressEvent.DUPLICATION_COMPLETE);
 
                 return;
             }
@@ -189,7 +189,7 @@ public class SonarProgressEventChecker implements Runnable {
         synchronized(sonarJavaCompleted) {
             if (!sonarJavaCompleted.get()) {
                 sonarJavaCompleted.set(true);
-                app.notifyObservers(ProgressEvent.SONARJAVA_COMPLETE);
+                observerManager.notifyObservers(ProgressEvent.SONARJAVA_COMPLETE);
 
                 return;
             }
@@ -198,7 +198,7 @@ public class SonarProgressEventChecker implements Runnable {
         synchronized(javascriptCompleted) {
             if (!javascriptCompleted.get()) {
                 javascriptCompleted.set(true);
-                app.notifyObservers(ProgressEvent.JAVASCRIPT_COMPLETE);
+                observerManager.notifyObservers(ProgressEvent.JAVASCRIPT_COMPLETE);
 
                 return;
             }
@@ -207,7 +207,7 @@ public class SonarProgressEventChecker implements Runnable {
         synchronized(cssCompleted) {
             if (!cssCompleted.get()) {
                 cssCompleted.set(true);
-                app.notifyObservers(ProgressEvent.CSS_COMPLETE);
+                observerManager.notifyObservers(ProgressEvent.CSS_COMPLETE);
 
                 return;
             }
