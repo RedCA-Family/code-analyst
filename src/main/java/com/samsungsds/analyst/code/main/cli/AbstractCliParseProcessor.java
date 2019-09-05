@@ -136,6 +136,10 @@ public abstract class AbstractCliParseProcessor implements CliParseProcessor {
                 parsedValue.getIndividualMode().setCss(includeOrExclude);
             } else if (mode.equalsIgnoreCase("html")) {
                 parsedValue.getIndividualMode().setHtml(includeOrExclude);
+            } else if (mode.equalsIgnoreCase("sonarcsharp")) {
+                parsedValue.getIndividualMode().setSonarCSharp(includeOrExclude);
+            } else if (mode.equalsIgnoreCase("sonarpython")) {
+                parsedValue.getIndividualMode().setSonarPython(includeOrExclude);
             } else if (mode.equalsIgnoreCase("dependency")) {
                 parsedValue.getIndividualMode().setDependency(includeOrExclude);
             } else if (mode.equalsIgnoreCase("unusedcode")) {
@@ -145,9 +149,7 @@ public abstract class AbstractCliParseProcessor implements CliParseProcessor {
             } else if (mode.equalsIgnoreCase("checkstyle")) {
                 parsedValue.getIndividualMode().setCheckStyle(includeOrExclude);
             } else {
-                throw new IllegalArgumentException("'mode' option can only have 'code-size', 'duplication', 'complexity', " +
-                        "'sonarjava', 'pmd', 'findbugs', 'findsecbugs', 'javascript'(sonarjs), 'css', 'html', 'dependency', 'unusedcode', 'ckmetrics', " +
-                        "and 'checkstyle' (with or without '-')");
+                throw new IllegalArgumentException(getModeErrorMessage());
             }
         }
     }
@@ -294,7 +296,59 @@ public abstract class AbstractCliParseProcessor implements CliParseProcessor {
             if (!tokens.equals("")) {
                 LOGGER.info("- tokens = {}", tokens);
             }
-        } else {    // javascript
+        } else if (parsedValue.getLanguage().equalsIgnoreCase("javascript")) {
+            LOGGER.info(" - project : {}", parsedValue.getProjectBaseDir());
+            LOGGER.info(" - src : {}", parsedValue.getSrc());
+            LOGGER.info(" - encoding : {}", parsedValue.getEncoding());
+            if (!parsedValue.getRuleSetFileForSonar().equals("")) {
+                LOGGER.info(" - sonar : {}", parsedValue.getRuleSetFileForSonar());
+            }
+            if (!parsedValue.getIncludes().equals("")) {
+                LOGGER.info(" - include : {}", parsedValue.getIncludes());
+            }
+            if (!parsedValue.getExcludes().equals("")) {
+                LOGGER.info(" - exclude : {}", parsedValue.getExcludes());
+            }
+            if (!mode.equals(Constants.DEFAULT_ANALYSIS_MODE)) {
+                LOGGER.info(" - mode : {}", mode);
+            }
+            if (analysis.equals("true")) {
+                LOGGER.info(" - detailAnalysis = true");
+            }
+            if (seperated.equals("true")) {
+                LOGGER.info(" - seperatedOutput = true");
+            }
+            if (catalog.equals("true")) {
+                LOGGER.info("- saveCatalog = true");
+            }
+        } else if (parsedValue.getLanguage().equalsIgnoreCase("csharp") ||
+                parsedValue.getLanguage().equalsIgnoreCase("c#")) {
+            LOGGER.info(" - project : {}", parsedValue.getProjectBaseDir());
+            LOGGER.info(" - src : {}", parsedValue.getSrc());
+            // LOGGER.info(" - binary : {}", parsedValue.getBinary()); // TODO check!
+            LOGGER.info(" - encoding : {}", parsedValue.getEncoding());
+            if (!parsedValue.getRuleSetFileForSonar().equals("")) {
+                LOGGER.info(" - sonar : {}", parsedValue.getRuleSetFileForSonar());
+            }
+            if (!parsedValue.getIncludes().equals("")) {
+                LOGGER.info(" - include : {}", parsedValue.getIncludes());
+            }
+            if (!parsedValue.getExcludes().equals("")) {
+                LOGGER.info(" - exclude : {}", parsedValue.getExcludes());
+            }
+            if (!mode.equals(Constants.DEFAULT_ANALYSIS_MODE)) {
+                LOGGER.info(" - mode : {}", mode);
+            }
+            if (analysis.equals("true")) {
+                LOGGER.info(" - detailAnalysis = true");
+            }
+            if (seperated.equals("true")) {
+                LOGGER.info(" - seperatedOutput = true");
+            }
+            if (catalog.equals("true")) {
+                LOGGER.info("- saveCatalog = true");
+            }
+        } else {    // python
             LOGGER.info(" - project : {}", parsedValue.getProjectBaseDir());
             LOGGER.info(" - src : {}", parsedValue.getSrc());
             LOGGER.info(" - encoding : {}", parsedValue.getEncoding());

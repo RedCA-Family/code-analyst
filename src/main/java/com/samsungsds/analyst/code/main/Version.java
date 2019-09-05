@@ -55,13 +55,14 @@ public class Version {
 	// 2.7.0 : SonarJS plugin upgrade(4.1.0 -> 5.1.1, ruleset 조정 포함), Node 실행환경 제공 (Sonar 분석 부분 분리),
 	//         Language 옵션 및 JavaScript language(Node.js) 추가
     // 2.8.0 : CheckStyle 적용, 소스 디렉토리 중복 체크 오류 수정, CKJM bcel lambda 함수 관련 오류 수정, include/exclude @file 처리 기능 추가
+    // 2.9.0 : C# language, Python language 추가
     // --------------------------------------------------
-	public static final String CODE_ANALYST = "2.8.0";
-	public static final String DOCUMENT_VERSION = "2.8";
+	public static final String CODE_ANALYST = "2.9.0";
+	public static final String DOCUMENT_VERSION = "2.9";
 	public static final String APPLICATION_JAR = "Code-Analyst-" + CODE_ANALYST + ".jar";
 
 	public static final String SONAR_SCANNER = "2.10.0.1189";
-	public static final String SONAR_SERVER = "6.7.4";
+	public static final String SONAR_SERVER = "6.7.4.38452";
 	public static final String PMD = "5.8.1";
 	public static final String FINDBUGS = "3.0.1";
 	public static final String FINDSECBUGS = "1.7.1";
@@ -73,6 +74,8 @@ public class Version {
 
 	public static final String SONAR_JAVA = "5.1.1.13214";
 	public static final String SONAR_JS = "5.1.1.7506";
+    public static final String SONAR_CSHARP = "7.15.0.8572";
+    public static final String SONAR_PYTHON = "1.14.1.3143";
 	public static final String SONAR_CSS = "3.1";
 	public static final String SONAR_WEB = "2.5.0.476";
 
@@ -83,6 +86,8 @@ public class Version {
 	public static final String FINDSECBUGS_RULESET = "81 rules (v1.7.1, RedCA Way Ruleset, '18.06)";
 	public static final String SONAR_JAVA_RULESET = "227 ruleset (v4.15, RedCA Way Ruleset, '18.03)";
 	public static final String SONAR_JS_RULESET = "95 ruleset (v5.0, RedCA Way Ruleset, '18.11)";
+    public static final String SONAR_CSHARP_RULESET = "203 ruleset (v7.15, RedCA Way Ruleset, '19.08)";
+    public static final String SONAR_PYTHON_RULESET = "26 ruleset (v1.14, RedCA Way Ruleset, '19.08)";
 	public static final String SONAR_CSS_RULESET = "CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)";
 	public static final String SONAR_WEB_RULESET = "16 ruleset (v2.5)";
 	public static final String CHECKSTYLE_RULESET = "58 ruleset (RedCA Way Ruleset, '19.06)";
@@ -92,6 +97,8 @@ public class Version {
 	public static final int FINDBUGS_DEFAULT_RULES = 214;
 	public static final int FINDSECBUGS_DEFAULT_RULES = 81;
 	public static final int SONAR_JS_DEFAULT_RULES = 95;
+	public static final int SONAR_CSHARP_DEFAULT_RULES = 203;
+	public static final int SONAR_PYTHON_DEFAULT_RULES = 26;
 
 	public static void printVersionInfo() {
 		System.out.println("Code Analyst : " + CODE_ANALYST);
@@ -100,6 +107,8 @@ public class Version {
 		System.out.println("     [Plugins]");
 		System.out.println("       - SonarJava : " + SONAR_JAVA + " (LGPL v3.0)");
 		System.out.println("       - SonarJS : " + SONAR_JS + " (LGPL v3.0)");
+        System.out.println("       - SonarC# : " + SONAR_CSHARP + " (LGPL v3.0)");
+        System.out.println("       - SonarPython : " + SONAR_PYTHON + " (LGPL v3.0)");
 		System.out.println("       - CSS/SCSS/Less : " + SONAR_CSS + " (LGPL v3.0)");
 		System.out.println("       - Web : " + SONAR_WEB + " (Apache v2.0)");
 		System.out.println("  - PMD : " + PMD + " (BSD-style)");
@@ -117,6 +126,8 @@ public class Version {
 		System.out.println("  - FindBugs : " + FINDBUGS_RULESET);
 		System.out.println("  - FindSecBugs : " + FINDSECBUGS_RULESET);
 		System.out.println("  - SonarJava : " + SONAR_JAVA_RULESET);
+        System.out.println("  - SonarCSharp : " + SONAR_CSHARP_RULESET);
+        System.out.println("  - SonarPython : " + SONAR_PYTHON_RULESET);
 		System.out.println("  - Web Resources :");
 		System.out.println("      - JS : " + SONAR_JS_RULESET);
 		System.out.println("      - CSS : " + SONAR_CSS_RULESET);

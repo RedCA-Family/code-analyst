@@ -66,6 +66,39 @@
             "homepageUrl": "https://github.com/racodond/sonar-css-plugin",
             "issueTrackerUrl": "https://github.com/racodond/sonar-css-plugin/issues",
             "implementationBuild": "58a0a86a53f82a8486a5ee93681257e1ae0a10c8"
-        }
+        },
+		{
+			"key": "csharp",
+			"name": "SonarC#",
+			"filename": "sonar-csharp-plugin-7.15.0.8572.jar",
+			"sonarLintSupported": false,
+			"hash": "73d90ce62c95649d02af4292588b027d",
+			"updatedAt": 1564638822147,
+			"description": "Code Analyzer for C#",
+			"version": "7.15 (build 8572)",
+			"license": "GNU LGPL 3",
+			"organizationName": "SonarSource",
+			"organizationUrl": "http://www.sonarsource.com",
+			"editionBundled": false,
+			"homepageUrl": "http://redirect.sonarsource.com/plugins/csharp.html",
+			"issueTrackerUrl": "https://github.com/SonarSource/sonar-dotnet/issues",
+			"implementationBuild": "e0ad49e38a28a8fc333ba746fc998e48678f6a8b"
+		},
+		{
+			"key": "python",
+			"name": "SonarPython",
+			"filename": "sonar-python-plugin-1.14.1.3143.jar",
+			"sonarLintSupported": true,
+			"hash": "5246ba7166e8e9ab17d08a6514e9a086",
+			"updatedAt": 1564711841108,
+			"description": "Code Analyzer for Python",
+			"version": "1.14.1 (build 3143)",
+			"license": "GNU LGPL 3",
+			"organizationName": "SonarSource and Waleri Enns",
+			"editionBundled": false,
+			"homepageUrl": "http://redirect.sonarsource.com/plugins/python.html",
+			"issueTrackerUrl": "https://jira.sonarsource.com/browse/SONARPY",
+			"implementationBuild": "eed7b315b6116fe462a19c771013bf3891c92a97"
+		}
 	]
 }

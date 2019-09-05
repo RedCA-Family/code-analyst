@@ -1,0 +1,17 @@
+		{
+			"key": "csharp",
+			"name": "SonarC#",
+			"filename": "sonar-csharp-plugin-7.15.0.8572.jar",
+			"sonarLintSupported": false,
+			"hash": "73d90ce62c95649d02af4292588b027d",
+			"updatedAt": 1564638822147,
+			"description": "Code Analyzer for C#",
+			"version": "7.15 (build 8572)",
+			"license": "GNU LGPL 3",
+			"organizationName": "SonarSource",
+			"organizationUrl": "http://www.sonarsource.com",
+			"editionBundled": false,
+			"homepageUrl": "http://redirect.sonarsource.com/plugins/csharp.html",
+			"issueTrackerUrl": "https://github.com/SonarSource/sonar-dotnet/issues",
+			"implementationBuild": "e0ad49e38a28a8fc333ba746fc998e48678f6a8b"
+		}

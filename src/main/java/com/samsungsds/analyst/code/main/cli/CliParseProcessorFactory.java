@@ -21,8 +21,12 @@ public class CliParseProcessorFactory {
     public static CliParseProcessor getCliParseProcessor(Language language) {
         if (language == Language.JAVA) {
             return new CliParseProcessorForJava();
-        } else {
+        } else if (language == Language.JAVASCRIPT) {
             return new CliParseProcessorForJavaScript();
+        } else if (language == Language.CSHARP) {
+            return new CliParseProcessorForCSharp();
+        } else {    // Python
+            return new CliParseProcessorForPython();
         }
     }
 }

@@ -1,14 +1,98 @@
 
+6
+%sonaranalyzer-cs.nuget.packageVersion7.15.0.8572(
 3
 (sonar.authenticator.ignoreStartupFailurefalse(
 H
 sonar.editions.jsonUrl,https://update.sonarsource.org/editions.json(
+'
+sonar.cs.ignoreHeaderCommentstrue(
 "
 sonar.less.file.suffixesless(
+I
+!sonar.python.coverage.reportPaths"
+ coverage-reports/*coverage-*.xml(
 6
 $sonar.javascript.jQueryObjectAliases
 $
  jQuery(
+
+email.fromName	SonarQube(
+#
+sonar.sonarcloud.enabledfalse(
+)
+sonar.python.xunit.skipDetailsfalse(
+B
+9sonar.dbcleaner.weeksBeforeKeepingOnlyAnalysesWithVersion104(
+$
+sonar.forceAuthenticationfalse(
+!
+sonar.notifications.delay60(
+8
+sonaranalyzer-cs.ruleNamespaceSonarAnalyzer.CSharp(
+"
+sonar.scss.file.suffixesscss(
+(
+sonar.cs.analyzeGeneratedCodefalse(
+
+email.smtp_port.secured25(
+C
+sonar.python.xunit.reportPath xunit-reports/xunit-result-*.xml(
+7
+sonar.web.file.suffixes.html,.xhtml,.rhtml,.shtml(
+C
+8sonar.builtInQualityProfiles.disableNotificationOnUpdatefalse(
+s
+sonar.javascript.globalsU
+angular
+goog
+google
+
+OpenLayers
+d3
+dojo
+dojox
+dijit
+Backbone
+moment
+casper(
+>
+6sonar.dbcleaner.hoursBeforeKeepingOnlyOneSnapshotByDay24(
+ 
+sonar.telemetry.enabletrue(
+M
+sonar.javascript.exclusions,
+**/node_modules/**
+**/bower_components/**(
+ 
+sonar.css.file.suffixescss(
+%
+sonar.java.failOnExceptionfalse(
+0
+%sonar.organizations.createPersonalOrgfalse(
+D
+sonar.telemetry.url+https://telemetry.sonarsource.com/sonarqube(
+(
+sonar.dbcleaner.cleanDirectorytrue(
+2
+'sonar.onboardingTutorial.showToNewUsersfalse(
+J
+sonar.jacoco.reportPaths,
+target/jacoco.exec
+ target/jacoco-it.exec(
+"
+sonar.cpd.cross_projectfalse(
+
+
+email.fromnoreply@nowhere(
+>
+7sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByWeek4(
+'
+sonar.leak.periodprevious_version(
+
+email.prefix[SONARQUBE](
+&
+sonaranalyzer-cs.pluginKeycsharp(
 /
 %sonar.javascript.ignoreHeaderCommentstrue(
 6
@@ -17,24 +101,16 @@ $sonar.javascript.jQueryObjectAliases
 8sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByMonth52(
 g
 sonar.lf.gravatarServerUrlGhttps://secure.gravatar.com/avatar/{EMAIL_MD5}.jpg?s={SIZE}&d=identicon(
-
-email.fromName	SonarQube(
-#
-sonar.sonarcloud.enabledfalse(
-B
-9sonar.dbcleaner.weeksBeforeKeepingOnlyAnalysesWithVersion104(
 #
 sonar.cpd.css.minimumTokens70(
 -
 "sonar.telemetry.frequencyInSeconds21600(
-$
-sonar.forceAuthenticationfalse(
-!
-sonar.notifications.delay60(
+F
+#sonaranalyzer-cs.staticResourceNameSonarAnalyzer-7.15.0.8572.zip(
 >
 5sonar.notifications.runningDelayBeforeReportingStatus600(
-"
-sonar.scss.file.suffixesscss(
+:
+ sonaranalyzer-cs.nuget.packageIdSonarAnalyzer.CSharp(
 Ñ
 sonar.javascript.environments­
 amd
@@ -68,70 +144,23 @@ $
  worker
  wsh
  yui(
-
-email.smtp_port.secured25(
 '
 sonar.authenticator.downcasefalse(
 
 sonar.scm.disabledfalse(
-7
-sonar.web.file.suffixes.html,.xhtml,.rhtml,.shtml(
-C
-8sonar.builtInQualityProfiles.disableNotificationOnUpdatefalse(
 %
 sonar.updatecenter.activatetrue(
-s
-sonar.javascript.globalsU
-angular
-goog
-google
-
-OpenLayers
-d3
-dojo
-dojox
-dijit
-Backbone
-moment
-casper(
->
-6sonar.dbcleaner.hoursBeforeKeepingOnlyOneSnapshotByDay24(
- 
-sonar.telemetry.enabletrue(
 0
  sonar.css.embedded.file.suffixes
 html,xhtml(
-M
-sonar.javascript.exclusions,
-**/node_modules/**
-**/bower_components/**(
- 
-sonar.css.file.suffixescss(
-%
-sonar.java.failOnExceptionfalse(
-0
-%sonar.organizations.createPersonalOrgfalse(
-D
-sonar.telemetry.url+https://telemetry.sonarsource.com/sonarqube(
+5
+sonaranalyzer-cs.analyzerIdSonarAnalyzer.CSharp(
 .
 #sonar.organizations.anyoneCanCreatefalse(
-(
-sonar.dbcleaner.cleanDirectorytrue(
-2
-'sonar.onboardingTutorial.showToNewUsersfalse(
-J
-sonar.jacoco.reportPaths,
-target/jacoco.exec
- target/jacoco-it.exec(
 4
 sonar.technicalDebt.ratingGrid0.05,0.1,0.2,0.5(
-"
-sonar.cpd.cross_projectfalse(
 +
 #sonar.technicalDebt.developmentCost30(
-
-
-email.fromnoreply@nowhere(
 "
 sonar.lf.enableGravatarfalse(
 €
@@ -147,17 +176,19 @@ governance
 authgithub
 authbitbucket
 googleanalytics(
->
-7sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByWeek4(
-'
-sonar.leak.periodprevious_version(
+/
+sonaranalyzer-cs.pluginVersion7.15.0.8572(
+$
+sonar.python.file.suffixes
+py(
+!
+sonar.cs.file.suffixes
+.cs(
 5
 sonar.javascript.file.suffixes
 .js
 .jsx
 .vue(
-
-email.prefix[SONARQUBE](
 +
 sonar.java.file.suffixes
 .java
@@ -171,4 +202,4 @@ S
 %
 sonar.core.idAWPJmxkrSp4w3Eb9fJeJ
 0
-sonar.core.startTime2019-04-02T13:51:42+0900
+sonar.core.startTime2019-08-02T11:10:37+0900

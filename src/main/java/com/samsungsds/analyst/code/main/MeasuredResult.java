@@ -191,8 +191,12 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	private int findSecBugsRules = 0;
 	@Expose
 	private int sonarJSRules = 0;
+    @Expose
+    private int sonarCSharpRules = 0;
+    @Expose
+    private int sonarPythonRules = 0;
 
-	@Expose
+    @Expose
 	@SerializedName("sonarJavaList")
 	private List<SonarIssueResult> sonarIssueList = null;
 
@@ -441,29 +445,39 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	}
 
 	public void changeSerializedName(CliParser cli) {
-		if (cli.getLanguageType() == Language.JAVASCRIPT) {
-			changeSerializedName("sonarIssueList", "sonarJSList");
-			changeSerializedName("sonarIssueCount", "sonarJSCount");
-			changeSerializedName("sonarIssueType", "sonarJSType");
-			changeSerializedName("topSonarIssueList", "topSonarJSList");
-		} else {	// Language.JAVA
-			if (cli.getIndividualMode().isSonarJava() && cli.getIndividualMode().isJavascript()) {
-				changeSerializedName("sonarIssueList", "sonarIssueList");
-				changeSerializedName("sonarIssueCount", "sonarIssueCount");
-				changeSerializedName("sonarIssueType", "sonarIssueType");
-				changeSerializedName("topSonarIssueList", "topSonarIssueList");
-			} else if (cli.getIndividualMode().isSonarJava()) {
-				changeSerializedName("sonarIssueList", "sonarJavaList");
-				changeSerializedName("sonarIssueCount", "sonarJavaCount");
-				changeSerializedName("sonarIssueType", "sonarJavaType");
-				changeSerializedName("topSonarIssueList", "topSonarJavaList");
-			} else if (cli.getIndividualMode().isJavascript()) {
-				changeSerializedName("sonarIssueList", "sonarJSList");
-				changeSerializedName("sonarIssueCount", "sonarJSCount");
-				changeSerializedName("sonarIssueType", "sonarJSType");
-				changeSerializedName("topSonarIssueList", "topSonarJSList");
-			}
-		}
+        if (cli.getLanguageType() == Language.JAVA) {
+            if (cli.getIndividualMode().isSonarJava() && cli.getIndividualMode().isJavascript()) {
+                changeSerializedName("sonarIssueList", "sonarIssueList");
+                changeSerializedName("sonarIssueCount", "sonarIssueCount");
+                changeSerializedName("sonarIssueType", "sonarIssueType");
+                changeSerializedName("topSonarIssueList", "topSonarIssueList");
+            } else if (cli.getIndividualMode().isSonarJava()) {
+                changeSerializedName("sonarIssueList", "sonarJavaList");
+                changeSerializedName("sonarIssueCount", "sonarJavaCount");
+                changeSerializedName("sonarIssueType", "sonarJavaType");
+                changeSerializedName("topSonarIssueList", "topSonarJavaList");
+            } else if (cli.getIndividualMode().isJavascript()) {
+                changeSerializedName("sonarIssueList", "sonarJSList");
+                changeSerializedName("sonarIssueCount", "sonarJSCount");
+                changeSerializedName("sonarIssueType", "sonarJSType");
+                changeSerializedName("topSonarIssueList", "topSonarJSList");
+            }
+        } else if (cli.getLanguageType() == Language.JAVASCRIPT) {
+            changeSerializedName("sonarIssueList", "sonarJSList");
+            changeSerializedName("sonarIssueCount", "sonarJSCount");
+            changeSerializedName("sonarIssueType", "sonarJSType");
+            changeSerializedName("topSonarIssueList", "topSonarJSList");
+        } else if (cli.getLanguageType() == Language.CSHARP) {
+            changeSerializedName("sonarIssueList", "sonarCSharpList");
+            changeSerializedName("sonarIssueCount", "sonarCSharpCount");
+            changeSerializedName("sonarIssueType", "sonarCSharpType");
+            changeSerializedName("topSonarIssueList", "topSonarCSharpList");
+        } else {    // Python
+            changeSerializedName("sonarIssueList", "sonarPythonList");
+            changeSerializedName("sonarIssueCount", "sonarPythonCount");
+            changeSerializedName("sonarIssueType", "sonarPythonType");
+            changeSerializedName("topSonarIssueList", "topSonarPythonList");
+        }
 	}
 
 	private void changeSerializedName(String fieldName, String newSerializedName) {
@@ -953,7 +967,23 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		this.sonarJSRules = sonarJSRules;
 	}
 
-	public String getWebapp() {
+    public int getSonarCSharpRules() {
+        return sonarCSharpRules;
+    }
+
+    public void setSonarCSharpRules(int sonarCSharpRules) {
+        this.sonarCSharpRules = sonarCSharpRules;
+    }
+
+    public int getSonarPythonRules() {
+        return sonarPythonRules;
+    }
+
+    public void setSonarPythonRules(int sonarPythonRules) {
+        this.sonarPythonRules = sonarPythonRules;
+    }
+
+    public String getWebapp() {
 		return webapp;
 	}
 
@@ -980,7 +1010,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	public void addSonarIssueResult(SonarIssueResult sonarIssueResult) {
 		String ruleKey = sonarIssueResult.getRuleRepository() + ":" + sonarIssueResult.getRuleKey();
 		if (sonarIssueFilterSet.contains(ruleKey)) {
-			LOGGER.debug("SonarJava(JS) Rule exclude : {}", ruleKey);
+			LOGGER.debug("Sonar Rule exclude : {}", ruleKey);
 			return;
 		}
 		sonarIssueList.add(sonarIssueResult);
@@ -1008,7 +1038,11 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 
 	public String getSonarIssueTitle() {
 		if (languageType == Language.JAVASCRIPT) {
-			return "SonarJS";
+            return "SonarJS";
+        } else if (languageType == Language.CSHARP) {
+            return "SonarCSharp";
+        } else if (languageType == Language.PYTHON) {
+		    return "SonarPython";
 		} else {	// Language.JAVA
 			if (individualMode.isJavascript()) {
 				return "SonarIssue";

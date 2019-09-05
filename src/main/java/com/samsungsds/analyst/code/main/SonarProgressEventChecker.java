@@ -42,6 +42,8 @@ public class SonarProgressEventChecker implements Runnable {
     private AtomicBoolean javascriptCompleted = new AtomicBoolean(false);
     private AtomicBoolean cssCompleted = new AtomicBoolean(false);
     private AtomicBoolean htmlCompleted = new AtomicBoolean(false);
+    private AtomicBoolean sonarCSharpCompleted = new AtomicBoolean(false);
+    private AtomicBoolean sonarPythonCompleted = new AtomicBoolean(false);
 
     public SonarProgressEventChecker(IndividualMode mode, ObserverManager observerManager, int targetFiles) {
         this(mode, observerManager);
@@ -77,6 +79,14 @@ public class SonarProgressEventChecker implements Runnable {
 
         if (!mode.isHtml()) {
             htmlCompleted.set(true);
+        }
+
+        if (!mode.isSonarCSharp()) {
+            sonarCSharpCompleted.set(true);
+        }
+
+        if (!mode.isSonarPython()) {
+            sonarPythonCompleted.set(true);
         }
 
         LOGGER.debug("Sonar Progress Event Start ... (interval : {}ms)", intervalMillisecond);
@@ -133,6 +143,20 @@ public class SonarProgressEventChecker implements Runnable {
                 observerManager.notifyObservers(ProgressEvent.HTML_COMPLETE);
             }
         }
+
+        synchronized(sonarCSharpCompleted) {
+            if (!sonarCSharpCompleted.get()) {
+                sonarCSharpCompleted.set(true);
+                observerManager.notifyObservers(ProgressEvent.SONARCSHARP_COMPLETE);
+            }
+        }
+
+        synchronized(sonarPythonCompleted) {
+            if (!sonarPythonCompleted.get()) {
+                sonarPythonCompleted.set(true);
+                observerManager.notifyObservers(ProgressEvent.SONARPYTHON_COMPLETE);
+            }
+        }
     }
 
     private void interrupt() {
@@ -160,7 +184,8 @@ public class SonarProgressEventChecker implements Runnable {
                 Thread.currentThread().interrupt();
                 LOGGER.debug("Thread was interrupted...");
             }
-            LOGGER.debug("Thread Process Event : {}, {}, {}, {}, {}, {}", codeSizeCompleted, duplicationCompleted, sonarJavaCompleted, javascriptCompleted, cssCompleted, htmlCompleted);
+            LOGGER.debug("Thread Process Event : {}, {}, {}, {}, {}, {}, {}, {}",
+                codeSizeCompleted, duplicationCompleted, sonarJavaCompleted, javascriptCompleted, cssCompleted, htmlCompleted, sonarCSharpCompleted, sonarPythonCompleted);
             intervalMillisecond *= increaseRate;
             processEvent();
         }
@@ -208,6 +233,33 @@ public class SonarProgressEventChecker implements Runnable {
             if (!cssCompleted.get()) {
                 cssCompleted.set(true);
                 observerManager.notifyObservers(ProgressEvent.CSS_COMPLETE);
+
+                return;
+            }
+        }
+
+        synchronized(htmlCompleted) {
+            if (!htmlCompleted.get()) {
+                htmlCompleted.set(true);
+                observerManager.notifyObservers(ProgressEvent.HTML_COMPLETE);
+
+                return;
+            }
+        }
+
+        synchronized(sonarCSharpCompleted) {
+            if (!sonarCSharpCompleted.get()) {
+                sonarCSharpCompleted.set(true);
+                observerManager.notifyObservers(ProgressEvent.SONARCSHARP_COMPLETE);
+
+                return;
+            }
+        }
+
+        synchronized(sonarPythonCompleted) {
+            if (!sonarPythonCompleted.get()) {
+                sonarPythonCompleted.set(true);
+                observerManager.notifyObservers(ProgressEvent.SONARPYTHON_COMPLETE);
 
                 return;
             }

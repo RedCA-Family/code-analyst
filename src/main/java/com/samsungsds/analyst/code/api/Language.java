@@ -1,5 +1,5 @@
 package com.samsungsds.analyst.code.api;
 
 public enum Language {
-    JAVA, JAVASCRIPT
+    JAVA, JAVASCRIPT, CSHARP, PYTHON
 }

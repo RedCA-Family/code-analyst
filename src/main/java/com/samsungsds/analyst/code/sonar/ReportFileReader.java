@@ -76,7 +76,7 @@ public class ReportFileReader implements Closeable {
 	}
 
 	protected void readComponent(Component component) {
-		LOGGER.debug("Component : {}", component.getPath());
+	    LOGGER.debug("Component[{}] : {}, {}, {}, {}", component.getRef(), component.getType(), component.getName(), component.getPath(), component.getChildRefList());
 
 		MeasuredResult instance = MeasuredResult.getInstance(instanceKey);
 
@@ -91,7 +91,9 @@ public class ReportFileReader implements Closeable {
 			// js의 경우 *.js, *.jsx, *.vue 파일 분석이 되나, language는 "js"만 리턴됨
 			if ((instance.getLanguageType() == Language.JAVA && "java".equals(component.getLanguage()))
 					|| (instance.getLanguageType() == Language.JAVA && instance.getIndividualMode().isJavascript() && "js".equals(component.getLanguage()))
-					|| (instance.getLanguageType() == Language.JAVASCRIPT && "js".equals(component.getLanguage()))) {
+					|| (instance.getLanguageType() == Language.JAVASCRIPT && "js".equals(component.getLanguage()))
+                    || (instance.getLanguageType() == Language.CSHARP && "cs".equals(component.getLanguage()))
+                    || (instance.getLanguageType() == Language.PYTHON && "py".equals(component.getLanguage()))) {
 
 				// Code Size
 				if (instance.getIndividualMode().isCodeSize()) {
@@ -108,13 +110,15 @@ public class ReportFileReader implements Closeable {
 				// Issue
 				if ((instance.getLanguageType() == Language.JAVA && instance.getIndividualMode().isSonarJava())
 						|| (instance.getLanguageType() == Language.JAVA && instance.getIndividualMode().isJavascript())
-						|| (instance.getLanguageType() == Language.JAVASCRIPT && instance.getIndividualMode().isSonarJS())) {
+						|| (instance.getLanguageType() == Language.JAVASCRIPT && instance.getIndividualMode().isSonarJS())
+                        || (instance.getLanguageType() == Language.CSHARP && instance.getIndividualMode().isSonarCSharp())
+                        || (instance.getLanguageType() == Language.PYTHON && instance.getIndividualMode().isSonarPython())) {
 					try (CloseableIterator<ScannerReport.Issue> it = reader.readComponentIssues(component.getRef())) {
 						while (it.hasNext()) {
 							ScannerReport.Issue issue = it.next();
-							SonarIssueResult sonarJavaResult = new SonarIssueResult(component.getLanguage(), component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(),	reverseSeverity(issue.getSeverityValue()),
+							SonarIssueResult sonarIssueResult = new SonarIssueResult(component.getLanguage(), component.getPath(), issue.getRuleRepository(), issue.getRuleKey(), issue.getMsg(), reverseSeverity(issue.getSeverityValue()),
 									issue.getTextRange().getStartLine(), issue.getTextRange().getStartOffset(), issue.getTextRange().getEndLine(), issue.getTextRange().getEndOffset());
-							instance.addSonarIssueResult(sonarJavaResult);
+							instance.addSonarIssueResult(sonarIssueResult);
 						}
 					} catch (Exception e) {
 						throw new IllegalStateException("Can't read issues for " + component, e);
@@ -136,11 +140,11 @@ public class ReportFileReader implements Closeable {
 			}
 		}
 
-		for (int ref : component.getChildRefList()) {
-			Component child = reader.readComponent(ref);
+        for (int ref : component.getChildRefList()) {
+            Component child = reader.readComponent(ref);
 
-			readComponent(child);
-		}
+            readComponent(child);
+        }
 	}
 
 	private void calculateCodeSize(Component component) {
