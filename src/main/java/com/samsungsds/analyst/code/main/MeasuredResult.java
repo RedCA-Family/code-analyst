@@ -24,7 +24,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import com.google.gson.annotations.JsonAdapter;
 import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.checkstyle.CheckStyleResult;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
@@ -139,7 +141,8 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	private int statements = 0;
 
 	@Expose
-	private List<String> filePathList = Collections.synchronizedList(new ArrayList<>());
+    @JsonAdapter(FilePathInfoAdapter.class)
+	private List<FilePathInfo> filePathList = Collections.synchronizedList(new ArrayList<>());
 
 	@Expose
 	private List<DuplicationResult> duplicationList = null;
@@ -585,11 +588,13 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	}
 
 	public List<String> getFilePathList() {
-		return filePathList;
+	    return filePathList.stream()
+            .map(file -> new String(file.getPath()))
+            .collect(Collectors.toList());
 	}
 
-	public void addFilePathList(String filePath) {
-		filePathList.add(filePath);
+	public void addFilePathList(String moduleName, String filePath) {
+		filePathList.add(new FilePathInfo(moduleName, filePath));
 	}
 
 	public int getDuplicatedBlocks() {

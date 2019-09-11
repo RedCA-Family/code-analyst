@@ -66,7 +66,7 @@ public class ReportFileReader implements Closeable {
 
 		Component project = reader.readComponent(rootComponentRef);
 
-		readComponent(project);
+		readComponent(project, "");
 
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("--------------------------------------------------------------------------------");
@@ -75,18 +75,20 @@ public class ReportFileReader implements Closeable {
 		}
 	}
 
-	protected void readComponent(Component component) {
+	protected void readComponent(Component component, String currentModuleName) {
 	    LOGGER.debug("Component[{}] : {}, {}, {}, {}", component.getRef(), component.getType(), component.getName(), component.getPath(), component.getChildRefList());
 
 		MeasuredResult instance = MeasuredResult.getInstance(instanceKey);
 
-		if (component.getType().equals(ComponentType.DIRECTORY)) {
+		if (component.getType() == ComponentType.MODULE) {
+            currentModuleName = component.getName();
+        } else if (component.getType() == ComponentType.DIRECTORY) {
 			if (instance.getIndividualMode().isCodeSize()) {
 				instance.addDirectories(1);
 			}
-		} else if (component.getType().equals(ComponentType.FILE)) {
+		} else if (component.getType() == ComponentType.FILE) {
 
-			instance.addFilePathList(component.getPath());
+			instance.addFilePathList(currentModuleName, component.getPath());
 
 			// js의 경우 *.js, *.jsx, *.vue 파일 분석이 되나, language는 "js"만 리턴됨
 			if ((instance.getLanguageType() == Language.JAVA && "java".equals(component.getLanguage()))
@@ -143,7 +145,7 @@ public class ReportFileReader implements Closeable {
         for (int ref : component.getChildRefList()) {
             Component child = reader.readComponent(ref);
 
-            readComponent(child);
+            readComponent(child, currentModuleName);
         }
 	}
 
