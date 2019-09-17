@@ -81,6 +81,8 @@ public class Version {
 
 	public static final String CHECKSTYLE = "8.21";
 
+	public static final String MS_CODE_ANALYSIS_METRICS = "2.9.4";
+
 	public static final String PMD_RULESET = "91 ruleset (v5.4, RedCA Way Ruleset, '18.03)";
 	public static final String FINDBUGS_RULESET = "214 ruleset (v3.0.1, RedCA Way Ruleset, '18.03)";
 	public static final String FINDSECBUGS_RULESET = "81 rules (v1.7.1, RedCA Way Ruleset, '18.06)";
@@ -120,6 +122,7 @@ public class Version {
 		System.out.println("    ※ Supported Platform : Windows/MacOS/Linux(x64)");
 		System.out.println("  - ESLint : " + ESLINT + " (MIT)");
 		System.out.println("  - CheckStyle : " + CHECKSTYLE + " (LGPL v2.1)");
+		System.out.println("  - MS CodeAnalysis Metrics : " + MS_CODE_ANALYSIS_METRICS + " (Apache v2.0)");
 		System.out.println();
 		System.out.println("Default RuleSet");
 		System.out.println("  - PMD : " + PMD_RULESET);

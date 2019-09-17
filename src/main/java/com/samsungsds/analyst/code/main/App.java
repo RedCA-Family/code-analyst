@@ -32,6 +32,7 @@ import com.samsungsds.analyst.code.main.subject.TargetFile;
 import com.samsungsds.analyst.code.main.subject.TargetManager;
 import com.samsungsds.analyst.code.node_modules.eslint.ComplexityAnalysisESLintLauncher;
 import com.samsungsds.analyst.code.pmd.*;
+import com.samsungsds.analyst.code.roslyn.codemetrics.CodeAnalysisLauncher;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -380,7 +381,11 @@ public class App {
 	}
 
     private void runComplexityForCSharp(CliParser cli) {
-        // TODO implement complexity mode for c#
+        ComplexityAnalysis codeAnalysis = new CodeAnalysisLauncher();
+
+        codeAnalysis.addOption("-dir", cli.getProjectBaseDir());
+
+        codeAnalysis.run(cli.getInstanceKey());
 
         observerManager.notifyObservers(ProgressEvent.COMPLEXITY_COMPLETE);
     }
