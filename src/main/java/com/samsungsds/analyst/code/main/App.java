@@ -32,6 +32,7 @@ import com.samsungsds.analyst.code.main.subject.TargetFile;
 import com.samsungsds.analyst.code.main.subject.TargetManager;
 import com.samsungsds.analyst.code.node_modules.eslint.ComplexityAnalysisESLintLauncher;
 import com.samsungsds.analyst.code.pmd.*;
+import com.samsungsds.analyst.code.python.radon.RadonAnalysisLauncher;
 import com.samsungsds.analyst.code.roslyn.codemetrics.CodeAnalysisLauncher;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -148,7 +149,7 @@ public class App {
                     }
                 }
 
-				if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isComplexity()
+				if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication()
                         || cli.getIndividualMode().isSonarJava()
 						|| cli.getIndividualMode().isJavascript() || cli.getIndividualMode().isWebResources()
                         || cli.getIndividualMode().isSonarCSharp() || cli.getIndividualMode().isSonarPython()) {
@@ -159,9 +160,11 @@ public class App {
 					if (cli.getIndividualMode().isDuplication()) {
 						sonarAnalysisModeList.add("Duplication");
 					}
+					/*
                     if (cli.getIndividualMode().isComplexity()) {
                         sonarAnalysisModeList.add("Complexity");
                     }
+					*/
 					if (cli.getIndividualMode().isSonarJava()) {
 						sonarAnalysisModeList.add("Sonar Java");
 					}
@@ -391,7 +394,13 @@ public class App {
     }
 
     private void runComplexityForPython(CliParser cli) {
-        // TODO implement complexity mode for Python
+        ComplexityAnalysis radonAnalysis = new RadonAnalysisLauncher();
+
+        radonAnalysis.addOption("path", cli.getProjectBaseDir());
+        radonAnalysis.addOption("exclude", cli.getExcludes());
+        radonAnalysis.addOption("src", cli.getSrc());
+
+        radonAnalysis.run(cli.getInstanceKey());
 
         observerManager.notifyObservers(ProgressEvent.COMPLEXITY_COMPLETE);
     }
