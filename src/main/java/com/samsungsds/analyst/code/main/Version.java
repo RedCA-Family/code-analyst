@@ -126,7 +126,7 @@ public class Version {
 		System.out.println("  - MS CodeAnalysis Metrics : " + MS_CODE_ANALYSIS_METRICS + " (Apache v2.0)");
         System.out.println("    ※ Supported Platform : Windows");
         System.out.println("  - Radon(python) : " + PYTHON_RADON + " (MIT)");
-        System.out.println("    ※ required Python runtime");
+        System.out.println("    ※ required Python runtime (any platform)");
 		System.out.println();
 		System.out.println("Default RuleSet");
 		System.out.println("  - PMD : " + PMD_RULESET);

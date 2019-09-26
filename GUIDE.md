@@ -3,10 +3,17 @@
 ## 1. 기본 실행 ##
 
 ### [Java]
-	$> java -jar Code-Analyst-2.8.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+	$> java -jar Code-Analyst-2.9.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
 
 ### [JavaScript]
-	$> java -jar Code-Analyst-2.8.0.jar -l javascript -p "프로젝트 위치" -s "."
+	$> java -jar Code-Analyst-2.9.0.jar -l javascript -p "프로젝트 위치" -s "."
+	
+### [C#]
+	$> java -jar Code-Analyst-2.9.0.jar -l c# -p "프로젝트 위치" -s "."
+
+### [Python]
+	$> java -jar Code-Analyst-2.9.0.jar -l python -p "프로젝트 위치" -s "."
+	
 
 ### 결과 화면 (예시)
 	
@@ -79,7 +86,7 @@
 ### [Java]
 | Option | Description | Default | since | Example |
 | ------ | ----------- | ------- | :---: | ------- |
-| -l, --language <arg> | 분석 대상 언어 지정 ('Java' 또는 'JavaScript', 지정되지 않으면 Java로 처리) | 'Java' | 2.7 | -l "java" |
+| -l, --language <arg> | 분석 대상 언어 지정 ('Java', 'JavaScript', 'C#' 또는 'Python', 지정되지 않으면 Java로 처리) | 'Java' | 2.7 | -l "java" |
 | -p, --project <arg> | 프로젝트 기본 위치 지정 (지정되지 않으면 현재 디렉토리로 처리) | . | 1.0 | -p "C:\Workspace\Project" |
 | -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | src\main\java, src(v2.2 이전) | 1.0 | -s "src\main\java" | 
 | -b, --binary <arg> | binary 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | target\classes | 1.0 | -b "binary" |
@@ -116,7 +123,7 @@ com/samsung/**/*.java
 ### [JavaScript]
 | Option | Description | Default | since | Example |
 | ------ | ----------- | ------- | :---: | ------- |
-| -l, --language <arg> | 분석 대상 언어 지정 ('Java' 또는 'JavaScript', 지정되지 않으면 Java로 처리) | 'Java' | 2.7 | -l "javascript" |
+| -l, --language <arg> | 분석 대상 언어 지정 ('Java', 'JavaScript', 'C#' 또는 'Python', 지정되지 않으면 Java로 처리) | 'Java' | 2.7 | -l "javascript" |
 | -p, --project <arg> | 프로젝트 기본 위치 지정 (지정되지 않으면 현재 디렉토리로 처리) | . | 2.7 | -p "C:\Workspace\Project" |
 | -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | . | 2.7 | -s "app" | 
 | -d, --debug | 디버그 모드 |  | 2.7 | -d |
@@ -137,8 +144,64 @@ com/samsung/**/*.java
 ※ 'include' 또는 'exclude' 옵션 지정 시, ```@file``` 형태로 파일 지정이 가능합니다. (since v2.8)
 이때 파일은 다음과 같은 형식으로 지정하면 됩니다. (여러 라인으로 구성되며, 각 라인은 콤마 없이 하나의 패턴을 지정)
 ```
-com/sds/**/*.java
-com/samsung/**/*.java
+com/sds/**/*.js
+com/samsung/**/*.js
+```
+
+### [C#]
+| Option | Description | Default | since | Example |
+| ------ | ----------- | ------- | :---: | ------- |
+| -l, --language <arg> | 분석 대상 언어 지정 ('Java', 'JavaScript', 'C#' 또는 'Python', 지정되지 않으면 Java로 처리) | 'Java' | 2.7 | -l "c#" |
+| -p, --project <arg> | 프로젝트 기본 위치 지정 (지정되지 않으면 현재 디렉토리로 처리) | . | 2.7 | -p "C:\Workspace\Project" |
+| -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | . | 2.7 | -s "app" | 
+| -d, --debug | 디버그 모드 |  | 2.7 | -d |
+| -e, --encoding <arg> | 소스에 대한 파일 encoding 지정 | 	UTF-8 | 2.7 | -e UTF-8 |
+| -sonar <arg> | SonarQube exclude 파일(XML)  형식 :  <SonarIssueFilter>  <Exclude key="common-js:DuplicatedBlocks"/>  </SonarIssueFilter> |  | 2.7 | -sonar "C:\SonarIssueFilter.xml" |
+| -o, --output <arg> | 결과 저장 파일명 지정  미지정시, 현재날짜를 포함하는 파일명 사용 | result-[yyyyMMddHHmmss].[out|json] | 2.7 | -o result.txt |
+| -f, --format <arg> | 결과 파일 형식 지정 (json, text, none)  * none의 경우 summary 결과만 표시하고 결과 파일을 저장하지 않음 | json | 2.7 | -f text |
+| -v, --version | 버전 정보 표시 (사용 library 및 버전, 적용 inspection rule 포함) |  | 2.7 | -v |
+| -t, --timeout <arg> | 내부적으로 사용되는 web service에 대한 timeout | 100분 | 2.7 | -t 160 |
+| -include <arg> | include 패턴 지정 (Ant-style로 comma로 구분되는 여러 패턴 지정 가능) |  | 2.7 | -include "app/**/*.cs" |
+| -exclude <arg> | exclude 패턴 지정 (Ant-style로 comma로 구분되는 여러 패턴 지정 가능) |  | 2.7 | -exclude "tests/**,tests-*/**,*-tests/**" |
+| -m, --mode <arg> | 점검 대상 선택 지정으로 code-size, duplication, complexity, sonarcsharp (comma로 구분)  점검 대상 앞에 "-"가 붙는 경우는 해당 항목 점검이 제외됨 | ※ 전체 | 2.7 | -m "sonarcsharp" |
+| -a,--analysis | 세부 분석 모드로 "영향도 높은 중복 코드 블럭 식별" 등 추가   (내부적으로 좀더 많은 메모리를 사용하므로 OOM 발생 시, JVM의 '-Xmx' 옵션을 사용 권장, eg: -Xmx1024m) |  | 2.7 | -a |
+| -r,--rerun <arg> | 이전 실행된 결과 output(text)와 동일한 옵션을 지정하여 실행  영향을 받는 옵션 : 'project', 'src', 'encoding', 'sonar', 'include', 'exclude', 'mode', 'analysis', 'seperated' alc 'catalog' |  | 2.7 | -r result.out |
+| -seperated | 중복도, 복잡도, SonarJS에 대한 결과 정보를 별도의 파일로 분리 |  | 2.7 | -seperated |
+| -catalog | 점검된 파일 목록 |  | 2.7 | -catalog |
+
+※ 'include' 또는 'exclude' 옵션 지정 시, ```@file``` 형태로 파일 지정이 가능합니다. (since v2.8)
+이때 파일은 다음과 같은 형식으로 지정하면 됩니다. (여러 라인으로 구성되며, 각 라인은 콤마 없이 하나의 패턴을 지정)
+```
+com/sds/**/*.cs
+com/samsung/**/*.cs
+```
+
+### [Python]
+| Option | Description | Default | since | Example |
+| ------ | ----------- | ------- | :---: | ------- |
+| -l, --language <arg> | 분석 대상 언어 지정 ('Java', 'JavaScript', 'C#' 또는 'Python', 지정되지 않으면 Java로 처리) | 'Java' | 2.7 | -l "python" |
+| -p, --project <arg> | 프로젝트 기본 위치 지정 (지정되지 않으면 현재 디렉토리로 처리) | . | 2.7 | -p "C:\Workspace\Project" |
+| -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | . | 2.7 | -s "app" | 
+| -d, --debug | 디버그 모드 |  | 2.7 | -d |
+| -e, --encoding <arg> | 소스에 대한 파일 encoding 지정 | 	UTF-8 | 2.7 | -e UTF-8 |
+| -sonar <arg> | SonarQube exclude 파일(XML)  형식 :  <SonarIssueFilter>  <Exclude key="common-js:DuplicatedBlocks"/>  </SonarIssueFilter> |  | 2.7 | -sonar "C:\SonarIssueFilter.xml" |
+| -o, --output <arg> | 결과 저장 파일명 지정  미지정시, 현재날짜를 포함하는 파일명 사용 | result-[yyyyMMddHHmmss].[out|json] | 2.7 | -o result.txt |
+| -f, --format <arg> | 결과 파일 형식 지정 (json, text, none)  * none의 경우 summary 결과만 표시하고 결과 파일을 저장하지 않음 | json | 2.7 | -f text |
+| -v, --version | 버전 정보 표시 (사용 library 및 버전, 적용 inspection rule 포함) |  | 2.7 | -v |
+| -t, --timeout <arg> | 내부적으로 사용되는 web service에 대한 timeout | 100분 | 2.7 | -t 160 |
+| -include <arg> | include 패턴 지정 (Ant-style로 comma로 구분되는 여러 패턴 지정 가능) |  | 2.7 | -include "app/**/*.cs" |
+| -exclude <arg> | exclude 패턴 지정 (Ant-style로 comma로 구분되는 여러 패턴 지정 가능) |  | 2.7 | -exclude "tests/**,tests-*/**,*-tests/**" |
+| -m, --mode <arg> | 점검 대상 선택 지정으로 code-size, duplication, complexity, sonarpython (comma로 구분)  점검 대상 앞에 "-"가 붙는 경우는 해당 항목 점검이 제외됨 | ※ 전체 | 2.7 | -m "sonarcsharp" |
+| -a,--analysis | 세부 분석 모드로 "영향도 높은 중복 코드 블럭 식별" 등 추가   (내부적으로 좀더 많은 메모리를 사용하므로 OOM 발생 시, JVM의 '-Xmx' 옵션을 사용 권장, eg: -Xmx1024m) |  | 2.7 | -a |
+| -r,--rerun <arg> | 이전 실행된 결과 output(text)와 동일한 옵션을 지정하여 실행  영향을 받는 옵션 : 'project', 'src', 'encoding', 'sonar', 'include', 'exclude', 'mode', 'analysis', 'seperated' alc 'catalog' |  | 2.7 | -r result.out |
+| -seperated | 중복도, 복잡도, SonarJS에 대한 결과 정보를 별도의 파일로 분리 |  | 2.7 | -seperated |
+| -catalog | 점검된 파일 목록 |  | 2.7 | -catalog |
+
+※ 'include' 또는 'exclude' 옵션 지정 시, ```@file``` 형태로 파일 지정이 가능합니다. (since v2.8)
+이때 파일은 다음과 같은 형식으로 지정하면 됩니다. (여러 라인으로 구성되며, 각 라인은 콤마 없이 하나의 패턴을 지정)
+```
+com/sds/**/*.py
+com/samsung/**/*.py
 ```
 
 ## 3. API 활용 가이드
@@ -205,8 +268,35 @@ API의 analyze() 호출을 통해 코드 분석을 수행하며, 다음과 같�
 | detailAnalysis | 세부 분석 처리 (Top 10 분석 등) |  |
 | saveCatalog | 점검된 파일 목록 기록 |  |
 
+#### [C#]
+| Property | Description | Remarks |
+| -------- | ----------- | ------- |
+| project | project 기본 디렉토리 지정 | 필수 |
+| src | 점검 대상 소스 디렉토리 (위 project 속성에 대한 상대경로 지정) | 필수 |
+| debug | Debug 모드 (개발자 모드) | 기본값 : false |
+| encoding | 소스 인코딩 | 기본값 : UTF-8 |
+| sonarRuleFile | SonarJava 등 SonarQube plugin exclude 처리 xml (생략되면 최종 RedCA Way ruleset 전체 적용) |  |
+| timeout | 내부적으로 사용되는 jetty에 대한 timeout 지정 (개발자 모드) | 기본값 : 100분 |
+| exclude | 제외 패턴(ant-style, 여러 개인 경우 comma로 구분) |  |
+| mode | AnalysisMode로 점검하고자 하는 항목 지정 (codeSize, duplication, complexity, sonarcsharp) | 기본 : 전체 |
+| detailAnalysis | 세부 분석 처리 (Top 10 분석 등) |  |
+| saveCatalog | 점검된 파일 목록 기록 |  |
 
-#### 공통 (Java, JavaScript)
+#### [Python]
+| Property | Description | Remarks |
+| -------- | ----------- | ------- |
+| project | project 기본 디렉토리 지정 | 필수 |
+| src | 점검 대상 소스 디렉토리 (위 project 속성에 대한 상대경로 지정) | 필수 |
+| debug | Debug 모드 (개발자 모드) | 기본값 : false |
+| encoding | 소스 인코딩 | 기본값 : UTF-8 |
+| sonarRuleFile | SonarJava 등 SonarQube plugin exclude 처리 xml (생략되면 최종 RedCA Way ruleset 전체 적용) |  |
+| timeout | 내부적으로 사용되는 jetty에 대한 timeout 지정 (개발자 모드) | 기본값 : 100분 |
+| exclude | 제외 패턴(ant-style, 여러 개인 경우 comma로 구분) |  |
+| mode | AnalysisMode로 점검하고자 하는 항목 지정 (codeSize, duplication, complexity, sonarpython) | 기본 : 전체 |
+| detailAnalysis | 세부 분석 처리 (Top 10 분석 등) |  |
+| saveCatalog | 점검된 파일 목록 기록 |  |
+
+#### 공통 (Java, JavaScript, C#, Python)
 
 * TargetFileInfo : 분석 대상 폴더 및 소스 파일 지정 (addPackage() 또는 addFile()/addFileExactly()을 통해 분석 대상 소스 지정)
 
@@ -229,6 +319,8 @@ API의 analyze() 호출을 통해 코드 분석을 수행하며, 다음과 같�
 | findSecBugsFile | FindSecBugs List 결과 파일 |
 | sonarJavaFile | SonarJava List 결과 파일 |
 | sonarJsFile | SonarJs List 결과 파일 |
+| sonarCSharpFile | SonarCSharp List 결과 파일 |
+| sonarPythonFile | SonarPython List 결과 파일 |
 | webResourceFile | Web Resource List 결과 파일 |
 | ckMetricsFile | CK Metrics List 결과 파일 |
 | checkStyleFile | CheckStyle List 결과 파일 |
@@ -412,8 +504,10 @@ ProgressObserver의 informProgress() 메소드에 의해 notify되며, AnalysisP
 * CODE_SIZE_COMPLETE : 기본 코드 분석 후 호출
 * DUPLICATION_COMPLETE : 중복 분석 후 호출
 * COMPLEXITY_COMPLETE : 복잡도 분석 후 호출
-* SONAR_JAVA_COMPLETE : SonarJava 분석 후 호출
+* SONARJAVA_COMPLETE : SonarJava 분석 후 호출
 * JAVASCRIPT_COMPLETE : SonarJS 분석 후 호출
+* SONARCSHARP_COMPLETE : SonarCSharp 분석 후 호출
+* SONARPYTHON_COMPLETE : SonarPython 분석 후 호출
 * CSS_COMPLETE : CSS(Sonar) 분석 후 호출
 * HTML_COMPLETE : Sonar Web 분석 후 호출
 * SONAR_ALL_COMPLETE: Sonar 관련 전체 분석 후 호출

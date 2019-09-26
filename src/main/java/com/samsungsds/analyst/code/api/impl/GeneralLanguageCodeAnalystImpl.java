@@ -95,7 +95,7 @@ public abstract class GeneralLanguageCodeAnalystImpl extends AbstractCodeAnalyst
 
 		info.setDuplicationFile(fileWithoutExt + "-duplication.json");
 		info.setComplexityFile(fileWithoutExt + "-complexity.json");
-		info.setSonarJsFile(fileWithoutExt + "-" + getSeparatedResultFileSuffix() + ".json");
+		info.setSonarOtherFile(fileWithoutExt + "-" + getSeparatedResultFileSuffix() + ".json");
 
 		return info;
 	}
