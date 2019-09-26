@@ -35,25 +35,25 @@ import com.samsungsds.analyst.code.sonar.ReportFileReader;
 @SuppressWarnings("serial")
 public class SubmitServlet extends HttpServlet {
 	private static final Logger LOGGER = LogManager.getLogger(SubmitServlet.class);
-	
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String url = request.getRequestURI();
 		String queryString = request.getQueryString() == null ? "" : "?" + request.getQueryString();
-		
+
 		LOGGER.debug("Requested URL : {}{}", url, queryString);
 
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-		
+
 		if (isMultipart) {
 			LOGGER.info("Multipart...");
 		}
-		
+
 		String projectKey = request.getParameter("projectKey");
 		LOGGER.info("Project Key : {}", projectKey);
-		
+
 		String[] keys = projectKey.split(":");
-		String instanceKey = keys[1];		
+		String instanceKey = keys[1];
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 
@@ -72,17 +72,15 @@ public class SubmitServlet extends HttpServlet {
 
 				// Write the file
 				fi.write(file);
-				
+
 				try (ReportFileReader reader = new ReportFileReader(file, instanceKey)) {
-					reader.read();	
-				} 
-				
+					reader.read();
+				}
 			}
-			
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			throw new IllegalArgumentException(ex.toString(), ex);
 		}
-		
+
 		// Declare response status code
 		response.setStatus(HttpServletResponse.SC_OK);
 	}

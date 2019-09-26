@@ -56,4 +56,9 @@ public interface CliParseProcessor {
      * @return whether parsing success
      */
     boolean parseAndSaveParsedValue(CliParser cliParser, Options options, String[] args, CliParsedValueObject parsedValue);
+
+    /**
+     * Get error message when mode has wrong value
+     */
+    String getModeErrorMessage();
 }

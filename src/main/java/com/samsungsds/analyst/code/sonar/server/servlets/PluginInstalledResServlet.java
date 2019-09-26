@@ -75,7 +75,8 @@ public class PluginInstalledResServlet extends HttpServlet {
                 IOAndFileUtils.write(outStream, "/statics/plugin_java.json");
                 isWritten = true;
             }
-            if (individualMode.getLanguageType() == Language.JAVASCRIPT || individualMode.isJavascript()) {
+            if ((individualMode.getLanguageType() == Language.JAVA && individualMode.isJavascript()) ||
+                (individualMode.getLanguageType() == Language.JAVASCRIPT && (individualMode.isCodeSize() || individualMode.isDuplication() || individualMode.isSonarJS()))) {
                 if (isWritten) {
                     IOAndFileUtils.writeString(outStream, ",\n");
                 }
@@ -92,6 +93,18 @@ public class PluginInstalledResServlet extends HttpServlet {
                     IOAndFileUtils.writeString(outStream, ",\n");
                 }
                 IOAndFileUtils.write(outStream, "/statics/plugin_css.json");
+            }
+            if (individualMode.getLanguageType() == Language.CSHARP && (individualMode.isCodeSize() || individualMode.isDuplication() || individualMode.isSonarCSharp())) {
+                if (isWritten) {
+                    IOAndFileUtils.writeString(outStream, ",\n");
+                }
+                IOAndFileUtils.write(outStream, "/statics/plugin_csharp.json");
+            }
+            if (individualMode.getLanguageType() == Language.PYTHON && (individualMode.isCodeSize() || individualMode.isDuplication() || individualMode.isSonarPython())) {
+                if (isWritten) {
+                    IOAndFileUtils.writeString(outStream, ",\n");
+                }
+                IOAndFileUtils.write(outStream, "/statics/plugin_python.json");
             }
 
             IOAndFileUtils.writeString(outStream, "\t]\n" + "}");

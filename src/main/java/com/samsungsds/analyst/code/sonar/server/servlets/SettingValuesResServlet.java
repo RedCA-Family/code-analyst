@@ -41,5 +41,4 @@ public class SettingValuesResServlet extends HttpServlet {
 			IOAndFileUtils.write(outStream, "/statics/values.protobuf");
 		}
 	}
-
 }

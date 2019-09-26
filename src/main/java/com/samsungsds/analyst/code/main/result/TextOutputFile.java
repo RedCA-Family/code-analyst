@@ -147,9 +147,13 @@ public class TextOutputFile extends AbstractOutputFile {
 				} else {
 					writer.println(name + "Rules = " + result.getSonarJavaRules());
 				}
-			} else {
+			} else if (result.getLanguageType() == Language.JAVASCRIPT) {
 				writer.println(name + "Rules = " + result.getSonarJSRules());
-			}
+			} else if (result.getLanguageType() == Language.CSHARP) {
+                writer.println(name + "Rules = " + result.getSonarCSharpRules());
+            } else if (result.getLanguageType() == Language.PYTHON) {
+                writer.println(name + "Rules = " + result.getSonarPythonRules());
+            }
 			writer.println(name + " = " + result.getSonarIssueCountAll());
 			writer.println(name + "1Priority = " + result.getSonarIssueCount(1));
 			writer.println(name + "2Priority = " + result.getSonarIssueCount(2));
@@ -365,7 +369,7 @@ public class TextOutputFile extends AbstractOutputFile {
 			writer.println();
 			writer.println();
 		}
-		
+
 		if (result.isDetailAnalysis()) {
 			writeTopInspection(result.getTopSonarIssueList(), "Top" + name + "List");
 		}

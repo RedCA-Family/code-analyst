@@ -85,8 +85,8 @@ public class ApiExample {
 
 		// argument.setDebug(true);
 
-		// argument.setExclude("com/samsungsds/analyst/code/main/filter/*");
-        argument.setExclude("@./include-files.txt");
+		argument.setExclude("com/samsungsds/analyst/code/main/filter/*");
+        //argument.setExclude("@./include-files.txt");
 
 		//argument.setInclude("**/com/samsungsds/**");
 		// include와 TargetFileInfo가 같이 들어오면 "and"로 처리됨

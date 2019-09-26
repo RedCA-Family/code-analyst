@@ -104,7 +104,9 @@ public class ResultProcessor {
 	private static void printSonarIssueSummary(MeasuredResult result) {
 		if ((result.getLanguageType() == Language.JAVA && result.getIndividualMode().isSonarJava())
 				|| (result.getLanguageType() == Language.JAVA && result.getIndividualMode().isJavascript())
-				|| (result.getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isSonarJS())) {
+				|| (result.getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isSonarJS())
+                || (result.getLanguageType() == Language.CSHARP && result.getIndividualMode().isSonarCSharp())
+                || (result.getLanguageType() == Language.PYTHON && result.getIndividualMode().isSonarPython())) {
 
 			String name = result.getSonarIssueTitle();
 

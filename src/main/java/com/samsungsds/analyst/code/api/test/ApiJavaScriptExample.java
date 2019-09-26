@@ -52,7 +52,7 @@ public class ApiJavaScriptExample {
         mode.setCodeSize(true);
         mode.setDuplication(true);
         mode.setComplexity(true);
-        mode.setSonarJS(false);
+        mode.setSonarJS(true);
 
         //System.setProperty("print.path.filter", "true");
 
@@ -68,6 +68,5 @@ public class ApiJavaScriptExample {
         String resultFile = analyst.analyze(TEMP_DIRECTORY, argument, targetFile);
 
         System.out.println("Result File : " + resultFile);
-
     }
 }

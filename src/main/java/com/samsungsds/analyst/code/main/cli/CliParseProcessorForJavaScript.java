@@ -42,7 +42,7 @@ public class CliParseProcessorForJavaScript extends AbstractCliParseProcessor {
 
     @Override
     public void setOptions(CliParser cliParser, Options options) {
-        options.addOption("l", "language", true, "specify the language to analyze. ('Java' or 'JavaScript', default : \"Java\")");
+        options.addOption("l", "language", true, "specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : \"Java\")");
 
         options.addOption("h", "help", false, "show help.");
         options.addOption("p", "project", true, "specify project base directory. (default: \".\")");
@@ -83,6 +83,7 @@ public class CliParseProcessorForJavaScript extends AbstractCliParseProcessor {
     public void setDefaultIndividualModeAfterParsing(CliParsedValueObject parsedValue) {
         parsedValue.getIndividualMode().setLanguageType(Language.JAVASCRIPT);
 
+        // keep values : CodeSize, Duplication, Complexity + SonarJS
         parsedValue.getIndividualMode().setSonarJava(false);
         parsedValue.getIndividualMode().setPmd(false);
         parsedValue.getIndividualMode().setFindBugs(false);
@@ -92,6 +93,9 @@ public class CliParseProcessorForJavaScript extends AbstractCliParseProcessor {
         parsedValue.getIndividualMode().setDependency(false);
         parsedValue.getIndividualMode().setUnusedCode(false);
         parsedValue.getIndividualMode().setCkMetrics(false);
+        parsedValue.getIndividualMode().setCheckStyle(false);
+        parsedValue.getIndividualMode().setSonarCSharp(false);
+        parsedValue.getIndividualMode().setSonarPython(false);
     }
 
     @Override
@@ -230,5 +234,10 @@ public class CliParseProcessorForJavaScript extends AbstractCliParseProcessor {
             help(options);
             return false;
         }
+    }
+
+    @Override
+    public String getModeErrorMessage() {
+        return "'mode' option can only have 'code-size', 'duplication', 'complexity' and 'javascript'(sonarjs) (with or without '-')";
     }
 }

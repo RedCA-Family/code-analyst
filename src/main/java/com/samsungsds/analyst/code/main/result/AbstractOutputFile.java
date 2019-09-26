@@ -67,7 +67,9 @@ public abstract class AbstractOutputFile {
 
 			if ((result.getLanguageType() == Language.JAVA && result.getIndividualMode().isSonarJava())
 					|| (result.getLanguageType() == Language.JAVA && result.getIndividualMode().isJavascript())
-					|| (result.getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isJavascript())) {
+					|| (result.getLanguageType() == Language.JAVASCRIPT && result.getIndividualMode().isJavascript())
+                    || (result.getLanguageType() == Language.CSHARP && result.getIndividualMode().isSonarCSharp())
+                    || (result.getLanguageType() == Language.PYTHON && result.getIndividualMode().isSonarPython())) {
 				writeSonarIssue(result.getSonarIssueList());
 			}
 

@@ -125,11 +125,19 @@ public class JsonOutputFile extends AbstractOutputFile {
 				} else {
 					throw new RuntimeException("Language & individual mode error...");
 				}
-			} else {
+			} else if (result.getLanguageType() == Language.JAVASCRIPT) {
 				String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarjs.json";
 
 				writeListToJson(sonarIssueList, "sonarJSList", jsonFile);
-			}
+			} else if (result.getLanguageType() == Language.CSHARP) {
+                String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarcsharp.json";
+
+                writeListToJson(sonarIssueList, "sonarCSharpList", jsonFile);
+            } else if (result.getLanguageType() == Language.PYTHON) {
+                String jsonFile = IOAndFileUtils.getFilenameWithoutExt(result.getOutputFile()) + "-sonarpython.json";
+
+                writeListToJson(sonarIssueList, "sonarPythonList", jsonFile);
+            }
 		}
 	}
 

@@ -34,6 +34,8 @@ public class SonarIssueFilterHandler extends DefaultHandler {
     private int excludedRules = 0;
     private int excludedJavaRules = 0;
     private int excludedJSRules = 0;
+    private int excludedCSharpRules = 0;
+    private int excludedPythonRules = 0;
 
     public SonarIssueFilterHandler(Set<String> filters) {
         this.filters = filters;
@@ -62,6 +64,10 @@ public class SonarIssueFilterHandler extends DefaultHandler {
                 excludedJavaRules++;
             } else if (keyValue.startsWith("javascript:") || keyValue.startsWith("common-js:")) {
                 excludedJSRules++;
+            } else if (keyValue.startsWith("csharpsquid:")) {
+                excludedCSharpRules++;
+            } else if (keyValue.startsWith("python:")) {
+                excludedPythonRules++;
             }
         }
     }
@@ -76,5 +82,13 @@ public class SonarIssueFilterHandler extends DefaultHandler {
 
     public int getExcludedJSRules() {
         return excludedJSRules;
+    }
+
+    public int getExcludedCSharpRules() {
+        return excludedCSharpRules;
+    }
+
+    public int getExcludedPythonRules() {
+        return excludedPythonRules;
     }
 }

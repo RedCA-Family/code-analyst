@@ -32,6 +32,8 @@ import com.samsungsds.analyst.code.main.subject.TargetFile;
 import com.samsungsds.analyst.code.main.subject.TargetManager;
 import com.samsungsds.analyst.code.node_modules.eslint.ComplexityAnalysisESLintLauncher;
 import com.samsungsds.analyst.code.pmd.*;
+import com.samsungsds.analyst.code.python.radon.RadonAnalysisLauncher;
+import com.samsungsds.analyst.code.roslyn.codemetrics.CodeAnalysisLauncher;
 import com.samsungsds.analyst.code.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -68,6 +70,7 @@ public class App {
 		if (cli.parse()) {
 
 			LOGGER.info("Language : {}", cli.getLanguage());
+			language = cli.getLanguageType();
 
 			if (cli.getMode() == MeasurementMode.DefaultMode) {
 				LOGGER.info("Mode : {}", cli.getIndividualMode());
@@ -132,21 +135,24 @@ public class App {
 				runComplexityForJava(cli);	// for only Java
 
 			} else {
+			    if (language == Language.JAVA) {
+                    TargetManager targetManager = TargetManager.getInstance(cli.getInstanceKey());
 
-				TargetManager targetManager = TargetManager.getInstance(cli.getInstanceKey());
+                    try {
+                        List<TargetFile> targetFileList = targetManager.getTargetFileList(project.getCanonicalPath(), cli.getSrc(), cli.getBinary(),
+                            MeasuredResult.getInstance(cli.getInstanceKey()));
 
-				try {
-					List<TargetFile> targetFileList = targetManager.getTargetFileList(project.getCanonicalPath(), cli.getSrc(), cli.getBinary(),
-							MeasuredResult.getInstance(cli.getInstanceKey()));
+                        LOGGER.info("Target File Count From Target Manager : {}", targetFileList.size());
+                    } catch (IOException e) {
+                        LOGGER.error("Project Directory Error : {}", cli.getProjectBaseDir());
+                        return;
+                    }
+                }
 
-					LOGGER.info("Target File Count From Target Manager : {}", targetFileList.size());
-				} catch (IOException e) {
-					LOGGER.error("Project Directory Error : {}", cli.getProjectBaseDir());
-					return;
-				}
-
-				if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isSonarJava()
-						|| cli.getIndividualMode().isJavascript() || cli.getIndividualMode().isWebResources()) {
+				if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication()
+                        || cli.getIndividualMode().isSonarJava()
+						|| cli.getIndividualMode().isJavascript() || cli.getIndividualMode().isWebResources()
+                        || cli.getIndividualMode().isSonarCSharp() || cli.getIndividualMode().isSonarPython()) {
 					List<String> sonarAnalysisModeList = new ArrayList<>();
 					if (cli.getIndividualMode().isCodeSize()) {
 						sonarAnalysisModeList.add("Code Size");
@@ -154,6 +160,11 @@ public class App {
 					if (cli.getIndividualMode().isDuplication()) {
 						sonarAnalysisModeList.add("Duplication");
 					}
+					/*
+                    if (cli.getIndividualMode().isComplexity()) {
+                        sonarAnalysisModeList.add("Complexity");
+                    }
+					*/
 					if (cli.getIndividualMode().isSonarJava()) {
 						sonarAnalysisModeList.add("Sonar Java");
 					}
@@ -166,6 +177,12 @@ public class App {
 					if (cli.getIndividualMode().isHtml()) {
 						sonarAnalysisModeList.add("HTML");
 					}
+					if (cli.getIndividualMode().isSonarCSharp()) {
+					    sonarAnalysisModeList.add("Sonar C#");
+                    }
+                    if (cli.getIndividualMode().isSonarPython()) {
+                        sonarAnalysisModeList.add("Sonar Python");
+                    }
 					String sonarAnalysisMode = StringUtils.join(sonarAnalysisModeList, " & ");
 					LOGGER.info(sonarAnalysisMode + " Analysis start...");
 
@@ -180,10 +197,14 @@ public class App {
 					LOGGER.info("Complexity Analysis start...");
 
 					if (cli.getLanguageType() == Language.JAVA) {
-						runComplexityForJava(cli);
-					} else {
+                        runComplexityForJava(cli);
+					} else if (cli.getLanguageType() == Language.JAVASCRIPT) {
 						runComplexityForJavascript(cli);
-					}
+					} else if (cli.getLanguageType() == Language.CSHARP) {
+					    runComplexityForCSharp(cli);
+                    } else {
+					    runComplexityForPython(cli);
+                    }
 				}
 
 				if (cli.getIndividualMode().isPmd()) {
@@ -256,7 +277,13 @@ public class App {
 	}
 
 	private void runSonarAnalysis(CliParser cli) {
-		AppForSonarAnalysis delegator = new AppForSonarAnalysis(cli, observerManager);
+		AppForSonarAnalysis delegator = null;
+
+		if (cli.getLanguageType() == Language.CSHARP) {
+            delegator = new AppForSonarAnalysisForCSharp(cli, observerManager);
+        } else {
+            delegator = new AppForSonarAnalysis(cli, observerManager);
+        }
 
 		delayWorkList.add(delegator);	// clean up
 
@@ -355,6 +382,28 @@ public class App {
 
 		observerManager.notifyObservers(ProgressEvent.COMPLEXITY_COMPLETE);
 	}
+
+    private void runComplexityForCSharp(CliParser cli) {
+        ComplexityAnalysis codeAnalysis = new CodeAnalysisLauncher();
+
+        codeAnalysis.addOption("-dir", cli.getProjectBaseDir());
+
+        codeAnalysis.run(cli.getInstanceKey());
+
+        observerManager.notifyObservers(ProgressEvent.COMPLEXITY_COMPLETE);
+    }
+
+    private void runComplexityForPython(CliParser cli) {
+        ComplexityAnalysis radonAnalysis = new RadonAnalysisLauncher();
+
+        radonAnalysis.addOption("path", cli.getProjectBaseDir());
+        radonAnalysis.addOption("exclude", cli.getExcludes());
+        radonAnalysis.addOption("src", cli.getSrc());
+
+        radonAnalysis.run(cli.getInstanceKey());
+
+        observerManager.notifyObservers(ProgressEvent.COMPLEXITY_COMPLETE);
+    }
 
 	private void runPmd(CliParser cli) {
 		PmdAnalysis pmdViolation = new PmdAnalysisLauncher();
@@ -491,7 +540,7 @@ public class App {
 
 	private void runUnusedCode(CliParser cli) {
 		UnusedCodeAnalysis unusedCodeViolation = new UnusedCodeAnalysisLauncher();
-		
+
 		unusedCodeViolation.setProjectBaseDir(cli.getProjectBaseDir());
 		unusedCodeViolation.setTargetBinary(cli.getBinary());
 		unusedCodeViolation.setTargetSrc(cli.getSrc());
@@ -615,11 +664,15 @@ public class App {
 				if (language.equalsIgnoreCase("java")) {
 					return Language.JAVA;
 				} else if (language.equalsIgnoreCase("javascript")) {
-					return Language.JAVASCRIPT;
+                    return Language.JAVASCRIPT;
+                } else if (language.equalsIgnoreCase("c#") || language.equalsIgnoreCase("csharp")) {
+                    return Language.CSHARP;
+                } else if (language.equalsIgnoreCase("python")) {
+				    return Language.PYTHON;
 				} else {
-					System.out.println("Error in 'language' option. ('Java' or 'JavaScript')");
+					System.out.println("Error in 'language' option. ('Java', 'JavaScript', 'C#' or 'Python')");
 					System.out.println("usage : java -jar " + Version.APPLICATION_JAR);
-					System.out.println("\t -l,--language <arg> ...	specify the language to analyze. ('Java' or 'JavaScript', default : \"Java\")");
+					System.out.println("\t -l,--language <arg> ...	specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : \"Java\")");
 					System.exit(-1);
 				}
 			}

@@ -34,6 +34,8 @@ public class SonarIssueFilter {
     private int excludedRules = 0;
     private int excludedJavaRules = 0;
     private int excludedJSRules = 0;
+    private int excludeCSharpRules = 0;
+    private int excludePythonRules = 0;
 
     public Set<String> parse(String ruleSetFileForSonar) {
         Set<String> filters = new HashSet<>();
@@ -52,12 +54,14 @@ public class SonarIssueFilter {
         excludedRules = filterHandler.getExcludedRules();
         excludedJavaRules = filterHandler.getExcludedJavaRules();
         excludedJSRules = filterHandler.getExcludedJSRules();
+        excludeCSharpRules = filterHandler.getExcludedCSharpRules();
+        excludePythonRules = filterHandler.getExcludedPythonRules();
 
         return filters;
     }
 
     /**
-     * @deprecated use getExcludedJavaRules() or getExcludedJSRules()
+     * @deprecated use getExcludedJavaRules(), getExcludedJSRules(), getExcludedCSharpRules() or getExcludedPythonRules()
      */
     @Deprecated
     public int getExcludedRules() {
@@ -70,5 +74,13 @@ public class SonarIssueFilter {
 
     public int getExcludedJSRules() {
         return excludedJSRules;
+    }
+
+    public int getExcludeCSharpRules() {
+        return excludeCSharpRules;
+    }
+
+    public int getExcludePythonRules() {
+        return excludePythonRules;
     }
 }

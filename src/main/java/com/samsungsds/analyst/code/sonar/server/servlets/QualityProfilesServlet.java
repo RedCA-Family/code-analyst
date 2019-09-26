@@ -31,14 +31,14 @@ import com.samsungsds.analyst.code.util.IOAndFileUtils;
 @SuppressWarnings("serial")
 public class QualityProfilesServlet extends HttpServlet {
 	private static final Logger LOGGER = LogManager.getLogger(QualityProfilesServlet.class);
-	
+
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String url = request.getRequestURI();
 		String queryString = request.getQueryString() == null ? "" : "?" + request.getQueryString();
-		
+
 		LOGGER.debug("Requested URL : {}{}", url, queryString);
-		
+
 		// Declare response encoding and types
 		response.setContentType("application/octet-stream");
 
@@ -46,9 +46,9 @@ public class QualityProfilesServlet extends HttpServlet {
 		response.setStatus(HttpServletResponse.SC_OK);
 
 		String resourceName = null;
-		
+
 		if (url.equals("/api/qualityprofiles/search.protobuf")) {
-			// URL 호출 : /batch/project.protobuf?key=local%3Acom.samsungsds.analyst.code.main.App
+			// URL 호출 : /api/qualityprofiles/search.protobuf?projectKey=local%3Acom.samsungsds.analyst.code.main.App
 
 			resourceName = "/statics/search.protobuf";
 		} else if (url.equals("/api/rules/search.protobuf")) {
@@ -59,6 +59,8 @@ public class QualityProfilesServlet extends HttpServlet {
 			// Less       : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJoogvCQBOyaqowapc&p=1&ps=500
 			// SCSS       : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJooTrCQBOyaqowal7&p=1&ps=500
 			// Web        : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJooQ2CQBOyaqowakX&p=1&ps=500
+            // CSharp     : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWxP8yw2BT8fMAYrFsSv&p=1&ps=500
+            // Python     : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWxQGL1gjwlKak8RLaoD&p=1&ps=500
 
 			if (!queryString.contains("&p=1&")) {
 				LOGGER.error("'p' parameter error : {}", queryString);
@@ -77,7 +79,11 @@ public class QualityProfilesServlet extends HttpServlet {
 				resourceName = "/statics/AWPJooTrCQBOyaqowal7.protobuf";
 			} else if (queryString.contains("qprofile=AWPJooQ2CQBOyaqowakX")) {	// Web
 				resourceName = "/statics/AWPJooQ2CQBOyaqowakX.protobuf";
-			}
+			} else if (queryString.contains("qprofile=AWxP8yw2BT8fMAYrFsSv")) { // CSharp
+			    resourceName = "/statics/AWxP8yw2BT8fMAYrFsSv.protobuf";
+            } else if (queryString.contains("qprofile=AWxQGL1gjwlKak8RLaoD")) { // Python
+                resourceName = "/statics/AWxQGL1gjwlKak8RLaoD.protobuf";
+            }
 		} else if (url.equals("/api/rules/list.protobuf")) {	// RuleSet이 변경되면 같이 변경하여야 함.. (parameter 없음)
 			// URL 호출 : /api/rules/list.protobuf
 			resourceName = "/statics/list.protobuf";
@@ -85,11 +91,11 @@ public class QualityProfilesServlet extends HttpServlet {
 			// URL 호출 : /batch/project.protobuf?key=local%3Acom.samsungsds.analyst.code.main.App
 			resourceName = "/statics/project.protobuf";
 		}
-		
+
 		if (resourceName == null) {
 			throw new IllegalArgumentException("URL or queryString error...");
 		}
-		
+
 		// Write back response
 		try (OutputStream outStream = response.getOutputStream()) {
 			IOAndFileUtils.write(outStream, resourceName);

@@ -35,6 +35,8 @@ public class ArgumentInfo {
 
 	private AnalysisMode mode;					// (Java) code-size,duplication,complexity,sonarjava,pmd,findbugs,findsecbugs,javascript,css,html,dependency,unused,ckmetrics
 												// (JavaScript) code-size,duplication,complexity,sonarjs
+                                                // (CSharp) code-size,duplication,complexity,sonarcsharp
+                                                // (Python) code-size,duplication,complexity,sonarpython
 	private boolean detailAnalysis = false;		// Detail Analysis mode
 
 	private boolean saveCatalog = false;		// Save target file list
