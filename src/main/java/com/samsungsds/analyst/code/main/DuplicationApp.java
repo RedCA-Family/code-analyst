@@ -73,14 +73,16 @@ public class DuplicationApp {
 			System.out.println();
 			System.out.println("Save CSV File : duplication.csv");
 
-			String csvFile = "duplication.csv";
+			String csvFile = "duplication-result.csv";
 
 			saveDuplicationListToCSV(csvFile);
-
-			System.out.println();
-
-			printTopDuplicationList();
+		} else {
+			// call this method for get top duplication and ignore returned list 
+			MeasuredResult.getInstance(INSTANCE_KEY).getDuplicationList();
 		}
+		System.out.println();
+
+		printTopDuplicationList();
 	}
 
 	private void saveDuplicationListToCSV(String csvFile) {
@@ -183,13 +185,22 @@ public class DuplicationApp {
 					isFirst = false;
 					continue;
 				}
+				int diff = 0;
+				if (record.size() == 8) {			// with project key
+					diff = 1;
+				} else if (record.size() == 7) {	// without project key
+					diff = 0;
+				} else {
+					throw new IllegalStateException("CSV's record error");
+				}
 				//String no = record.get(0);
-				String path = record.get(1);
-				String startLine = record.get(2);
-				String endLine = record.get(3);
-				String duplicatedPath = record.get(4);
-				String dupStartLine = record.get(5);
-				String dupEndLine = record.get(6);
+				//String project = record.get(0 + diff);
+				String path = record.get(1 + diff);
+				String startLine = record.get(2 + diff);
+				String endLine = record.get(3 + diff);
+				String duplicatedPath = record.get(4 + diff);
+				String dupStartLine = record.get(5 + diff);
+				String dupEndLine = record.get(6 + diff);
 
 				//builder.append(no).append(",");
 				builder.append(path).append(",");
