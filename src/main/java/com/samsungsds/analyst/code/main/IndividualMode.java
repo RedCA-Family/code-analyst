@@ -34,6 +34,8 @@ public class IndividualMode extends AnalysisMode {
 		setUnusedCode(true);
 		setCkMetrics(true);
 		setCheckStyle(true);
+		setSonarCSharp(true);
+		setSonarPython(true);
 	}
 
 	public void setUnsetAll() {
@@ -51,6 +53,8 @@ public class IndividualMode extends AnalysisMode {
 		setUnusedCode(false);
 		setCkMetrics(false);
 		setCheckStyle(false);
+		setSonarCSharp(false);
+		setSonarPython(false);
 	}
 
 	@Override
@@ -87,6 +91,12 @@ public class IndividualMode extends AnalysisMode {
 		if (isHtml()) {
 			builder.append("HTML, ");
 		}
+		if (isSonarCSharp()) {
+		    builder.append("SonarCSharp, ");
+        }
+        if (isSonarPython()) {
+            builder.append("SonarPython, ");
+        }
 		if (isDependency()) {
 			builder.append("Dependency, ");
 		}

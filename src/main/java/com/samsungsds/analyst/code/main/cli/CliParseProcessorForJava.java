@@ -15,6 +15,7 @@ limitations under the License.
  */
 package com.samsungsds.analyst.code.main.cli;
 
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.main.CliParser;
 import com.samsungsds.analyst.code.main.MeasurementMode;
 import com.samsungsds.analyst.code.main.Version;
@@ -40,7 +41,7 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
 
     @Override
     public void setOptions(CliParser cliParser, Options options) {
-        options.addOption("l", "language", true, "specify the language to analyze. ('Java' or 'JavaScript', default : \"Java\")");
+        options.addOption("l", "language", true, "specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : \"Java\")");
 
         options.addOption("h", "help", false, "show help.");
         options.addOption("p", "project", true, "specify project base directory. (default: \".\")");
@@ -72,7 +73,8 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
                 "\n※ webapp directory should not overlap the src directories.");
 
         options.addOption("include", true, "specify include pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*.java)");
-        options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*VO.java)");
+        options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*VO.java)" +
+                "\n※ If 'include' or 'exclude' option starts with '@' and has file name, the option value is read from the file");
 
         options.addOption("m", "mode", true, "specify analysis items with comma separated. If '-' specified in each mode, the mode is excluded. " +
                 "(code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs, javascript, css, html, dependency, unusedcode, ckmetrics, checkstyle)" +
@@ -81,7 +83,7 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
         options.addOption("a", "analysis", false, "detailed analysis mode. (required more memory. If OOM exception occurred, use JVM '-Xmx' option like '-Xmx1024m')");
 
         options.addOption("r", "rerun", true, "specify previous output file to rerun with same options. "
-                + "('project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'include', 'exclude', 'mode', 'analysis', 'seperated', 'catalog', 'duplication', 'token' and 'webapp')");
+                + "('project', 'src', 'binary', 'encoding', 'java', 'pmd', 'findbugs', 'sonar', 'include', 'exclude', 'mode', 'analysis', 'seperated', 'catalog', 'duplication', 'token' and 'webapp')");
 
         options.addOption("seperated", false, "specify seperated output mode.");
 
@@ -93,7 +95,11 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
 
     @Override
     public void setDefaultIndividualModeAfterParsing(CliParsedValueObject parsedValue) {
-        // no operations because default individual mode is for Java
+        parsedValue.getIndividualMode().setLanguageType(Language.JAVA);
+
+        // exclude SonarCSharp & SonarPython
+        parsedValue.getIndividualMode().setSonarCSharp(false);
+        parsedValue.getIndividualMode().setSonarPython(false);
     }
 
     @Override
@@ -201,11 +207,11 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
             }
 
             if (cmd.hasOption("include")) {
-                parsedValue.setIncludes(cmd.getOptionValue("include"));
+                parsedValue.setIncludes(FileArgumentUtil.getFileArgument(cmd.getOptionValue("include")));
             }
 
             if (cmd.hasOption("exclude")) {
-                parsedValue.setExcludes(cmd.getOptionValue("exclude"));
+                parsedValue.setExcludes(FileArgumentUtil.getFileArgument(cmd.getOptionValue("exclude")));
             }
 
             if (cmd.hasOption("m")) {
@@ -281,5 +287,11 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
             help(options);
             return false;
         }
+    }
+
+    @Override
+    public String getModeErrorMessage() {
+        return "'mode' option can only have 'code-size', 'duplication', 'complexity', 'sonarjava', 'pmd', 'findbugs', 'findsecbugs', " +
+            "'javascript'(sonarjs), 'css', 'html', 'dependency', 'unusedcode', 'ckmetrics', and 'checkstyle' (with or without '-')";
     }
 }

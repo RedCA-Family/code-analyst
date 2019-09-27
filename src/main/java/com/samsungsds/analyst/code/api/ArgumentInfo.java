@@ -35,6 +35,8 @@ public class ArgumentInfo {
 
 	private AnalysisMode mode;					// (Java) code-size,duplication,complexity,sonarjava,pmd,findbugs,findsecbugs,javascript,css,html,dependency,unused,ckmetrics
 												// (JavaScript) code-size,duplication,complexity,sonarjs
+                                                // (CSharp) code-size,duplication,complexity,sonarcsharp
+                                                // (Python) code-size,duplication,complexity,sonarpython
 	private boolean detailAnalysis = false;		// Detail Analysis mode
 
 	private boolean saveCatalog = false;		// Save target file list
@@ -140,6 +142,9 @@ public class ArgumentInfo {
 	}
 
 	public void setInclude(String include) {
+        if (include.startsWith("@")) {
+            throw new IllegalArgumentException("'@file' feature not available in API mode");
+        }
 		this.include = include;
 	}
 
@@ -148,6 +153,9 @@ public class ArgumentInfo {
 	}
 
 	public void setExclude(String exclude) {
+	    if (exclude.startsWith("@")) {
+	        throw new IllegalArgumentException("'@file' feature not available in API mode");
+        }
 		this.exclude = exclude;
 	}
 

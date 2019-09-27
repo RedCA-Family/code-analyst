@@ -32,6 +32,8 @@ public class AnalysisMode {
 	private boolean unusedCode = true;
 	private boolean ckMetrics = true;
 	private boolean checkStyle = true;
+	private boolean sonarCSharp = true;
+	private boolean sonarPython = true;
 
 	public void setLanguageType(Language languageType) {
 		this.languageType = languageType;
@@ -171,5 +173,21 @@ public class AnalysisMode {
 
     public void setCheckStyle(boolean checkStyle) {
         this.checkStyle = checkStyle;
+    }
+
+    public boolean isSonarCSharp() {
+        return sonarCSharp;
+    }
+
+    public void setSonarCSharp(boolean sonarCSharp) {
+        this.sonarCSharp = sonarCSharp;
+    }
+
+    public boolean isSonarPython() {
+        return sonarPython;
+    }
+
+    public void setSonarPython(boolean sonarPython) {
+        this.sonarPython = sonarPython;
     }
 }

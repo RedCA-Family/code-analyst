@@ -15,8 +15,10 @@ limitations under the License.
  */
 package com.samsungsds.analyst.code.api;
 
+import com.samsungsds.analyst.code.api.impl.CSharpCodeAnalystImpl;
 import com.samsungsds.analyst.code.api.impl.JavaCodeAnalystImpl;
 import com.samsungsds.analyst.code.api.impl.JavaScriptCodeAnalystImpl;
+import com.samsungsds.analyst.code.api.impl.PythonCodeAnalystImpl;
 
 public class CodeAnalystFactory {
 	public static CodeAnalyst create() {
@@ -26,8 +28,12 @@ public class CodeAnalystFactory {
 	public static CodeAnalyst create(Language language) {
 		if (language == Language.JAVA) {
 			return new JavaCodeAnalystImpl();
-		} else {
+		} else if (language == Language.JAVASCRIPT) {
 			return new JavaScriptCodeAnalystImpl();
-		}
+		} else if (language == Language.CSHARP) {
+		    return new CSharpCodeAnalystImpl();
+        } else {    // Python
+		    return new PythonCodeAnalystImpl();
+        }
 	}
 }

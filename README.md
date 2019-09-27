@@ -8,7 +8,7 @@ Code Analyst는 코드 품질에 대한 다양한 지표를 통합적으로 확�
 
 기본적으로 측정되는 코드 규모(프로그램 개수, loc 등)뿐만 아니라 중복도, 복잡도, Inspection 결과(PMD, FindBugs) 등을 확인할 수 있습니다.
 
-※ 현재는 Java 및 JavaScript(Node.js)만 지원하며, 향후 다양한 언어로 확대될 예정임
+※ 현재 Java, JavaScript(Node.js), C# 및 Python을 지원
 
 
 ## Build & Installation
@@ -30,19 +30,19 @@ API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 d
 	<dependency>
 		<groupId>com.samsungsds.analyst</groupId>
 		<artifactId>code-analyst</artifactId>
-		<version>2.8.0</version>
+		<version>2.9.0</version>
 	</dependency>
 
 **API 활용에 대한 사항은 [Guide](GUIDE.md)를 참조**해 주세요.
   
 
 ## Usage
-CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)를 지원합니다.  
+CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C# 및 Python을 지원합니다.  
 언어에 대한 지정은 ```--language``` 또는 ```-l``` 옵션을 통해 지정됩니다.
 
 ### Java 언어 점검
 
-    $> java -jar Code-Analyst-2.8.0.jar -l java -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+    $> java -jar Code-Analyst-2.9.0.jar -l java -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
     
 ※ 참고로 ```-l,--language``` 지정이 없으면, Java 언어를 기본 점검 대상으로 합니다.
 
@@ -53,10 +53,10 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
 
 #### Help (Java)
 
-	$> java -jar Code-Analyst-2.8.0.jar --help
-    usage: java -jar Code-Analyst-2.8.0.jar
+	$> java -jar Code-Analyst-2.9.0.jar --help
+    usage: java -jar Code-Analyst-2.9.0.jar
      ※ To see individual language-specific option usages, specify the '-l' or '--language' option
-     -l,--language <arg>     specify the language to analyze. ('Java' or 'JavaScript', default : "Java")
+     -l,--language <arg>     specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : "Java")
      -h,--help               show help.
      -p,--project <arg>      specify project base directory. (default: ".")
      -s,--src <arg>          specify source directories with comma separated. (default: "${project}\src\main\java")
@@ -83,6 +83,8 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
                              ※ webapp directory should not overlap the src directories.
      -include <arg>          specify include pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*.java)
      -exclude <arg>          specify exclude pattern(Ant-style) with comma separated. (e.g.: com/sds/**/*VO.java)
+                             ※ If 'include' or 'exclude' option starts with '@' and has file name, the option value is read
+                             from the file
      -m,--mode <arg>         specify analysis items with comma separated. If '-' specified in each mode, the mode is
                              excluded. (code-size, duplication, complexity, sonarjava, pmd, findbugs, findsecbugs,
                              javascript, css, html, dependency, unusedcode, ckmetrics, checkstyle)
@@ -101,13 +103,13 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
 
 ### JavaScript 언어 점검
 
-    $> java -jar Code-Analyst-2.8.0.jar -l javascript -p "프로젝트 위치" -s "."
+    $> java -jar Code-Analyst-2.9.0.jar -l javascript -p "프로젝트 위치" -s "."
     
 #### Help (JavaScript)
 
-    $> java -jar Code-Analyst-2.8.0.jar -l javascript --help
-    usage: java -jar Code-Analyst-2.8.0.jar
-     -l,--language <arg>   specify the language to analyze. ('Java' or 'JavaScript', default : "Java")
+    $> java -jar Code-Analyst-2.9.0.jar -l javascript --help
+    usage: java -jar Code-Analyst-2.9.0.jar
+     -l,--language <arg>   specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : "Java")
      -h,--help             show help.
      -p,--project <arg>    specify project base directory. (default: ".")
      -s,--src <arg>        specify source directories with comma separated. (default: "${project}\.")
@@ -124,6 +126,8 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
      -t,--timeout <arg>    specify internal ws timeout. (default : 100 min.)
      -include <arg>        specify include pattern(Ant-style) with comma separated. (e.g.: app/**/*.js)
      -exclude <arg>        specify exclude pattern(Ant-style) with comma separated. (e.g.: tests/**,tests-*/**,*-tests/**)
+                             ※ If 'include' or 'exclude' option starts with '@' and has file name, the option value is read
+                             from the file
      -m,--mode <arg>       specify analysis items with comma separated. If '-' specified in each mode, the mode is excluded.
                            (code-size, duplication, complexity, sonarjs)
      -a,--analysis         detailed analysis mode. (required more memory. If OOM exception occurred, use JVM '-Xmx' option
@@ -133,16 +137,94 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
      -seperated            specify seperated output mode.
      -catalog              specify file catalog saving mode.
 
+### C# 언어 점검
+
+    $> java -jar Code-Analyst-2.9.0.jar -l C# -p "프로젝트 위치" -s "."
+    
+※ 참고로 프로젝트 위치는 Visual Studio 솔루션("*.sln") 파일이 있는 위치입니다.
+
+#### Help (C#)
+
+    $> java -jar Code-Analyst-2.9.0.jar -l C# --help
+    usage: java -jar Code-Analyst-2.9.0.jar
+     -l,--language <arg>   specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : "Java")
+     -h,--help             show help.
+     -p,--project <arg>    specify project base directory. (default: ".")
+     -s,--src <arg>        specify source directories with comma separated. (default: "${project}\.")
+     -d,--debug            debug mode.
+     -e,--encoding <arg>   encoding of the source code. (default: UTF-8)
+     -sonar <arg>          specify SonarQube issue ruleset(exclude filter) xml file.
+                           ex:
+                           <SonarIssueFilter>
+                           <Exclude key="common-js:DuplicatedBlocks"/>
+                           </SonarIssueFilter>
+     -o,--output <arg>     specify result output file. (default : "result-[yyyyMMddHHmmss].[out|json]")
+     -f,--format <arg>     specify result output file format(json, text, none). (default : text)
+     -v,--version          display version info.
+     -t,--timeout <arg>    specify internal ws timeout. (default : 100 min.)
+     -include <arg>        specify include pattern(Ant-style) with comma separated. (e.g.: app/**/*.cs)
+     -exclude <arg>        specify exclude pattern(Ant-style) with comma separated. (e.g.:
+                           **/*.AssemblyInfo.cs,tests/**,tests-*/**,*-tests/**)
+                           ※ If 'include' or 'exclude' option starts with '@' and has file name, the option value is read
+                           from the file
+                           - default exclusions pattern is added :
+                           **/*.AssemblyInfo.cs,**/*.generated.cs,**/*Language.Designer.cs
+     -m,--mode <arg>       specify analysis items with comma separated. If '-' specified in each mode, the mode is excluded.
+                           (code-size, duplication, complexity, sonarcsharp)
+     -a,--analysis         detailed analysis mode. (required more memory. If OOM exception occurred, use JVM '-Xmx' option
+                           like '-Xmx1024m')
+     -r,--rerun <arg>      specify previous output file to rerun with same options. ('project', 'src', 'encoding', 'sonar',
+                           'include', 'exclude', 'mode', 'analysis', 'seperated', and 'catalog')
+     -seperated            specify seperated output mode.
+     -catalog              specify file catalog saving mode.
+    
+### Python 언어 점검
+
+    $> java -jar Code-Analyst-2.9.0.jar -l Python -p "프로젝트 위치" -s "."
+
+#### Help (Python)
+
+    $> java -jar Code-Analyst-2.9.0.jar -l Python --help
+    usage: java -jar Code-Analyst-2.9.0.jar
+     -l,--language <arg>   specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : "Java")
+     -h,--help             show help.
+     -p,--project <arg>    specify project base directory. (default: ".")
+     -s,--src <arg>        specify source directories with comma separated. (default: "${project}\.")
+     -d,--debug            debug mode.
+     -e,--encoding <arg>   encoding of the source code. (default: UTF-8)
+     -sonar <arg>          specify SonarQube issue ruleset(exclude filter) xml file.
+                           ex:
+                           <SonarIssueFilter>
+                           <Exclude key="common-js:DuplicatedBlocks"/>
+                           </SonarIssueFilter>
+     -o,--output <arg>     specify result output file. (default : "result-[yyyyMMddHHmmss].[out|json]")
+     -f,--format <arg>     specify result output file format(json, text, none). (default : text)
+     -v,--version          display version info.
+     -t,--timeout <arg>    specify internal ws timeout. (default : 100 min.)
+     -include <arg>        specify include pattern(Ant-style) with comma separated. (e.g.: app/**/*.py)
+     -exclude <arg>        specify exclude pattern(Ant-style) with comma separated. (e.g.: tests/**,tests-*/**,*-tests/**)
+                           ※ If 'include' or 'exclude' option starts with '@' and has file name, the option value is read
+                           from the file
+     -m,--mode <arg>       specify analysis items with comma separated. If '-' specified in each mode, the mode is excluded.
+                           (code-size, duplication, complexity, sonarpython)
+     -a,--analysis         detailed analysis mode. (required more memory. If OOM exception occurred, use JVM '-Xmx' option
+                           like '-Xmx1024m')
+     -r,--rerun <arg>      specify previous output file to rerun with same options. ('project', 'src', 'encoding', 'sonar',
+                           'include', 'exclude', 'mode', 'analysis', 'seperated', and 'catalog')
+     -seperated            specify seperated output mode.
+     -catalog              specify file catalog saving mode.
 
 ### Version 정보
 
-	$> java -jar Code-Analyst-2.8.0.jar --version
-    Code Analyst : 2.8.0
+	$> java -jar Code-Analyst-2.9.0.jar --version
+    Code Analyst : 2.9.0
       - Sonar Scanner : 2.10.0.1189 (LGPL v3.0)
-      - Sonar Server : 6.7.4 (LGPL v3.0)
+      - Sonar Server : 6.7.4.38452 (LGPL v3.0)
          [Plugins]
            - SonarJava : 5.1.1.13214 (LGPL v3.0)
            - SonarJS : 5.1.1.7506 (LGPL v3.0)
+           - SonarC# : 7.15.0.8572 (LGPL v3.0)
+           - SonarPython : 1.14.1.3143 (LGPL v3.0)
            - CSS/SCSS/Less : 3.1 (LGPL v3.0)
            - Web : 2.5.0.476 (Apache v2.0)
       - PMD : 5.8.1 (BSD-style)
@@ -160,6 +242,8 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
       - FindBugs : 214 ruleset (v3.0.1, RedCA Way Ruleset, '18.03)
       - FindSecBugs : 81 rules (v1.7.1, RedCA Way Ruleset, '18.06)
       - SonarJava : 227 ruleset (v4.15, RedCA Way Ruleset, '18.03)
+      - SonarCSharp : 203 ruleset (v7.15, RedCA Way Ruleset, '19.08)
+      - SonarPython : 26 ruleset (v1.14, RedCA Way Ruleset, '19.08)
       - Web Resources :
           - JS : 95 ruleset (v5.0, RedCA Way Ruleset, '18.11)
           - CSS : CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)
@@ -187,7 +271,8 @@ CLI(Command Line Interface) 형태로 사용되며, Java와 JavaScript(Node.js)�
 - (2018.12) Design Metrics(CK Metrics) added (v2.5)
 - (2019.01) Token based duplication detection mode added (v2.6)
 - (2019.04) JavaScript language mode added & Node.js runtime provided for JavaScript/SonarJS analysis  (v2.7)
-= (2019.07) CheckStyle check mode added (v2.8)
+- (2019.07) CheckStyle check mode added (v2.8)
+- (2019.09) C# and Python language mode added (v2.9)
 
 
 ## License
