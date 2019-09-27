@@ -56,7 +56,7 @@ public class Version {
 	//         Language 옵션 및 JavaScript language(Node.js) 추가
     // 2.8.0 : CheckStyle 적용, 소스 디렉토리 중복 체크 오류 수정, CKJM bcel lambda 함수 관련 오류 수정, include/exclude @file 처리 기능 추가,
     //         DuplicationApp 오류 수정 (project key 정보 포함된 결과 파일 처리)
-    // 2.9.0 : C# language, Python language 추가
+    // 2.9.0 : C# language, Python language 추가, CK Metrics 처리 시 BCEL 오류 수정
     // --------------------------------------------------
 	public static final String CODE_ANALYST = "2.9.0";
 	public static final String DOCUMENT_VERSION = "2.9";

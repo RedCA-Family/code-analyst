@@ -25,6 +25,7 @@ import java.util.TreeSet;
 import com.samsungsds.analyst.code.ckmetrics.utils.FindSuperClassesUtil;
 import org.apache.bcel.Constants;
 import org.apache.bcel.Repository;
+import org.apache.bcel.classfile.ClassFormatException;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
@@ -49,7 +50,7 @@ public class ClassVisitor extends org.apache.bcel.classfile.EmptyVisitor {
     private String myClassName;
     /** The container where metrics for all classes are stored. */
     private ClassMetricsContainer cmap;
-    /** The emtrics for the class being visited. */
+    /** The metrics for the class being visited. */
     private ClassMetrics cm;
     /* Classes encountered.
      * Its cardinality is used for calculating the CBO.
@@ -78,7 +79,7 @@ public class ClassVisitor extends org.apache.bcel.classfile.EmptyVisitor {
     public ClassMetrics getMetrics() { return cm; }
 
     public void start() {
-	visitJavaClass(visitedClass);
+	    visitJavaClass(visitedClass);
     }
 
     /** Calculate the class's metrics based on its elements. */
@@ -170,28 +171,32 @@ public class ClassVisitor extends org.apache.bcel.classfile.EmptyVisitor {
 
     /** Called when a method invocation is encountered. */
     public void visitMethod(Method method) {
-	MethodGen mg = new MethodGen(method, visitedClass.getClassName(), cp);
+        try {
+            MethodGen mg = new MethodGen(method, visitedClass.getClassName(), cp);
 
-		Type returnType = mg.getReturnType();
-		Type[] argTypes = mg.getArgumentTypes();
+            Type returnType = mg.getReturnType();
+            Type[] argTypes = mg.getArgumentTypes();
 
-		registerCoupling(mg.getReturnType());
-		for (int i = 0; i < argTypes.length; i++)
-			registerCoupling(argTypes[i]);
+            registerCoupling(mg.getReturnType());
+            for (int i = 0; i < argTypes.length; i++)
+                registerCoupling(argTypes[i]);
 
-		String[] exceptions = mg.getExceptions();
-		for (int i = 0; i < exceptions.length; i++)
-			registerCoupling(exceptions[i]);
+            String[] exceptions = mg.getExceptions();
+            for (int i = 0; i < exceptions.length; i++)
+                registerCoupling(exceptions[i]);
 
-		/* Measuring decision: A class's own methods contribute to its RFC */
-		incRFC(myClassName, method.getName(), argTypes);
+            /* Measuring decision: A class's own methods contribute to its RFC */
+            incRFC(myClassName, method.getName(), argTypes);
 
-		cm.incWmc();
-		if (Modifier.isPublic(method.getModifiers()))
-			cm.incNpm();
-		mi.add(new TreeSet<>());
-		MethodVisitor factory = new MethodVisitor(mg, this);
-		factory.start();
+            cm.incWmc();
+            if (Modifier.isPublic(method.getModifiers()))
+                cm.incNpm();
+            mi.add(new TreeSet<>());
+            MethodVisitor factory = new MethodVisitor(mg, this);
+            factory.start();
+        } catch (ClassFormatException cfe) {
+            System.err.println("BCEL Error : " + cfe.getMessage());
+        }
     }
 
     /** Return a class name associated with a type. */
