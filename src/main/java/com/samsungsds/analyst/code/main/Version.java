@@ -57,15 +57,16 @@ public class Version {
     // 2.8.0 : CheckStyle 적용, 소스 디렉토리 중복 체크 오류 수정, CKJM bcel lambda 함수 관련 오류 수정, include/exclude @file 처리 기능 추가,
     //         DuplicationApp 오류 수정 (project key 정보 포함된 결과 파일 처리)
     // 2.9.0 : C# language, Python language 추가, CK Metrics 처리 시 BCEL 오류 수정
+    // 2.9.1 : FindBugs + BCEL 오류 수정 => SpotBugs(v3.1.12) 적용
     // --------------------------------------------------
-	public static final String CODE_ANALYST = "2.9.0";
+	public static final String CODE_ANALYST = "2.9.1";
 	public static final String DOCUMENT_VERSION = "2.9";
 	public static final String APPLICATION_JAR = "Code-Analyst-" + CODE_ANALYST + ".jar";
 
 	public static final String SONAR_SCANNER = "2.10.0.1189";
 	public static final String SONAR_SERVER = "6.7.4.38452";
 	public static final String PMD = "5.8.1";
-	public static final String FINDBUGS = "3.0.1";
+	public static final String FINDBUGS = "3.1.12";
 	public static final String FINDSECBUGS = "1.7.1";
 	public static final String JDEPEND = "2.9.1";
 	public static final String CKJM = "1.9";
@@ -116,7 +117,7 @@ public class Version {
 		System.out.println("       - CSS/SCSS/Less : " + SONAR_CSS + " (LGPL v3.0)");
 		System.out.println("       - Web : " + SONAR_WEB + " (Apache v2.0)");
 		System.out.println("  - PMD : " + PMD + " (BSD-style)");
-		System.out.println("  - FindBugs : " + FINDBUGS + " (LGPL v3.0)");
+		System.out.println("  - FindBugs(SpotBugs) : " + FINDBUGS + " (LGPL v3.0)");
 		System.out.println("  - FindSecBugs : " + FINDSECBUGS + " (LGPL v3.0)");
 		System.out.println("  - JDepend : " + JDEPEND +"-based modification" + " (BSD-style)");
 		System.out.println("  - CKJM : " + CKJM + "-based modification" + " (Apache v2.0)");
@@ -142,6 +143,6 @@ public class Version {
 		System.out.println("      - HTML : " + SONAR_WEB_RULESET);
 		System.out.println("  - CheckStyle : " + CHECKSTYLE_RULESET);
 		System.out.println();
-		System.out.println("Copyright(c) 2018 By Samsung SDS (Code Quality Group)");
+		System.out.println("Copyright(c) 2018-19 By Samsung SDS (Code Quality Group)");
 	}
 }
