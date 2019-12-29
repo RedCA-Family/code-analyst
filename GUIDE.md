@@ -3,20 +3,20 @@
 ## 1. 기본 실행 ##
 
 ### [Java]
-	$> java -jar Code-Analyst-2.9.0.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+	$> java -jar Code-Analyst-2.9.2.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
 
 ### [JavaScript]
-	$> java -jar Code-Analyst-2.9.0.jar -l javascript -p "프로젝트 위치" -s "."
-	
+	$> java -jar Code-Analyst-2.9.2.jar -l javascript -p "프로젝트 위치" -s "."
+
 ### [C#]
-	$> java -jar Code-Analyst-2.9.0.jar -l c# -p "프로젝트 위치" -s "."
+	$> java -jar Code-Analyst-2.9.2.jar -l c# -p "프로젝트 위치" -s "."
 
 ### [Python]
-	$> java -jar Code-Analyst-2.9.0.jar -l python -p "프로젝트 위치" -s "."
-	
+	$> java -jar Code-Analyst-2.9.2.jar -l python -p "프로젝트 위치" -s "."
+
 
 ### 결과 화면 (예시)
-	
+
 	14:28:28.929 INFO  c.s.a.c.m.App - Project Directory : C:\Workspace\Project
 	14:28:28.935 INFO  c.s.a.c.m.App - Code Size Analysis start...
 	...
@@ -37,11 +37,11 @@
 	Comment Lines : 384
 	Ncloc : 4,633
 	Statements : 2,210
-	 
+
 	Duplicated Blocks : 40
 	Duplicated lines : 50
 	Duplication % : 0.75%
-	 
+
 	Complexity functions : 524
 	Complexity Total : 932
 	Complexity Over 10(%) : 0.76% (4)
@@ -49,34 +49,34 @@
 	Complexity Over 20(%) : 0.00% (0)
 	Complexity Equal Or Over 50(%) : 0.00% (0)
 	- The complexity is calculated by PMD's Modified Cyclomatic Complexity method
-	 
+
 	SonarJava violations : 447
 	SonarJava 1 priority : 3
 	SonarJava 2 priority : 43
 	SonarJava 3 priority : 339
 	SonarJava 4 priority : 62
 	SonarJava 5 priority : 0
-	 
+
 	PMD violations : 302
 	PMD 1 priority : 22
 	PMD 2 priority : 110
 	PMD < 3 priority : 170
-	 
+
 	FindBugs bugs : 20
 	FindBugs 1 priority : 6
 	FindBugs 2 priority : 14
 	FindBugs < 3 priority : 0
-	  
+
 	FindSecBugs bugs : 10
-	  
+
 	WebResource violations : 0
-	 
+
 	Cyclic Dependencies : 8
-	  
+
 	UnusedCode : 351
-	 
+
 	Technical Debt : 414.49MH
-	 
+
 	* This project has classes with no package. In this case, some analysis of these classes is not possible.
 	 - FindBugs, FindSecBugs, and Cyclic Dependencies
 
@@ -88,7 +88,7 @@
 | ------ | ----------- | ------- | :---: | ------- |
 | -l, --language <arg> | 분석 대상 언어 지정 ('Java', 'JavaScript', 'C#' 또는 'Python', 지정되지 않으면 Java로 처리) | 'Java' | 2.7 | -l "java" |
 | -p, --project <arg> | 프로젝트 기본 위치 지정 (지정되지 않으면 현재 디렉토리로 처리) | . | 1.0 | -p "C:\Workspace\Project" |
-| -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | src\main\java, src(v2.2 이전) | 1.0 | -s "src\main\java" | 
+| -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | src\main\java, src(v2.2 이전) | 1.0 | -s "src\main\java" |
 | -b, --binary <arg> | binary 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | target\classes | 1.0 | -b "binary" |
 | -d, --debug | 디버그 모드 |  | 1.0 | -d |
 | -e, --encoding <arg> | 소스에 대한 파일 encoding 지정 | 	UTF-8 | 1.0 | -e UTF-8 |
@@ -125,7 +125,7 @@ com/samsung/**/*.java
 | ------ | ----------- | ------- | :---: | ------- |
 | -l, --language <arg> | 분석 대상 언어 지정 ('Java', 'JavaScript', 'C#' 또는 'Python', 지정되지 않으면 Java로 처리) | 'Java' | 2.7 | -l "javascript" |
 | -p, --project <arg> | 프로젝트 기본 위치 지정 (지정되지 않으면 현재 디렉토리로 처리) | . | 2.7 | -p "C:\Workspace\Project" |
-| -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | . | 2.7 | -s "app" | 
+| -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | . | 2.7 | -s "app" |
 | -d, --debug | 디버그 모드 |  | 2.7 | -d |
 | -e, --encoding <arg> | 소스에 대한 파일 encoding 지정 | 	UTF-8 | 2.7 | -e UTF-8 |
 | -sonar <arg> | SonarQube exclude 파일(XML)  형식 :  <SonarIssueFilter>  <Exclude key="common-js:DuplicatedBlocks"/>  </SonarIssueFilter> |  | 2.7 | -sonar "C:\SonarIssueFilter.xml" |
@@ -153,7 +153,7 @@ com/samsung/**/*.js
 | ------ | ----------- | ------- | :---: | ------- |
 | -l, --language <arg> | 분석 대상 언어 지정 ('Java', 'JavaScript', 'C#' 또는 'Python', 지정되지 않으면 Java로 처리) | 'Java' | 2.7 | -l "c#" |
 | -p, --project <arg> | 프로젝트 기본 위치 지정 (지정되지 않으면 현재 디렉토리로 처리) | . | 2.7 | -p "C:\Workspace\Project" |
-| -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | . | 2.7 | -s "app" | 
+| -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | . | 2.7 | -s "app" |
 | -d, --debug | 디버그 모드 |  | 2.7 | -d |
 | -e, --encoding <arg> | 소스에 대한 파일 encoding 지정 | 	UTF-8 | 2.7 | -e UTF-8 |
 | -sonar <arg> | SonarQube exclude 파일(XML)  형식 :  <SonarIssueFilter>  <Exclude key="common-js:DuplicatedBlocks"/>  </SonarIssueFilter> |  | 2.7 | -sonar "C:\SonarIssueFilter.xml" |
@@ -181,7 +181,7 @@ com/samsung/**/*.cs
 | ------ | ----------- | ------- | :---: | ------- |
 | -l, --language <arg> | 분석 대상 언어 지정 ('Java', 'JavaScript', 'C#' 또는 'Python', 지정되지 않으면 Java로 처리) | 'Java' | 2.7 | -l "python" |
 | -p, --project <arg> | 프로젝트 기본 위치 지정 (지정되지 않으면 현재 디렉토리로 처리) | . | 2.7 | -p "C:\Workspace\Project" |
-| -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | . | 2.7 | -s "app" | 
+| -s, --src <arg> | 소스 디렉토리 (프로젝트 기본 위치에 대한 상대 경로) | . | 2.7 | -s "app" |
 | -d, --debug | 디버그 모드 |  | 2.7 | -d |
 | -e, --encoding <arg> | 소스에 대한 파일 encoding 지정 | 	UTF-8 | 2.7 | -e UTF-8 |
 | -sonar <arg> | SonarQube exclude 파일(XML)  형식 :  <SonarIssueFilter>  <Exclude key="common-js:DuplicatedBlocks"/>  </SonarIssueFilter> |  | 2.7 | -sonar "C:\SonarIssueFilter.xml" |
@@ -212,11 +212,11 @@ API 호출을 의한 Interface는 다음과 같이 정의되어 있습니다.
 
 ```java
 package com.samsungsds.analyst.code.api;
- 
+
 public interface CodeAnalyst {
     void addProgressObserver(ProgressObserver observer);
     void deleteProgressObserver(ProgressObserver observer);
-     
+
     String analyze(String where, ArgumentInfo argument, TargetFileInfo targetFile);
     ResultInfo analyzeWithSeperatedResult(String where, ArgumentInfo argument, TargetFileInfo targetFile);
 }
@@ -303,7 +303,7 @@ API의 analyze() 호출을 통해 코드 분석을 수행하며, 다음과 같�
 | Method | Description |
 | setIncludeSubPackage(boolean) | 패키지 지정 시, 하위 패키지 포함 여부 지정 |
 | addPackage(String packageName) | 패키지를 지정 (하위 패키지 포함 여부에 함께 사용됨) |
-| addFile(String packageName, String file) | 패키지에 대한 파일명 지정 (src가 정확히 지정되지 않더라고 처리되나 일부 속도가 느려짐)  ※ **/packageName/file 형식으로 지정됨 | 
+| addFile(String packageName, String file) | 패키지에 대한 파일명 지정 (src가 정확히 지정되지 않더라고 처리되나 일부 속도가 느려짐)  ※ **/packageName/file 형식으로 지정됨 |
 | addFileExactly(String packageName, String file) | 패키지에 대한 파일명 지정 (src가 정확히 지정되어야 함)  ※ packageName/file 형식으로 지정됨 |
 
 
@@ -331,17 +331,17 @@ Java language 모드에서 분석 요청에 대한 예는 다음과 같습니다
 
 ```java
 	CodeAnalyst analyst = CodeAnalystFactory.create();
-	
+
 	ArgumentInfo argument = new ArgumentInfo();
-	 
+
 	argument.setProject("C:\\Workspace\\Project");
-	 
+
 	argument.setSrc("src");
 	argument.setBinary("target\\classes");
-	
+
 	argument.setEncoding("UTF-8");  // default
 	argument.setJavaVersion("1.8"); // default
-	 
+
 	AnalysisMode mode = new AnalysisMode();
 	mode.setCodeSize(true);
 	mode.setDuplication(true);
@@ -354,27 +354,27 @@ Java language 모드에서 분석 요청에 대한 예는 다음과 같습니다
 	mode.setDependency(true);
 	mode.setUnused(true);
 	mode.setCkMetrics(true);
-	 
+
 	argument.setMode(mode);
-	 
+
 	argument.setExclude("JDepend.java,com/samsungsds/analyst/code/main/filter/*.java");
-	 
+
 	TargetFileInfo targetFile = new TargetFileInfo();
-	 
+
 	// addPackage() 또는 addFile()로 점검 대상 지정 (or 조건으로 처리됨)
 	// - addPackage()는 선택된 패키지의 소스 전체
 	// - addFile()은 선택된 소스
-	 
+
 	//targetFile.addPackage("com.samsungsds.analyst.code.main");    // include sub-packages
-	 
+
 	targetFile.addFile("com.samsungsds.analyst.code.main", "MeasuredResult.java");
 	targetFile.addFile("com.samsungsds.analyst.code.main", "ResultProcessor.java");
-	 
+
 	File temp = new File("C:\\Temp");
 	if (!temp.exists()) {
 	    temp.mkdirs();
 	}
-	 
+
 	String resultFile = analyst.analyze("C:\\Temp", argument, targetFile);
 ```
 
@@ -421,7 +421,7 @@ JavaScript language 모드에서 분석 요청에 대한 예는 다음과 같습
 
 ### 3.3 Web 리소스 분석(JavaScript, CSS, HTML)
 
-V2.2부터 web 리소스 분석을 별도의 analyzeWebResource() 메소드로 분리하였으며 다음과 같이 4개의 파라미터와 함께 호출합니다.  
+V2.2부터 web 리소스 분석을 별도의 analyzeWebResource() 메소드로 분리하였으며 다음과 같이 4개의 파라미터와 함께 호출합니다.
 ※ Web 리소스 분석은 'Java' language 모드에서 동작함
 
 * where : 결과 파일(json) 저장 위치 지정 (eg: eclipse plugin의 경우, workspace의 metadata 하위 디렉토리 지정 등)
@@ -442,7 +442,7 @@ V2.2부터 web 리소스 분석을 별도의 analyzeWebResource() 메소드로 �
 
 * WebTargetFileInfo : 분석 대상 폴더 및 소스 파일 지정 (addDirectory() 또는 addFile()을 통해 분석 대상 소스 지정)
 
-| Method | Description | 
+| Method | Description |
 | setIncludeSubDirectory(boolean) | 디렉토리 지정 시, 하위 디렉토리 포함 여부 지정 |
 | addDirectory(String directory) | 디렉토리를 추가 지정 |
 | addFile(String filePath) | 파일을 추가 추가 |
@@ -453,26 +453,26 @@ V2.2부터 web 리소스 분석을 별도의 analyzeWebResource() 메소드로 �
 
 ```java
 	WebArgumentInfo argument = new WebArgumentInfo();
-	 
-	 
+
+
 	argument.setProject("C:\workspace\test");
 	argument.setEncoding("UTF-8"); // default
-	 
+
 	argument.setWebapp("src/main/webapp");
-	 
+
 	// argument.setDebug(true);
-	 
+
 	// argument.setExclude("**/test.js");
-	 
+
 	argument.setSaveCatalog(true);
-	 
+
 	WebTargetFileInfo targetFile = new WebTargetFileInfo();
-	 
+
 	File temp = new File(TEMP_DIRECTORY);
 	if (!temp.exists()) {
 	    temp.mkdirs();
 	}
-	 
+
 	String resultFile = analyst.analyzeWebResource(TEMP_DIRECTORY, argument, targetFile, false);
 
 ```

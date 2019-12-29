@@ -36,19 +36,19 @@ public class SourceFileHandler {
             throw new IllegalArgumentException("If src has comma, then use other constructor with string array.");
         }
 
-        this.projectBaseDir = projectBaseDir.replaceAll("/", "\\\\");
+        this.projectBaseDir = projectBaseDir.replace("/", File.separator).replace("\\", File.separator);
 
         this.srcDirectories = new String[1];
-        this.srcDirectories[0] = src.replaceAll("/", "\\\\");
+        this.srcDirectories[0] = src.replace("/", File.separator).replace("\\", File.separator);
     }
 
     public SourceFileHandler(String projectBaseDir, String[] srcDirectories) {
-        this.projectBaseDir = projectBaseDir.replaceAll("/", "\\\\");
+        this.projectBaseDir = projectBaseDir.replace("/", File.separator).replace("\\", File.separator);
 
         this.srcDirectories = new String[srcDirectories.length];
 
         for (int i = 0; i < srcDirectories.length; i++) {
-            this.srcDirectories[i] =  srcDirectories[i].replaceAll("/", "\\\\");
+            this.srcDirectories[i] =  srcDirectories[i].replace("/", File.separator).replace("\\", File.separator);
         }
     }
 
@@ -59,7 +59,10 @@ public class SourceFileHandler {
             appendStringWithComma(ret, getPathStringWithInclude(includes, src));
         }
 
-        LOGGER.info("Modified Directories or files : {}", ret);
+        if (ret.length() == 0) {
+            throw new IllegalArgumentException("Modified directories or files not found : src or include option error");
+        }
+        LOGGER.info("Modified directories or files : {}", ret);
 
         return ret.toString();
     }
@@ -87,10 +90,10 @@ public class SourceFileHandler {
                     break;
                 }
 
-                filePath.append(path).append("\\");
+                filePath.append(path).append(File.separator);
             }
 
-            if (filePath.toString().endsWith("\\")) {
+            if (filePath.toString().endsWith(File.separator)) {
                 filePath.deleteCharAt(filePath.length() - 1);
             }
 
@@ -105,7 +108,6 @@ public class SourceFileHandler {
                     }
                 }
             }
-
         }
 
         return ret.toString();
@@ -119,5 +121,15 @@ public class SourceFileHandler {
             builder.append(",");
         }
         builder.append(str);
+    }
+
+    public static void main(String[] args) {
+        SourceFileHandler handler = null;
+
+        handler = new SourceFileHandler(".", new String[]{"src\\main\\java"});
+        System.out.println("Result : " + handler.getPathStringWithInclude("**/*Controller.java"));
+
+        handler = new SourceFileHandler(".", new String[]{"src/main/java"});
+        System.out.println("Result : " + handler.getPathStringWithInclude("**/*Controller.java"));
     }
 }

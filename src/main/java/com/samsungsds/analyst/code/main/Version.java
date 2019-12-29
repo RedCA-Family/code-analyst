@@ -58,8 +58,9 @@ public class Version {
     //         DuplicationApp 오류 수정 (project key 정보 포함된 결과 파일 처리)
     // 2.9.0 : C# language, Python language 추가, CK Metrics 처리 시 BCEL 오류 수정
     // 2.9.1 : FindBugs + BCEL 오류 수정 => SpotBugs(v3.1.12) 적용
+    // 2.9.2 : Complexity/PMD 점검 관련 Linux/MacOS 파일 처리 오류 수정
     // --------------------------------------------------
-	public static final String CODE_ANALYST = "2.9.1";
+	public static final String CODE_ANALYST = "2.9.2";
 	public static final String DOCUMENT_VERSION = "2.9";
 	public static final String APPLICATION_JAR = "Code-Analyst-" + CODE_ANALYST + ".jar";
 
