@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/RedCA-Family/code-analyst.svg?branch=development)](https://travis-ci.org/RedCA-Family/code-analyst)
 [![License](https://img.shields.io/github/license/RedCA-Family/code-analyst.svg?style=flat)](https://raw.githubusercontent.com/RedCA-Family/code-analyst/master/LICENSE.txt)
 
-Code Analyst는 코드 품질에 대한 다양한 지표를 통합적으로 확인할 수 있는 프로그램입니다. 
+Code Analyst는 코드 품질에 대한 다양한 지표를 통합적으로 확인할 수 있는 프로그램입니다.
 
 기본적으로 측정되는 코드 규모(프로그램 개수, loc 등)뿐만 아니라 중복도, 복잡도, Inspection 결과(PMD, FindBugs) 등을 확인할 수 있습니다.
 
@@ -25,36 +25,36 @@ Code Analyst를 실행하기 위해서는 Java 1.8이 필요하며, 하나의 �
 
 
 ## API 사용 ##
-API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 dependency를 추가하면 됩니다. 
-	
+API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 dependency를 추가하면 됩니다.
+
 	<dependency>
 		<groupId>com.samsungsds.analyst</groupId>
 		<artifactId>code-analyst</artifactId>
-		<version>2.9.0</version>
+		<version>2.9.2</version>
 	</dependency>
 
 **API 활용에 대한 사항은 [Guide](GUIDE.md)를 참조**해 주세요.
-  
+
 
 ## Usage
-CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C# 및 Python을 지원합니다.  
+CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C# 및 Python을 지원합니다.
 언어에 대한 지정은 ```--language``` 또는 ```-l``` 옵션을 통해 지정됩니다.
 
 ### Java 언어 점검
 
-    $> java -jar Code-Analyst-2.9.0.jar -l java -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
-    
+    $> java -jar Code-Analyst-2.9.2.jar -l java -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+
 ※ 참고로 ```-l,--language``` 지정이 없으면, Java 언어를 기본 점검 대상으로 합니다.
 
-기본적으로 --project 옵션을 통해 분석하고자 하는 프로젝트 위치를 지정합니다. 
+기본적으로 --project 옵션을 통해 분석하고자 하는 프로젝트 위치를 지정합니다.
 
 이와 함께 --src, --binary 옵션으로 소스 디렉토리와 binary 디렉토리(컴파일된 class 파일 생성 위치)를 지정합니다. (생략되면 maven 프로젝트 기준으로 설정되며, "--project" 옵션에 대한 상대 경로로 지정해야 합니다.)
 
 
 #### Help (Java)
 
-	$> java -jar Code-Analyst-2.9.0.jar --help
-    usage: java -jar Code-Analyst-2.9.0.jar
+	$> java -jar Code-Analyst-2.9.2.jar --help
+    usage: java -jar Code-Analyst-2.9.2.jar
      ※ To see individual language-specific option usages, specify the '-l' or '--language' option
      -l,--language <arg>     specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : "Java")
      -h,--help               show help.
@@ -103,12 +103,12 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
 
 ### JavaScript 언어 점검
 
-    $> java -jar Code-Analyst-2.9.0.jar -l javascript -p "프로젝트 위치" -s "."
-    
+    $> java -jar Code-Analyst-2.9.2.jar -l javascript -p "프로젝트 위치" -s "."
+
 #### Help (JavaScript)
 
-    $> java -jar Code-Analyst-2.9.0.jar -l javascript --help
-    usage: java -jar Code-Analyst-2.9.0.jar
+    $> java -jar Code-Analyst-2.9.2.jar -l javascript --help
+    usage: java -jar Code-Analyst-2.9.2.jar
      -l,--language <arg>   specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : "Java")
      -h,--help             show help.
      -p,--project <arg>    specify project base directory. (default: ".")
@@ -139,14 +139,14 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
 
 ### C# 언어 점검
 
-    $> java -jar Code-Analyst-2.9.0.jar -l C# -p "프로젝트 위치" -s "."
-    
+    $> java -jar Code-Analyst-2.9.2.jar -l C# -p "프로젝트 위치" -s "."
+
 ※ 참고로 프로젝트 위치는 Visual Studio 솔루션("*.sln") 파일이 있는 위치입니다.
 
 #### Help (C#)
 
-    $> java -jar Code-Analyst-2.9.0.jar -l C# --help
-    usage: java -jar Code-Analyst-2.9.0.jar
+    $> java -jar Code-Analyst-2.9.2.jar -l C# --help
+    usage: java -jar Code-Analyst-2.9.2.jar
      -l,--language <arg>   specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : "Java")
      -h,--help             show help.
      -p,--project <arg>    specify project base directory. (default: ".")
@@ -177,15 +177,15 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
                            'include', 'exclude', 'mode', 'analysis', 'seperated', and 'catalog')
      -seperated            specify seperated output mode.
      -catalog              specify file catalog saving mode.
-    
+
 ### Python 언어 점검
 
-    $> java -jar Code-Analyst-2.9.0.jar -l Python -p "프로젝트 위치" -s "."
+    $> java -jar Code-Analyst-2.9.2.jar -l Python -p "프로젝트 위치" -s "."
 
 #### Help (Python)
 
-    $> java -jar Code-Analyst-2.9.0.jar -l Python --help
-    usage: java -jar Code-Analyst-2.9.0.jar
+    $> java -jar Code-Analyst-2.9.2.jar -l Python --help
+    usage: java -jar Code-Analyst-2.9.2.jar
      -l,--language <arg>   specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : "Java")
      -h,--help             show help.
      -p,--project <arg>    specify project base directory. (default: ".")
@@ -216,8 +216,8 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
 
 ### Version 정보
 
-	$> java -jar Code-Analyst-2.9.0.jar --version
-    Code Analyst : 2.9.0
+	$> java -jar Code-Analyst-2.9.2.jar --version
+    Code Analyst : 2.9.2
       - Sonar Scanner : 2.10.0.1189 (LGPL v3.0)
       - Sonar Server : 6.7.4.38452 (LGPL v3.0)
          [Plugins]
@@ -236,7 +236,7 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
         ※ Supported Platform : Windows/MacOS/Linux(x64)
       - ESLint : 5.16.0 (MIT)
       - CheckStyle : 8.21 (LGPL v2.1)
-    
+
     Default RuleSet
       - PMD : 91 ruleset (v5.4, RedCA Way Ruleset, '18.03)
       - FindBugs : 214 ruleset (v3.0.1, RedCA Way Ruleset, '18.03)
@@ -249,11 +249,11 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
           - CSS : CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)
           - HTML : 16 ruleset (v2.5)
       - CheckStyle : 58 ruleset (RedCA Way Ruleset, '19.06)
-    
+
     Copyright(c) 2018 By Samsung SDS (Code Quality Group)
 
 
-보다 **자세한 사항은 [Guide](GUIDE.md)를 참조**해 주세요. 
+보다 **자세한 사항은 [Guide](GUIDE.md)를 참조**해 주세요.
 
 
 ## Contributing
@@ -277,10 +277,10 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
 
 ## License
 
-Code Analyst is licensed under the version 2.0 of the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).   
-See [LICENSE](./LICENSE.txt) for the Code-Analyst full license text.  
-Licenses about 3rd-party library are in [./src/main/resources/LICENSES](./src/main/resources/LICENSES).  
+Code Analyst is licensed under the version 2.0 of the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).
+See [LICENSE](./LICENSE.txt) for the Code-Analyst full license text.
+Licenses about 3rd-party library are in [./src/main/resources/LICENSES](./src/main/resources/LICENSES).
 
-Unless required by applicable law or agreed to in writing, Software distributed as an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND.    
-In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall any Contributor be liable to You for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of this License or out of the use or inability to use the Work (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if such Contributor has been advised of the possibility of such damages.  
+Unless required by applicable law or agreed to in writing, Software distributed as an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND.
+In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall any Contributor be liable to You for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of this License or out of the use or inability to use the Work (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if such Contributor has been advised of the possibility of such damages.
 Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability.
