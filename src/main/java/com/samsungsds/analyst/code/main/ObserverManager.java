@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObserverManager {
-    private List<ProgressObserver> observerList = new ArrayList<>();
+    private final List<ProgressObserver> observerList = new ArrayList<>();
 
     private AnalysisProgressMonitor progressMonitor;
 
