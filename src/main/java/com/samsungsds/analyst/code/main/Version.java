@@ -59,15 +59,16 @@ public class Version {
     // 2.9.0 : C# language, Python language 추가, CK Metrics 처리 시 BCEL 오류 수정
     // 2.9.1 : FindBugs + BCEL 오류 수정 => SpotBugs(v3.1.12) 적용
     // 2.9.2 : Complexity/PMD 점검 관련 Linux/MacOS 파일 처리 오류 수정
+    // 2.10.0 : SonarQube 7.9 LTS 및 관련 plugin 버전, SpotBugs(FindBugs) v4.0.6 등 OSS 버전 업그레이드
     // --------------------------------------------------
-	public static final String CODE_ANALYST = "2.9.2";
+	public static final String CODE_ANALYST = "2.10.0";
 	public static final String DOCUMENT_VERSION = "2.9";
 	public static final String APPLICATION_JAR = "Code-Analyst-" + CODE_ANALYST + ".jar";
 
-	public static final String SONAR_SCANNER = "2.10.0.1189";
-	public static final String SONAR_SERVER = "6.7.4.38452";
+	public static final String SONAR_SCANNER = "2.15.0.2182";
+	public static final String SONAR_SERVER = "7.9.4";
 	public static final String PMD = "5.8.1";
-	public static final String FINDBUGS = "3.1.12";
+	public static final String FINDBUGS = "4.0.6";
 	public static final String FINDSECBUGS = "1.7.1";
 	public static final String JDEPEND = "2.9.1";
 	public static final String CKJM = "1.9";

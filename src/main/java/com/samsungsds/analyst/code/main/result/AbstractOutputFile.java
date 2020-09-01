@@ -21,12 +21,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.checkstyle.CheckStyleResult;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
-import org.apache.commons.io.IOUtils;
+import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 import com.samsungsds.analyst.code.findbugs.FindBugsResult;
 import com.samsungsds.analyst.code.main.CliParser;
@@ -43,7 +44,7 @@ public abstract class AbstractOutputFile {
 
 	public void process(File file, CliParser cli, MeasuredResult result) {
 		try {
-			writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8")));
+			writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)));
 
 			open(result);
 
@@ -112,7 +113,7 @@ public abstract class AbstractOutputFile {
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);
 		} finally {
-			IOUtils.closeQuietly(writer);
+			IOAndFileUtils.closeQuietly(writer);
 		}
 	}
 

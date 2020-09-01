@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.TreeSet;
 
 import com.samsungsds.analyst.code.ckmetrics.utils.FindSuperClassesUtil;
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.ClassFormatException;
 import org.apache.bcel.classfile.Field;
@@ -203,7 +203,7 @@ public class ClassVisitor extends org.apache.bcel.classfile.EmptyVisitor {
     static String className(Type t) {
 		String ts = t.toString();
 
-		if (t.getType() <= Constants.T_VOID) {
+		if (t.getType() <= Const.T_VOID) {
 			return "java.PRIMITIVE";
 		} else if (t instanceof ArrayType) {
 			ArrayType at = (ArrayType) t;

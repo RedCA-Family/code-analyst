@@ -225,4 +225,14 @@ public class IOAndFileUtils {
 
 		return path;
 	}
+
+    public static void closeQuietly(Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (IOException ignore) {
+            // no operation
+        }
+    }
 }

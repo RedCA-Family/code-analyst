@@ -16,12 +16,8 @@ limitations under the License.
 package com.samsungsds.analyst.code.api.impl;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import com.samsungsds.analyst.code.api.*;
 import org.apache.logging.log4j.LogManager;
@@ -52,7 +48,7 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 			System.out.println(" - with seperated output option");
 		}
 
-		CliParser cli = new CliParser(arguments);
+		CliParser cli = new CliParser(arguments, Language.JAVA);
 
 		cli.setInstanceKey(getUniqueId());
 

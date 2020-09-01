@@ -169,7 +169,7 @@ public class AppForSonarAnalysisForCSharp extends AppForSonarAnalysis {
         }
     }
 
-    private void addParameter(List list, String key, String value) {
+    private void addParameter(List<String> list, String key, String value) {
         list.add(String.format("/d:%s=%s", key, value));
     }
 
