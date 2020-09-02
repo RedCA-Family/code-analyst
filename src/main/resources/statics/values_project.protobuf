@@ -1,0 +1,269 @@
+
+6
+%sonaranalyzer-cs.nuget.packageVersion8.6.1.17183(
+'
+sonar.cs.ignoreHeaderCommentstrue(
+/
+sonar.typescript.file.suffixes
+.ts
+.tsx(
+
+email.fromName	SonarQube(
+)
+sonar.python.xunit.skipDetailsfalse(
+'
+sonar.go.exclusions
+**/vendor/**(
+$
+sonar.forceAuthenticationfalse(
+!
+sonar.notifications.delay60(
+8
+sonaranalyzer-cs.ruleNamespaceSonarAnalyzer.CSharp(
+(
+sonar.cs.analyzeGeneratedCodefalse(
+
+email.smtp_port.secured25(
+C
+8sonar.builtInQualityProfiles.disableNotificationOnUpdatefalse(
+1
+sonar.css.file.suffixes
+.css
+.less
+.scss(
+0
+%sonar.organizations.createPersonalOrgfalse(
+j
+sonar.html.file.suffixesL
+.html
+.xhtml
+.cshtml
+.vbhtml
+.aspx
+.ascx
+.rhtml
+.erb
+.shtm
+.shtml(
+"
+sonar.cpd.cross_projectfalse(
+*
+ sonar.vbnet.ignoreHeaderCommentstrue(
+'
+sonar.leak.periodprevious_version(
+'
+sonar.auth.github.groupsSyncfalse(
+'
+sonar.scala.file.suffixes
+.scala(
++
+sonar.auth.github.loginStrategyUnique(
+@
+!sonaranalyzer-vbnet.ruleNamespaceSonarAnalyzer.VisualBasic(
+/
+%sonar.javascript.ignoreHeaderCommentstrue(
+6
+.sonar.dbcleaner.daysBeforeDeletingClosedIssues30(
+@
+8sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByMonth52(
+g
+sonar.lf.gravatarServerUrlGhttps://secure.gravatar.com/avatar/{EMAIL_MD5}.jpg?s={SIZE}&d=identicon(
+"
+sonar.findbugs.effortDefault(
+>
+5sonar.notifications.runningDelayBeforeReportingStatus600(
+1
+sonar.jsp.file.suffixes
+.jsp
+.jspf
+.jspx(
+Ñ
+sonar.javascript.environments­
+amd
+ applescript
+	 atomtest
+ browser
+	 commonjs
+ couch
+
+ embertest
+ flow
+ greasemonkey
+ jasmine
+ jest
+ jquery
+ meteor
+ mocha
+ mongo
+ nashorn
+ node
+
+ phantomjs
+ prototypejs
+ protractor
+ qunit
+ rhino
+ serviceworker
+ shared-node-browser
+ shelljs
+ webextensions
+ worker
+ wsh
+ yui(
+
+sonar.scm.disabledfalse(
+"
+sonar.auth.saml.enabledfalse(
+$
+sonar.vbnet.file.suffixes
+.vb(
++
+#sonar.technicalDebt.developmentCost30(
+$
+sonar.python.file.suffixes
+py(
+!
+sonar.cs.file.suffixes
+.cs(
+I
+&sonaranalyzer-vbnet.staticResourceNameSonarAnalyzer-7.15.0.8572.zip(
++
+sonar.java.file.suffixes
+.java
+.jav(
+%
+sonar.kotlin.file.suffixes
+.kt(
+@
+sonar.php.file.suffixes#
+php
+php3
+php4
+php5
+phtml
+inc(
+/
+sonar.xml.file.suffixes
+.xml
+.xsd
+.xsl(
+8
+/sonar.dbcleaner.weeksBeforeDeletingAllSnapshots260(
+I
+!sonar.python.coverage.reportPaths"
+ coverage-reports/*coverage-*.xml(
+$
+sonar.auth.github.enabledfalse(
+6
+$sonar.javascript.jQueryObjectAliases
+$
+ jQuery(
+9
+(sonaranalyzer-vbnet.nuget.packageVersion7.15.0.8572(
+!
+sonar.go.file.suffixes
+.go(
+,
+sonar.auth.saml.applicationId	sonarqube(
+B
+9sonar.dbcleaner.weeksBeforeKeepingOnlyAnalysesWithVersion104(
+(
+sonar.php.exclusions
+**/vendor/**(
+*
+sonar.vbnet.roslyn.ignoreIssuesfalse(
+"
+sonar.flex.file.suffixes
+as(
+5
+sonar.auth.github.apiUrlhttps://api.github.com/(
+#
+sonar.ruby.file.suffixes
+.rb(
+.
+$sonar.auth.github.allowUsersToSignUptrue(
+C
+sonar.python.xunit.reportPath xunit-reports/xunit-result-*.xml(
+s
+sonar.javascript.globalsU
+angular
+goog
+google
+
+OpenLayers
+d3
+dojo
+dojox
+dijit
+Backbone
+moment
+casper(
+>
+6sonar.dbcleaner.hoursBeforeKeepingOnlyOneSnapshotByDay24(
+M
+sonar.javascript.exclusions,
+**/node_modules/**
+**/bower_components/**(
+1
+sonar.auth.github.webUrlhttps://github.com/(
+B
+#sonaranalyzer-vbnet.nuget.packageIdSonarAnalyzer.VisualBasic(
+
+
+email.fromnoreply@nowhere(
+2
+!sonaranalyzer-vbnet.pluginVersion7.15.0.8572(
++
+ sonar.internal.analysis.failFastfalse(
+>
+7sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByWeek4(
+=
+sonaranalyzer-vbnet.analyzerIdSonarAnalyzer.VisualBasic(
+
+email.prefix[SONARQUBE](
+'
+sonar.cs.roslyn.ignoreIssuesfalse(
+&
+sonaranalyzer-cs.pluginKeycsharp(
+&
+sonar.auth.saml.providerNameSAML(
+?
+sonar.ruby.coverage.reportPaths
+coverage/.resultset.json(
+F
+#sonaranalyzer-cs.staticResourceNameSonarAnalyzer-8.6.1.17183.zip(
+*
+sonar.findbugs.confidenceLevelmedium(
+:
+ sonaranalyzer-cs.nuget.packageIdSonarAnalyzer.CSharp(
+'
+sonar.authenticator.downcasefalse(
+5
+sonaranalyzer-cs.analyzerIdSonarAnalyzer.CSharp(
+-
+"sonar.findbugs.allowuncompiledcodefalse(
+.
+#sonar.organizations.anyoneCanCreatefalse(
+4
+sonar.technicalDebt.ratingGrid0.05,0.1,0.2,0.5(
+"
+sonar.lf.enableGravatarfalse(
+/
+sonaranalyzer-cs.pluginVersion8.6.1.17183(
+5
+sonar.javascript.file.suffixes
+.js
+.jsx
+.vue(
++
+ sonar.vbnet.analyzeGeneratedCodefalse(
+(
+sonaranalyzer-vbnet.pluginKeyvbnet(
+S
+sonar.updatecenter.url7https://update.sonarsource.org/update-center.properties(
+"
+sonar.findbugs.timeout600000(
+0
+sonar.core.idBF41A1F2-AXQjDMC5ai_BF8caLuUE(
+2
+sonar.core.startTime2020-09-01T16:15:04+0900(

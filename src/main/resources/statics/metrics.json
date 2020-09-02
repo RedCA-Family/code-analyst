@@ -1,17 +1,7 @@
 {
 	"metrics": [
 		{
-			"id": "11",
-			"key": "accessors",
-			"type": "INT",
-			"name": "Accessors",
-			"description": "Accessors",
-			"direction": -1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "120",
+			"id": "81",
 			"key": "new_technical_debt",
 			"type": "WORK_DUR",
 			"name": "Added Technical Debt",
@@ -21,7 +11,7 @@
 			"custom": false
 		},
 		{
-			"id": "97",
+			"id": "56",
 			"key": "blocker_violations",
 			"type": "INT",
 			"name": "Blocker Issues",
@@ -31,17 +21,7 @@
 			"custom": false
 		},
 		{
-			"id": "64",
-			"key": "new_it_conditions_to_cover",
-			"type": "INT",
-			"name": "Branches to Cover by IT on New Code",
-			"description": "Branches to cover by Integration Tests on New Code",
-			"direction": 0,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "115",
+			"id": "74",
 			"key": "bugs",
 			"type": "INT",
 			"name": "Bugs",
@@ -51,7 +31,7 @@
 			"custom": false
 		},
 		{
-			"id": "142",
+			"id": "105",
 			"key": "burned_budget",
 			"type": "FLOAT",
 			"name": "Burned budget",
@@ -60,23 +40,13 @@
 			"custom": true
 		},
 		{
-			"id": "143",
+			"id": "106",
 			"key": "business_value",
 			"type": "FLOAT",
 			"name": "Business value",
 			"direction": 1,
 			"qualitative": true,
 			"custom": true
-		},
-		{
-			"id": "26",
-			"key": "class_complexity_distribution",
-			"type": "DISTRIB",
-			"name": "Class Distribution / Complexity",
-			"description": "Classes distribution /complexity",
-			"direction": 0,
-			"qualitative": true,
-			"custom": false
 		},
 		{
 			"id": "7",
@@ -89,7 +59,7 @@
 			"custom": false
 		},
 		{
-			"id": "113",
+			"id": "72",
 			"key": "code_smells",
 			"type": "INT",
 			"name": "Code Smells",
@@ -99,7 +69,7 @@
 			"custom": false
 		},
 		{
-			"id": "29",
+			"id": "26",
 			"key": "cognitive_complexity",
 			"type": "INT",
 			"name": "Cognitive Complexity",
@@ -109,7 +79,7 @@
 			"custom": false
 		},
 		{
-			"id": "15",
+			"id": "14",
 			"key": "comment_lines",
 			"type": "INT",
 			"name": "Comment Lines",
@@ -119,17 +89,7 @@
 			"custom": false
 		},
 		{
-			"id": "19",
-			"key": "commented_out_code_lines",
-			"type": "INT",
-			"name": "Commented-Out LOC",
-			"description": "Commented lines of code",
-			"direction": -1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "16",
+			"id": "15",
 			"key": "comment_lines_density",
 			"type": "PERCENT",
 			"name": "Comments (%)",
@@ -139,7 +99,7 @@
 			"custom": false
 		},
 		{
-			"id": "136",
+			"id": "99",
 			"key": "comment_lines_data",
 			"type": "DATA",
 			"name": "comment_lines_data",
@@ -148,7 +108,7 @@
 			"custom": false
 		},
 		{
-			"id": "23",
+			"id": "21",
 			"key": "class_complexity",
 			"type": "FLOAT",
 			"name": "Complexity / Class",
@@ -158,7 +118,7 @@
 			"custom": false
 		},
 		{
-			"id": "21",
+			"id": "19",
 			"key": "file_complexity",
 			"type": "FLOAT",
 			"name": "Complexity / File",
@@ -168,7 +128,7 @@
 			"custom": false
 		},
 		{
-			"id": "25",
+			"id": "23",
 			"key": "function_complexity",
 			"type": "FLOAT",
 			"name": "Complexity / Function",
@@ -178,7 +138,7 @@
 			"custom": false
 		},
 		{
-			"id": "22",
+			"id": "20",
 			"key": "complexity_in_classes",
 			"type": "INT",
 			"name": "Complexity in Classes",
@@ -188,7 +148,7 @@
 			"custom": false
 		},
 		{
-			"id": "24",
+			"id": "22",
 			"key": "complexity_in_functions",
 			"type": "INT",
 			"name": "Complexity in Functions",
@@ -198,7 +158,7 @@
 			"custom": false
 		},
 		{
-			"id": "50",
+			"id": "45",
 			"key": "branch_coverage",
 			"type": "PERCENT",
 			"name": "Condition Coverage",
@@ -208,17 +168,7 @@
 			"custom": false
 		},
 		{
-			"id": "68",
-			"key": "new_it_branch_coverage",
-			"type": "PERCENT",
-			"name": "Condition Coverage by IT on New Code",
-			"description": "Integration tests condition coverage of new/changed code",
-			"direction": 1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "51",
+			"id": "46",
 			"key": "new_branch_coverage",
 			"type": "PERCENT",
 			"name": "Condition Coverage on New Code",
@@ -228,37 +178,27 @@
 			"custom": false
 		},
 		{
-			"id": "52",
-			"key": "conditions_by_line",
-			"type": "DATA",
-			"name": "Conditions by Line",
-			"description": "Conditions by line",
-			"direction": 0,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "46",
+			"id": "41",
 			"key": "conditions_to_cover",
 			"type": "INT",
 			"name": "Conditions to Cover",
 			"description": "Conditions to cover",
-			"direction": 0,
+			"direction": -1,
 			"qualitative": false,
 			"custom": false
 		},
 		{
-			"id": "47",
+			"id": "42",
 			"key": "new_conditions_to_cover",
 			"type": "INT",
 			"name": "Conditions to Cover on New Code",
 			"description": "Conditions to cover on new code",
-			"direction": 0,
+			"direction": -1,
 			"qualitative": false,
 			"custom": false
 		},
 		{
-			"id": "112",
+			"id": "71",
 			"key": "confirmed_issues",
 			"type": "INT",
 			"name": "Confirmed Issues",
@@ -268,7 +208,7 @@
 			"custom": false
 		},
 		{
-			"id": "37",
+			"id": "33",
 			"key": "coverage",
 			"type": "PERCENT",
 			"name": "Coverage",
@@ -278,27 +218,7 @@
 			"custom": false
 		},
 		{
-			"id": "55",
-			"key": "new_it_coverage",
-			"type": "PERCENT",
-			"name": "Coverage by IT on New Code",
-			"description": "Integration tests coverage of new/changed code",
-			"direction": 1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "45",
-			"key": "coverage_line_hits_data",
-			"type": "DATA",
-			"name": "Coverage Hits by Line",
-			"description": "Coverage hits by line",
-			"direction": 0,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "38",
+			"id": "34",
 			"key": "new_coverage",
 			"type": "PERCENT",
 			"name": "Coverage on New Code",
@@ -308,17 +228,7 @@
 			"custom": false
 		},
 		{
-			"id": "53",
-			"key": "covered_conditions_by_line",
-			"type": "DATA",
-			"name": "Covered Conditions by Line",
-			"description": "Covered conditions by line",
-			"direction": 0,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "98",
+			"id": "57",
 			"key": "critical_violations",
 			"type": "INT",
 			"name": "Critical Issues",
@@ -328,7 +238,7 @@
 			"custom": false
 		},
 		{
-			"id": "20",
+			"id": "18",
 			"key": "complexity",
 			"type": "INT",
 			"name": "Cyclomatic Complexity",
@@ -338,12 +248,32 @@
 			"custom": false
 		},
 		{
-			"id": "141",
+			"id": "104",
 			"key": "last_commit_date",
 			"type": "MILLISEC",
 			"name": "Date of Last Commit",
 			"direction": 0,
 			"qualitative": false,
+			"custom": false
+		},
+		{
+			"id": "84",
+			"key": "development_cost",
+			"type": "STRING",
+			"name": "Development Cost",
+			"description": "Development cost",
+			"direction": -1,
+			"qualitative": true,
+			"custom": false
+		},
+		{
+			"id": "85",
+			"key": "new_development_cost",
+			"type": "STRING",
+			"name": "Development Cost on New Code",
+			"description": "Development cost on new code",
+			"direction": -1,
+			"qualitative": true,
 			"custom": false
 		},
 		{
@@ -357,7 +287,7 @@
 			"custom": false
 		},
 		{
-			"id": "90",
+			"id": "49",
 			"key": "duplicated_blocks",
 			"type": "INT",
 			"name": "Duplicated Blocks",
@@ -367,7 +297,7 @@
 			"custom": false
 		},
 		{
-			"id": "91",
+			"id": "50",
 			"key": "new_duplicated_blocks",
 			"type": "INT",
 			"name": "Duplicated Blocks on New Code",
@@ -377,7 +307,7 @@
 			"custom": false
 		},
 		{
-			"id": "92",
+			"id": "51",
 			"key": "duplicated_files",
 			"type": "INT",
 			"name": "Duplicated Files",
@@ -387,7 +317,7 @@
 			"custom": false
 		},
 		{
-			"id": "88",
+			"id": "47",
 			"key": "duplicated_lines",
 			"type": "INT",
 			"name": "Duplicated Lines",
@@ -397,7 +327,7 @@
 			"custom": false
 		},
 		{
-			"id": "93",
+			"id": "52",
 			"key": "duplicated_lines_density",
 			"type": "PERCENT",
 			"name": "Duplicated Lines (%)",
@@ -407,7 +337,7 @@
 			"custom": false
 		},
 		{
-			"id": "89",
+			"id": "48",
 			"key": "new_duplicated_lines",
 			"type": "INT",
 			"name": "Duplicated Lines on New Code",
@@ -417,17 +347,17 @@
 			"custom": false
 		},
 		{
-			"id": "94",
+			"id": "53",
 			"key": "new_duplicated_lines_density",
 			"type": "PERCENT",
-			"name": "Duplicated Lines on New Code (%)",
+			"name": "Duplicated Lines on New Code",
 			"description": "Duplicated lines on new code balanced by statements",
 			"direction": -1,
 			"qualitative": true,
 			"custom": false
 		},
 		{
-			"id": "95",
+			"id": "54",
 			"key": "duplications_data",
 			"type": "DATA",
 			"name": "Duplication Details",
@@ -437,7 +367,7 @@
 			"custom": false
 		},
 		{
-			"id": "126",
+			"id": "88",
 			"key": "effort_to_reach_maintainability_rating_a",
 			"type": "WORK_DUR",
 			"name": "Effort to Reach Maintainability Rating A",
@@ -447,7 +377,7 @@
 			"custom": false
 		},
 		{
-			"id": "137",
+			"id": "100",
 			"key": "executable_lines_data",
 			"type": "DATA",
 			"name": "executable_lines_data",
@@ -456,7 +386,7 @@
 			"custom": false
 		},
 		{
-			"id": "108",
+			"id": "67",
 			"key": "false_positive_issues",
 			"type": "INT",
 			"name": "False Positive Issues",
@@ -466,7 +396,7 @@
 			"custom": false
 		},
 		{
-			"id": "28",
+			"id": "25",
 			"key": "file_complexity_distribution",
 			"type": "DISTRIB",
 			"name": "File Distribution / Complexity",
@@ -486,7 +416,7 @@
 			"custom": false
 		},
 		{
-			"id": "27",
+			"id": "24",
 			"key": "function_complexity_distribution",
 			"type": "DISTRIB",
 			"name": "Function Distribution / Complexity",
@@ -526,7 +456,7 @@
 			"custom": false
 		},
 		{
-			"id": "101",
+			"id": "60",
 			"key": "info_violations",
 			"type": "INT",
 			"name": "Info Issues",
@@ -536,7 +466,7 @@
 			"custom": false
 		},
 		{
-			"id": "96",
+			"id": "55",
 			"key": "violations",
 			"type": "INT",
 			"name": "Issues",
@@ -546,107 +476,7 @@
 			"custom": false
 		},
 		{
-			"id": "63",
-			"key": "it_conditions_to_cover",
-			"type": "INT",
-			"name": "IT Branches to Cover",
-			"description": "Integration Tests conditions to cover",
-			"direction": 1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "67",
-			"key": "it_branch_coverage",
-			"type": "PERCENT",
-			"name": "IT Condition Coverage",
-			"description": "Condition coverage by integration tests",
-			"direction": 1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "69",
-			"key": "it_conditions_by_line",
-			"type": "DATA",
-			"name": "IT Conditions by Line",
-			"description": "IT conditions by line",
-			"direction": 0,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "54",
-			"key": "it_coverage",
-			"type": "PERCENT",
-			"name": "IT Coverage",
-			"description": "Integration tests coverage",
-			"direction": 1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "62",
-			"key": "it_coverage_line_hits_data",
-			"type": "DATA",
-			"name": "IT Coverage Hits by Line",
-			"description": "Coverage hits by line by integration tests",
-			"direction": 0,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "70",
-			"key": "it_covered_conditions_by_line",
-			"type": "DATA",
-			"name": "IT Covered Conditions by Line",
-			"description": "IT covered conditions by line",
-			"direction": 0,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "60",
-			"key": "it_line_coverage",
-			"type": "PERCENT",
-			"name": "IT Line Coverage",
-			"description": "Line coverage by integration tests",
-			"direction": 1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "56",
-			"key": "it_lines_to_cover",
-			"type": "INT",
-			"name": "IT Lines to Cover",
-			"description": "Lines to cover by Integration Tests",
-			"direction": 1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "65",
-			"key": "it_uncovered_conditions",
-			"type": "INT",
-			"name": "IT Uncovered Conditions",
-			"description": "Uncovered conditions by integration tests",
-			"direction": -1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "58",
-			"key": "it_uncovered_lines",
-			"type": "INT",
-			"name": "IT Uncovered Lines",
-			"description": "Uncovered lines by integration tests",
-			"direction": -1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "43",
+			"id": "39",
 			"key": "line_coverage",
 			"type": "PERCENT",
 			"name": "Line Coverage",
@@ -656,17 +486,7 @@
 			"custom": false
 		},
 		{
-			"id": "61",
-			"key": "new_it_line_coverage",
-			"type": "PERCENT",
-			"name": "Line Coverage by IT on New Code",
-			"description": "Integration tests line coverage of added/changed code",
-			"direction": 1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "44",
+			"id": "40",
 			"key": "new_line_coverage",
 			"type": "PERCENT",
 			"name": "Line Coverage on New Code",
@@ -706,7 +526,7 @@
 			"custom": false
 		},
 		{
-			"id": "39",
+			"id": "35",
 			"key": "lines_to_cover",
 			"type": "INT",
 			"name": "Lines to Cover",
@@ -716,17 +536,7 @@
 			"custom": false
 		},
 		{
-			"id": "57",
-			"key": "new_it_lines_to_cover",
-			"type": "INT",
-			"name": "Lines to Cover by IT on New Code",
-			"description": "Lines to cover on new code by integration tests",
-			"direction": -1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "40",
+			"id": "36",
 			"key": "new_lines_to_cover",
 			"type": "INT",
 			"name": "Lines to Cover on New Code",
@@ -736,7 +546,7 @@
 			"custom": false
 		},
 		{
-			"id": "121",
+			"id": "82",
 			"key": "sqale_rating",
 			"type": "RATING",
 			"name": "Maintainability Rating",
@@ -746,7 +556,7 @@
 			"custom": false
 		},
 		{
-			"id": "122",
+			"id": "83",
 			"key": "new_maintainability_rating",
 			"type": "RATING",
 			"name": "Maintainability Rating on New Code",
@@ -756,7 +566,7 @@
 			"custom": false
 		},
 		{
-			"id": "99",
+			"id": "58",
 			"key": "major_violations",
 			"type": "INT",
 			"name": "Major Issues",
@@ -766,7 +576,7 @@
 			"custom": false
 		},
 		{
-			"id": "100",
+			"id": "59",
 			"key": "minor_violations",
 			"type": "INT",
 			"name": "Minor Issues",
@@ -776,7 +586,7 @@
 			"custom": false
 		},
 		{
-			"id": "135",
+			"id": "98",
 			"key": "ncloc_data",
 			"type": "DATA",
 			"name": "ncloc_data",
@@ -785,7 +595,7 @@
 			"custom": false
 		},
 		{
-			"id": "103",
+			"id": "62",
 			"key": "new_blocker_violations",
 			"type": "INT",
 			"name": "New Blocker Issues",
@@ -795,7 +605,7 @@
 			"custom": false
 		},
 		{
-			"id": "116",
+			"id": "75",
 			"key": "new_bugs",
 			"type": "INT",
 			"name": "New Bugs",
@@ -805,7 +615,7 @@
 			"custom": false
 		},
 		{
-			"id": "114",
+			"id": "73",
 			"key": "new_code_smells",
 			"type": "INT",
 			"name": "New Code Smells",
@@ -815,7 +625,7 @@
 			"custom": false
 		},
 		{
-			"id": "104",
+			"id": "63",
 			"key": "new_critical_violations",
 			"type": "INT",
 			"name": "New Critical Issues",
@@ -825,7 +635,7 @@
 			"custom": false
 		},
 		{
-			"id": "107",
+			"id": "66",
 			"key": "new_info_violations",
 			"type": "INT",
 			"name": "New Info Issues",
@@ -835,7 +645,7 @@
 			"custom": false
 		},
 		{
-			"id": "102",
+			"id": "61",
 			"key": "new_violations",
 			"type": "INT",
 			"name": "New Issues",
@@ -855,7 +665,7 @@
 			"custom": false
 		},
 		{
-			"id": "105",
+			"id": "64",
 			"key": "new_major_violations",
 			"type": "INT",
 			"name": "New Major Issues",
@@ -865,7 +675,7 @@
 			"custom": false
 		},
 		{
-			"id": "106",
+			"id": "65",
 			"key": "new_minor_violations",
 			"type": "INT",
 			"name": "New Minor Issues",
@@ -875,7 +685,17 @@
 			"custom": false
 		},
 		{
-			"id": "118",
+			"id": "79",
+			"key": "new_security_hotspots",
+			"type": "INT",
+			"name": "New Security Hotspots",
+			"description": "New Security Hotspots",
+			"direction": -1,
+			"qualitative": true,
+			"custom": false
+		},
+		{
+			"id": "77",
 			"key": "new_vulnerabilities",
 			"type": "INT",
 			"name": "New Vulnerabilities",
@@ -885,7 +705,7 @@
 			"custom": false
 		},
 		{
-			"id": "110",
+			"id": "69",
 			"key": "open_issues",
 			"type": "INT",
 			"name": "Open Issues",
@@ -895,177 +715,7 @@
 			"custom": false
 		},
 		{
-			"id": "80",
-			"key": "overall_conditions_to_cover",
-			"type": "INT",
-			"name": "Overall Branches to Cover",
-			"description": "Branches to cover by all tests",
-			"direction": 1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "81",
-			"key": "new_overall_conditions_to_cover",
-			"type": "INT",
-			"name": "Overall Branches to Cover on New Code",
-			"description": "New branches to cover by all tests",
-			"direction": 0,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "84",
-			"key": "overall_branch_coverage",
-			"type": "PERCENT",
-			"name": "Overall Condition Coverage",
-			"description": "Condition coverage by all tests",
-			"direction": 1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "85",
-			"key": "new_overall_branch_coverage",
-			"type": "PERCENT",
-			"name": "Overall Condition Coverage on New Code",
-			"description": "Condition coverage of new/changed code by all tests",
-			"direction": 1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "86",
-			"key": "overall_conditions_by_line",
-			"type": "DATA",
-			"name": "Overall Conditions by Line",
-			"description": "Overall conditions by all tests and by line",
-			"direction": 0,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "71",
-			"key": "overall_coverage",
-			"type": "PERCENT",
-			"name": "Overall Coverage",
-			"description": "Overall test coverage",
-			"direction": 1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "79",
-			"key": "overall_coverage_line_hits_data",
-			"type": "DATA",
-			"name": "Overall Coverage Hits by Line",
-			"description": "Coverage hits by all tests and by line",
-			"direction": 0,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "72",
-			"key": "new_overall_coverage",
-			"type": "PERCENT",
-			"name": "Overall Coverage on New Code",
-			"description": "Overall coverage of new/changed code",
-			"direction": 1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "87",
-			"key": "overall_covered_conditions_by_line",
-			"type": "DATA",
-			"name": "Overall Covered Conditions by Line",
-			"description": "Overall covered conditions by all tests and by line",
-			"direction": 0,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "77",
-			"key": "overall_line_coverage",
-			"type": "PERCENT",
-			"name": "Overall Line Coverage",
-			"description": "Line coverage by all tests",
-			"direction": 1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "78",
-			"key": "new_overall_line_coverage",
-			"type": "PERCENT",
-			"name": "Overall Line Coverage on New Code",
-			"description": "Line coverage of added/changed code by all tests",
-			"direction": 1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "73",
-			"key": "overall_lines_to_cover",
-			"type": "INT",
-			"name": "Overall Lines to Cover",
-			"description": "Overall lines to cover by all tests",
-			"direction": 1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "74",
-			"key": "new_overall_lines_to_cover",
-			"type": "INT",
-			"name": "Overall Lines to Cover on New Code",
-			"description": "New lines to cover by all tests",
-			"direction": -1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "82",
-			"key": "overall_uncovered_conditions",
-			"type": "INT",
-			"name": "Overall Uncovered Conditions",
-			"description": "Uncovered conditions by all tests",
-			"direction": -1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "83",
-			"key": "new_overall_uncovered_conditions",
-			"type": "INT",
-			"name": "Overall Uncovered Conditions on New Code",
-			"description": "New conditions that are not covered by any test",
-			"direction": -1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "75",
-			"key": "overall_uncovered_lines",
-			"type": "INT",
-			"name": "Overall Uncovered Lines",
-			"description": "Uncovered lines by all tests",
-			"direction": -1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "76",
-			"key": "new_overall_uncovered_lines",
-			"type": "INT",
-			"name": "Overall Uncovered Lines on New Code",
-			"description": "New lines that are not covered by any tests",
-			"direction": -1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "140",
+			"id": "103",
 			"key": "quality_profiles",
 			"type": "DATA",
 			"name": "Profiles",
@@ -1075,7 +725,7 @@
 			"custom": false
 		},
 		{
-			"id": "14",
+			"id": "13",
 			"key": "projects",
 			"type": "INT",
 			"name": "Projects",
@@ -1085,7 +735,7 @@
 			"custom": false
 		},
 		{
-			"id": "13",
+			"id": "12",
 			"key": "public_api",
 			"type": "INT",
 			"name": "Public API",
@@ -1095,7 +745,7 @@
 			"custom": false
 		},
 		{
-			"id": "17",
+			"id": "16",
 			"key": "public_documented_api_density",
 			"type": "PERCENT",
 			"name": "Public Documented API (%)",
@@ -1105,7 +755,7 @@
 			"custom": false
 		},
 		{
-			"id": "18",
+			"id": "17",
 			"key": "public_undocumented_api",
 			"type": "INT",
 			"name": "Public Undocumented API",
@@ -1115,7 +765,7 @@
 			"custom": false
 		},
 		{
-			"id": "139",
+			"id": "102",
 			"key": "quality_gate_details",
 			"type": "DATA",
 			"name": "Quality Gate Details",
@@ -1125,7 +775,7 @@
 			"custom": false
 		},
 		{
-			"id": "138",
+			"id": "101",
 			"key": "alert_status",
 			"type": "LEVEL",
 			"name": "Quality Gate Status",
@@ -1135,7 +785,7 @@
 			"custom": false
 		},
 		{
-			"id": "129",
+			"id": "91",
 			"key": "reliability_rating",
 			"type": "RATING",
 			"name": "Reliability Rating",
@@ -1145,7 +795,7 @@
 			"custom": false
 		},
 		{
-			"id": "130",
+			"id": "92",
 			"key": "new_reliability_rating",
 			"type": "RATING",
 			"name": "Reliability Rating on New Code",
@@ -1155,7 +805,7 @@
 			"custom": false
 		},
 		{
-			"id": "127",
+			"id": "89",
 			"key": "reliability_remediation_effort",
 			"type": "WORK_DUR",
 			"name": "Reliability Remediation Effort",
@@ -1165,7 +815,7 @@
 			"custom": false
 		},
 		{
-			"id": "128",
+			"id": "90",
 			"key": "new_reliability_remediation_effort",
 			"type": "WORK_DUR",
 			"name": "Reliability Remediation Effort on New Code",
@@ -1175,7 +825,7 @@
 			"custom": false
 		},
 		{
-			"id": "111",
+			"id": "70",
 			"key": "reopened_issues",
 			"type": "INT",
 			"name": "Reopened Issues",
@@ -1185,7 +835,17 @@
 			"custom": false
 		},
 		{
-			"id": "133",
+			"id": "78",
+			"key": "security_hotspots",
+			"type": "INT",
+			"name": "Security Hotspots",
+			"description": "Security Hotspots",
+			"direction": -1,
+			"qualitative": false,
+			"custom": false
+		},
+		{
+			"id": "95",
 			"key": "security_rating",
 			"type": "RATING",
 			"name": "Security Rating",
@@ -1195,7 +855,7 @@
 			"custom": false
 		},
 		{
-			"id": "134",
+			"id": "96",
 			"key": "new_security_rating",
 			"type": "RATING",
 			"name": "Security Rating on New Code",
@@ -1205,7 +865,7 @@
 			"custom": false
 		},
 		{
-			"id": "131",
+			"id": "93",
 			"key": "security_remediation_effort",
 			"type": "WORK_DUR",
 			"name": "Security Remediation Effort",
@@ -1215,7 +875,7 @@
 			"custom": false
 		},
 		{
-			"id": "132",
+			"id": "94",
 			"key": "new_security_remediation_effort",
 			"type": "WORK_DUR",
 			"name": "Security Remediation Effort on New Code",
@@ -1225,7 +885,17 @@
 			"custom": false
 		},
 		{
-			"id": "33",
+			"id": "97",
+			"key": "security_review_rating",
+			"type": "RATING",
+			"name": "Security Review Rating",
+			"description": "Security Review Rating",
+			"direction": -1,
+			"qualitative": true,
+			"custom": false
+		},
+		{
+			"id": "30",
 			"key": "skipped_tests",
 			"type": "INT",
 			"name": "Skipped Unit Tests",
@@ -1235,26 +905,7 @@
 			"custom": false
 		},
 		{
-			"id": "145",
-			"key": "sonarjava_feedback",
-			"type": "DATA",
-			"name": "SonarJava feedback",
-			"direction": 0,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "123",
-			"key": "development_cost",
-			"type": "STRING",
-			"name": "SQALE Development Cost",
-			"description": "SQALE development cost",
-			"direction": -1,
-			"qualitative": true,
-			"custom": false
-		},
-		{
-			"id": "12",
+			"id": "11",
 			"key": "statements",
 			"type": "INT",
 			"name": "Statements",
@@ -1264,7 +915,7 @@
 			"custom": false
 		},
 		{
-			"id": "144",
+			"id": "107",
 			"key": "team_size",
 			"type": "INT",
 			"name": "Team size",
@@ -1273,17 +924,17 @@
 			"custom": true
 		},
 		{
-			"id": "119",
+			"id": "80",
 			"key": "sqale_index",
 			"type": "WORK_DUR",
 			"name": "Technical Debt",
-			"description": "Total effort (in days) to fix all the issues on the component and therefore to comply to all the requirements.",
+			"description": "Total effort (in hours) to fix all the issues on the component and therefore to comply to all the requirements.",
 			"direction": -1,
 			"qualitative": true,
 			"custom": false
 		},
 		{
-			"id": "124",
+			"id": "86",
 			"key": "sqale_debt_ratio",
 			"type": "PERCENT",
 			"name": "Technical Debt Ratio",
@@ -1293,7 +944,7 @@
 			"custom": false
 		},
 		{
-			"id": "125",
+			"id": "87",
 			"key": "new_sqale_debt_ratio",
 			"type": "PERCENT",
 			"name": "Technical Debt Ratio on New Code",
@@ -1303,7 +954,7 @@
 			"custom": false
 		},
 		{
-			"id": "48",
+			"id": "43",
 			"key": "uncovered_conditions",
 			"type": "INT",
 			"name": "Uncovered Conditions",
@@ -1313,17 +964,7 @@
 			"custom": false
 		},
 		{
-			"id": "66",
-			"key": "new_it_uncovered_conditions",
-			"type": "INT",
-			"name": "Uncovered Conditions by IT on New Code",
-			"description": "New conditions that are not covered by integration tests",
-			"direction": -1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "49",
+			"id": "44",
 			"key": "new_uncovered_conditions",
 			"type": "INT",
 			"name": "Uncovered Conditions on New Code",
@@ -1333,7 +974,7 @@
 			"custom": false
 		},
 		{
-			"id": "41",
+			"id": "37",
 			"key": "uncovered_lines",
 			"type": "INT",
 			"name": "Uncovered Lines",
@@ -1343,17 +984,7 @@
 			"custom": false
 		},
 		{
-			"id": "59",
-			"key": "new_it_uncovered_lines",
-			"type": "INT",
-			"name": "Uncovered Lines by IT on New Code",
-			"description": "New lines that are not covered by integration tests",
-			"direction": -1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "42",
+			"id": "38",
 			"key": "new_uncovered_lines",
 			"type": "INT",
 			"name": "Uncovered Lines on New Code",
@@ -1363,17 +994,7 @@
 			"custom": false
 		},
 		{
-			"id": "36",
-			"key": "test_data",
-			"type": "DATA",
-			"name": "Unit Test Details",
-			"description": "Unit tests details",
-			"direction": -1,
-			"qualitative": false,
-			"custom": false
-		},
-		{
-			"id": "31",
+			"id": "28",
 			"key": "test_execution_time",
 			"type": "MILLISEC",
 			"name": "Unit Test Duration",
@@ -1383,7 +1004,7 @@
 			"custom": false
 		},
 		{
-			"id": "32",
+			"id": "29",
 			"key": "test_errors",
 			"type": "INT",
 			"name": "Unit Test Errors",
@@ -1393,7 +1014,7 @@
 			"custom": false
 		},
 		{
-			"id": "34",
+			"id": "31",
 			"key": "test_failures",
 			"type": "INT",
 			"name": "Unit Test Failures",
@@ -1403,7 +1024,7 @@
 			"custom": false
 		},
 		{
-			"id": "35",
+			"id": "32",
 			"key": "test_success_density",
 			"type": "PERCENT",
 			"name": "Unit Test Success (%)",
@@ -1413,17 +1034,17 @@
 			"custom": false
 		},
 		{
-			"id": "30",
+			"id": "27",
 			"key": "tests",
 			"type": "INT",
 			"name": "Unit Tests",
 			"description": "Number of unit tests",
-			"direction": -1,
+			"direction": 1,
 			"qualitative": false,
 			"custom": false
 		},
 		{
-			"id": "117",
+			"id": "76",
 			"key": "vulnerabilities",
 			"type": "INT",
 			"name": "Vulnerabilities",
@@ -1433,7 +1054,7 @@
 			"custom": false
 		},
 		{
-			"id": "109",
+			"id": "68",
 			"key": "wont_fix_issues",
 			"type": "INT",
 			"name": "Won't Fix Issues",
@@ -1443,7 +1064,7 @@
 			"custom": false
 		}
 	],
-	"total": 145,
+	"total": 107,
 	"p": 1,
 	"ps": 500
 }

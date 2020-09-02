@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.server.handler.ShutdownHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 
@@ -39,17 +40,12 @@ Request 처리 예시
 - Load plugins index : /api/plugins/installed
 - Load project repositories : /batch/project.protobuf?key=local%3Acom.samsungsds.analyst.code.main.App
 - Load quality profiles : /api/qualityprofiles/search.protobuf?projectKey=local%3Acom.samsungsds.analyst.code.main.App
+    => 프로젝트 생성 후 Quality Profiles 항목 수정 후 다운로드 처리 필요
 - Load active rules (변경된 quality profile만 위 search.protobuf에서 ID 반영, QualityProfilesServlet.java도 반영 필요)
-	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWncZv1RIhyt1CDWUP11&p=1&ps=500
-	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJooCyCQBOyaqowaiw&p=1&ps=500
-	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJpVp5CQBOyaqowaql&p=1&ps=500
-	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJoogvCQBOyaqowapc&p=1&ps=500
-	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJooTrCQBOyaqowal7&p=1&ps=500
-	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWPJooQ2CQBOyaqowakX&p=1&ps=500
-	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWxP8yw2BT8fMAYrFsSv&p=1&ps=500
-	/api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt&activation=true&qprofile=AWxQGL1gjwlKak8RLaoD&p=1&ps=500
+    => 언어별 Quality Profile은 QualityProfilesServlet.java 부분 참조
 - Load metrics repository : /api/metrics/search?f=name,description,direction,qualitative,custom&ps=500&p=1
 - Load server rules : /api/rules/list.protobuf
+- Load project repositories : /batch/project.protobuf?key=local%3Acom.samsungsds.analyst.code.main.App
 
 * Request (Sonar Scanner for MSBuild) 처리 예시
 - Load API version : /api/server/version : Version.SONAR_SERVER 전송
@@ -108,18 +104,16 @@ public class JettySurrogateSonarServer implements SurrogateSonarServer {
 
 		ServletHandler handler = new ServletHandler();
 
-		handler.addServletWithMapping(SettingValuesResServlet.class, "/api/settings/values.protobuf");
-		/*
-		if (cli.getIndividualMode().isCodeSize() || cli.getIndividualMode().isDuplication() || cli.getIndividualMode().isSonarJava()) {
-			if (cli.getIndividualMode().isWebResources()) {
-				handler.addServletWithMapping(DefaultPluginInstalledResServlet.class, "/api/plugins/installed");
-			} else {
-				handler.addServletWithMapping(JavaPluginInstalledResServlet.class, "/api/plugins/installed");
-			}
-		} else if (cli.getIndividualMode().isWebResources()) {
-			handler.addServletWithMapping(WebPluginInstalledResServlet.class, "/api/plugins/installed");
-		}
-		*/
+		server.setRequestLog((request, response) -> {
+		    if (request.getQueryString() == null) {
+                LOGGER.debug("Request URL : {}", request.getRequestURL());
+            } else {
+                LOGGER.debug("Request URL : {}?{}", request.getRequestURL(), request.getQueryString());
+            }
+        });
+
+        handler.addServletWithMapping(SettingValuesResServlet.class, "/api/settings/values.protobuf");
+
 		handler.addServletWithMapping(PluginInstalledResServlet.class, "/api/plugins/installed");
 
 		handler.addServletWithMapping(MetricsResServlet.class, "/api/metrics/search");

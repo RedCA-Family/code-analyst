@@ -1,17 +1,17 @@
 		{
 			"key": "java",
-			"name": "SonarJava",
-			"filename": "sonar-java-plugin-5.1.1.13214.jar",
-			"sonarLintSupported": true,
-			"hash": "3aaab5779c7b936f8e0d281de6f97073",
-			"updatedAt": 1520315802623,
+			"name": "Java Code Quality and Security",
 			"description": "Code Analyzer for Java",
-			"version": "5.1.1 (build 13214)",
+			"version": "6.3.2 (build 22818)",
 			"license": "GNU LGPL 3",
 			"organizationName": "SonarSource",
 			"organizationUrl": "http://www.sonarsource.com",
 			"editionBundled": false,
 			"homepageUrl": "http://redirect.sonarsource.com/plugins/java.html",
 			"issueTrackerUrl": "https://jira.sonarsource.com/browse/SONARJAVA",
-			"implementationBuild": "815a76171aeed933a909453f668a3202d592d9b4"
+			"implementationBuild": "5bbf3112d1ac8287fd3681482f2502072d0e1a4f",
+			"updatedAt": 1598316730977,
+			"filename": "sonar-java-plugin-6.3.2.22818.jar",
+			"sonarLintSupported": true,
+			"hash": "5718493547506efe17d67410c378e4eb"
 		}

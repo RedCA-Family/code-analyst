@@ -51,6 +51,8 @@ public class ReportFileReader implements Closeable {
 
 	private String instanceKey;
 
+	private DirectoryCounter directoryCounter;
+
 	public ReportFileReader(File zipFile, String instanceKey) {
 		this.zipFile = zipFile;
 		this.instanceKey = instanceKey;
@@ -64,7 +66,9 @@ public class ReportFileReader implements Closeable {
 		Metadata metadata = reader.readMetadata();
 		int rootComponentRef = metadata.getRootComponentRef();
 
-		Component project = reader.readComponent(rootComponentRef);
+        Component project = reader.readComponent(rootComponentRef);
+
+        directoryCounter = new DirectoryCounter(MeasuredResult.getInstance(instanceKey));
 
 		readComponent(project, "");
 
@@ -80,15 +84,16 @@ public class ReportFileReader implements Closeable {
 
 		MeasuredResult instance = MeasuredResult.getInstance(instanceKey);
 
-		if (component.getType().getNumber() == ComponentType.MODULE_VALUE) {
-            currentModuleName = component.getName();
-        } else if (component.getType().getNumber() == ComponentType.DIRECTORY_VALUE) {
-			if (instance.getIndividualMode().isCodeSize()) {
-				instance.addDirectories(1);
-			}
-		} else if (component.getType() == ComponentType.FILE) {
+		// 더이상 ComponentType.MODULE, ComponentType.DIRECTORY는 제공되지 않음
+        if (component.getType() == ComponentType.FILE) {
 
 			instance.addFilePathList(currentModuleName, component.getProjectRelativePath());
+
+			// SonarQube 7.7부터 Directories 측정을 제공하지 않기 때문에 별도로 측정
+            // 다만, 소스가 있는 디렉토리 개수만 계산함
+            if (instance.getIndividualMode().isCodeSize()) {
+			    directoryCounter.processDirectory(component.getProjectRelativePath());
+            }
 
 			// js의 경우 *.js, *.jsx, *.vue 파일 분석이 되나, language는 "js"만 리턴됨
 			if ((instance.getLanguageType() == Language.JAVA && "java".equals(component.getLanguage()))
