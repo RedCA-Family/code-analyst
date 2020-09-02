@@ -110,6 +110,10 @@ public class IndividualMode extends AnalysisMode {
             builder.append("CheckStyle, ");
         }
 
+        if (builder.length() == 0) {
+            return "*None*";
+        }
+
 		return builder.substring(0, builder.length() - 2);
 	}
 }

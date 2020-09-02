@@ -69,7 +69,7 @@ public class Version {
 	public static final String SONAR_SERVER = "7.9.4";
 	public static final String PMD = "5.8.1";
 	public static final String FINDBUGS = "4.0.6";
-	public static final String FINDSECBUGS = "1.7.1";
+	public static final String FINDSECBUGS = "1.10.1";
 	public static final String JDEPEND = "2.9.1";
 	public static final String CKJM = "1.9";
 
@@ -90,7 +90,7 @@ public class Version {
 
 	public static final String PMD_RULESET = "91 ruleset (v5.4, RedCA Way Ruleset, '18.03)";
 	public static final String FINDBUGS_RULESET = "213 ruleset (v4.0.6, RedCA Way Ruleset, '20.09)";
-	public static final String FINDSECBUGS_RULESET = "81 rules (v1.10.1, RedCA Way Ruleset, '18.06)";
+	public static final String FINDSECBUGS_RULESET = "81 rules (v1.10.1, RedCA Way Ruleset, '20.09)";
 	public static final String SONAR_JAVA_RULESET = "243 ruleset (v6.3.2, RedCA Way Ruleset, '20.09)";
 	public static final String SONAR_JS_RULESET = "89 ruleset (v6.2.1, RedCA Way Ruleset, '20.09)";
     public static final String SONAR_CSHARP_RULESET = "155 ruleset (v8.6.1, RedCA Way Ruleset, '20.09)";
