@@ -89,8 +89,8 @@ public class Version {
 	public static final String PYTHON_RADON = "3.0.3";
 
 	public static final String PMD_RULESET = "91 ruleset (v5.4, RedCA Way Ruleset, '18.03)";
-	public static final String FINDBUGS_RULESET = "214 ruleset (v3.0.1, RedCA Way Ruleset, '18.03)";
-	public static final String FINDSECBUGS_RULESET = "81 rules (v1.7.1, RedCA Way Ruleset, '18.06)";
+	public static final String FINDBUGS_RULESET = "213 ruleset (v4.0.6, RedCA Way Ruleset, '20.09)";
+	public static final String FINDSECBUGS_RULESET = "81 rules (v1.10.1, RedCA Way Ruleset, '18.06)";
 	public static final String SONAR_JAVA_RULESET = "243 ruleset (v6.3.2, RedCA Way Ruleset, '20.09)";
 	public static final String SONAR_JS_RULESET = "89 ruleset (v6.2.1, RedCA Way Ruleset, '20.09)";
     public static final String SONAR_CSHARP_RULESET = "155 ruleset (v8.6.1, RedCA Way Ruleset, '20.09)";
@@ -101,7 +101,7 @@ public class Version {
 
 	public static final int SONAR_JAVA_DEFAULT_RULES = 243;
 	public static final int PMD_DEFAULT_RULES = 91;
-	public static final int FINDBUGS_DEFAULT_RULES = 214;
+	public static final int FINDBUGS_DEFAULT_RULES = 213;
 	public static final int FINDSECBUGS_DEFAULT_RULES = 81;
 	public static final int SONAR_JS_DEFAULT_RULES = 89;
 	public static final int SONAR_CSHARP_DEFAULT_RULES = 155;

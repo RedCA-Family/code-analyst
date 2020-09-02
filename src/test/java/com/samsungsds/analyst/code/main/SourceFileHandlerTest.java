@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.io.File;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SourceFileHandlerTest {
     @Test
@@ -18,7 +18,7 @@ public class SourceFileHandlerTest {
 
         // assert
         assertThat(result, either(is(".\\src\\main\\java")).or(is("./src/main/java")));
-        assertTrue(new File(result).exists());
+        assertThat(new File(result).exists(), is(true));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class SourceFileHandlerTest {
 
         // assert
         assertThat(result, either(is(".\\src\\main\\java")).or(is("./src/main/java")));
-        assertTrue(new File(result).exists());
+        assertThat(new File(result).exists(), is(true));
     }
 
     @Test(expected=IllegalArgumentException.class)

@@ -37,7 +37,7 @@ public class JettySurrogateSonarServerTest {
 				"/api/settings/values.protobuf",
 				"/api/plugins/installed",
 				"/api/metrics/search",
-				"/deploy/plugins/findsecbugs-plugin-1.7.1.jar",
+				"/deploy/plugins/findsecbugs-plugin-1.10.1.jar",
 				"/api/qualityprofiles/search.protobuf",
 				"/api/rules/search.protobuf?qprofile=AWPJpVp5CQBOyaqowaql",
 				"/api/rules/list.protobuf",
