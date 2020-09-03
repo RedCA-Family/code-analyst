@@ -20,7 +20,7 @@ import java.util.List;
 public class CheckStyleAnalysisLauncher implements CheckStyleAnalysis {
     private static final Logger LOGGER = LogManager.getLogger(CheckStyleAnalysisLauncher.class);
 
-    private static final String CHECKSTYLE_RULESET_FILE = "/statics/checkstyle-java-checks-190509.xml";
+    private static final String CHECKSTYLE_RULESET_FILE = "/statics/checkstyle-java-checks-200903.xml";
 
     private List<String> arg = new ArrayList<>();
     private String projectBaseDir = null;
