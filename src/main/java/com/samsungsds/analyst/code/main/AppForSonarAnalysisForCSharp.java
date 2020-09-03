@@ -213,9 +213,9 @@ public class AppForSonarAnalysisForCSharp extends AppForSonarAnalysis {
         String targetFile = null;
 
         if (env == MSBuildEnv.DOT_NET_FRAMEWORK) {
-            targetFile = "/statics/sonar-scanner-msbuild/sonar-scanner-msbuild-4.6.2.2108-net46.zip";
+            targetFile = "/statics/sonar-scanner-msbuild/sonar-scanner-msbuild-4.10.0.19059-net46.zip";
         } else {    // DOT_NET_CORE
-            targetFile = "/statics/sonar-scanner-msbuild/sonar-scanner-msbuild-4.6.2.2108-netcoreapp2.0.zip";
+            targetFile = "/statics/sonar-scanner-msbuild/sonar-scanner-msbuild-4.10.0.19059-netcoreapp2.0.zip";
         }
 
         File zipFile = IOAndFileUtils.saveResourceFile(targetFile,"scanner-msbuild", ".zip");
@@ -244,7 +244,7 @@ public class AppForSonarAnalysisForCSharp extends AppForSonarAnalysis {
             return MSBuildEnv.DOT_NET_CORE;
         } catch (IOException ignore) {
             // dotnet not found...
-            throw new RuntimeException("MSBuild for .NET Framework or .NET Core");
+            throw new RuntimeException("MSBuild for .NET Framework or .NET Core not found");
         }
     }
 

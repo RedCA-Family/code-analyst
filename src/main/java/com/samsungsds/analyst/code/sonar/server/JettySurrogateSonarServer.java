@@ -51,12 +51,33 @@ Request 처리 예시
 - Load API version : /api/server/version : Version.SONAR_SERVER 전송
 - Load global settings : /api/settings/values (/statics/values.json)
 - Load languages list : /api/languages/list (/statics/list.json)
-- Load quality profiles : /api/qualityprofiles/search??key=local (/statics/search.json)
-- Load active rules : /api/rules/search?f=repo,name,severity,lang,internalKey,templateKey,params,actives&ps=500&activation=true&qprofile=AWxP8yw2BT8fMAYrFsSv&p=1 (AWxP8yw2BT8fMAYrFsSv.json)
-                      /api/rules/search?f=repo,name,severity,lang,internalKey,templateKey,params&ps=500&activation=false&qprofile=AWxP8yw2BT8fMAYrFsSv&p=1&languages=cs (AWxP8yw2BT8fMAYrFsSv_inactive.json)
+- Load quality profiles : /api/qualityprofiles/search?key=local (/statics/search.json)
+- Load active rules : /api/rules/search?f=repo,name,severity,lang,internalKey,templateKey,params,actives&ps=500&activation=true&qprofile=AXRH3wgCAhLXeJN1dxS4&p=1 (AXRH3wgCAhLXeJN1dxS4.json)
+                      /api/rules/search?f=repo,name,severity,lang,internalKey,templateKey,params&ps=500&activation=false&qprofile=AXRH3wgCAhLXeJN1dxS4&p=1&languages=cs (AXRH3wgCAhLXeJN1dxS4_inactive.json)
 - Load batch index : /batch/index
 ....
 Accesslog sample
+127.0.0.1 - - [03/9월/2020:14:09:36 +0900] "GET /batch/index HTTP/1.1" 200 - "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAABx"
+127.0.0.1 - - [03/9월/2020:14:09:38 +0900] "GET /api/settings/values.protobuf HTTP/1.1" 200 3918 "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAABy"
+127.0.0.1 - - [03/9월/2020:14:09:38 +0900] "GET /api/plugins/installed HTTP/1.1" 200 - "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAABz"
+127.0.0.1 - - [03/9월/2020:14:09:40 +0900] "GET /api/settings/values.protobuf?component=local HTTP/1.1" 200 3922 "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAAB0"
+127.0.0.1 - - [03/9월/2020:14:09:40 +0900] "GET /api/qualityprofiles/search.protobuf?projectKey=local HTTP/1.1" 200 1545 "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAAB1"
+127.0.0.1 - - [03/9월/2020:14:09:40 +0900] "GET /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXRH3wgCAhLXeJN1dxS4&ps=500&p=1 HTTP/1.1" 200 - "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAAB2"
+127.0.0.1 - - [03/9월/2020:14:09:40 +0900] "GET /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQjDQ-cai_BF8caLvsh&ps=500&p=1 HTTP/1.1" 200 5624 "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAAB3"
+127.0.0.1 - - [03/9월/2020:14:09:41 +0900] "GET /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQvgbsEcvFlxZDP-lAC&ps=500&p=1 HTTP/1.1" 200 - "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAAB4"
+127.0.0.1 - - [03/9월/2020:14:09:41 +0900] "GET /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQjDRBGai_BF8caLvtX&ps=500&p=1 HTTP/1.1" 200 7603 "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAAB5"
+127.0.0.1 - - [03/9월/2020:14:09:41 +0900] "GET /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQjDReQai_BF8caLwNQ&ps=500&p=1 HTTP/1.1" 200 6768 "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAAB6"
+127.0.0.1 - - [03/9월/2020:14:09:41 +0900] "GET /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQjDRDCai_BF8caLvt2&ps=500&p=1 HTTP/1.1" 200 11 "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAAB7"
+127.0.0.1 - - [03/9월/2020:14:09:41 +0900] "GET /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQyuYmthzVTrCiH1EHi&ps=500&p=1 HTTP/1.1" 200 4282 "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAAB8"
+127.0.0.1 - - [03/9월/2020:14:09:41 +0900] "GET /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQjDRDcai_BF8caLvuX&ps=500&p=1 HTTP/1.1" 200 8092 "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAAB9"
+127.0.0.1 - - [03/9월/2020:14:09:41 +0900] "GET /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXRH1ytGAhLXeJN1dxQE&ps=500&p=1 HTTP/1.1" 200 - "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAAB+"
+127.0.0.1 - - [03/9월/2020:14:09:41 +0900] "GET /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXRH4F65AhLXeJN1dxXw&ps=500&p=1 HTTP/1.1" 200 6316 "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAAB/"
+127.0.0.1 - - [03/9월/2020:14:09:41 +0900] "GET /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQjDRwUai_BF8caLwal&ps=500&p=1 HTTP/1.1" 200 - "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAACA"
+127.0.0.1 - - [03/9월/2020:14:09:41 +0900] "GET /batch/project.protobuf?key=local HTTP/1.1" 200 0 "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAACB"
+127.0.0.1 - - [03/9월/2020:14:09:42 +0900] "GET /api/metrics/search?f=name,description,direction,qualitative,custom&ps=500&p=1 HTTP/1.1" 200 - "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAACC"
+127.0.0.1 - - [03/9월/2020:14:09:43 +0900] "POST /api/ce/submit?projectKey=local HTTP/1.1" 200 44 "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAACD"
+----------------------
+<이전 버전>
 127.0.0.1 - - [03/9월/2019:13:49:48 +0900] "GET /api/server/version HTTP/1.1" 200 - "-" "ScannerMSBuild/4.6.2" "AWz0i+9u7mAPt+uLAABH"
 127.0.0.1 - - [03/9월/2019:13:49:48 +0900] "GET /api/settings/values?component=local HTTP/1.1" 200 5988 "-" "ScannerMSBuild/4.6.2" "AWz0i+9u7mAPt+uLAABI"
 127.0.0.1 - - [03/9월/2019:13:49:48 +0900] "GET /api/languages/list HTTP/1.1" 200 243 "-" "ScannerMSBuild/4.6.2" "AWz0i+9u7mAPt+uLAABJ"

@@ -1,1 +1,1 @@
-{"languages":[{"key":"cs","name":"C#"},{"key":"css","name":"CSS"},{"key":"java","name":"Java"},{"key":"js","name":"JavaScript"},{"key":"less","name":"Less"},{"key":"py","name":"Python"},{"key":"scss","name":"SCSS"},{"key":"web","name":"Web"}]}
+{"languages":[{"key":"cs","name":"C#"},{"key":"css","name":"CSS"},{"key":"go","name":"Go"},{"key":"web","name":"HTML"},{"key":"jsp","name":"JSP"},{"key":"java","name":"Java"},{"key":"js","name":"JavaScript"},{"key":"kotlin","name":"Kotlin"},{"key":"py","name":"Python"},{"key":"scala","name":"Scala"},{"key":"ts","name":"TypeScript"}]}

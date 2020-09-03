@@ -35,6 +35,6 @@ public class BatchIndexServlet extends HttpServlet {
 		response.setStatus(HttpServletResponse.SC_OK);
 
 		// Write back response
-		response.getWriter().println("sonar-scanner-engine-shaded-6.7.4.jar|e162cfde6a4d2c5f296387a1acd098cb");
+		response.getWriter().println("sonar-scanner-engine-shaded-7.9.4-all.jar|6daf938ede67767970bafc194078293b");
 	}
 }

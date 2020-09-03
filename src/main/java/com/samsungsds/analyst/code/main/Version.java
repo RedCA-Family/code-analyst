@@ -66,7 +66,8 @@ public class Version {
 	public static final String APPLICATION_JAR = "Code-Analyst-" + CODE_ANALYST + ".jar";
 
 	public static final String SONAR_SCANNER = "2.15.0.2182";
-	public static final String SONAR_SERVER = "7.9.4";
+	public static final String SONAR_SCANNER_FOR_MSBUILD = "4.10.0.19059";
+	public static final String SONAR_SERVER = "7.9.4.35981";
 	public static final String PMD = "5.8.1";
 	public static final String FINDBUGS = "4.0.6";
 	public static final String FINDSECBUGS = "1.10.1";
@@ -85,7 +86,7 @@ public class Version {
 
 	public static final String CHECKSTYLE = "8.35";
 
-	public static final String MS_CODE_ANALYSIS_METRICS = "2.9.4";
+	public static final String MS_CODE_ANALYSIS_METRICS = "3.3.0";
 	public static final String PYTHON_RADON = "3.0.3";
 
 	public static final String PMD_RULESET = "91 ruleset (v5.4, RedCA Way Ruleset, '18.03)";
@@ -97,7 +98,7 @@ public class Version {
     public static final String SONAR_PYTHON_RULESET = "26 ruleset (v2.8, RedCA Way Ruleset, '20.09)";
 	public static final String SONAR_CSS_RULESET = "CSS / Less / SCSS 27 ruleset (v1.2)";
 	public static final String SONAR_WEB_RULESET = "28 ruleset (v3.2)";
-	public static final String CHECKSTYLE_RULESET = "58 ruleset (RedCA Way Ruleset, '19.06)";
+	public static final String CHECKSTYLE_RULESET = "58 ruleset (RedCA Way Ruleset, '20.09)";
 
 	public static final int SONAR_JAVA_DEFAULT_RULES = 243;
 	public static final int PMD_DEFAULT_RULES = 91;
@@ -110,6 +111,7 @@ public class Version {
 	public static void printVersionInfo() {
 		System.out.println("Code Analyst : " + CODE_ANALYST);
 		System.out.println("  - Sonar Scanner : " + SONAR_SCANNER + " (LGPL v3.0)");
+        System.out.println("  - Sonar Scanner for MSBuild : " + SONAR_SCANNER_FOR_MSBUILD + " (LGPL v3.0)");
 		System.out.println("  - Sonar Server : " + SONAR_SERVER + " (LGPL v3.0)");
 		System.out.println("     [Plugins]");
 		System.out.println("       - SonarJava : " + SONAR_JAVA + " (LGPL v3.0)");
