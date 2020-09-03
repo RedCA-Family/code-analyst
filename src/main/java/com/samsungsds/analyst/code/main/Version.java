@@ -65,7 +65,7 @@ public class Version {
 	public static final String DOCUMENT_VERSION = "2.9";
 	public static final String APPLICATION_JAR = "Code-Analyst-" + CODE_ANALYST + ".jar";
 
-	public static final String SONAR_SCANNER = "2.15.0.2182";
+	public static final String SONAR_SCANNER_API = "2.15.0.2182";
 	public static final String SONAR_SCANNER_FOR_MSBUILD = "4.10.0.19059";
 	public static final String SONAR_SERVER = "7.9.4.35981";
 	public static final String PMD = "5.8.1";
@@ -110,7 +110,7 @@ public class Version {
 
 	public static void printVersionInfo() {
 		System.out.println("Code Analyst : " + CODE_ANALYST);
-		System.out.println("  - Sonar Scanner : " + SONAR_SCANNER + " (LGPL v3.0)");
+		System.out.println("  - Sonar Scanner API : " + SONAR_SCANNER_API + " (LGPL v3.0)");
         System.out.println("  - Sonar Scanner for MSBuild : " + SONAR_SCANNER_FOR_MSBUILD + " (LGPL v3.0)");
 		System.out.println("  - Sonar Server : " + SONAR_SERVER + " (LGPL v3.0)");
 		System.out.println("     [Plugins]");
