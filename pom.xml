@@ -110,6 +110,7 @@
 		<!-- Next dependencies will be replaced with sonar-scanner-engine-shaded -->
 		<!-- * for source reference -->
 		<!-- * sonar-duplications artifact isn't deployed on central repository -->
+		<!--
 		<dependency>
 			<groupId>org.sonarsource.sonarqube</groupId>
 			<artifactId>sonar-plugin-api</artifactId>
@@ -137,6 +138,7 @@
 			<version>7.9.4</version>
 			<scope>provided</scope>
 		</dependency>
+		-->
 		<!-- End of dependencies replaced -->
 
 		<!-- Not deployed on central maven repository after v7.0 -->
