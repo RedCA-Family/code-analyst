@@ -81,30 +81,35 @@ public class PluginInstalledResServlet extends HttpServlet {
                     IOAndFileUtils.writeString(outStream, ",\n");
                 }
                 IOAndFileUtils.write(outStream, "/statics/plugin_javascript.json");
+                isWritten = true;
             }
             if (individualMode.isHtml()) {
                 if (isWritten) {
                     IOAndFileUtils.writeString(outStream, ",\n");
                 }
                 IOAndFileUtils.write(outStream, "/statics/plugin_web.json");
+                isWritten = true;
             }
             if (individualMode.isCss()) {
                 if (isWritten) {
                     IOAndFileUtils.writeString(outStream, ",\n");
                 }
                 IOAndFileUtils.write(outStream, "/statics/plugin_css.json");
+                isWritten = true;
             }
             if (individualMode.getLanguageType() == Language.CSHARP && (individualMode.isCodeSize() || individualMode.isDuplication() || individualMode.isSonarCSharp())) {
                 if (isWritten) {
                     IOAndFileUtils.writeString(outStream, ",\n");
                 }
                 IOAndFileUtils.write(outStream, "/statics/plugin_csharp.json");
+                isWritten = true;
             }
             if (individualMode.getLanguageType() == Language.PYTHON && (individualMode.isCodeSize() || individualMode.isDuplication() || individualMode.isSonarPython())) {
                 if (isWritten) {
                     IOAndFileUtils.writeString(outStream, ",\n");
                 }
                 IOAndFileUtils.write(outStream, "/statics/plugin_python.json");
+                isWritten = true;
             }
 
             IOAndFileUtils.writeString(outStream, "\t]\n" + "}");

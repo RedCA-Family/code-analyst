@@ -150,9 +150,9 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
         ProcessBuilder builder;
 
         if (PythonRuntime.IS_MACOS || PythonRuntime.IS_LINUX) {
-            builder = new ProcessBuilder("/bin/sh", "-c", pip + " install --find-links . radon-3.0.3-py2.py3-none-any.whl");
+            builder = new ProcessBuilder("/bin/sh", "-c", pip + " install --find-links . --no-index radon-3.0.3-py2.py3-none-any.whl");
         } else {
-            builder = new ProcessBuilder(pip, "install", "--find-links", ".", "radon-3.0.3-py2.py3-none-any.whl");
+            builder = new ProcessBuilder(pip, "install", "--find-links", ".", "--no-index", "radon-3.0.3-py2.py3-none-any.whl");
         }
 
         // "venv activate"

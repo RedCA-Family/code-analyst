@@ -18,6 +18,7 @@ package com.samsungsds.analyst.code.util;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -38,7 +39,7 @@ public class IOAndFileUtils {
 	}
 
 	public static void writeString(OutputStream output, String str) throws IOException {
-		output.write(str.getBytes("UTF-8"));
+		output.write(str.getBytes(StandardCharsets.UTF_8));
 	}
 
 	public static long write(OutputStream output, String resourcePath) throws IOException {
@@ -225,4 +226,14 @@ public class IOAndFileUtils {
 
 		return path;
 	}
+
+    public static void closeQuietly(Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (IOException ignore) {
+            // no operation
+        }
+    }
 }

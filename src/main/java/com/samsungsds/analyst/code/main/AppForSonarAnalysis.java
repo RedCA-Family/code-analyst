@@ -31,7 +31,6 @@ import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.sonar.api.CoreProperties;
-import org.sonar.api.batch.bootstrap.ProjectDefinition;
 import org.sonarsource.scanner.api.ScanProperties;
 import org.sonarsource.scanner.api.ScannerProperties;
 import org.sonarsource.scanner.api.internal.InternalProperties;
@@ -115,7 +114,7 @@ public class AppForSonarAnalysis implements DelayWork {
         sonar.addProperty(ScanProperties.PROJECT_SOURCE_ENCODING, cli.getEncoding());
 
         // sonar.addProperty(CoreProperties.ANALYSIS_MODE, CoreProperties.ANALYSIS_MODE_PREVIEW);
-        sonar.addProperty(CoreProperties.ANALYSIS_MODE, CoreProperties.ANALYSIS_MODE_PUBLISH);
+        // sonar.addProperty(CoreProperties.ANALYSIS_MODE, CoreProperties.ANALYSIS_MODE_PUBLISH);
 
         sonar.addProperty(CoreProperties.PROJECT_KEY_PROPERTY, "local");
 
@@ -123,20 +122,20 @@ public class AppForSonarAnalysis implements DelayWork {
 
         if (cli.getLanguageType() == Language.JAVA) {
             sonar.addProperty("sonar.java.binaries", cli.getBinary());
-            sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, src);
+            sonar.addProperty("sonar.sources", src);
             sonar.addProperty("sonar.java.source", cli.getJavaVersion());
         } else if (cli.getLanguageType() == Language.JAVASCRIPT) {
             sonar.addProperty("sonar.language", "js");
 
-            sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, src);
+            sonar.addProperty("sonar.sources", src);
         } else if (cli.getLanguageType() == Language.CSHARP) {
             sonar.addProperty("sonar.language", "cs");
 
-            sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, src);
+            sonar.addProperty("sonar.sources", src);
         } else if (cli.getLanguageType() == Language.PYTHON) {
             sonar.addProperty("sonar.language", "py");
 
-            sonar.addProperty(ProjectDefinition.SOURCES_PROPERTY, src);
+            sonar.addProperty("sonar.sources", src);
         }
 
         // BatchWSClient timeout

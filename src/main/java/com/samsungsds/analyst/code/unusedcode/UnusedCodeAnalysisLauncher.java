@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import com.github.javaparser.ParseResult;
 import com.samsungsds.analyst.code.util.FindFileUtils;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -45,16 +46,16 @@ import com.samsungsds.analyst.code.unusedcode.type.CAMethod;
 import com.samsungsds.analyst.code.unusedcode.type.CAType;
 
 public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
-	
+
 	//private static final String DEFAULT_TARGET_SRC = "src";
 
 	private static final Logger LOGGER = LogManager.getLogger(UnusedCodeAnalysisLauncher.class);
-	
+
 	public static final String UNUSED_CODE_TYPE_FIELD = "Field";
 	public static final String UNUSED_CODE_TYPE_METHOD = "Method";
 	public static final String UNUSED_CODE_TYPE_CONSTANT = "Constant";
 	public static final String UNUSED_CODE_TYPE_CLASS = "Class";
-	
+
 	private String projectBaseDir = null;
 	private String targetSrc = null;
 	private String targetBinary = null;
@@ -62,12 +63,12 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	//private String rootPackage = null;
 	//private String sourceRootFolderPath = null;
 	//private String classRootFolderPath = null;
-	
+
 	@Override
 	public void setProjectBaseDir(String directory) {
 		this.projectBaseDir = IOAndFileUtils.getNormalizedPath(directory);
 	}
-	
+
 	@Override
 	public void setTargetSrc(String directory) {
 		LOGGER.debug("UnusedCode Target Src : {}", directory);
@@ -86,9 +87,9 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	@Override
 	public void run(String instanceKey) {
 		MeasuredResult measuredResult = MeasuredResult.getInstance(instanceKey);
-		
+
 		VisitResult visitResult = new VisitResult();
-		
+
 		Queue<File> waitingQueue = new LinkedList<>();
 
 		for (String projectBinary : getProjectBinary()) {
@@ -127,7 +128,10 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 
 							sourceFileOf = sourceFileOf(f);
 							FileInputStream in = new FileInputStream(sourceFileOf);
-							CompilationUnit unit = JavaParser.parse(in);
+							//CompilationUnit unit = JavaParser.parse(in);
+                            JavaParser javaParser = new JavaParser();
+                            ParseResult<CompilationUnit> result = javaParser.parse(in);
+                            CompilationUnit unit = result.getResult().get();
 							unit.accept(new CodeAnalysisSourceVisitor(visitResult), null);
 						}
 					} catch (IOException e) {
@@ -141,24 +145,24 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 				clearTempInfo(visitResult);
 			}
 		}
-		
+
 		//set total count per type
 		measuredResult.setUcTotalClassCount(visitResult.getClasses().size());
 		measuredResult.setUcTotalMethodCount(visitResult.getMethods().size());
 		measuredResult.setUcTotalFieldCount(visitResult.getFields().size());
 		measuredResult.setUcTotalConstantCount(visitResult.getContants().size());
-		
+
 		Collection<CAClass> unusedClasses = CollectionUtils.subtract(visitResult.getClasses(), visitResult.getUsedClasses());
 		Collection<CAMethod> unusedMethods = CollectionUtils.subtract(visitResult.getMethods(), visitResult.getUsedMethods());
 		Collection<CAField> unusedFields = CollectionUtils.subtract(visitResult.getFields(), visitResult.getUsedFields());
 		Collection<CAConstant> unusedConstants = CollectionUtils.subtract(visitResult.getContants(), visitResult.getUsedConstants());
-		
+
 		//set unused count per type
 		measuredResult.setUnusedClassCount(unusedClasses.size());
 		measuredResult.setUnusedMethodCount(unusedMethods.size());
 		measuredResult.setUnusedFieldCount(unusedFields.size());
 		measuredResult.setUnusedConstantCount(unusedConstants.size());
-		
+
 		List<UnusedCodeResult> resultList = new ArrayList<>();
 		for (CAClass caClass : unusedClasses) {
 			UnusedCodeResult result = new UnusedCodeResult();
@@ -171,13 +175,13 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			result.setDescription(String.format("%s %s has 0 references", result.getType(), result.getName()));
 			resultList.add(result);
 		}
-		
+
 		for (CAMethod caMethod : unusedMethods) {
 			if (isNotExistInSource(caMethod)) {
 				measuredResult.setUnusedMethodCount(measuredResult.getUnusedMethodCount() - 1);
 				continue;
 			}
-			
+
 			UnusedCodeResult result = new UnusedCodeResult();
 			if (caMethod.getClassName().contains(".")) {
 				result.setPackageName(caMethod.getClassName().substring(0, caMethod.getClassName().lastIndexOf(".")));
@@ -189,13 +193,13 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			result.setLine(caMethod.getLine());
 			resultList.add(result);
 		}
-		
+
 		for (CAField caField : unusedFields) {
 			if (isNotExistInSource(caField)) {
 				measuredResult.setUnusedFieldCount(measuredResult.getUnusedFieldCount() - 1);
 				continue;
 			}
-			
+
 			UnusedCodeResult result = new UnusedCodeResult();
 			if (caField.getClassName().contains(".")) {
 				result.setPackageName(caField.getClassName().substring(0, caField.getClassName().lastIndexOf(".")));
@@ -207,13 +211,13 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			result.setLine(caField.getLine());
 			resultList.add(result);
 		}
-		
+
 		for (CAConstant caConstant : unusedConstants) {
 			if(isNotExistInSource(caConstant)) {
 				measuredResult.setUnusedConstantCount(measuredResult.getUnusedConstantCount() - 1);
 				continue;
 			}
-			
+
 			UnusedCodeResult result = new UnusedCodeResult();
 			if (caConstant.getClassName().contains(".")) {
 				result.setPackageName(caConstant.getClassName().substring(0, caConstant.getClassName().lastIndexOf(".")));
@@ -225,7 +229,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 			result.setLine(caConstant.getLine());
 			resultList.add(result);
 		}
-		
+
 		measuredResult.putUnusedCodeList(resultList);
 	}
 
@@ -252,7 +256,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	private boolean isNotExistInSource(CAType caType) {
 		return caType.getLine() == 0;
 	}
-	
+
 	private void clearTempInfo(VisitResult visitResult) {
 		visitResult.getTempFields().clear();
 		visitResult.getTempMethods().clear();
@@ -275,7 +279,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		classRootFolderPath = sourceFolderPathOfDefaultPackage(className, getProjectBinary()).replaceAll("/", "\\\\");
 	}
 	*/
-	
+
 	private File sourceFileOf(File classFile) throws IOException {
 
 		String classFilePath = null;
@@ -376,7 +380,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 				}
 			}
 		}
-		
+
 		throw new IllegalArgumentException("the source file path of given rootPackage was not found");
 	}
 

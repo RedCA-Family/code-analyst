@@ -44,9 +44,9 @@ public class QualityProfilesJsonServlet extends HttpServlet {
             resourceName = "/statics/search.json";
         } else if (url.equals("/api/rules/search")) {
             if (queryString.contains("activation=true")) {
-                resourceName = "/statics/AWxP8yw2BT8fMAYrFsSv.json";
+                resourceName = "/statics/AXRH3wgCAhLXeJN1dxS4.json";
             } else {
-                resourceName = "/statics/AWxP8yw2BT8fMAYrFsSv_inactive.json";
+                resourceName = "/statics/AXRH3wgCAhLXeJN1dxS4_inactive.json";
             }
         }
 

@@ -57,9 +57,9 @@ public class App {
 
 	private Language language = Language.JAVA;
 
-	private ObserverManager observerManager = new ObserverManager();
+	private final ObserverManager observerManager = new ObserverManager();
 
-	private List<DelayWork> delayWorkList = new ArrayList<>();
+	private final List<DelayWork> delayWorkList = new ArrayList<>();
 
 	private boolean parsingError = false;
 	private String parsingErrorMessage = "";
@@ -492,6 +492,8 @@ public class App {
 
 			if (isFirstRun) {
 				MeasuredResult.getInstance(cli.getInstanceKey()).setFindSecBugsRules(Version.FINDSECBUGS_DEFAULT_RULES);
+
+                isFirstRun = false;
 			}
 
 			findBugsViolation.run(cli.getInstanceKey());

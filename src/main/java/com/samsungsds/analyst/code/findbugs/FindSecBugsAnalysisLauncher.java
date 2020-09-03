@@ -29,37 +29,37 @@ import edu.umd.cs.findbugs.FindBugs2;
 
 public class FindSecBugsAnalysisLauncher extends FindBugsAnalysisLauncher {
 	private static final Logger LOGGER = LogManager.getLogger(FindSecBugsAnalysisLauncher.class);
-	
-	private static final String PLUGIN_FILE = "/statics/findsecbugs-plugin-1.7.1.jar";
+
+	private static final String PLUGIN_FILE = "/statics/findsecbugs-plugin-1.10.1.jar";
 	private static final String BUG_SEC_RULESET_FILE = "/statics/FindSecBugs-include-filter_81.xml";
-	
+
 	private static boolean firstRun = true;
-	
+
 	private File reportFile = null;
-	
+
 	@Override
 	public void run(String instanceKey) {
 		if (firstRun) {
 			addOption("-pluginList", IOAndFileUtils.saveResourceFile(PLUGIN_FILE, "plugin", ".jar").toString());
 		}
 		addOption("-include", IOAndFileUtils.saveResourceFile(BUG_SEC_RULESET_FILE, "include", ".xml").toString());
-		
+
 		addOption("-xml", "");
-		
+
 		try {
 			reportFile = File.createTempFile("findsecbugs", ".xml");
 		} catch (IOException ex) {
 			throw new IllegalStateException(ex);
 		}
 		reportFile.deleteOnExit();
-		
+
 		addOption("-output", reportFile.toString());
-		
+
 		LOGGER.debug("FindSecBugs Result File : {}", reportFile.toString());
-		
+
 		addOption("-onlyAnalyze", getTargetPackages(instanceKey));
 		addOption("-nested:false", "");
-		
+
 		addOption(getTargetDirectory(), "");
 
 		try {
@@ -74,9 +74,9 @@ public class FindSecBugsAnalysisLauncher extends FindBugsAnalysisLauncher {
 		} finally {
 			firstRun = false;
 		}
-		
+
 		List<FindBugsResult> resultList = parseXML(reportFile);
-		
+
 		MeasuredResult.getInstance(instanceKey).putFindSecBugsList(resultList);
 	}
 }

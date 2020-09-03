@@ -70,6 +70,8 @@ public class SubmitServlet extends HttpServlet {
 
 				LOGGER.info("File uploaded... file : {}", file);
 
+				file.delete();
+
 				// Write the file
 				fi.write(file);
 

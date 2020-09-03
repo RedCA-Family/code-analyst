@@ -25,7 +25,7 @@ import java.io.UncheckedIOException;
 public class CodeAnalysisLauncher implements ComplexityAnalysis {
     private static final Logger LOGGER = LogManager.getLogger(CodeAnalysisLauncher.class);
 
-    private static final String MS_CODE_ANALYSIS_METRICS = "/statics/MS.CodeAnalysis.Metrics-2.9.4.zip";
+    private static final String MS_CODE_ANALYSIS_METRICS = "/statics/MS.CodeAnalysis.Metrics-3.3.0.zip";
     private static final String EXECUTABLE_PROGRAM = "Metrics.exe";
 
     private final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();;

@@ -59,56 +59,59 @@ public class Version {
     // 2.9.0 : C# language, Python language 추가, CK Metrics 처리 시 BCEL 오류 수정
     // 2.9.1 : FindBugs + BCEL 오류 수정 => SpotBugs(v3.1.12) 적용
     // 2.9.2 : Complexity/PMD 점검 관련 Linux/MacOS 파일 처리 오류 수정
+    // 2.10.0 : SonarQube 7.9 LTS 및 관련 plugin 버전, SpotBugs(FindBugs) v4.0.6 등 OSS 버전 업그레이드
     // --------------------------------------------------
-	public static final String CODE_ANALYST = "2.9.2";
+	public static final String CODE_ANALYST = "2.10.0";
 	public static final String DOCUMENT_VERSION = "2.9";
 	public static final String APPLICATION_JAR = "Code-Analyst-" + CODE_ANALYST + ".jar";
 
-	public static final String SONAR_SCANNER = "2.10.0.1189";
-	public static final String SONAR_SERVER = "6.7.4.38452";
+	public static final String SONAR_SCANNER_API = "2.15.0.2182";
+	public static final String SONAR_SCANNER_FOR_MSBUILD = "4.10.0.19059";
+	public static final String SONAR_SERVER = "7.9.4.35981";
 	public static final String PMD = "5.8.1";
-	public static final String FINDBUGS = "3.1.12";
-	public static final String FINDSECBUGS = "1.7.1";
+	public static final String FINDBUGS = "4.0.6";
+	public static final String FINDSECBUGS = "1.10.1";
 	public static final String JDEPEND = "2.9.1";
 	public static final String CKJM = "1.9";
 
 	public static final String NODE_JS = "10.15.3 LTS";
 	public static final String ESLINT = "5.16.0";
 
-	public static final String SONAR_JAVA = "5.1.1.13214";
-	public static final String SONAR_JS = "5.1.1.7506";
-    public static final String SONAR_CSHARP = "7.15.0.8572";
-    public static final String SONAR_PYTHON = "1.14.1.3143";
-	public static final String SONAR_CSS = "3.1";
-	public static final String SONAR_WEB = "2.5.0.476";
+	public static final String SONAR_JAVA = "6.3.2.22818";
+	public static final String SONAR_JS = "6.2.1.12157";
+    public static final String SONAR_CSHARP = "8.6.1.17183";
+    public static final String SONAR_PYTHON = "2.8.6204";
+	public static final String SONAR_CSS = "1.2.1325";
+	public static final String SONAR_WEB = "3.2.2082";
 
-	public static final String CHECKSTYLE = "8.21";
+	public static final String CHECKSTYLE = "8.35";
 
-	public static final String MS_CODE_ANALYSIS_METRICS = "2.9.4";
+	public static final String MS_CODE_ANALYSIS_METRICS = "3.3.0";
 	public static final String PYTHON_RADON = "3.0.3";
 
 	public static final String PMD_RULESET = "91 ruleset (v5.4, RedCA Way Ruleset, '18.03)";
-	public static final String FINDBUGS_RULESET = "214 ruleset (v3.0.1, RedCA Way Ruleset, '18.03)";
-	public static final String FINDSECBUGS_RULESET = "81 rules (v1.7.1, RedCA Way Ruleset, '18.06)";
-	public static final String SONAR_JAVA_RULESET = "227 ruleset (v4.15, RedCA Way Ruleset, '18.03)";
-	public static final String SONAR_JS_RULESET = "95 ruleset (v5.0, RedCA Way Ruleset, '18.11)";
-    public static final String SONAR_CSHARP_RULESET = "203 ruleset (v7.15, RedCA Way Ruleset, '19.08)";
-    public static final String SONAR_PYTHON_RULESET = "26 ruleset (v1.14, RedCA Way Ruleset, '19.08)";
-	public static final String SONAR_CSS_RULESET = "CSS 71 / Less 71 / SCSS 82 ruleset (v3.1)";
-	public static final String SONAR_WEB_RULESET = "16 ruleset (v2.5)";
-	public static final String CHECKSTYLE_RULESET = "58 ruleset (RedCA Way Ruleset, '19.06)";
+	public static final String FINDBUGS_RULESET = "213 ruleset (v4.0.6, RedCA Way Ruleset, '20.09)";
+	public static final String FINDSECBUGS_RULESET = "81 rules (v1.10.1, RedCA Way Ruleset, '20.09)";
+	public static final String SONAR_JAVA_RULESET = "243 ruleset (v6.3.2, RedCA Way Ruleset, '20.09)";
+	public static final String SONAR_JS_RULESET = "89 ruleset (v6.2.1, RedCA Way Ruleset, '20.09)";
+    public static final String SONAR_CSHARP_RULESET = "155 ruleset (v8.6.1, RedCA Way Ruleset, '20.09)";
+    public static final String SONAR_PYTHON_RULESET = "26 ruleset (v2.8, RedCA Way Ruleset, '20.09)";
+	public static final String SONAR_CSS_RULESET = "CSS / Less / SCSS 27 ruleset (v1.2)";
+	public static final String SONAR_WEB_RULESET = "28 ruleset (v3.2)";
+	public static final String CHECKSTYLE_RULESET = "58 ruleset (RedCA Way Ruleset, '20.09)";
 
-	public static final int SONAR_JAVA_DEFAULT_RULES = 227;
+	public static final int SONAR_JAVA_DEFAULT_RULES = 243;
 	public static final int PMD_DEFAULT_RULES = 91;
-	public static final int FINDBUGS_DEFAULT_RULES = 214;
+	public static final int FINDBUGS_DEFAULT_RULES = 213;
 	public static final int FINDSECBUGS_DEFAULT_RULES = 81;
-	public static final int SONAR_JS_DEFAULT_RULES = 95;
-	public static final int SONAR_CSHARP_DEFAULT_RULES = 203;
+	public static final int SONAR_JS_DEFAULT_RULES = 89;
+	public static final int SONAR_CSHARP_DEFAULT_RULES = 155;
 	public static final int SONAR_PYTHON_DEFAULT_RULES = 26;
 
 	public static void printVersionInfo() {
 		System.out.println("Code Analyst : " + CODE_ANALYST);
-		System.out.println("  - Sonar Scanner : " + SONAR_SCANNER + " (LGPL v3.0)");
+		System.out.println("  - Sonar Scanner API : " + SONAR_SCANNER_API + " (LGPL v3.0)");
+        System.out.println("  - Sonar Scanner for MSBuild : " + SONAR_SCANNER_FOR_MSBUILD + " (LGPL v3.0)");
 		System.out.println("  - Sonar Server : " + SONAR_SERVER + " (LGPL v3.0)");
 		System.out.println("     [Plugins]");
 		System.out.println("       - SonarJava : " + SONAR_JAVA + " (LGPL v3.0)");
@@ -116,7 +119,7 @@ public class Version {
         System.out.println("       - SonarC# : " + SONAR_CSHARP + " (LGPL v3.0)");
         System.out.println("       - SonarPython : " + SONAR_PYTHON + " (LGPL v3.0)");
 		System.out.println("       - CSS/SCSS/Less : " + SONAR_CSS + " (LGPL v3.0)");
-		System.out.println("       - Web : " + SONAR_WEB + " (Apache v2.0)");
+		System.out.println("       - HTML : " + SONAR_WEB + " (Apache v2.0)");
 		System.out.println("  - PMD : " + PMD + " (BSD-style)");
 		System.out.println("  - FindBugs(SpotBugs) : " + FINDBUGS + " (LGPL v3.0)");
 		System.out.println("  - FindSecBugs : " + FINDSECBUGS + " (LGPL v3.0)");
@@ -133,7 +136,7 @@ public class Version {
 		System.out.println();
 		System.out.println("Default RuleSet");
 		System.out.println("  - PMD : " + PMD_RULESET);
-		System.out.println("  - FindBugs : " + FINDBUGS_RULESET);
+		System.out.println("  - SpotBugs(FindBugs) : " + FINDBUGS_RULESET);
 		System.out.println("  - FindSecBugs : " + FINDSECBUGS_RULESET);
 		System.out.println("  - SonarJava : " + SONAR_JAVA_RULESET);
         System.out.println("  - SonarCSharp : " + SONAR_CSHARP_RULESET);
@@ -144,6 +147,6 @@ public class Version {
 		System.out.println("      - HTML : " + SONAR_WEB_RULESET);
 		System.out.println("  - CheckStyle : " + CHECKSTYLE_RULESET);
 		System.out.println();
-		System.out.println("Copyright(c) 2018-19 By Samsung SDS (Code Quality Group)");
+		System.out.println("Copyright(c) 2018-20 By Samsung SDS (DevOps Group)");
 	}
 }

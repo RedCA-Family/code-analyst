@@ -16,23 +16,8 @@
 
 package com.samsungsds.analyst.code.ckmetrics.gr.spinellis.ckjm;
 
-import org.apache.bcel.Constants;
-import org.apache.bcel.generic.ArrayInstruction;
-import org.apache.bcel.generic.CHECKCAST;
-import org.apache.bcel.generic.CodeExceptionGen;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.ConstantPushInstruction;
-import org.apache.bcel.generic.EmptyVisitor;
-import org.apache.bcel.generic.FieldInstruction;
-import org.apache.bcel.generic.INSTANCEOF;
-import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InstructionConstants;
-import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.bcel.generic.LocalVariableInstruction;
-import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.generic.ReturnInstruction;
-import org.apache.bcel.generic.Type;
+import org.apache.bcel.Const;
+import org.apache.bcel.generic.*;
 
 /**
  * Visit a method calculating the class's Chidamber-Kemerer metrics.
@@ -78,14 +63,14 @@ class MethodVisitor extends EmptyVisitor {
     private boolean visitInstruction(Instruction i) {
         short opcode = i.getOpcode();
 
-        return ((InstructionConstants.INSTRUCTIONS[opcode] != null) &&
+        return ((InstructionConst.getInstruction(opcode) != null) &&
                 !(i instanceof ConstantPushInstruction) &&
                 !(i instanceof ReturnInstruction));
     }
 
     /** Local variable use. */
     public void visitLocalVariableInstruction(LocalVariableInstruction i) {
-        if (i.getOpcode() != Constants.IINC)
+        if (i.getOpcode() != Const.IINC)
             cv.registerCoupling(i.getType(cp));
     }
 
@@ -96,7 +81,13 @@ class MethodVisitor extends EmptyVisitor {
 
     /** Field access. */
     public void visitFieldInstruction(FieldInstruction i) {
-        cv.registerFieldAccess(i.getClassName(cp), i.getFieldName(cp));
+        //cv.registerFieldAccess(i.getClassName(cp), i.getFieldName(cp));
+        ReferenceType ref = i.getReferenceType(cp);
+        if (ref instanceof ArrayType) {
+            cv.registerFieldAccess("java.lang.Object", i.getFieldName(cp));
+        } else {    // ObjectType
+            cv.registerFieldAccess(((ObjectType)ref).getClassName(), i.getFieldName(cp));
+        }
         cv.registerCoupling(i.getFieldType(cp));
     }
 

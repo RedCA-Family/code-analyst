@@ -25,6 +25,7 @@ import org.openqa.selenium.os.ExecutableFinder;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,7 +83,7 @@ public class PythonRuntime {
             int errCode = proc.waitFor();
             if (errCode == 0) {
                 StringWriter writer = new StringWriter();
-                IOUtils.copy(proc.getInputStream(), writer);
+                IOUtils.copy(proc.getInputStream(), writer, Charset.defaultCharset());
                 String versionString = writer.toString();
 
                 Matcher matcher = PYTHON_VERSION_PATTERN.matcher(versionString);
@@ -95,7 +96,7 @@ public class PythonRuntime {
                 }
             } else {
                 StringWriter writer = new StringWriter();
-                IOUtils.copy(proc.getErrorStream(), writer);
+                IOUtils.copy(proc.getErrorStream(), writer, Charset.defaultCharset());
 
                 throw new PythonRuntimeException(writer.toString());
             }
