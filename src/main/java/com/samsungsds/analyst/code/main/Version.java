@@ -147,6 +147,6 @@ public class Version {
 		System.out.println("      - HTML : " + SONAR_WEB_RULESET);
 		System.out.println("  - CheckStyle : " + CHECKSTYLE_RULESET);
 		System.out.println();
-		System.out.println("Copyright(c) 2018-20 By Samsung SDS (Code Quality Group)");
+		System.out.println("Copyright(c) 2018-20 By Samsung SDS (DevOps Group)");
 	}
 }
