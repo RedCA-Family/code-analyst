@@ -17,7 +17,6 @@ package com.samsungsds.analyst.code.unusedcode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import  org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,8 +46,8 @@ public class CodeAnalysisSourceVisitor extends VoidVisitorAdapter<Void> {
 	String className;
 	String packageName;
 
-	List<String> importListWithClassName = new ArrayList<String>();
-	List<String> importListWithAsterisk = new ArrayList<String>();
+	List<String> importListWithClassName = new ArrayList<>();
+	List<String> importListWithAsterisk = new ArrayList<>();
 
 
 	public CodeAnalysisSourceVisitor(VisitResult result) {

@@ -5,7 +5,7 @@
 
 	<groupId>com.samsungsds.analyst</groupId>
 	<artifactId>code-analyst</artifactId>
-	<version>2.10.1</version>
+	<version>2.10.2</version>
 
 	<name>Code-Analyst</name>
 	<description>Code Analyst to measure various code metrics</description>
@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>net.sourceforge.pmd</groupId>
 			<artifactId>pmd-java</artifactId>
-			<version>5.8.1</version>
+			<version>6.22.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-io</groupId>

@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.checkstyle.CheckStyleAnalysis;
@@ -117,8 +118,12 @@ public class App {
 			if (cli.isDebug()) {
 				LOGGER.info("Debugging enabled");
 				LogUtils.setDebugLevel();
+				JavaLogUtils.setDebugLevel();
 			} else {
 				LogUtils.unsetDebugLevel();
+				JavaLogUtils.unsetDebugLevel();
+
+				JavaLogUtils.setPmdLogLevel(Level.SEVERE);
 			}
 
 			observerManager.setUpProgressMonitor(cli);
@@ -332,7 +337,7 @@ public class App {
 		}
 
 		pmdComplexity.addOption("-encoding", cli.getEncoding());
-		pmdComplexity.addOption("-version", cli.getJavaVersion());
+		pmdComplexity.addOption("-version", cli.getJavaVersionWithoutDot());
 		pmdComplexity.addOption("-language", "java");
 
 		pmdComplexity.run(cli.getInstanceKey());
@@ -423,7 +428,7 @@ public class App {
 		}
 
 		pmdViolation.addOption("-encoding", cli.getEncoding());
-		pmdViolation.addOption("-version", cli.getJavaVersion());
+		pmdViolation.addOption("-version", cli.getJavaVersionWithoutDot());
 		pmdViolation.addOption("-language", "java");
 
 		if (cli.getRuleSetFileForPMD() != null && !cli.getRuleSetFileForPMD().equals("")) {

@@ -61,15 +61,19 @@ public class Version {
     // 2.9.2 : Complexity/PMD 점검 관련 Linux/MacOS 파일 처리 오류 수정
     // 2.10.0 : SonarQube 7.9 LTS 및 관련 plugin 버전, SpotBugs(FindBugs) v4.0.6 등 OSS 버전 업그레이드
     // 2.10.1 : packaging 누락 system scope 참조 클래스 처리
+    // 2.10.2 : Java 11 지원 관련 오류 수정
+    //          Compatibility with java 11 : 다음 부분을 제외하고 지원됨
+    //            - FindBugs : experimental 지원
+    //            - CKJM (Apache BCEL 기반) : experimental 지원
     // --------------------------------------------------
-	public static final String CODE_ANALYST = "2.10.1";
+	public static final String CODE_ANALYST = "2.10.2";
 	public static final String DOCUMENT_VERSION = "2.9";
 	public static final String APPLICATION_JAR = "Code-Analyst-" + CODE_ANALYST + ".jar";
 
 	public static final String SONAR_SCANNER_API = "2.15.0.2182";
 	public static final String SONAR_SCANNER_FOR_MSBUILD = "4.10.0.19059";
 	public static final String SONAR_SERVER = "7.9.4.35981";
-	public static final String PMD = "5.8.1";
+	public static final String PMD = "6.22.0";
 	public static final String FINDBUGS = "4.0.6";
 	public static final String FINDSECBUGS = "1.10.1";
 	public static final String JDEPEND = "2.9.1";
