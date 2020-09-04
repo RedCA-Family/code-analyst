@@ -5,7 +5,7 @@
 
 	<groupId>com.samsungsds.analyst</groupId>
 	<artifactId>code-analyst</artifactId>
-	<version>2.10.0</version>
+	<version>2.10.1</version>
 
 	<name>Code-Analyst</name>
 	<description>Code Analyst to measure various code metrics</description>
@@ -52,6 +52,7 @@
 
 	<properties>
 		<jarName>Code-Analyst</jarName>
+		<mainClass>com.samsungsds.analyst.code.main.App</mainClass>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
 	</properties>
@@ -142,6 +143,7 @@
 		<!-- End of dependencies replaced -->
 
 		<!-- Not deployed on central maven repository after v7.0 -->
+		<!-- This system scope dependency isn't included with 'jar-with-dependencies' configuration -->
 		<dependency>
 			<groupId>org.sonarsource.sonarqube</groupId>
 			<artifactId>sonar-scanner-engine-shaded</artifactId>
@@ -317,7 +319,7 @@
 					<archive>
 						<manifest>
 							<!-- addClasspath>true</addClasspath -->
-							<mainClass>com.samsungsds.analyst.code.main.App</mainClass>
+							<mainClass>${mainClass}</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -343,11 +345,20 @@
 						<id>antrun</id>
 						<phase>package</phase>
 						<configuration>
-							<tasks>
+							<target>
+								<!-- System scope dependencies aren't include with 'jar-with-dependencies', so additional Ant task is required -->
+								<jar destfile="${project.basedir}/target/${jarName}-${project.version}-jar-with-local-dependencies.jar">
+									<zipgroupfileset dir="${project.basedir}/target" includes="${jarName}-${project.version}-jar-with-dependencies.jar" />
+									<zipgroupfileset dir="${project.basedir}/lib" includes="**/*.jar" />
+									<manifest>
+										<attribute name="Main-Class" value="${mainClass}" />
+									</manifest>
+								</jar>
 								<copy
-									file="${project.basedir}/target/${jarName}-${project.version}-jar-with-dependencies.jar"
+									file="${project.basedir}/target/${jarName}-${project.version}-jar-with-local-dependencies.jar"
 									tofile="${project.basedir}/target/${jarName}-${project.version}.jar" />
-							</tasks>
+								<delete file="${project.basedir}/target/${jarName}-${project.version}-jar-with-local-dependencies.jar" />
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>
