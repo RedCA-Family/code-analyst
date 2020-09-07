@@ -118,6 +118,8 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 
 	private IndividualMode individualMode;
 
+	private boolean debug = false;
+
 	@Expose
 	private String version = Version.DOCUMENT_VERSION;
 	@Expose
@@ -446,6 +448,14 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 
 		webapp = cli.getWebapp();
 	}
+
+	public void setDebug(boolean debug) {
+	    this.debug = debug;
+    }
+
+    public boolean isDebug() {
+	    return debug;
+    }
 
 	public void changeSerializedName(CliParser cli) {
         if (cli.getLanguageType() == Language.JAVA) {

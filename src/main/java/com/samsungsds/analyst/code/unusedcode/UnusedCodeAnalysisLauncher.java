@@ -119,7 +119,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 					File sourceFileOf = null;
 					try {
 						ClassReader reader = new ClassReader(new FileInputStream(f));
-						reader.accept(new CodeAnalysisClassVisitor(Opcodes.ASM5, visitResult), 0);
+						reader.accept(new CodeAnalysisClassVisitor(Opcodes.ASM7, visitResult), 0);
 
 						if (!visitResult.skipThisClass()) {
 							//if (rootPackage == null) {
