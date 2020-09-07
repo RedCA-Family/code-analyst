@@ -18,7 +18,9 @@ package com.samsungsds.analyst.code.pmd;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
+import com.samsungsds.analyst.code.util.JavaLogUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,6 +56,10 @@ public class ComplexityAnalysisLauncher extends AbstractPmdAnalysis implements C
 		addOption("-reportfile", reportFile.toString());
 
 		LOGGER.debug("Complexity Result File : {}", reportFile.toString());
+
+        if (!MeasuredResult.getInstance(instanceKey).isDebug()) {
+            JavaLogUtils.setPmdLogLevelFilter(Level.SEVERE);
+        }
 
 		PMD.run(arg.toArray(new String[0]));
 

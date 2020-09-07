@@ -15,7 +15,9 @@ limitations under the License.
  */
 package com.samsungsds.analyst.code.util;
 
+import java.util.logging.Filter;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 public class JavaLogUtils {
@@ -27,14 +29,49 @@ public class JavaLogUtils {
         Logger.getGlobal().setLevel(Level.FINE);
     }
 
-    public static void setPmdLogLevel(Level level) {
+    public static Level getCurrentGlobalLevel() {
+        return Logger.getGlobal().getLevel();
+    }
+
+    public static void setGlobalLevel(Level level) {
+        Logger.getGlobal().setLevel(level);
+    }
+
+    public static void setPmdLogLevelFilter(Level level) {
         String[] loggerNames = {
             "net.sourceforge.pmd.RuleSetFactory",
             "net.sourceforge.pmd.PMD"
         };
 
-        for (String name : loggerNames) {
-            Logger.getLogger(name).setLevel(level);
+        PmdFilter filter = new PmdFilter(level, loggerNames);
+
+        //Logger.getGlobal().setFilter(filter);
+
+        for (String loggerName : loggerNames) {
+            Logger.getLogger(loggerName).setFilter(filter);
         }
+    }
+}
+
+class PmdFilter implements Filter {
+    private Level level;
+    private String[] filteredLoggerNames = new String[0];
+
+    public PmdFilter(Level level, String[] filteredLoggerNames) {
+        this.level = level;
+        this.filteredLoggerNames = filteredLoggerNames;
+    }
+
+    @Override
+    public boolean isLoggable(LogRecord record) {
+        for (String loggerName : filteredLoggerNames) {
+            if (record.getLoggerName().equals(loggerName)) {
+                if (record.getLevel().intValue() <= this.level.intValue()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

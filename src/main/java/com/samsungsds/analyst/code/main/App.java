@@ -119,11 +119,12 @@ public class App {
 				LOGGER.info("Debugging enabled");
 				LogUtils.setDebugLevel();
 				JavaLogUtils.setDebugLevel();
+                MeasuredResult.getInstance(cli.getInstanceKey()).setDebug(true);
 			} else {
 				LogUtils.unsetDebugLevel();
 				JavaLogUtils.unsetDebugLevel();
-
-				JavaLogUtils.setPmdLogLevel(Level.SEVERE);
+				JavaLogUtils.setPmdLogLevelFilter(Level.SEVERE);
+                MeasuredResult.getInstance(cli.getInstanceKey()).setDebug(false);
 			}
 
 			observerManager.setUpProgressMonitor(cli);
