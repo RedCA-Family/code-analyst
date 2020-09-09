@@ -3,16 +3,16 @@
 ## 1. 기본 실행 ##
 
 ### [Java]
-	$> java -jar Code-Analyst-2.10.2.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+	$> java -jar Code-Analyst-2.10.3.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
 
 ### [JavaScript]
-	$> java -jar Code-Analyst-2.10.2.jar -l javascript -p "프로젝트 위치" -s "."
+	$> java -jar Code-Analyst-2.10.3.jar -l javascript -p "프로젝트 위치" -s "."
 
 ### [C#]
-	$> java -jar Code-Analyst-2.10.2.jar -l c# -p "프로젝트 위치" -s "."
+	$> java -jar Code-Analyst-2.10.3.jar -l c# -p "프로젝트 위치" -s "."
 
 ### [Python]
-	$> java -jar Code-Analyst-2.10.2.jar -l python -p "프로젝트 위치" -s "."
+	$> java -jar Code-Analyst-2.10.3.jar -l python -p "프로젝트 위치" -s "."
 
 
 ### 결과 화면 (예시)
