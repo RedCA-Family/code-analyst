@@ -27,7 +27,6 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.server.handler.ShutdownHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 
@@ -38,6 +37,7 @@ import com.samsungsds.analyst.code.util.IOAndFileUtils;
 Request 처리 예시
 - Load global settings : /api/settings/values.protobuf
 - Load plugins index : /api/plugins/installed
+- Download plugin : /api/plugins/download?plugin=java&acceptCompressions=pack200 (언어별)
 - Load project repositories : /batch/project.protobuf?key=local%3Acom.samsungsds.analyst.code.main.App
 - Load quality profiles : /api/qualityprofiles/search.protobuf?projectKey=local%3Acom.samsungsds.analyst.code.main.App
     => 프로젝트 생성 후 Quality Profiles 항목 수정 후 다운로드 처리 필요
@@ -136,6 +136,7 @@ public class JettySurrogateSonarServer implements SurrogateSonarServer {
         handler.addServletWithMapping(SettingValuesResServlet.class, "/api/settings/values.protobuf");
 
 		handler.addServletWithMapping(PluginInstalledResServlet.class, "/api/plugins/installed");
+        handler.addServletWithMapping(PluginDownloadResServlet.class, "/api/plugins/download");
 
 		handler.addServletWithMapping(MetricsResServlet.class, "/api/metrics/search");
 		handler.addServletWithMapping(JarDownloadServlet.class, "/deploy/plugins/*");

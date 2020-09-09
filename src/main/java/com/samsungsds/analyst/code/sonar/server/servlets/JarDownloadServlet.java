@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 
 @SuppressWarnings("serial")
-public class JarDownloadServlet  extends HttpServlet {
+public class JarDownloadServlet extends HttpServlet {
 	private static final Logger LOGGER = LogManager.getLogger(JarDownloadServlet.class);
 
 	@Override

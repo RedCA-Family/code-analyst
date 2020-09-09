@@ -2,13 +2,16 @@ package com.samsungsds.analyst.code.main;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
 
 import com.samsungsds.analyst.code.api.Language;
 import org.apache.commons.io.FileUtils;
@@ -41,7 +44,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-h" };
 
-		CliParser cli = new CliParser(args);
+		CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -57,7 +60,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-v" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -72,7 +75,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] {};
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -93,7 +96,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-p", "abc,def" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -108,7 +111,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-p", "abc" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -123,7 +126,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-s", "abc", "-b", "def" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -140,7 +143,7 @@ public class CliParserTest {
 		String[] args = new String[] { "-library", "library", "-w", "webapp", "-d", "-e", "euc-kr", "-j", "1.6", "-o",
 				"output", "-t", "100" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -160,7 +163,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-pmd", "pmd", "-findbugs", "findbugs", "-sonar", "sonar" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -177,7 +180,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-f", "error" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -192,7 +195,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-f", "text" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -207,7 +210,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-c", "class" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -223,7 +226,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-include", "include", "-exclude", "exclude" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -239,7 +242,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-m", "code-size", "-c", "class" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -254,7 +257,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-m", "error" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -269,7 +272,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-m", "code-size,-duplication" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -282,11 +285,11 @@ public class CliParserTest {
 	}
 
 	@Test
-	public void testForModeDefult() {
+	public void testForModeDefault() {
 		// arrange
 		String[] args = new String[] {};
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -309,11 +312,11 @@ public class CliParserTest {
 	}
 
 	@Test
-	public void testForModeDefultWithWebappOption() {
+	public void testForModeDefaultWithWebappOption() {
 		// arrange
 		String[] args = new String[] {"-w", "webapp"};
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -340,7 +343,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] {"-m", "-duplication"};
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -367,7 +370,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] {"-m", "codesize,duplication,complexity,sonarjava,pmd,findbugs,findsecbugs,javascript,css,html,dependency,-unusedcode,-ckmetrics"};
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -394,7 +397,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-a", "-seperated", "-catalog" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -413,7 +416,7 @@ public class CliParserTest {
 
 		String[] args = new String[] { "-r", result };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -446,7 +449,7 @@ public class CliParserTest {
 
 		String[] args = new String[] { "-r", result };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -467,13 +470,13 @@ public class CliParserTest {
 	}
 
 	@Test
-	public void testForRerunIndiviualMode() {
+	public void testForRerunIndividualMode() {
 		// arrange
 		String result = saveTempFile("code-size,-duplication" );
 
 		String[] args = new String[] { "-r", result };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -489,9 +492,10 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-duplication", "statement" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
-		// act
+
+        // act
 		boolean ret = cli.parse();
 
 		// assert
@@ -504,7 +508,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-duplication", "token" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -520,7 +524,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-duplication", "error" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -535,7 +539,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-duplication", "token", "-tokens", "150" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -551,7 +555,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-s", "abc/,def", "-w", "def" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -566,7 +570,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-p", "-s" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -581,7 +585,7 @@ public class CliParserTest {
 		// arrange
 		String[] args = new String[] { "-s", "/abc/def" };
 
-		CliParser cli = new CliParser(args);
+        CliParser cli = new CliParser(args, Language.JAVA);
 
 		// act
 		boolean ret = cli.parse();
@@ -616,7 +620,7 @@ public class CliParserTest {
 				data.append(add).append("\n");
 			}
 
-			FileUtils.writeStringToFile(tmp, data.toString());
+			FileUtils.writeStringToFile(tmp, data.toString(), Charset.defaultCharset());
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}

@@ -65,8 +65,9 @@ public class Version {
     //          Compatibility with java 11 : 다음 부분을 제외하고 지원됨
     //            - FindBugs : experimental 지원
     //            - CKJM (Apache BCEL 기반) : experimental 지원
+    // 2.10.3 : Local 상에 plugin이 없는 경우 다운로드 오류 발생 수정
     // --------------------------------------------------
-	public static final String CODE_ANALYST = "2.10.2";
+	public static final String CODE_ANALYST = "2.10.3";
 	public static final String DOCUMENT_VERSION = "2.9";
 	public static final String APPLICATION_JAR = "Code-Analyst-" + CODE_ANALYST + ".jar";
 

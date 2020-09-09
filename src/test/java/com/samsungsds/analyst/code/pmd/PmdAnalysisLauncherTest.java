@@ -56,6 +56,7 @@ public class PmdAnalysisLauncherTest {
 	should_add_a_option_to_arg_list_when_call_addOption() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		Field f = PmdAnalysisLauncher.class.getDeclaredField("arg");
 		f.setAccessible(true);
+        @SuppressWarnings("unchecked")
 		List<String> arg = (List<String>) f.get(pmdAnalysisLauncher);
 
 		int nextIdx = arg.size();
@@ -69,6 +70,7 @@ public class PmdAnalysisLauncherTest {
 	should_add_option_name_only_when_option_value_is_null_or_blank() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		Field f = PmdAnalysisLauncher.class.getDeclaredField("arg");
 		f.setAccessible(true);
+        @SuppressWarnings("unchecked")
 		List<String> arg = (List<String>) f.get(pmdAnalysisLauncher);
 
 		int nextIdx = arg.size();
@@ -97,6 +99,7 @@ public class PmdAnalysisLauncherTest {
 	sholud_add_specific_ruleset_when_exist_decalare_ruleset_option() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		Field f = PmdAnalysisLauncher.class.getDeclaredField("arg");
 		f.setAccessible(true);
+        @SuppressWarnings("unchecked")
 		List<String> arg = (List<String>) f.get(pmdAnalysisLauncher);
 
 		String testRulesetFile = "/statics/PMD_ruleset_SDS_Standard_20160826_test.xml";
