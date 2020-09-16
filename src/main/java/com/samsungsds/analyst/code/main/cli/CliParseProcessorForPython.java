@@ -30,6 +30,8 @@ import java.io.UncheckedIOException;
 public class CliParseProcessorForPython extends AbstractCliParseProcessor {
     private static final Logger LOGGER = LogManager.getLogger(CliParseProcessorForPython.class);
 
+    private static final String DEFAULT_EXCLUSIONS = "**/site-packages/**";
+
     @Override
     public String getDefaultSrcOption() {
         return ".";
@@ -64,7 +66,8 @@ public class CliParseProcessorForPython extends AbstractCliParseProcessor {
 
         options.addOption("include", true, "specify include pattern(Ant-style) with comma separated. (e.g.: app/**/*.py)");
         options.addOption("exclude", true, "specify exclude pattern(Ant-style) with comma separated. (e.g.: tests/**,tests-*/**,*-tests/**)" +
-                "\n※ If 'include' or 'exclude' option starts with '@' and has file name, the option value is read from the file");
+                "\n※ If 'include' or 'exclude' option starts with '@' and has file name, the option value is read from the file" +
+                "\n  - default exclusions pattern is added : " + DEFAULT_EXCLUSIONS);
 
         options.addOption("m", "mode", true, "specify analysis items with comma separated. If '-' specified in each mode, the mode is excluded. " +
                 "(code-size, duplication, complexity, sonarpython)");
@@ -175,6 +178,13 @@ public class CliParseProcessorForPython extends AbstractCliParseProcessor {
 
             if (cmd.hasOption("exclude")) {
                 parsedValue.setExcludes(FileArgumentUtil.getFileArgument(cmd.getOptionValue("exclude")));
+            }
+
+            // default exclusions
+            if (parsedValue.getExcludes().equals("")) {
+                parsedValue.setExcludes(DEFAULT_EXCLUSIONS);
+            } else {
+                parsedValue.setExcludes(parsedValue.getExcludes() + "," + DEFAULT_EXCLUSIONS);
             }
 
             if (cmd.hasOption("m")) {

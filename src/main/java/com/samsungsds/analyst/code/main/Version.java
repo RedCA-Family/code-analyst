@@ -66,7 +66,7 @@ public class Version {
     //            - FindBugs : experimental 지원
     //            - CKJM (Apache BCEL 기반) : experimental 지원
     // 2.10.3 : Local 상에 plugin이 없는 경우 다운로드 오류 발생 수정
-    // 2.10.4 : RedCA Way ruleset 조정, C# 부분 다운로드 처리 오류 수정
+    // 2.10.4 : RedCA Way ruleset 조정, C# 부분 다운로드 처리 오류 수정, Python 기본 제외 규칙 추가
     // --------------------------------------------------
 	public static final String CODE_ANALYST = "2.10.4";
 	public static final String DOCUMENT_VERSION = "2.9";
