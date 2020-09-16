@@ -43,7 +43,7 @@ public class ZipDownloadServlet extends HttpServlet {
         String headerValue = String.format("attachment; filename=\"%s\"", filename);
         response.setHeader(headerKey, headerValue);
 
-        File jarFile = IOAndFileUtils.extractFileToTemp("/statics/" + filename);
+        File jarFile = IOAndFileUtils.extractFileToTemp("/statics/csharp/" + filename);
         LOGGER.debug("File size : {}", jarFile.length());
 
 		// Declare response encoding and types

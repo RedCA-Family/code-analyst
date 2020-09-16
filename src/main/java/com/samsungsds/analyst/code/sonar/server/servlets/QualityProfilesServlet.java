@@ -58,15 +58,15 @@ public class QualityProfilesServlet extends HttpServlet {
 			// Java       : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQvgbsEcvFlxZDP-lAC&ps=500&p=1
 			// Web        : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQjDReQai_BF8caLwNQ&ps=500&p=1
             // CSharp     : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXRH3wgCAhLXeJN1dxS4&ps=500&p=1
-            // Python     : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXRH4F65AhLXeJN1dxXw&ps=500&p=1
+            // Python     : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXSUcsLtvMPN_CJo408b&ps=500&p=1
 
             // Go         : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQyuYmthzVTrCiH1EHi&ps=500&p=1
             // Kotlin     : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQjDRDcai_BF8caLvuX&ps=500&p=1
             // TypeScript : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQjDRwUai_BF8caLwal&ps=500&p=1
             // Scala      : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQjDRBGai_BF8caLvtX&ps=500&p=1
-            // FSB JSP    : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQk63GIyhcEZoAI9SEj&ps=500&p=1
+            // JSP        : /api/rules/search.protobuf?f=repo,name,severity,lang,internalKey,templateKey,params,actives,createdAt,updatedAt&activation=true&qprofile=AXQjDRDCai_BF8caLvt2&ps=500&p=1
 
-			if (!queryString.contains("&p=1&") && !queryString.endsWith("&p=1")) {
+            if (!queryString.contains("&p=1&") && !queryString.endsWith("&p=1")) {
 				LOGGER.error("'p' parameter error : {}", queryString);
 				throw new IllegalArgumentException("Request URL parameter error ('p' isn't 1)");
 			}
@@ -81,8 +81,8 @@ public class QualityProfilesServlet extends HttpServlet {
 				resourceName = "/statics/AXQjDReQai_BF8caLwNQ.protobuf";
 			} else if (queryString.contains("qprofile=AXRH3wgCAhLXeJN1dxS4")) { // CSharp
 			    resourceName = "/statics/AXRH3wgCAhLXeJN1dxS4.protobuf";
-            } else if (queryString.contains("qprofile=AXRH4F65AhLXeJN1dxXw")) { // Python
-                resourceName = "/statics/AXRH4F65AhLXeJN1dxXw.protobuf";
+            } else if (queryString.contains("qprofile=AXSUcsLtvMPN_CJo408b")) { // Python
+                resourceName = "/statics/AXSUcsLtvMPN_CJo408b.protobuf";
             } else if (queryString.contains("qprofile=AXQyuYmthzVTrCiH1EHi")) { // Go
                 resourceName = "/statics/AXQyuYmthzVTrCiH1EHi.protobuf";
             } else if (queryString.contains("qprofile=AXQjDRDcai_BF8caLvuX")) { // Kotlin
@@ -91,8 +91,8 @@ public class QualityProfilesServlet extends HttpServlet {
                 resourceName = "/statics/AXQjDRwUai_BF8caLwal.protobuf";
             } else if (queryString.contains("qprofile=AXQjDRBGai_BF8caLvtX")) { // Scala
                 resourceName = "/statics/AXQjDRBGai_BF8caLvtX.protobuf";
-            } else if (queryString.contains("qprofile=AXQk63GIyhcEZoAI9SEj")) { // FSB JSP
-                resourceName = "/statics/AXQk63GIyhcEZoAI9SEj.protobuf";
+            } else if (queryString.contains("qprofile=AXQjDRDCai_BF8caLvt2")) { // JSP
+                resourceName = "/statics/AXQjDRDCai_BF8caLvt2.protobuf";
             }
 		} else if (url.equals("/api/rules/list.protobuf")) {	// RuleSet이 변경되면 같이 변경하여야 함.. (parameter 없음)
 			// URL 호출 : /api/rules/list.protobuf

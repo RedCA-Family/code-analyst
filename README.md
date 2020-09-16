@@ -30,7 +30,7 @@ API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 d
 	<dependency>
 		<groupId>com.samsungsds.analyst</groupId>
 		<artifactId>code-analyst</artifactId>
-		<version>2.10.3</version>
+		<version>2.10.4</version>
 	</dependency>
 
 **API 활용에 대한 사항은 [Guide](GUIDE.md)를 참조**해 주세요.
@@ -42,7 +42,7 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
 
 ### Java 언어 점검
 
-    $> java -jar Code-Analyst-2.10.3.jar -l java -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+    $> java -jar Code-Analyst-2.10.4.jar -l java -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
 
 ※ 참고로 ```-l,--language``` 지정이 없으면, Java 언어를 기본 점검 대상으로 합니다.
 
@@ -53,8 +53,8 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
 
 #### Help (Java)
 
-	$> java -jar Code-Analyst-2.10.3.jar --help
-    usage: java -jar Code-Analyst-2.10.3.jar
+	$> java -jar Code-Analyst-2.10.4.jar --help
+    usage: java -jar Code-Analyst-2.10.4.jar
      ※ To see individual language-specific option usages, specify the '-l' or '--language' option
      -l,--language <arg>     specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : "Java")
      -h,--help               show help.
@@ -105,12 +105,12 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
 
 ### JavaScript 언어 점검
 
-    $> java -jar Code-Analyst-2.10.3.jar -l javascript -p "프로젝트 위치" -s "."
+    $> java -jar Code-Analyst-2.10.4.jar -l javascript -p "프로젝트 위치" -s "."
 
 #### Help (JavaScript)
 
-    $> java -jar Code-Analyst-2.10.3.jar -l javascript --help
-    usage: java -jar Code-Analyst-2.10.3.jar
+    $> java -jar Code-Analyst-2.10.4.jar -l javascript --help
+    usage: java -jar Code-Analyst-2.10.4.jar
      -l,--language <arg>   specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : "Java")
      -h,--help             show help.
      -p,--project <arg>    specify project base directory. (default: ".")
@@ -141,14 +141,14 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
 
 ### C# 언어 점검
 
-    $> java -jar Code-Analyst-2.10.3.jar -l C# -p "프로젝트 위치" -s "."
+    $> java -jar Code-Analyst-2.10.4.jar -l C# -p "프로젝트 위치" -s "."
 
 ※ 참고로 프로젝트 위치는 Visual Studio 솔루션("*.sln") 파일이 있는 위치입니다.
 
 #### Help (C#)
 
-    $> java -jar Code-Analyst-2.10.3.jar -l C# --help
-    usage: java -jar Code-Analyst-2.10.3.jar
+    $> java -jar Code-Analyst-2.10.4.jar -l C# --help
+    usage: java -jar Code-Analyst-2.10.4.jar
      -l,--language <arg>   specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : "Java")
      -h,--help             show help.
      -p,--project <arg>    specify project base directory. (default: ".")
@@ -182,12 +182,12 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
 
 ### Python 언어 점검
 
-    $> java -jar Code-Analyst-2.10.3.jar -l Python -p "프로젝트 위치" -s "."
+    $> java -jar Code-Analyst-2.10.4.jar -l Python -p "프로젝트 위치" -s "."
 
 #### Help (Python)
 
-    $> java -jar Code-Analyst-2.10.3.jar -l Python --help
-    usage: java -jar Code-Analyst-2.10.3.jar
+    $> java -jar Code-Analyst-2.10.4.jar -l Python --help
+    usage: java -jar Code-Analyst-2.10.4.jar
      -l,--language <arg>   specify the language to analyze. ('Java', 'JavaScript', 'C#' or 'Python', default : "Java")
      -h,--help             show help.
      -p,--project <arg>    specify project base directory. (default: ".")
@@ -218,8 +218,8 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
 
 ### Version 정보
 
-	$> java -jar Code-Analyst-2.10.3.jar --version
-    Code Analyst : 2.10.3
+	$> java -jar Code-Analyst-2.10.4.jar --version
+    Code Analyst : 2.10.4
       - Sonar Scanner API : 2.15.0.2182 (LGPL v3.0)
       - Sonar Scanner for MSBuild : 4.10.0.19059 (LGPL v3.0)
       - Sonar Server : 7.9.4.35981 (LGPL v3.0)
@@ -250,7 +250,7 @@ CLI(Command Line Interface) 형태로 사용되며, Java, JavaScript(Node.js), C
       - FindSecBugs : 81 rules (v1.10.1, RedCA Way Ruleset, '20.09)
       - SonarJava : 243 ruleset (v6.3.2, RedCA Way Ruleset, '20.09)
       - SonarCSharp : 155 ruleset (v8.6.1, RedCA Way Ruleset, '20.09)
-      - SonarPython : 26 ruleset (v2.8, RedCA Way Ruleset, '20.09)
+      - SonarPython : 76 ruleset (v2.8, RedCA Way Ruleset, '20.09)
       - Web Resources :
           - JS : 89 ruleset (v6.2.1, RedCA Way Ruleset, '20.09)
           - CSS : CSS / Less / SCSS 27 ruleset (v1.2)
