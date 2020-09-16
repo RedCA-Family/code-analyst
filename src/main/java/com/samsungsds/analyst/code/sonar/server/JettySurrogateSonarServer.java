@@ -55,6 +55,7 @@ Request 처리 예시
 - Load active rules : /api/rules/search?f=repo,name,severity,lang,internalKey,templateKey,params,actives&ps=500&activation=true&qprofile=AXRH3wgCAhLXeJN1dxS4&p=1 (AXRH3wgCAhLXeJN1dxS4.json)
                       /api/rules/search?f=repo,name,severity,lang,internalKey,templateKey,params&ps=500&activation=false&qprofile=AXRH3wgCAhLXeJN1dxS4&p=1&languages=cs (AXRH3wgCAhLXeJN1dxS4_inactive.json)
 - Load batch index : /batch/index
+- Load scanner jar : /batch/file?name=sonar-scanner-engine-shaded-7.9.4-all.jar
 ....
 Accesslog sample
 127.0.0.1 - - [03/9월/2020:14:09:36 +0900] "GET /batch/index HTTP/1.1" 200 - "-" "ScannerMSBuild/4.10" "AXRSUuLvUQjYSLPYAABx"
@@ -154,6 +155,7 @@ public class JettySurrogateSonarServer implements SurrogateSonarServer {
         handler.addServletWithMapping(QualityProfilesJsonServlet.class, "/api/rules/search");
         handler.addServletWithMapping(BatchIndexServlet.class, "/batch/index");
         handler.addServletWithMapping(ZipDownloadServlet.class, "/static/csharp/*");
+        handler.addServletWithMapping(JarDownloadServlet.class, "/batch/file");
 
 		HandlerList handlers = new HandlerList();
 		handlers.setHandlers(new Handler[] { new ShutdownHandler(secretPassword.toString(), false, true), handler });

@@ -6,10 +6,9 @@
       "language": "cs",
       "languageName": "C#",
       "isInherited": false,
-      "isDefault": false,
+      "isDefault": true,
       "activeRuleCount": 155,
       "activeDeprecatedRuleCount": 0,
-      "projectCount": 2,
       "rulesUpdatedAt": "2020-09-01T04:13:53+0000",
       "lastUsed": "2020-09-03T14:09:41+0900",
       "userUpdatedAt": "2020-09-01T13:13:53+0900",
@@ -17,10 +16,10 @@
       "isBuiltIn": false,
       "actions": {
         "edit": true,
-        "setAsDefault": true,
+        "setAsDefault": false,
         "copy": true,
-        "associateProjects": true,
-        "delete": true
+        "associateProjects": false,
+        "delete": false
       }
     },
     {
@@ -49,20 +48,19 @@
       "language": "go",
       "languageName": "Go",
       "isInherited": false,
-      "isDefault": false,
+      "isDefault": true,
       "activeRuleCount": 17,
       "activeDeprecatedRuleCount": 0,
-      "projectCount": 2,
       "rulesUpdatedAt": "2020-08-28T01:44:23+0000",
       "userUpdatedAt": "2020-08-28T10:44:23+0900",
       "organization": "default-organization",
       "isBuiltIn": false,
       "actions": {
         "edit": true,
-        "setAsDefault": true,
+        "setAsDefault": false,
         "copy": true,
-        "associateProjects": true,
-        "delete": true
+        "associateProjects": false,
+        "delete": false
       }
     },
     {
@@ -71,20 +69,19 @@
       "language": "java",
       "languageName": "Java",
       "isInherited": false,
-      "isDefault": false,
+      "isDefault": true,
       "activeRuleCount": 243,
       "activeDeprecatedRuleCount": 0,
-      "projectCount": 2,
       "rulesUpdatedAt": "2020-08-27T10:42:59+0000",
       "userUpdatedAt": "2020-08-27T19:42:59+0900",
       "organization": "default-organization",
       "isBuiltIn": false,
       "actions": {
         "edit": true,
-        "setAsDefault": true,
+        "setAsDefault": false,
         "copy": true,
-        "associateProjects": true,
-        "delete": true
+        "associateProjects": false,
+        "delete": false
       }
     },
     {
@@ -93,32 +90,31 @@
       "language": "js",
       "languageName": "JavaScript",
       "isInherited": false,
-      "isDefault": false,
+      "isDefault": true,
       "activeRuleCount": 89,
       "activeDeprecatedRuleCount": 0,
-      "projectCount": 2,
       "rulesUpdatedAt": "2020-09-01T04:05:17+0000",
       "userUpdatedAt": "2020-09-01T13:05:17+0900",
       "organization": "default-organization",
       "isBuiltIn": false,
       "actions": {
         "edit": true,
-        "setAsDefault": true,
+        "setAsDefault": false,
         "copy": true,
-        "associateProjects": true,
-        "delete": true
+        "associateProjects": false,
+        "delete": false
       }
     },
     {
-      "key": "AXQk63GIyhcEZoAI9SEj",
-      "name": "FindBugs Security JSP",
+      "key": "AXQjDRDCai_BF8caLvt2",
+      "name": "Sonar way",
       "language": "jsp",
       "languageName": "JSP",
       "isInherited": false,
       "isDefault": true,
-      "activeRuleCount": 6,
+      "activeRuleCount": 0,
       "activeDeprecatedRuleCount": 0,
-      "rulesUpdatedAt": "2020-08-25T09:20:43+0000",
+      "rulesUpdatedAt": "2020-08-25T00:38:12+0000",
       "organization": "default-organization",
       "isBuiltIn": true,
       "actions": {
@@ -150,25 +146,24 @@
       }
     },
     {
-      "key": "AXRH4F65AhLXeJN1dxXw",
+      "key": "AXSUcsLtvMPN_CJo408b",
       "name": "RedCA Way for SonarPython",
       "language": "py",
       "languageName": "Python",
       "isInherited": false,
-      "isDefault": false,
-      "activeRuleCount": 26,
+      "isDefault": true,
+      "activeRuleCount": 76,
       "activeDeprecatedRuleCount": 0,
-      "projectCount": 2,
-      "rulesUpdatedAt": "2020-09-01T04:15:20+0000",
-      "userUpdatedAt": "2020-09-01T13:15:20+0900",
+      "rulesUpdatedAt": "2020-09-16T01:06:23+0000",
+      "userUpdatedAt": "2020-09-16T10:06:23+0900",
       "organization": "default-organization",
       "isBuiltIn": false,
       "actions": {
         "edit": true,
-        "setAsDefault": true,
+        "setAsDefault": false,
         "copy": true,
-        "associateProjects": true,
-        "delete": true
+        "associateProjects": false,
+        "delete": false
       }
     },
     {
@@ -197,18 +192,17 @@
       "language": "ts",
       "languageName": "TypeScript",
       "isInherited": false,
-      "isDefault": false,
+      "isDefault": true,
       "activeRuleCount": 134,
       "activeDeprecatedRuleCount": 0,
-      "projectCount": 2,
       "rulesUpdatedAt": "2020-08-25T00:52:26+0000",
       "organization": "default-organization",
       "isBuiltIn": true,
       "actions": {
         "edit": false,
-        "setAsDefault": true,
+        "setAsDefault": false,
         "copy": true,
-        "associateProjects": true,
+        "associateProjects": false,
         "delete": false
       }
     },

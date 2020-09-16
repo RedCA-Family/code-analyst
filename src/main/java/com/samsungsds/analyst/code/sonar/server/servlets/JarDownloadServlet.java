@@ -41,6 +41,10 @@ public class JarDownloadServlet extends HttpServlet {
 
 		String filename = url.substring(url.lastIndexOf("/") + 1);
 
+		if (request.getParameter("name") != null && !request.getParameter("name").equals("")) {
+		    filename = request.getParameter("name");
+        }
+
         String headerKey = "Content-Disposition";
         String headerValue = String.format("attachment; filename=\"%s\"", filename);
         response.setHeader(headerKey, headerValue);

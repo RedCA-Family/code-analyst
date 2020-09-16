@@ -66,8 +66,9 @@ public class Version {
     //            - FindBugs : experimental 지원
     //            - CKJM (Apache BCEL 기반) : experimental 지원
     // 2.10.3 : Local 상에 plugin이 없는 경우 다운로드 오류 발생 수정
+    // 2.10.4 : RedCA Way ruleset 조정, C# 부분 다운로드 처리 오류 수정
     // --------------------------------------------------
-	public static final String CODE_ANALYST = "2.10.3";
+	public static final String CODE_ANALYST = "2.10.4";
 	public static final String DOCUMENT_VERSION = "2.9";
 	public static final String APPLICATION_JAR = "Code-Analyst-" + CODE_ANALYST + ".jar";
 
@@ -96,23 +97,23 @@ public class Version {
 	public static final String PYTHON_RADON = "3.0.3";
 
 	public static final String PMD_RULESET = "91 ruleset (v5.4, RedCA Way Ruleset, '18.03)";
-	public static final String FINDBUGS_RULESET = "213 ruleset (v4.0.6, RedCA Way Ruleset, '20.09)";
+	public static final String FINDBUGS_RULESET = "215 ruleset (v4.0.6, RedCA Way Ruleset, '20.09)";
 	public static final String FINDSECBUGS_RULESET = "81 rules (v1.10.1, RedCA Way Ruleset, '20.09)";
 	public static final String SONAR_JAVA_RULESET = "243 ruleset (v6.3.2, RedCA Way Ruleset, '20.09)";
 	public static final String SONAR_JS_RULESET = "89 ruleset (v6.2.1, RedCA Way Ruleset, '20.09)";
     public static final String SONAR_CSHARP_RULESET = "155 ruleset (v8.6.1, RedCA Way Ruleset, '20.09)";
-    public static final String SONAR_PYTHON_RULESET = "26 ruleset (v2.8, RedCA Way Ruleset, '20.09)";
+    public static final String SONAR_PYTHON_RULESET = "76 ruleset (v2.8, RedCA Way Ruleset, '20.09)";
 	public static final String SONAR_CSS_RULESET = "CSS / Less / SCSS 27 ruleset (v1.2)";
 	public static final String SONAR_WEB_RULESET = "28 ruleset (v3.2)";
 	public static final String CHECKSTYLE_RULESET = "58 ruleset (RedCA Way Ruleset, '20.09)";
 
 	public static final int SONAR_JAVA_DEFAULT_RULES = 243;
 	public static final int PMD_DEFAULT_RULES = 91;
-	public static final int FINDBUGS_DEFAULT_RULES = 213;
+	public static final int FINDBUGS_DEFAULT_RULES = 215;
 	public static final int FINDSECBUGS_DEFAULT_RULES = 81;
 	public static final int SONAR_JS_DEFAULT_RULES = 89;
 	public static final int SONAR_CSHARP_DEFAULT_RULES = 155;
-	public static final int SONAR_PYTHON_DEFAULT_RULES = 26;
+	public static final int SONAR_PYTHON_DEFAULT_RULES = 76;
 
 	public static void printVersionInfo() {
 		System.out.println("Code Analyst : " + CODE_ANALYST);

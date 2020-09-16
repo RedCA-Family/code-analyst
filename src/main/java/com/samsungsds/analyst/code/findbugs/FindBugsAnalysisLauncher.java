@@ -34,51 +34,51 @@ import edu.umd.cs.findbugs.SortedBugCollection;
 
 public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 	private static final Logger LOGGER = LogManager.getLogger(FindBugsAnalysisLauncher.class);
-	
-	private static final String BUG_RULESET_FILE = "/statics/FindBugs-include-filter_214.xml";
-	
+
+	private static final String BUG_RULESET_FILE = "/statics/FindBugs-include-filter_215.xml";
+
 	private List<String> arg = new ArrayList<>();
 	private File reportFile = null;
-	
+
 	private String targetDirectory = null;
-	
+
 	@Override
 	public void setTarget(String directory) {
 		LOGGER.debug("FindBugs Target Directory : {}", directory);
-		this.targetDirectory = directory; 
+		this.targetDirectory = directory;
 	}
-	
+
 	@Override
 	public void addOption(String option, String value) {
 		arg.add(option);
-		
+
 		if (value != null && !value.equals("")) {
 			arg.add(value);
 		}
 	}
-	
+
 	@Override
 	public void run(String instanceKey) {
-		
+
 		if (!arg.contains("-include")) {
 			addOption("-include", IOAndFileUtils.saveResourceFile(BUG_RULESET_FILE, "include", ".xml").toString());
 		}
 		addOption("-xml", "");
-		
+
 		try {
 			reportFile = File.createTempFile("findbugs", ".xml");
 		} catch (IOException ex) {
 			throw new IllegalStateException(ex);
 		}
 		reportFile.deleteOnExit();
-		
+
 		addOption("-output", reportFile.toString());
-		
+
 		LOGGER.debug("FindBugs Result File : {}", reportFile.toString());
-		
+
 		addOption("-onlyAnalyze", getTargetPackages(instanceKey));
 		addOption("-nested:false", "");
-		
+
 		addOption(targetDirectory, "");
 
 		try {
@@ -91,57 +91,57 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
-		
+
 		List<FindBugsResult> resultList = parseXML(reportFile);
-		
+
 		MeasuredResult.getInstance(instanceKey).putFindBugsList(resultList);
 	}
-	
+
 	protected List<FindBugsResult> parseXML(File reportFile) {
 		List<FindBugsResult> list = new ArrayList<>();
 
 		BugCollection bugCollection = new SortedBugCollection();
-		
+
 		try {
 			bugCollection.readXML(reportFile.toString());
 		} catch (IOException | DocumentException ex) {
 			throw new RuntimeException(ex);
 		}
-		
+
 		for (BugInstance bug : bugCollection) {
 			list.add(new FindBugsResult(bug));
 		}
-		
+
 		return list;
 	}
 
 	protected String getTargetPackages(String instanceKey) {
 		StringBuilder builder = new StringBuilder();
-		
+
 		for (String packageName : MeasuredResult.getInstance(instanceKey).getPackageList()) {
 			if (packageName.equals("")) {
 				LOGGER.warn("The project has class(es) with no package... FindBugs/FindSecBugs can't check with no package class(es)");
 				MeasuredResult.getInstance(instanceKey).setWithDefaultPackageClasses(true);
 				continue;
 			}
-			
+
 			if (builder.length() != 0) {
 				builder.append(",");
 			}
-			
+
 			builder.append(packageName).append(".*");
 			// Replace .* with .- to also analyze all subpackages.
 		}
-		
+
 		LOGGER.info("target packages : {}", builder.toString());
-		
+
 		return builder.toString();
 	}
-	
+
 	protected List<String> getArg() {
 		return arg;
 	}
-	
+
 	protected String getTargetDirectory() {
 		return targetDirectory;
 	}
