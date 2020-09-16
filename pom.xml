@@ -350,8 +350,10 @@
 								<jar destfile="${project.basedir}/target/${jarName}-${project.version}-jar-with-local-dependencies.jar">
 									<zipgroupfileset dir="${project.basedir}/target" includes="${jarName}-${project.version}-jar-with-dependencies.jar" />
 									<zipgroupfileset dir="${project.basedir}/lib" includes="**/*.jar" />
+									<!--zipfileset dir="${project.basedir}/lib" prefix="META-INF/lib" /-->
 									<manifest>
 										<attribute name="Main-Class" value="${mainClass}" />
+										<!--attribute name="Class-Path" value="META-INF/lib/sonar-scanner-engine-shaded-7.9.4-all.jar" /-->
 									</manifest>
 								</jar>
 								<copy
