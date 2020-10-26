@@ -15,14 +15,18 @@ limitations under the License.
  */
 package com.samsungsds.analyst.code.main.subject;
 
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ParseResult;
+import com.github.javaparser.ast.CompilationUnit;
 import com.samsungsds.analyst.code.main.FileSkipChecker;
 import com.samsungsds.analyst.code.util.FindFileUtils;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -120,10 +124,109 @@ public class TargetManager {
             this.binaryDirectories = binaryDirectories.split(FindFileUtils.COMMA_SPLITTER);
             this.skipChecker = skipChecker;
 
+            checkAndModifyDirectories();
+
             initializeAndGetTargetFileList();
 
             return targetFileList;
         }
+    }
+
+    private void checkAndModifyDirectories() {
+        changeSourceDirectories();
+        changeBinaryDirectories();
+    }
+
+    private void changeSourceDirectories() {
+        for (int i = 0; i < sourceDirectories.length; i++) {
+            String src = IOAndFileUtils.getNormalizedPath(sourceDirectories[i]);
+
+            FirstFileFinder find = new FirstFileFinder(projectBaseDir + File.separator + src, "java");
+
+            String path = find.getPath();
+
+            JavaParser javaParser = new JavaParser();
+            ParseResult<CompilationUnit> result = null;
+            try {
+                result = javaParser.parse(new FileInputStream(path));
+                String packageName = result.getResult().get().getPackageDeclaration().get().getNameAsString();
+
+
+                path = path.substring(0, path.lastIndexOf(File.separatorChar));
+                path = path.replace(IOAndFileUtils.getNormalizedPath(projectBaseDir), "");
+                if (path.startsWith(File.separator)) {
+                    path = path.substring(1);
+                }
+                String packageDir = packageName.replace(".", File.separator);
+
+                if (path.endsWith(packageDir)) {
+                    path = path.substring(0, path.length() - packageDir.length());
+                } else {
+                    throw new IllegalStateException("src option error : " + src);
+                }
+
+                if (path.endsWith(File.separator)) {
+                    path = path.substring(0, path.length() - 1);
+                }
+
+                if (!src.equals(path)) {
+                    LOGGER.info("Source Directory changed : {} -> {}", src, path);
+                    sourceDirectories[i] = path;
+                }
+
+            } catch (FileNotFoundException ex) {
+                throw new UncheckedIOException(ex);
+            }
+        }
+    }
+
+    private void changeBinaryDirectories() {
+        for (int i = 0; i < binaryDirectories.length; i++) {
+            String bin = IOAndFileUtils.getNormalizedPath(binaryDirectories[i]);
+
+            FirstFileFinder find = new FirstFileFinder(projectBaseDir + File.separator + bin, "class");
+
+            String path = find.getPath();
+
+            ClassParser parser = new ClassParser(path);
+
+            try {
+                JavaClass javaClass = parser.parse();
+                String packageName = javaClass.getPackageName();
+
+                path = path.substring(0, path.lastIndexOf(File.separatorChar));
+                path = path.replace(IOAndFileUtils.getNormalizedPath(projectBaseDir), "");
+                if (path.startsWith(File.separator)) {
+                    path = path.substring(1);
+                }
+                String packageDir = packageName.replace(".", File.separator);
+
+                if (path.endsWith(packageDir)) {
+                    path = path.substring(0, path.length() - packageDir.length());
+                } else {
+                    throw new IllegalStateException("binary option error : " + bin);
+                }
+
+                if (path.endsWith(File.separator)) {
+                    path = path.substring(0, path.length() - 1);
+                }
+
+                if (!bin.equals(path)) {
+                    LOGGER.info("Binary Directory changed : {} -> {}", bin, path);
+                    binaryDirectories[i] = path;
+                }
+            } catch (IOException ex) {
+                throw new UncheckedIOException(ex);
+            }
+        }
+    }
+
+    public String getSourceOption() {
+        return String.join(",", sourceDirectories);
+    }
+
+    public String getBinaryOption() {
+        return String.join(",", binaryDirectories);
     }
 
     private final class ProcessFile extends SimpleFileVisitor<Path> {
