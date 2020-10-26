@@ -47,6 +47,8 @@ public class TargetManager {
 
     private List<TargetFile> targetFileList = new ArrayList<>();
 
+    private boolean directoriesChanged = false;
+
     public static TargetManager getInstance(String instanceKey) {
         if (!instances.containsKey(instanceKey)) {
             synchronized (TargetManager.class) {
@@ -172,6 +174,7 @@ public class TargetManager {
                 if (!src.equals(path)) {
                     LOGGER.info("Source Directory changed : {} -> {}", src, path);
                     sourceDirectories[i] = path;
+                    directoriesChanged = true;
                 }
 
             } catch (FileNotFoundException ex) {
@@ -214,11 +217,16 @@ public class TargetManager {
                 if (!bin.equals(path)) {
                     LOGGER.info("Binary Directory changed : {} -> {}", bin, path);
                     binaryDirectories[i] = path;
+                    directoriesChanged = true;
                 }
             } catch (IOException ex) {
                 throw new UncheckedIOException(ex);
             }
         }
+    }
+
+    public boolean isDirectoriesChanged() {
+        return directoriesChanged;
     }
 
     public String getSourceOption() {
