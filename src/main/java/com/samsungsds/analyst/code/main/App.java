@@ -148,6 +148,9 @@ public class App {
                         List<TargetFile> targetFileList = targetManager.getTargetFileList(project.getCanonicalPath(), cli.getSrc(), cli.getBinary(),
                             MeasuredResult.getInstance(cli.getInstanceKey()));
 
+                        cli.setSrc(targetManager.getSourceOption());
+                        cli.setBinary(targetManager.getBinaryOption());
+
                         LOGGER.info("Target File Count From Target Manager : {}", targetFileList.size());
                     } catch (IOException e) {
                         LOGGER.error("Project Directory Error : {}", cli.getProjectBaseDir());

@@ -204,4 +204,12 @@ public class CliParser {
 	public int getMinimumTokens() {
 		return parsedValue.getMinimumTokens();
 	}
+
+    public void setSrc(String sourceOption) {
+	    parsedValue.setSrc(sourceOption);
+    }
+
+    public void setBinary(String binaryOption) {
+	    parsedValue.setBinary(binaryOption);
+    }
 }
