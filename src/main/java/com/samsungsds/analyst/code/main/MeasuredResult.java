@@ -449,6 +449,11 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		webapp = cli.getWebapp();
 	}
 
+	public void setChangeSourceAndBinary(String source, String binary) {
+        this.source = source;
+        this.binary = binary;
+    }
+
 	public void setDebug(boolean debug) {
 	    this.debug = debug;
     }
