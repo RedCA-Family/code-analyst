@@ -3,16 +3,16 @@
 ## 1. 기본 실행 ##
 
 ### [Java]
-	$> java -jar Code-Analyst-2.10.5.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
+	$> java -jar Code-Analyst-2.10.6.jar -p "프로젝트 위치" -s "src\main\java" -b "target\classes"
 
 ### [JavaScript]
-	$> java -jar Code-Analyst-2.10.5.jar -l javascript -p "프로젝트 위치" -s "."
+	$> java -jar Code-Analyst-2.10.6.jar -l javascript -p "프로젝트 위치" -s "."
 
 ### [C#]
-	$> java -jar Code-Analyst-2.10.5.jar -l c# -p "프로젝트 위치" -s "."
+	$> java -jar Code-Analyst-2.10.6.jar -l c# -p "프로젝트 위치" -s "."
 
 ### [Python]
-	$> java -jar Code-Analyst-2.10.5.jar -l python -p "프로젝트 위치" -s "."
+	$> java -jar Code-Analyst-2.10.6.jar -l python -p "프로젝트 위치" -s "."
 
 
 ### 결과 화면 (예시)
@@ -140,6 +140,8 @@ com/samsung/**/*.java
 | -r,--rerun <arg> | 이전 실행된 결과 output(text)와 동일한 옵션을 지정하여 실행  영향을 받는 옵션 : 'project', 'src', 'encoding', 'sonar', 'include', 'exclude', 'mode', 'analysis', 'seperated' alc 'catalog' |  | 2.7 | -r result.out |
 | -seperated | 중복도, 복잡도, SonarJS에 대한 결과 정보를 별도의 파일로 분리 |  | 2.7 | -seperated |
 | -catalog | 점검된 파일 목록 |  | 2.7 | -catalog |
+| -duplication <arg> | 중복 점검 방식 지정 ('statement' 또는 'token' 방식) | statement  | 2.6 | -duplication token |
+| -tokens <arg> | token 중복 점검 방식의 token 기준값 지정 | 100 | 2.6 | -tokens 50 |
 
 ※ 'include' 또는 'exclude' 옵션 지정 시, ```@file``` 형태로 파일 지정이 가능합니다. (since v2.8)
 이때 파일은 다음과 같은 형식으로 지정하면 됩니다. (여러 라인으로 구성되며, 각 라인은 콤마 없이 하나의 패턴을 지정)
@@ -168,6 +170,8 @@ com/samsung/**/*.js
 | -r,--rerun <arg> | 이전 실행된 결과 output(text)와 동일한 옵션을 지정하여 실행  영향을 받는 옵션 : 'project', 'src', 'encoding', 'sonar', 'include', 'exclude', 'mode', 'analysis', 'seperated' alc 'catalog' |  | 2.7 | -r result.out |
 | -seperated | 중복도, 복잡도, SonarJS에 대한 결과 정보를 별도의 파일로 분리 |  | 2.7 | -seperated |
 | -catalog | 점검된 파일 목록 |  | 2.7 | -catalog |
+| -duplication <arg> | 중복 점검 방식 지정 ('statement' 또는 'token' 방식) | statement  | 2.6 | -duplication token |
+| -tokens <arg> | token 중복 점검 방식의 token 기준값 지정 | 100 | 2.6 | -tokens 50 |
 
 ※ 'include' 또는 'exclude' 옵션 지정 시, ```@file``` 형태로 파일 지정이 가능합니다. (since v2.8)
 이때 파일은 다음과 같은 형식으로 지정하면 됩니다. (여러 라인으로 구성되며, 각 라인은 콤마 없이 하나의 패턴을 지정)
@@ -196,6 +200,8 @@ com/samsung/**/*.cs
 | -r,--rerun <arg> | 이전 실행된 결과 output(text)와 동일한 옵션을 지정하여 실행  영향을 받는 옵션 : 'project', 'src', 'encoding', 'sonar', 'include', 'exclude', 'mode', 'analysis', 'seperated' alc 'catalog' |  | 2.7 | -r result.out |
 | -seperated | 중복도, 복잡도, SonarJS에 대한 결과 정보를 별도의 파일로 분리 |  | 2.7 | -seperated |
 | -catalog | 점검된 파일 목록 |  | 2.7 | -catalog |
+| -duplication <arg> | 중복 점검 방식 지정 ('statement' 또는 'token' 방식) | statement  | 2.6 | -duplication token |
+| -tokens <arg> | token 중복 점검 방식의 token 기준값 지정 | 100 | 2.6 | -tokens 50 |
 
 ※ 'include' 또는 'exclude' 옵션 지정 시, ```@file``` 형태로 파일 지정이 가능합니다. (since v2.8)
 이때 파일은 다음과 같은 형식으로 지정하면 됩니다. (여러 라인으로 구성되며, 각 라인은 콤마 없이 하나의 패턴을 지정)
