@@ -145,13 +145,16 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
     private void installRadonPackages(String virtualEnvDir) {
         LOGGER.info("Install radon");
 
-        String pip = virtualEnvDir + File.separator + "radon" + File.separator + "Scripts" + File.separator + "pip";
-
+        String pip;
         ProcessBuilder builder;
 
         if (PythonRuntime.IS_MACOS || PythonRuntime.IS_LINUX) {
+            pip = virtualEnvDir + File.separator + "radon" + File.separator + "bin" + File.separator + "pip";
+
             builder = new ProcessBuilder("/bin/sh", "-c", pip + " install --find-links . --no-index radon-3.0.3-py2.py3-none-any.whl");
         } else {
+            pip = virtualEnvDir + File.separator + "radon" + File.separator + "Scripts" + File.separator + "pip.exe";
+
             builder = new ProcessBuilder(pip, "install", "--find-links", ".", "--no-index", "radon-3.0.3-py2.py3-none-any.whl");
         }
 
@@ -180,7 +183,12 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
     private String runRadon(String virtualEnvDir) {
         LOGGER.info("Run radon ...");
 
-        String radon = virtualEnvDir + File.separator + "Scripts" + File.separator + "radon";
+        String radon;
+        if (PythonRuntime.IS_MACOS || PythonRuntime.IS_LINUX) {
+            radon = virtualEnvDir + File.separator + "bin" + File.separator + "radon";
+        } else {
+            radon = virtualEnvDir + File.separator + "Scripts" + File.separator + "radon.exe";
+        }
 
         File json = new File(virtualEnvDir, "result.json");
 
