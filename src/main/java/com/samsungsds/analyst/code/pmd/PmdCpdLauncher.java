@@ -70,7 +70,6 @@ public class PmdCpdLauncher implements PmdCpd {
     private void processResultCSVFile(File csvFile, String instanceKey) {
         try (Reader in = new FileReader(csvFile)) {
 
-
             Iterable<CSVRecord> records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
 
             for (CSVRecord record : records) {
@@ -84,9 +83,10 @@ public class PmdCpdLauncher implements PmdCpd {
                 int startLine = Integer.parseInt(record.get(3));
                 String path = record.get(4);
 
-                MeasuredResult.getInstance(instanceKey).addDuplicatedBlocks();
-
+                boolean added = false;
+                boolean hasOccurrences = false;
                 for (int i = 5; i < 5 + (occurrences - 1) * 2; i+=2) {
+                    hasOccurrences = true;
                     int targetStartLine = Integer.parseInt(record.get(i));
                     String targetPath = record.get(i+1);
 
@@ -100,7 +100,14 @@ public class PmdCpdLauncher implements PmdCpd {
                     data[4] = String.valueOf(targetStartLine);
                     data[5] = String.valueOf(targetStartLine + lines - 1);
 
-                    addResult(data, instanceKey);
+                    // MeasuredResult 부분에서 include/exclude 처리 됨 (모두 포함되어야 중복으로 처리)
+                    if (addResult(data, instanceKey)) {
+                        added = true;
+                    }
+                }
+
+                if (added && hasOccurrences) {
+                    MeasuredResult.getInstance(instanceKey).addDuplicatedBlocks();
                 }
             }
         } catch (IOException ex) {
@@ -108,7 +115,7 @@ public class PmdCpdLauncher implements PmdCpd {
         }
     }
 
-    private void addResult(String[] data, String instanceKey) {
+    private boolean addResult(String[] data, String instanceKey) {
         DuplicationResult result;
 
         data[0] = PmdResult.getConvertedFilePath(data[0], instanceKey).replaceAll("^\\./", "");
@@ -128,7 +135,7 @@ public class PmdCpdLauncher implements PmdCpd {
             throw new RuntimeException("Duplication Process Error : " + Arrays.toString(data));
         }
 
-        MeasuredResult.getInstance(instanceKey).addDuplicationResult(result);
+        return MeasuredResult.getInstance(instanceKey).addDuplicationResult(result);
     }
 
     private File createPmdCpdCSVFile() {

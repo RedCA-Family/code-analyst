@@ -306,6 +306,16 @@ public class App {
 	private void runPmdCpd(CliParser cli) {
 		PmdCpd cpd = new PmdCpdLauncher();
 
+        if (language == Language.CSHARP) {
+            cpd.addOption("--language", "cs");
+        } else if (language == Language.JAVASCRIPT) {
+            cpd.addOption("--language", "js");
+        } else if (language == Language.PYTHON) {
+            cpd.addOption("--language", "py");
+        } else {
+            // default : --language java
+        }
+
 		cpd.addOption("--encoding", cli.getEncoding());
 		cpd.addOption("--format", "csv");
 		cpd.addOption("-failOnViolation", "false");
@@ -314,6 +324,9 @@ public class App {
 
 		String dirs = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getSrc());
 		cpd.addOption("--files", dirs);
+
+        cpd.addOption("--skip-lexical-errors", "");
+        cpd.addOption("--ignore-annotations", "");
 
 		cpd.run(cli.getInstanceKey());
 	}

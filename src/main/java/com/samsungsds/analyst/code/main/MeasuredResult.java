@@ -632,19 +632,20 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		this.sonarIssueFilterSet = sonarIssueFilterSet;
 	}
 
-	public synchronized void addDuplicationResult(DuplicationResult result) {
+	public synchronized boolean addDuplicationResult(DuplicationResult result) {
 		String path = result.getPath();
-		String duplcatedPath = null;
+		String duplicatedPath = null;
 
 		if (DuplicationResult.DUPLICATED_FILE_SAME_MARK.equals(result.getDuplicatedPath())) {
-			addDuplicatedBlocks();
-			duplcatedPath = result.getPath();
+		    // 이 경우 addDuplicatedBlocks() 호출 이유 확인 필요
+			//addDuplicatedBlocks();
+			duplicatedPath = result.getPath();
 		} else {
-			duplcatedPath = result.getDuplicatedPath();
+			duplicatedPath = result.getDuplicatedPath();
 		}
 
-		if (haveToSkip(path) || haveToSkip(duplcatedPath)) {
-			return;
+		if (haveToSkip(path) || haveToSkip(duplicatedPath)) {
+			return false;
 		}
 
 		duplicationList.add(result);
@@ -659,19 +660,21 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 			duplicatedBlockData.put(path, duplicatedLineNumbers);
 		}
 
-		if (duplicatedBlockData.containsKey(duplcatedPath)) {
-			this.duplicatedLines += getAddedDuplicatedLines(result.getDuplicatedStartLine(), result.getDuplicatedEndLine(), duplicatedBlockData.get(duplcatedPath));
+		if (duplicatedBlockData.containsKey(duplicatedPath)) {
+			this.duplicatedLines += getAddedDuplicatedLines(result.getDuplicatedStartLine(), result.getDuplicatedEndLine(), duplicatedBlockData.get(duplicatedPath));
 		} else {
 			Set<Integer> duplicatedLineNumbers = new HashSet<>();
 
 			this.duplicatedLines += getAddedDuplicatedLines(result.getDuplicatedStartLine(), result.getDuplicatedEndLine(), duplicatedLineNumbers);
 
-			duplicatedBlockData.put(duplcatedPath, duplicatedLineNumbers);
+			duplicatedBlockData.put(duplicatedPath, duplicatedLineNumbers);
 		}
 
 		if (detailAnalysis) {
 			duplicationDetailAnalyst.add(result);
 		}
+
+		return true;
 	}
 
 	private int getAddedDuplicatedLines(int from, int to, Set<Integer> duplicatedLineNumbers) {

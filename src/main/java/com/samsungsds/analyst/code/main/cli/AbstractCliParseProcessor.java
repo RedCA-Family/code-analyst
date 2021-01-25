@@ -438,4 +438,25 @@ public abstract class AbstractCliParseProcessor implements CliParseProcessor {
 
         return false;
     }
+
+    protected boolean checkDuplicationType(Options options, CliParsedValueObject parsedValue, CommandLine cmd) {
+        if (cmd.hasOption("duplication")) {
+            String duplicationMode = cmd.getOptionValue("duplication");
+            if (duplicationMode.equalsIgnoreCase("statement")) {
+                parsedValue.setTokenBased(false);
+            } else if (duplicationMode.equalsIgnoreCase("token")) {
+                parsedValue.setTokenBased(true);
+            } else {
+                parsedValue.setErrorMessage("Option Error : 'duplication' option's value has to be 'statement' or 'token'");
+                System.out.println(parsedValue.getErrorMessage());
+                help(options, cmd);
+                return true;
+            }
+        }
+
+        if (cmd.hasOption("tokens")) {
+            parsedValue.setMinimumTokens(Integer.parseInt(cmd.getOptionValue("tokens")));
+        }
+        return false;
+    }
 }
