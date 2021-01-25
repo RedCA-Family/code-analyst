@@ -68,7 +68,7 @@ public class Version {
     // 2.10.3 : Local 상에 plugin이 없는 경우 다운로드 오류 발생 수정
     // 2.10.4 : RedCA Way ruleset 조정, C# 부분 다운로드 처리 오류 수정, Python/JavaScript 기본 제외 규칙 추가
     // 2.10.5 : 일부 옵션 보정 처리 (--src, --binary), eslint 실행 권한 (in linux)
-    // 2.10.6 : JavaScript ESLint 여러 src 처리 오류, Python pip Linux 경로 오류 수정
+    // 2.10.6 : JavaScript ESLint 여러 src 처리 오류, Python pip Linux 경로 오류, Python radon 관련 오류 수정
     // --------------------------------------------------
 	public static final String CODE_ANALYST = "2.10.6";
 	public static final String DOCUMENT_VERSION = "2.9";

@@ -42,6 +42,8 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
     private static final Logger LOGGER = LogManager.getLogger(RadonAnalysisLauncher.class);
 
     private static final String PYTHON_RADON_PACKAGES = "/statics/python/radon.zip";
+    private static final String WHEEL_PACKAGES = "/statics/python/wheel.zip";
+
     private String projectPath = null;
     private String exclude = null;
     private String src = null;
@@ -64,6 +66,8 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
         File tmpDir = saveRadonPackageWheels();
 
         String virtualEnvDir = makeVirtualEnv(python, tmpDir);
+
+        installWheelPackages(tmpDir.getPath());
 
         installRadonPackages(tmpDir.getPath());
 
@@ -142,6 +146,55 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
         return radon.getPath();
     }
 
+    private void installWheelPackages(String virtualEnvDir) {
+        LOGGER.info("Install wheel package");
+
+        File wheel = IOAndFileUtils.saveResourceFile(WHEEL_PACKAGES, "wheel", ".zip");
+
+        File wheelDir = Files.createTempDir();
+        try {
+            ZipUtils.unzip(wheel, wheelDir);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+
+        String wheelFile = wheelDir + File.separator + "wheel-0.36.2-py2.py3-none-any.whl";
+
+        String pip;
+        ProcessBuilder builder;
+
+        if (PythonRuntime.IS_MACOS || PythonRuntime.IS_LINUX) {
+            pip = virtualEnvDir + File.separator + "radon" + File.separator + "bin" + File.separator + "pip";
+
+            builder = new ProcessBuilder("/bin/sh", "-c", pip + " install --find-links . --no-index " + wheelFile);
+        } else {
+            pip = virtualEnvDir + File.separator + "radon" + File.separator + "Scripts" + File.separator + "pip.exe";
+
+            builder = new ProcessBuilder(pip, "install", "--find-links", ".", "--no-index", wheelFile);
+        }
+
+        // "venv activate"
+        // -> add Scripts path to PATH environment
+        // -> set VIRTUAL_ENV environment
+        builder.environment().put("VIRTUAL_ENV", virtualEnvDir);
+
+        builder.directory(new File(virtualEnvDir));
+        builder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+        builder.redirectError(ProcessBuilder.Redirect.INHERIT);
+
+        try {
+            Process proc = builder.start();
+            int errCode = proc.waitFor();
+            if (errCode != 0) {
+                throw new RuntimeException("Python Install Wheel Packages Error");
+            }
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        } catch (InterruptedException ex) {
+            throw new UncheckedExecutionException(ex);
+        }
+    }
+
     private void installRadonPackages(String virtualEnvDir) {
         LOGGER.info("Install radon");
 
@@ -195,7 +248,7 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
         String[] srcPaths = src.split(FindFileUtils.COMMA_SPLITTER);
         StringBuilder pathWithQuotation = new StringBuilder();
         for (String path : srcPaths) {
-            pathWithQuotation.append("\"").append(path).append("\"").append(" ");
+            pathWithQuotation.append("\"").append(projectPath).append(File.separator).append(path).append("\"").append(" ");
         }
 
         ProcessBuilder builder;
@@ -207,11 +260,11 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
             pathList.add(radon);
             pathList.add("cc");
             pathList.add("-e");
-            pathList.add("\" + exclude + \"");
+            pathList.add(exclude);
             pathList.add("--no-assert");
             pathList.add("--json");
             for (String path : srcPaths) {
-                pathList.add(path);
+                pathList.add(projectPath + File.separator + path);
             }
             builder = new ProcessBuilder(pathList);
         }
@@ -263,11 +316,11 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
                 if (item.getMethods() != null && !item.getMethods().isEmpty()) {
                     for (RadonComplexityItem subItem : item.getMethods()) {
                         if (subItem.getType().equalsIgnoreCase("method") || subItem.getType().equalsIgnoreCase("function")) {
-                            list.add(new ComplexityResult(path, subItem.getLineno(), subItem.getName(), subItem.getComplexity()));
+                            list.add(new ComplexityResult(MeasuredResult.getConvertedFilePath(path, projectPath), subItem.getLineno(), subItem.getName(), subItem.getComplexity()));
                         }
                     }
                 } else if (item.getType().equalsIgnoreCase("method") || item.getType().equalsIgnoreCase("function")) {
-                    list.add(new ComplexityResult(path, item.getLineno(), item.getName(), item.getComplexity()));
+                    list.add(new ComplexityResult(MeasuredResult.getConvertedFilePath(path, projectPath), item.getLineno(), item.getName(), item.getComplexity()));
                 }
             }
         });
