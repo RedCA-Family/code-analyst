@@ -51,7 +51,8 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
     @Override
     public void addOption(String option, String value) {
         if (option.equals("path")) {
-            projectPath = value;
+            String path = new File(value).getAbsolutePath();
+            projectPath = path;
         } else if (option.equals("exclude")) {
             exclude = value;
         } else if (option.equals("src")) {
