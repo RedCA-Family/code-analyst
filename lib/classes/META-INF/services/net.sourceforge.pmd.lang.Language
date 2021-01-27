@@ -1,0 +1,4 @@
+net.sourceforge.pmd.lang.java.JavaLanguageModule
+net.sourceforge.pmd.lang.cs.CsLanguageModule
+net.sourceforge.pmd.lang.ecmascript.EcmascriptLanguageModule
+net.sourceforge.pmd.lang.python.PythonLanguageModule
