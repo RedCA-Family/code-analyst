@@ -15,8 +15,10 @@ limitations under the License.
  */
 package com.samsungsds.analyst.code.pmd;
 
+import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.sonar.DuplicationResult;
+import com.samsungsds.analyst.code.util.FileLineFinder;
 import net.sourceforge.pmd.cpd.CPDCommandLineInterface;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -72,42 +74,52 @@ public class PmdCpdLauncher implements PmdCpd {
 
             Iterable<CSVRecord> records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
 
-            for (CSVRecord record : records) {
-                if (record.get(0).equals("")) {
-                    continue;
-                }
-
-                int lines = Integer.parseInt(record.get(0));
-                //int tokens = Integer.parseInt(record.get(1));
-                int occurrences = Integer.parseInt(record.get(2));
-                int startLine = Integer.parseInt(record.get(3));
-                String path = record.get(4);
-
-                boolean added = false;
-                boolean hasOccurrences = false;
-                for (int i = 5; i < 5 + (occurrences - 1) * 2; i+=2) {
-                    hasOccurrences = true;
-                    int targetStartLine = Integer.parseInt(record.get(i));
-                    String targetPath = record.get(i+1);
-
-                    String[] data = new String[6];
-
-                    data[0] = path;
-                    data[1] = String.valueOf(startLine);
-                    data[2] = String.valueOf(startLine + lines - 1);
-
-                    data[3] = targetPath;
-                    data[4] = String.valueOf(targetStartLine);
-                    data[5] = String.valueOf(targetStartLine + lines - 1);
-
-                    // MeasuredResult 부분에서 include/exclude 처리 됨 (모두 포함되어야 중복으로 처리)
-                    if (addResult(data, instanceKey)) {
-                        added = true;
+            try (FileLineFinder finder = new FileLineFinder()) {
+                for (CSVRecord record : records) {
+                    if (record.get(0).equals("")) {
+                        continue;
                     }
-                }
 
-                if (added && hasOccurrences) {
-                    MeasuredResult.getInstance(instanceKey).addDuplicatedBlocks();
+                    int lines = Integer.parseInt(record.get(0));
+                    //int tokens = Integer.parseInt(record.get(1));
+                    int occurrences = Integer.parseInt(record.get(2));
+                    int startLine = Integer.parseInt(record.get(3));
+                    String path = record.get(4);
+
+                    // Python의 경우 주석으로 시작하는 부분은 제외
+                    if (MeasuredResult.getInstance(instanceKey).getLanguageType() == Language.PYTHON) {
+                        String line = finder.getLine(path, startLine);
+                        if (line.trim().startsWith("'''") || line.trim().startsWith("\"\"\"")) {
+                            continue;
+                        }
+                    }
+
+                    boolean added = false;
+                    boolean hasOccurrences = false;
+                    for (int i = 5; i < 5 + (occurrences - 1) * 2; i += 2) {
+                        hasOccurrences = true;
+                        int targetStartLine = Integer.parseInt(record.get(i));
+                        String targetPath = record.get(i + 1);
+
+                        String[] data = new String[6];
+
+                        data[0] = path;
+                        data[1] = String.valueOf(startLine);
+                        data[2] = String.valueOf(startLine + lines - 1);
+
+                        data[3] = targetPath;
+                        data[4] = String.valueOf(targetStartLine);
+                        data[5] = String.valueOf(targetStartLine + lines - 1);
+
+                        // MeasuredResult 부분에서 include/exclude 처리 됨 (모두 포함되어야 중복으로 처리)
+                        if (addResult(data, instanceKey)) {
+                            added = true;
+                        }
+                    }
+
+                    if (added && hasOccurrences) {
+                        MeasuredResult.getInstance(instanceKey).addDuplicatedBlocks();
+                    }
                 }
             }
         } catch (IOException ex) {

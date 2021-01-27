@@ -309,9 +309,9 @@ public class App {
         if (language == Language.CSHARP) {
             cpd.addOption("--language", "cs");
         } else if (language == Language.JAVASCRIPT) {
-            cpd.addOption("--language", "js");
+            cpd.addOption("--language", "ecmascript");
         } else if (language == Language.PYTHON) {
-            cpd.addOption("--language", "py");
+            cpd.addOption("--language", "python");
         } else {
             // default : --language java
         }
