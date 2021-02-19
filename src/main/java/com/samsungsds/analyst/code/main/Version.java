@@ -70,7 +70,7 @@ public class Version {
     // 2.10.5 : 일부 옵션 보정 처리 (--src, --binary), eslint 실행 권한 (in linux)
     // 2.10.6 : JavaScript ESLint 여러 src 처리 오류, Python pip Linux 경로 오류, Python radon 관련 오류 수정
     //          PMD CPD 중복 체크 기능 다른 언어 적용, PMD CPD 충돌(w/ SonarQube)으로 인한 오류 수정,
-    //          Linux Node 설치 처리 오류 수정
+    //          Linux Node 설치 처리 오류 수정, C# CK Metrics exclude/include 오류 수정
     // --------------------------------------------------
 	public static final String CODE_ANALYST = "2.10.6";
 	public static final String DOCUMENT_VERSION = "2.9";

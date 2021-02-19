@@ -21,8 +21,7 @@ import com.samsungsds.analyst.code.util.CSVFileResult;
 import java.io.Serializable;
 
 public class CkMetricsResult implements Serializable, CSVFileResult {
-
-    private static final long serialVersionUID = 1412457119763168428L;
+    private static final long serialVersionUID = -7592888907648916235L;
 
     @Expose
     private String qualifiedClassName;
@@ -43,7 +42,7 @@ public class CkMetricsResult implements Serializable, CSVFileResult {
     @Expose
     private int cbo;
 
-    /** Depth of inheritence tree */
+    /** Depth of inheritance tree */
     @Expose
     private int dit;
 
@@ -51,11 +50,15 @@ public class CkMetricsResult implements Serializable, CSVFileResult {
     @Expose
     private int lcom;
 
+    /** File Path */
+    @Expose
+    private String filePath;
+
     public CkMetricsResult() {
         // default constructor (CSV)
     }
 
-    public CkMetricsResult(String qualifiedClassName, int wmc, int noc, int rfc, int cbo, int dit, int lcom) {
+    public CkMetricsResult(String qualifiedClassName, int wmc, int noc, int rfc, int cbo, int dit, int lcom, String filePath) {
         this.qualifiedClassName = qualifiedClassName;
         this.wmc = wmc;
         this.noc = noc;
@@ -63,11 +66,12 @@ public class CkMetricsResult implements Serializable, CSVFileResult {
         this.cbo = cbo;
         this.dit = dit;
         this.lcom = lcom;
+        this.filePath = filePath;
     }
 
     @Override
     public int getColumnSize() {
-        return 7;
+        return 8;
     }
 
     @Override
@@ -80,6 +84,7 @@ public class CkMetricsResult implements Serializable, CSVFileResult {
             case 4 : return String.valueOf(cbo);
             case 5 : return String.valueOf(dit);
             case 6 : return String.valueOf(lcom);
+            case 7 : return filePath;
             default : throw new IndexOutOfBoundsException("Index: " + columnIndex);
         }
     }
@@ -94,6 +99,7 @@ public class CkMetricsResult implements Serializable, CSVFileResult {
             case 4 : cbo = Integer.parseInt(data); break;
             case 5 : dit = Integer.parseInt(data); break;
             case 6 : lcom = Integer.parseInt(data); break;
+            case 7 : filePath = data; break;
             default : throw new IndexOutOfBoundsException("Index: " + columnIndex);
         }
     }
@@ -124,5 +130,9 @@ public class CkMetricsResult implements Serializable, CSVFileResult {
 
     public int getLcom() {
         return lcom;
+    }
+
+    public String getFilePath() {
+        return filePath;
     }
 }

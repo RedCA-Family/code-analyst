@@ -696,6 +696,8 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	}
 
 	public boolean haveToSkip(String path, boolean addSrcPrefix, boolean withoutFilename) {
+	    path = path.replace("\\", "/");
+
 		String[] pathArray;
 
 		if (addSrcPrefix) {
@@ -1239,7 +1241,16 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	}
 
 	public void setCkMetricsResultList(List<CkMetricsResult> ckMetricsResultList) {
-		this.ckMetricsResultList = ckMetricsResultList;
+		//this.ckMetricsResultList = ckMetricsResultList;
+        this.ckMetricsResultList.clear();
+
+        for (CkMetricsResult result : ckMetricsResultList) {
+            if (haveToSkip(result.getFilePath())) {
+                continue;
+            }
+
+            this.ckMetricsResultList.add(result);
+        }
 	}
 
 	public List<CkMetricsResult> getCkMetricsResultList() {
