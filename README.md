@@ -33,6 +33,10 @@ $ docker image build -t code-analyst .
 실행은 `/project`에 대한 volume을 지정하여 분석하고자 하는 프로젝트 위치를 지정합니다. 최종 결과 파일도 지정된 `/project` volume에 생성됩니다.
 (docker를 사용하는 경우 `-p` 프로젝트 위치 옵션 지정 대신 이 `/project` volume을 사용합니다.)
 
+```shell
+$ docker run --rm -v /workspace/project:/project code-analyst [options] 
+```
+
 
 ## API 사용 ##
 API 형태로 사용하기 위해서는 Maven dependencies에 다음과 같은 dependency를 추가하면 됩니다.
