@@ -254,22 +254,8 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
                 parsedValue.setSaveCatalog(true);
             }
 
-            if (cmd.hasOption("duplication")) {
-                String duplicationMode = cmd.getOptionValue("duplication");
-                if (duplicationMode.equalsIgnoreCase("statement")) {
-                    parsedValue.setTokenBased(false);
-                } else if (duplicationMode.equalsIgnoreCase("token")) {
-                    parsedValue.setTokenBased(true);
-                } else {
-                    parsedValue.setErrorMessage("Option Error : 'duplication' option's value has to be 'statement' or 'token'");
-                    System.out.println(parsedValue.getErrorMessage());
-                    help(options, cmd);
-                    return false;
-                }
-            }
-
-            if (cmd.hasOption("tokens")) {
-                parsedValue.setMinimumTokens(Integer.parseInt(cmd.getOptionValue("tokens")));
+            if (checkDuplicationType(options, parsedValue, cmd)) {
+                return false;
             }
 
             if (checkSourceDuplication(parsedValue)) {

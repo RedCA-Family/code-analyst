@@ -165,7 +165,11 @@ public class NodeRuntime {
                     saveArchiveFile(fin, dir);
                 }
 
-                return dir + File.separator + NODE_PATH_FOR_MACOS;
+                String path = dir + File.separator + NODE_PATH_FOR_MACOS;
+                File nodeExecute = new File(path);
+                nodeExecute.setExecutable(true);
+
+                return path;
             } else if (IS_LINUX) {
                 File zipFile = IOAndFileUtils.saveResourceFile("/statics/nodejs/node-v10.15.3-linux-x64.tar.xz", "node", ".tar.gz");
 
@@ -175,7 +179,11 @@ public class NodeRuntime {
                     saveArchiveFile(fin, dir);
                 }
 
-                return dir + File.separator + NODE_PATH_FOR_LINUX;
+                String path = dir + File.separator + NODE_PATH_FOR_LINUX;
+                File nodeExecute = new File(path);
+                nodeExecute.setExecutable(true);
+
+                return path;
             } else {
                 throw new NodeRuntimeException("Current OS not supported...");
             }

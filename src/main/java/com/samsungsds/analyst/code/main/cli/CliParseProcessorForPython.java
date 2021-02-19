@@ -80,6 +80,9 @@ public class CliParseProcessorForPython extends AbstractCliParseProcessor {
         options.addOption("seperated", false, "specify seperated output mode.");
 
         options.addOption("catalog", false, "specify file catalog saving mode.");
+
+        options.addOption("duplication", true,"specify duplication detection mode. ('statement' or 'token', default : statement)");
+        options.addOption("tokens", true, "specify the minimum number of tokens when token-based duplication detection mode. (default : 100)");
     }
 
     @Override
@@ -217,6 +220,10 @@ public class CliParseProcessorForPython extends AbstractCliParseProcessor {
 
             if (cmd.hasOption("catalog")) {
                 parsedValue.setSaveCatalog(true);
+            }
+
+            if (checkDuplicationType(options, parsedValue, cmd)) {
+                return false;
             }
 
             if (checkSourceDuplication(parsedValue)) {

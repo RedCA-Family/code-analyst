@@ -1,0 +1,4 @@
+net.sourceforge.pmd.cpd.JavaLanguage
+net.sourceforge.pmd.cpd.CsLanguage
+net.sourceforge.pmd.cpd.EcmascriptLanguage
+net.sourceforge.pmd.cpd.PythonLanguage

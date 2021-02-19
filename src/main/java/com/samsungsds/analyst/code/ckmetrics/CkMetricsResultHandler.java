@@ -27,7 +27,16 @@ public class CkMetricsResultHandler implements CkjmOutputHandler {
 
     @Override
     public void handleClass(String name, ClassMetrics c) {
-        ckMetricsResults.add(new CkMetricsResult(name, c.getWmc(), c.getNoc(), c.getRfc(), c.getCbo(), c.getDit(), c.getLcom()));
+        String filePath = getFilePathFromFqcn(name);
+        ckMetricsResults.add(new CkMetricsResult(name, c.getWmc(), c.getNoc(), c.getRfc(), c.getCbo(), c.getDit(), c.getLcom(), filePath));
+    }
+
+    private String getFilePathFromFqcn(String name) {
+        if (name.contains("$")) {
+            name = name.substring(0, name.indexOf('$'));
+        }
+
+        return name.replace(".", "/") + ".java";
     }
 
     public List<CkMetricsResult> getCkMetricsResults() {

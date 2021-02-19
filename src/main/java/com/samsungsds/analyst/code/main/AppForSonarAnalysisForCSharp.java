@@ -201,7 +201,7 @@ public class AppForSonarAnalysisForCSharp extends AppForSonarAnalysis {
             addParameter(arguments, "sonar.exclusions", MeasuredResult.getInstance(cli.getInstanceKey()).getExcludes());
         }
 
-        if (!cli.getIndividualMode().isDuplication()) {
+        if (!cli.getIndividualMode().isDuplication() || cli.isTokenBased()) {
             LOGGER.info("CPD Exclusions All files");
             addParameter(arguments, "sonar.cpd.exclusions", "**/*");
         }

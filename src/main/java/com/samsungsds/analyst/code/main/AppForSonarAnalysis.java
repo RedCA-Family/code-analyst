@@ -155,7 +155,7 @@ public class AppForSonarAnalysis implements DelayWork {
             sonar.addProperty("sonar.exclusions", MeasuredResult.getInstance(cli.getInstanceKey()).getExcludes());
         }
 
-        if (!cli.getIndividualMode().isDuplication()) {
+        if (!cli.getIndividualMode().isDuplication() || cli.isTokenBased()) {
             LOGGER.info("CPD Exclusions All files");
             sonar.addProperty("sonar.cpd.exclusions", "**/*");
         }

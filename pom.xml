@@ -5,7 +5,7 @@
 
 	<groupId>com.samsungsds.analyst</groupId>
 	<artifactId>code-analyst</artifactId>
-	<version>2.10.5</version>
+	<version>2.10.6</version>
 
 	<name>Code-Analyst</name>
 	<description>Code Analyst to measure various code metrics</description>
@@ -75,7 +75,55 @@
 		<dependency>
 			<groupId>net.sourceforge.pmd</groupId>
 			<artifactId>pmd-java</artifactId>
-			<version>6.22.0</version>
+			<version>6.25.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.ow2.asm</groupId>
+					<artifactId>asm</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.pmd</groupId>
+			<artifactId>pmd-cs</artifactId>
+			<version>6.25.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.ow2.asm</groupId>
+					<artifactId>asm</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.pmd</groupId>
+			<artifactId>pmd-javascript</artifactId>
+			<version>6.25.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.ow2.asm</groupId>
+					<artifactId>asm</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.pmd</groupId>
+			<artifactId>pmd-python</artifactId>
+			<version>6.25.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-io</groupId>
@@ -149,13 +197,13 @@
 			<artifactId>sonar-scanner-engine-shaded</artifactId>
 			<version>7.9.4</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/sonar-scanner-engine-shaded-7.9.4-all.jar</systemPath>
+			<systemPath>${project.basedir}/lib/sonar-scanner-engine-shaded-7.9.4-all-modified.jar</systemPath>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>9.4.31.v20200723</version>
+			<version>9.4.35.v20201120</version>
 		</dependency>
 
 		<dependency>
@@ -246,6 +294,12 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
 			<version>1.20</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.tukaani</groupId>
+			<artifactId>xz</artifactId>
+			<version>1.8</version>
 		</dependency>
 
 		<!--
@@ -348,9 +402,12 @@
 							<target>
 								<!-- System scope dependencies aren't include with 'jar-with-dependencies', so additional Ant task is required -->
 								<jar destfile="${project.basedir}/target/${jarName}-${project.version}-jar-with-local-dependencies.jar">
-									<zipgroupfileset dir="${project.basedir}/target" includes="${jarName}-${project.version}-jar-with-dependencies.jar" />
+									<!--zipgroupfileset dir="${project.basedir}/target" includes="${jarName}-${project.version}-jar-with-dependencies.jar" /-->
+									<zipfileset src="${project.basedir}/target/${jarName}-${project.version}-jar-with-dependencies.jar"
+												excludes="META-INF/services/net.sourceforge.pmd.cpd.Language,META-INF/services/net.sourceforge.pmd.lang.Language" />
 									<zipgroupfileset dir="${project.basedir}/lib" includes="**/*.jar" />
 									<!--zipfileset dir="${project.basedir}/lib" prefix="META-INF/lib" /-->
+									<fileset dir="${project.basedir}/lib/classes"/>
 									<manifest>
 										<attribute name="Main-Class" value="${mainClass}" />
 										<!--attribute name="Class-Path" value="META-INF/lib/sonar-scanner-engine-shaded-7.9.4-all.jar" /-->

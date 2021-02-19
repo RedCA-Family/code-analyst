@@ -79,6 +79,7 @@ public class JettySurrogateSonarServerTest {
 		assertThat(conn.getResponseCode(), is(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
 	}
 
+	@Ignore
 	@Test(expected = ConnectException.class) public void
 	should_throw_connectException_when_server_was_stopped() throws IOException {
 
