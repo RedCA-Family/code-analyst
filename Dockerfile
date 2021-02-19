@@ -10,8 +10,13 @@ COPY lib ./lib
 
 RUN mvn clean package -DskipTests
 
+RUN export code_analyst_version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) \
+    && cp target/Code-Analyst-${code_analyst_version}.jar Code-Analyst.jar
+
 # JDK run stage
 FROM openjdk:8-jre
-WORKDIR /app
+WORKDIR /project
 
-ENTRYPOINT ["java","-jar","target/Code-Analyst-[0-9]*.[0-9]*.[0-9]*.jar"]
+COPY --from=build /app/Code-Analyst.jar /app/Code-Analyst.jar
+
+ENTRYPOINT ["java","-jar","/app/Code-Analyst.jar"]
