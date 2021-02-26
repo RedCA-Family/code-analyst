@@ -34,7 +34,7 @@ public class PythonRuntime {
 
     private static final String PYTHON_PROGRAM = "python";
 
-    private static final Pattern PYTHON_VERSION_PATTERN = Pattern.compile("Python ?(\\d+)\\.(\\d+)\\.(\\d+)");
+    static final Pattern PYTHON_VERSION_PATTERN = Pattern.compile("Python ?(\\d+)\\.(\\d+)\\.(\\d+).*");
 
     public static final boolean IS_WINDOWS = SystemUtils.IS_OS_WINDOWS;
     public static final boolean IS_MACOS = SystemUtils.IS_OS_MAC;
