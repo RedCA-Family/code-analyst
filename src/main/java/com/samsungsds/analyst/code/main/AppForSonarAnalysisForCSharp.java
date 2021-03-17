@@ -110,6 +110,8 @@ public class AppForSonarAnalysisForCSharp extends AppForSonarAnalysis {
     }
 
     private void runMSBuild(MSBuildEnv env, String projectBaseDir) {
+        projectBaseDir = getSolutionFile(projectBaseDir);
+
         List<String> command = new ArrayList<>();
         if (env == MSBuildEnv.DOT_NET_FRAMEWORK) {
             command.add("MSBuild.exe");
@@ -122,6 +124,19 @@ public class AppForSonarAnalysisForCSharp extends AppForSonarAnalysis {
         }
 
         runProcessBuilder(command, projectBaseDir);
+    }
+
+    private String getSolutionFile(String projectBaseDir) {
+        if (".".equals(cli.getSrc())) {
+            return projectBaseDir;
+        }
+
+        File sln = new File(projectBaseDir, cli.getSrc());
+        if (sln.exists()) {
+            return sln.getAbsolutePath();
+        } else {
+            throw new IllegalArgumentException("sln file not found : " + sln.getAbsolutePath());
+        }
     }
 
     private void runProcessBuilder(List<String> command, String workingDirectory) {

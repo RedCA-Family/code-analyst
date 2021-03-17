@@ -414,6 +414,8 @@ public class App {
 
         codeAnalysis.addOption("-dir", cli.getProjectBaseDir());
 
+        codeAnalysis.addOption("sln", cli.getSrc());
+
         codeAnalysis.run(cli.getInstanceKey());
 
         observerManager.notifyObservers(ProgressEvent.COMPLEXITY_COMPLETE);

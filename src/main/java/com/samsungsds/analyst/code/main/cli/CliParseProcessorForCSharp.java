@@ -48,7 +48,8 @@ public class CliParseProcessorForCSharp extends AbstractCliParseProcessor {
 
         options.addOption("h", "help", false, "show help.");
         options.addOption("p", "project", true, "specify project base directory. (default: \".\")");
-        options.addOption("s", "src", true, "specify source directories with comma separated. (default: \"${project}" + File.separator + getDefaultSrcOption() + "\")");
+        options.addOption("s", "src", true, "specify '*.sln' file in project directory. (default: 'sln' file in \"${project}\" directory. " +
+            "However, there should be only 1 'sln' file in that directory.)");
 
         options.addOption("d", "debug", false, "debug mode.");
         options.addOption("e", "encoding", true, "encoding of the source code. (default: UTF-8)");

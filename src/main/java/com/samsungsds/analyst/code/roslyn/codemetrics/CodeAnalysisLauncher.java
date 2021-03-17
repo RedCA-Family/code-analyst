@@ -31,10 +31,14 @@ public class CodeAnalysisLauncher implements ComplexityAnalysis {
     private final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();;
     private String solutionDirectory = null;
 
+    private String slnFilename = ".";
+
     @Override
     public void addOption(String option, String value) {
         if (option.equals("-dir")) {
             solutionDirectory = value;
+        } else if (option.equals("sln")) {
+            slnFilename = value;
         }
     }
 
@@ -137,14 +141,25 @@ public class CodeAnalysisLauncher implements ComplexityAnalysis {
     private String findSolutionFile(String directory) {
         File dir = new File(directory);
 
-        File[] list = dir.listFiles((sub, name) -> {
-            return name.endsWith(".sln");
-        });
+        if (".".equals(slnFilename)) {
 
-        if (list.length == 0) {
-            throw new IllegalStateException("Solution(*.sln) not found in " + directory);
+            File[] list = dir.listFiles((sub, name) -> {
+                return name.endsWith(".sln");
+            });
+
+            if (list.length == 0) {
+                throw new IllegalStateException("Solution(*.sln) not found in " + directory);
+            }
+
+            return list[0].getName();
+        } else {
+            File sln = new File(dir, slnFilename);
+
+            if (sln.exists()) {
+                return slnFilename;
+            } else {
+                throw new IllegalArgumentException("sln file not found : " + sln.getAbsolutePath());
+            }
         }
-
-        return list[0].getName();
     }
 }
