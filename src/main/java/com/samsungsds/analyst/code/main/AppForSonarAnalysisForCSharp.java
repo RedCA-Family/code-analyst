@@ -110,17 +110,17 @@ public class AppForSonarAnalysisForCSharp extends AppForSonarAnalysis {
     }
 
     private void runMSBuild(MSBuildEnv env, String projectBaseDir) {
-        projectBaseDir = getSolutionFile(projectBaseDir);
+        String slnFilePath = getSolutionFile(projectBaseDir);
 
         List<String> command = new ArrayList<>();
         if (env == MSBuildEnv.DOT_NET_FRAMEWORK) {
             command.add("MSBuild.exe");
-            command.add(projectBaseDir);
+            command.add(slnFilePath);
             command.add("/t:Rebuild");
         } else {
             command.add("dotnet");
             command.add("build");
-            command.add(projectBaseDir);
+            command.add(slnFilePath);
         }
 
         runProcessBuilder(command, projectBaseDir);
