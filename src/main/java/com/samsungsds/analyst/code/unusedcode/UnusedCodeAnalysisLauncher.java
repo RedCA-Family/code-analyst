@@ -55,7 +55,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	private String projectBaseDir = null;
 	private String targetSrc = null;
 	private String targetBinary = null;
-	private String encoding = null;
+	private String encoding = "UTF-8";
 
 	//private String rootPackage = null;
 	//private String sourceRootFolderPath = null;
