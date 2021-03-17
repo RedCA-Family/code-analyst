@@ -18,14 +18,10 @@ package com.samsungsds.analyst.code.unusedcode;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 import com.github.javaparser.ParseResult;
 import com.samsungsds.analyst.code.util.FindFileUtils;
@@ -59,6 +55,7 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 	private String projectBaseDir = null;
 	private String targetSrc = null;
 	private String targetBinary = null;
+	private String encoding = null;
 
 	//private String rootPackage = null;
 	//private String sourceRootFolderPath = null;
@@ -84,7 +81,12 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 		this.targetBinary = IOAndFileUtils.getNormalizedPath(directory);
 	}
 
-	@Override
+    @Override
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    @Override
 	public void run(String instanceKey) {
 		MeasuredResult measuredResult = MeasuredResult.getInstance(instanceKey);
 
@@ -130,9 +132,13 @@ public class UnusedCodeAnalysisLauncher implements UnusedCodeAnalysis {
 							FileInputStream in = new FileInputStream(sourceFileOf);
 							//CompilationUnit unit = JavaParser.parse(in);
                             JavaParser javaParser = new JavaParser();
-                            ParseResult<CompilationUnit> result = javaParser.parse(in);
-                            CompilationUnit unit = result.getResult().get();
-							unit.accept(new CodeAnalysisSourceVisitor(visitResult), null);
+                            ParseResult<CompilationUnit> result = javaParser.parse(in, Charset.forName(encoding));
+                            if (result.getResult().isPresent()) {
+                                CompilationUnit unit = result.getResult().get();
+                                unit.accept(new CodeAnalysisSourceVisitor(visitResult), null);
+                            } else {
+                                LOGGER.info("SKIP Java source parsing error: {}", sourceFileOf);
+                            }
 						}
 					} catch (IOException e) {
 						LOGGER.info("SKIP FileNotFound: {}", e.getMessage());

@@ -573,6 +573,8 @@ public class App {
 		unusedCodeViolation.setTargetBinary(cli.getBinary());
 		unusedCodeViolation.setTargetSrc(cli.getSrc());
 
+        unusedCodeViolation.setEncoding(cli.getEncoding());
+
 		unusedCodeViolation.run(cli.getInstanceKey());
 
 		observerManager.notifyObservers(ProgressEvent.UNUSED_COMPLETE);

@@ -71,8 +71,9 @@ public class Version {
     // 2.10.6 : JavaScript ESLint 여러 src 처리 오류, Python pip Linux 경로 오류, Python radon 관련 오류 수정
     //          PMD CPD 중복 체크 기능 다른 언어 적용, PMD CPD 충돌(w/ SonarQube)으로 인한 오류 수정,
     //          Linux Node 설치 처리 오류 수정, C# CK Metrics exclude/include 오류 수정
+    // 2.10.7 : Python 경로지정 기능 추가("python" 시스템 속성), Unused 처리 소스 인코딩 지정 추가
     // --------------------------------------------------
-	public static final String CODE_ANALYST = "2.10.6";
+	public static final String CODE_ANALYST = "2.10.7";
 	public static final String DOCUMENT_VERSION = "2.9";
 	public static final String APPLICATION_JAR = "Code-Analyst-" + CODE_ANALYST + ".jar";
 

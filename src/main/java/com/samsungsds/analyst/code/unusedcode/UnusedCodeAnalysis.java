@@ -16,9 +16,11 @@ limitations under the License.
 package com.samsungsds.analyst.code.unusedcode;
 
 public interface UnusedCodeAnalysis {
-	
+
 	void setProjectBaseDir(String directory);
 	void setTargetSrc(String directory);
 	void setTargetBinary(String directory);
+    void setEncoding(String encoding);
+
 	void run(String instanceKey);
 }

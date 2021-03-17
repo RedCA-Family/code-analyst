@@ -51,8 +51,12 @@ public class PythonRuntime {
                 throw new PythonRuntimeException("Current OS not supported...");
             }
 
-            ExecutableFinder finder = new ExecutableFinder();
-            path = finder.find(PYTHON_PROGRAM);
+            path = getPythonPathFromSystemProperty();
+
+            if (path == null) {
+                ExecutableFinder finder = new ExecutableFinder();
+                path = finder.find(PYTHON_PROGRAM);
+            }
 
             if (path == null) {
                 throw new PythonRuntimeException("There is no python runtime.");
@@ -66,6 +70,10 @@ public class PythonRuntime {
                 throw new PythonRuntimeException("Python Runtime Check Error", throwable);
             }
         }
+    }
+
+    private String getPythonPathFromSystemProperty() {
+        return System.getProperty("python");
     }
 
     private void checkPythonVersion() throws PythonRuntimeException {
