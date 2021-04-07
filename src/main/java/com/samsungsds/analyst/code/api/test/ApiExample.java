@@ -59,6 +59,9 @@ public class ApiExample {
 
 		//argument.setDebug(true);
 
+        argument.setTokenBased(true);
+        argument.setMinimumTokens(50);
+
 		AnalysisMode mode = new AnalysisMode();
 		mode.setCodeSize(true);
 		mode.setDuplication(false);

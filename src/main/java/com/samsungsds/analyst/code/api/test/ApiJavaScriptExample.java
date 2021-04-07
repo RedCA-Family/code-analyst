@@ -48,6 +48,8 @@ public class ApiJavaScriptExample {
 
         argument.setSrc("src\\main\\webapp\\js");
 
+        argument.setTokenBased(true);
+
         AnalysisMode mode = new AnalysisMode();
         mode.setCodeSize(true);
         mode.setDuplication(true);

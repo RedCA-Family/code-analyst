@@ -50,6 +50,8 @@ public class ApiPythonExample {
 
         //argument.setDebug(true);
 
+        argument.setTokenBased(true);
+
         AnalysisMode mode = new AnalysisMode();
         mode.setCodeSize(true);
         mode.setDuplication(true);

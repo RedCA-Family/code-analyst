@@ -238,6 +238,14 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 			argumentList.add("-catalog");
 		}
 
+		if (argument.isTokenBased()) {
+		    argumentList.add("-duplication");
+		    argumentList.add("token");
+
+		    argumentList.add("-tokens");
+		    argumentList.add(Integer.toString(argument.getMinimumTokens()));
+        }
+
 		return argumentList.toArray(new String[0]);
 	}
 

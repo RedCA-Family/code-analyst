@@ -41,6 +41,10 @@ public class ArgumentInfo {
 
 	private boolean saveCatalog = false;		// Save target file list
 
+    private boolean tokenBased = false;
+
+    private int minimumTokens = 100;
+
 	public Language getLanguage() {
 		return language;
 	}
@@ -198,4 +202,20 @@ public class ArgumentInfo {
 	public void setBinary(String[] binaryDirectories) {
 		this.binary = String.join(",", binaryDirectories);
 	}
+
+    public boolean isTokenBased() {
+        return tokenBased;
+    }
+
+    public void setTokenBased(boolean tokenBased) {
+        this.tokenBased = tokenBased;
+    }
+
+    public int getMinimumTokens() {
+        return minimumTokens;
+    }
+
+    public void setMinimumTokens(int minimumTokens) {
+        this.minimumTokens = minimumTokens;
+    }
 }
