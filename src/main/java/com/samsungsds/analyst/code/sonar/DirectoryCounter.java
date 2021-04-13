@@ -30,7 +30,7 @@ public class DirectoryCounter {
     }
 
     public void processDirectory(String filePath) {
-        File file = new File(filePath);
+        File file = new File(instance.getProjectDirectory(), filePath);
         String dir = file.getParent();
 
         if (!directories.contains(dir)) {

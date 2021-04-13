@@ -18,7 +18,7 @@ package com.samsungsds.analyst.code.main.subject;
 import java.io.File;
 
 public class TargetFile {
-    public final static String PATH_SEPARATOR = System.getProperty("path.separator");
+    public final static String PATH_SEPARATOR = File.separator;
     public final static String PATH_SEPARATOR_FOR_DISPLAY = "/";
 
     private String projectBaseDir;

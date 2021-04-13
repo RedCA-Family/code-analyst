@@ -18,6 +18,7 @@ package com.samsungsds.analyst.code.sonar;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import com.samsungsds.analyst.code.api.Language;
 import org.apache.logging.log4j.LogManager;
@@ -45,13 +46,15 @@ public class ReportFileReader implements Closeable {
 	private static final String METRIC_STATEMENTS = "statements";
 
 	private File zipFile = null;
-	private File toDir = Files.createTempDir();
+	private final File toDir = Files.createTempDir();
 
 	private ScannerReportReader reader = null;
 
-	private String instanceKey;
+	private final String instanceKey;
 
 	private DirectoryCounter directoryCounter;
+
+    private Map<String, String> modulesRelativePathByProjectKey = null;
 
 	public ReportFileReader(File zipFile, String instanceKey) {
 		this.zipFile = zipFile;
@@ -66,6 +69,7 @@ public class ReportFileReader implements Closeable {
 		Metadata metadata = reader.readMetadata();
 		int rootComponentRef = metadata.getRootComponentRef();
 
+        modulesRelativePathByProjectKey = metadata.getModulesProjectRelativePathByKeyMap();
         Component project = reader.readComponent(rootComponentRef);
 
         directoryCounter = new DirectoryCounter(MeasuredResult.getInstance(instanceKey));
@@ -86,6 +90,10 @@ public class ReportFileReader implements Closeable {
 
 		// 더이상 ComponentType.MODULE, ComponentType.DIRECTORY는 제공되지 않음
         if (component.getType() == ComponentType.FILE) {
+
+            if (modulesRelativePathByProjectKey.size() != 1) {  // 모듈이 있으면
+                changeProjectDirectory(instance, modulesRelativePathByProjectKey);
+            }
 
 			instance.addFilePathList(currentModuleName, component.getProjectRelativePath());
 
@@ -153,6 +161,38 @@ public class ReportFileReader implements Closeable {
             readComponent(child, currentModuleName);
         }
 	}
+
+    private void changeProjectDirectory(MeasuredResult instance, Map<String, String> modules) {
+	    String projectDirectory = instance.getProjectDirectory();
+
+	    while (true) {
+            boolean allExist = true;
+            for (String moduleDirectory : modules.values()) {
+                if (moduleDirectory.equals("")) {
+                    continue;
+                }
+                if (!new File(projectDirectory, moduleDirectory).exists()) {
+                    allExist = false;
+                }
+            }
+
+            if (allExist) {
+                break;
+            } else {
+                projectDirectory = new File(projectDirectory).getParent();
+            }
+
+            if (!new File(projectDirectory).exists()) {
+                throw new IllegalStateException("Directory not found : " + projectDirectory);
+            }
+        }
+
+	    if (!instance.getProjectDirectory().equals(projectDirectory)) {
+	        LOGGER.info("Project Directory Changed : {} -> {}", instance.getProjectDirectory(), projectDirectory);
+
+	        instance.setProjectDirectory(projectDirectory);
+        }
+    }
 
 	private void calculateCodeSize(Component component) {
 		MeasuredResult.getInstance(instanceKey).addFiles(1);

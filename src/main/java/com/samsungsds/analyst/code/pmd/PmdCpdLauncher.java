@@ -22,10 +22,12 @@ import com.samsungsds.analyst.code.util.FileLineFinder;
 import net.sourceforge.pmd.cpd.CPDCommandLineInterface;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +36,34 @@ public class PmdCpdLauncher implements PmdCpd {
     private static final Logger LOGGER = LogManager.getLogger(PmdCpdLauncher.class);
 
     private List<String> arg = new ArrayList<>();
+
+    public static File getFileListFile(String projectBaseDir, List<String> fileList) {
+        StringBuilder buffer = new StringBuilder();
+
+        projectBaseDir = projectBaseDir.replace("/", File.separator).replace("\\", File.separator);
+
+        if (!projectBaseDir.endsWith(File.separator)) {
+            projectBaseDir += File.separator;
+        }
+
+        for (String target : fileList) {
+            if (buffer.length() != 0) {
+                buffer.append(",").append(System.lineSeparator());
+            }
+            buffer.append(projectBaseDir).append(target);
+        }
+
+        File file;
+        try {
+            file = File.createTempFile("pmd-filelist", ".txt");
+
+            FileUtils.write(file, buffer.toString(), Charset.defaultCharset());
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+
+        return file;
+    }
 
     @Override
     public void addOption(String option, String value) {

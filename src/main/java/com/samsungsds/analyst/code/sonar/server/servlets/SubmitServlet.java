@@ -80,6 +80,7 @@ public class SubmitServlet extends HttpServlet {
 				}
 			}
 		} catch (Throwable ex) {
+            LOGGER.error("Submit Error", ex);
 			throw new IllegalArgumentException(ex.toString(), ex);
 		}
 

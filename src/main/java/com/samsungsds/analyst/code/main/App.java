@@ -322,11 +322,23 @@ public class App {
 
 		cpd.addOption("--minimum-tokens", Integer.toString(cli.getMinimumTokens()));
 
-		String dirs = FindFileUtils.getMultiDirectoriesWithComma(cli.getProjectBaseDir(), cli.getSrc());
-		cpd.addOption("--files", dirs);
+        MeasuredResult instance = MeasuredResult.getInstance(cli.getInstanceKey());
+		String cpdOption = System.getProperty("cpdOption", "filelist");
+        if (cpdOption.equals("files") || instance.getFilePathList().size() == 0) {
+            LOGGER.info("Using --files option for CPD.");
+            String dirs = FindFileUtils.getMultiDirectoriesWithComma(instance.getProjectDirectory(), cli.getSrc());
+		    cpd.addOption("--files", dirs);
+        } else {
+            LOGGER.info("Using --filelist option for CPD.");
+            File fileList = PmdCpdLauncher.getFileListFile(instance.getProjectDirectory(), instance.getFilePathList());
+            cpd.addOption("--filelist", fileList.getAbsolutePath());
+        }
 
         cpd.addOption("--skip-lexical-errors", "");
         cpd.addOption("--ignore-annotations", "");
+        if (language == Language.CSHARP) {
+            cpd.addOption("--ignore-usings", "");
+        }
 
 		cpd.run(cli.getInstanceKey());
 	}
