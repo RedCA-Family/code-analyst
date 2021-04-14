@@ -73,6 +73,7 @@ public class Version {
     //          Linux Node 설치 처리 오류 수정, C# CK Metrics exclude/include 오류 수정
     // 2.10.7 : Python 경로지정 기능 추가("python" 시스템 속성), Unused 처리 소스 인코딩 지정 추가, C# sln 파일 지정 기능
     // 2.10.8 : API 중복 관련 옵션 추가, Jetty 패치 반영, PMC CPD 방식 변경 (files -> filelist 옵션 사용) 및 C# Project Directory 위치 보정 처리
+    //          소스 디렉토리 점검 strict check 옵션 추가 및 ESLint 실행 시 js 없는 디렉토리 제외 처리
     // --------------------------------------------------
 	public static final String CODE_ANALYST = "2.10.8";
 	public static final String DOCUMENT_VERSION = "2.9";

@@ -51,6 +51,16 @@ public class TargetManager {
     private boolean directoriesChanged = false;
     private AtomicBoolean initialized = new AtomicBoolean();
 
+    private boolean strictCheck = true;
+
+    private TargetManager() {
+        if (System.getProperty("strictCheck", "true").equalsIgnoreCase("false")) {
+            strictCheck = false;
+        }
+
+        LOGGER.info("Strict File Check : {}", strictCheck);
+    }
+
     public static TargetManager getInstance(String instanceKey) {
         if (!instances.containsKey(instanceKey)) {
             synchronized (TargetManager.class) {
@@ -152,12 +162,23 @@ public class TargetManager {
     }
 
     private void changeSourceDirectories() {
+        boolean exists = false;
         for (int i = 0; i < sourceDirectories.length; i++) {
             String src = IOAndFileUtils.getNormalizedPath(sourceDirectories[i]);
 
             FirstFileFinder find = new FirstFileFinder(projectBaseDir + File.separator + src, "java");
 
-            String path = find.getPath();
+            String path;
+            try {
+                path = find.getPath();
+            } catch (IllegalStateException ise) {
+                if (strictCheck) {
+                    throw ise;
+                } else {
+                    continue;
+                }
+            }
+            exists = true;
 
             JavaParser javaParser = new JavaParser();
             ParseResult<CompilationUnit> result = null;
@@ -197,15 +218,30 @@ public class TargetManager {
                 throw new UncheckedIOException(ex);
             }
         }
+
+        if (!exists) {
+            throw new IllegalStateException("There are no java files files in any directories : " + sourceDirectories);
+        }
     }
 
     private void changeBinaryDirectories() {
+        boolean exists = false;
         for (int i = 0; i < binaryDirectories.length; i++) {
             String bin = IOAndFileUtils.getNormalizedPath(binaryDirectories[i]);
 
             FirstFileFinder find = new FirstFileFinder(projectBaseDir + File.separator + bin, "class");
 
-            String path = find.getPath();
+            String path;
+            try {
+                path = find.getPath();
+            } catch (IllegalStateException ise) {
+                if (strictCheck) {
+                    throw ise;
+                } else {
+                    continue;
+                }
+            }
+            exists = true;
 
             ClassParser parser = new ClassParser(path);
 
@@ -238,6 +274,10 @@ public class TargetManager {
             } catch (IOException ex) {
                 throw new UncheckedIOException(ex);
             }
+        }
+
+        if (!exists) {
+            throw new IllegalStateException("There are no class files files in any directories : " + binaryDirectories);
         }
     }
 
