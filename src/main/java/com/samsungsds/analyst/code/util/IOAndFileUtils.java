@@ -186,7 +186,7 @@ public class IOAndFileUtils {
         return file;
 	}
 
-    private static File mkdirCacheDir() {
+    public static File mkdirCacheDir() {
         File codeAnalystCache = new File(getUserHomeDir(), ".code-analyst-cache");
 
         if (codeAnalystCache.exists()) {
@@ -198,7 +198,7 @@ public class IOAndFileUtils {
             if (!codeAnalystCache.exists()) {
                 codeAnalystCache.mkdir();
 
-                File readme = new File(codeAnalystCache, "_do_not_edit_files_just_delete_files.txt");
+                File readme = new File(codeAnalystCache, "_DO_NOT_EDIT_FILES_JUST_DELETE_FILES.txt");
                 try {
                     writeString(new FileOutputStream(readme), "Don't edit files. If you want to problem, the just delete files or delete this 'cache' directory.");
                 } catch (IOException ex) {
@@ -227,6 +227,15 @@ public class IOAndFileUtils {
 
         return outputFile.substring(0, outputFile.lastIndexOf("."));
 	}
+
+	public static String getFileExtension(File file) {
+	    String filename = file.getAbsolutePath();
+
+	    if (filename.lastIndexOf(".") > 0) {
+	        return filename.substring(filename.lastIndexOf("."));
+        }
+	    return "";
+    }
 
     public static int getFileCount(Path dir, String ext) {
         try (Stream<Path> paths =  Files.walk(dir)) {

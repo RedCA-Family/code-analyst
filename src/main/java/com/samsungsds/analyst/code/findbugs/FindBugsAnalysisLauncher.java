@@ -71,6 +71,7 @@ public class FindBugsAnalysisLauncher implements FindBugsAnalysis {
 			throw new IllegalStateException(ex);
 		}
 		reportFile.deleteOnExit();
+        MeasuredResult.getInstance(instanceKey).addTempFileToBeDeleted(reportFile);
 
 		addOption("-output", reportFile.toString());
 

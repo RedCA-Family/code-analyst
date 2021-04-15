@@ -52,6 +52,7 @@ public class FindSecBugsAnalysisLauncher extends FindBugsAnalysisLauncher {
 			throw new IllegalStateException(ex);
 		}
 		reportFile.deleteOnExit();
+        MeasuredResult.getInstance(instanceKey).addTempFileToBeDeleted(reportFile);
 
 		addOption("-output", reportFile.toString());
 

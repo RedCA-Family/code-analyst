@@ -17,6 +17,7 @@ package com.samsungsds.analyst.code.main.nodejs;
 
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+import com.samsungsds.analyst.code.main.CacheUtils;
 import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.main.Version;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
@@ -65,7 +66,7 @@ public class NodeRuntime {
 
         LOGGER.info("Find 'node' runtime...");
         // To perform analysis SonarJS requires Node.js >=6
-        NodeRuntime nodeRuntime = new NodeRuntime(6);
+        NodeRuntime nodeRuntime = new NodeRuntime(instanceKey, 6);
 
         String path = nodeRuntime.getNodeExecutablePath();
         String version = nodeRuntime.getVersionString();
@@ -78,7 +79,7 @@ public class NodeRuntime {
         return path;
     }
 
-    public NodeRuntime(int requiredMajorVersion) throws NodeRuntimeException {
+    public NodeRuntime(String instanceKey, int requiredMajorVersion) throws NodeRuntimeException {
         try {
             if (!IS_WINDOWS && !IS_MACOS && !IS_LINUX) {
                 throw new NodeRuntimeException("Current OS not supported...");
@@ -88,7 +89,7 @@ public class NodeRuntime {
             String searchedPath = finder.find(NODE_PROGRAM);
 
             if (searchedPath == null) {
-                path = installNodeRuntimeAndGetPath();
+                path = installNodeRuntimeAndGetPath(instanceKey);
             } else {
                 path = searchedPath;
             }
@@ -98,7 +99,7 @@ public class NodeRuntime {
             if (majorVersion < requiredMajorVersion) {
                 LOGGER.warn("It's version({}) is lower than required version {}", majorVersion, requiredMajorVersion);
 
-                path = installNodeRuntimeAndGetPath();
+                path = installNodeRuntimeAndGetPath(instanceKey);
             }
         } catch (Throwable throwable) {
             LOGGER.error("Node Runtime SetUp Error", throwable);
@@ -144,66 +145,38 @@ public class NodeRuntime {
         }
     }
 
-    private String installNodeRuntimeAndGetPath() throws NodeRuntimeException {
+    private String installNodeRuntimeAndGetPath(String instanceKey) throws NodeRuntimeException {
         LOGGER.info("Saving Node runtime (version : {}) ...", Version.NODE_JS);
 
-        try {
-            if (IS_WINDOWS) {
-                File zipFile = IOAndFileUtils.saveResourceFile("/statics/nodejs/node-v10.15.3-win-x86.zip", "node", ".zip");
+        if (IS_WINDOWS) {
+            File zipFile = IOAndFileUtils.saveResourceFile("/statics/nodejs/node-v10.15.3-win-x86.zip", "node", ".zip");
 
-                File dir = Files.createTempDir();
-                ZipUtils.unzip(zipFile, dir);
+            File dir = CacheUtils.getUnzippedCacheDirectory(instanceKey, zipFile, "node");
 
-                return dir + File.separator + NODE_PATH_FOR_WINDOWS;
+            return dir + File.separator + NODE_PATH_FOR_WINDOWS;
 
-            } else if (IS_MACOS) {
-                File zipFile = IOAndFileUtils.saveResourceFile("/statics/nodejs/node-v10.15.3-darwin-x64.tar.gz", "node", ".tar.gz");
+        } else if (IS_MACOS) {
+            File zipFile = IOAndFileUtils.saveResourceFile("/statics/nodejs/node-v10.15.3-darwin-x64.tar.gz", "node", ".tar.gz");
 
-                File dir = Files.createTempDir();
+            File dir = CacheUtils.getUnzippedCacheDirectory(instanceKey, zipFile, "node");
 
-                try (TarArchiveInputStream fin = new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(zipFile)))) {
-                    saveArchiveFile(fin, dir);
-                }
+            String path = dir + File.separator + NODE_PATH_FOR_MACOS;
+            File nodeExecute = new File(path);
+            nodeExecute.setExecutable(true);
 
-                String path = dir + File.separator + NODE_PATH_FOR_MACOS;
-                File nodeExecute = new File(path);
-                nodeExecute.setExecutable(true);
+            return path;
+        } else if (IS_LINUX) {
+            File zipFile = IOAndFileUtils.saveResourceFile("/statics/nodejs/node-v10.15.3-linux-x64.tar.xz", "node", ".tar.gz");
 
-                return path;
-            } else if (IS_LINUX) {
-                File zipFile = IOAndFileUtils.saveResourceFile("/statics/nodejs/node-v10.15.3-linux-x64.tar.xz", "node", ".tar.gz");
+            File dir = CacheUtils.getUnzippedCacheDirectory(instanceKey, zipFile, "node");
 
-                File dir = Files.createTempDir();
+            String path = dir + File.separator + NODE_PATH_FOR_LINUX;
+            File nodeExecute = new File(path);
+            nodeExecute.setExecutable(true);
 
-                try (TarArchiveInputStream fin = new TarArchiveInputStream(new XZCompressorInputStream(new FileInputStream(zipFile)))) {
-                    saveArchiveFile(fin, dir);
-                }
-
-                String path = dir + File.separator + NODE_PATH_FOR_LINUX;
-                File nodeExecute = new File(path);
-                nodeExecute.setExecutable(true);
-
-                return path;
-            } else {
-                throw new NodeRuntimeException("Current OS not supported...");
-            }
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
-
-    private void saveArchiveFile(TarArchiveInputStream fin, File dir) throws IOException {
-        TarArchiveEntry entry;
-        while ((entry = fin.getNextTarEntry()) != null) {
-            if (entry.isDirectory()) {
-                continue;
-            }
-            File curfile = new File(dir, entry.getName());
-            File parent = curfile.getParentFile();
-            if (!parent.exists()) {
-                parent.mkdirs();
-            }
-            IOUtils.copy(fin, new FileOutputStream(curfile));
+            return path;
+        } else {
+            throw new NodeRuntimeException("Current OS not supported...");
         }
     }
 

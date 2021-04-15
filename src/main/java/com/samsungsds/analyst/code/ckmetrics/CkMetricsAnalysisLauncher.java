@@ -59,6 +59,7 @@ public class CkMetricsAnalysisLauncher implements CkMetricsAnalysis {
         LOGGER.info("CK Metrics Target Files : {}", targetFileList.size());
 
         File jar = getJarFileFromBinaryDirectories();
+        result.addTempFileToBeDeleted(jar);
 
         MetricsFilter.setRepositoryClassPath(jar.toString());
 
@@ -79,6 +80,9 @@ public class CkMetricsAnalysisLauncher implements CkMetricsAnalysis {
 
         LOGGER.info("CK Metrics Total Result : {}", MeasuredResult.getInstance(instanceKey).getCkMetricsResultList().size());
 
+        MetricsFilter.close();
+
+        jar.delete();
     }
 
     private File getJarFileFromBinaryDirectories() {

@@ -356,9 +356,14 @@ public class CSVFileCollectionList<E extends CSVFileResult> implements List<E>, 
 
 	@Override
 	public void clear() {
-		reset();
+		//reset();
+        try {
+            close();    // replace 'reset()' method call to delete file
+        } catch (IOException ignore) {
+            // no-op
+        }
 
-		createFile();
+        createFile();
 		openWriter();
 	}
 

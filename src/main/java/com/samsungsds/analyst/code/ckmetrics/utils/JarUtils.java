@@ -11,11 +11,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class JarUtils {
     public static File getJarFromClasspathDirectories(String classpaths) {
         List<File> targetDirectories = new ArrayList<>();
-        String[] paths = classpaths.split("\\" + System.getProperty("path.separator"));
+        String[] paths = classpaths.split(Pattern.quote(System.getProperty("path.separator")));
         for (int i = 0; i < paths.length; i++) {
             File a = new File(paths[i].trim());
             targetDirectories.addAll(Arrays.asList(a.listFiles()));
@@ -39,8 +40,8 @@ public class JarUtils {
     }
 
     public static void compress(String name, File... files) throws IOException {
-        try (JarArchiveOutputStream out = new JarArchiveOutputStream(new FileOutputStream(name))){
-            for (File file : files){
+        try (JarArchiveOutputStream out = new JarArchiveOutputStream(new FileOutputStream(name))) {
+            for (File file : files) {
                 addToArchiveCompression(out, file, ".");
             }
         }
@@ -56,8 +57,10 @@ public class JarUtils {
             JarArchiveEntry entry = new JarArchiveEntry(name);
             out.putArchiveEntry(entry);
             entry.setSize(file.length());
-            IOUtils.copy(new FileInputStream(file), out);
-            out.closeArchiveEntry();
+            try (FileInputStream input = new FileInputStream(file)) {
+                IOUtils.copy(input, out);
+                out.closeArchiveEntry();
+            }
         } else if (file.isDirectory()) {
             File[] children = file.listFiles();
             if (children != null){

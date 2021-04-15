@@ -2,6 +2,7 @@ package com.samsungsds.analyst.code.roslyn.codemetrics;
 
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+import com.samsungsds.analyst.code.main.CacheUtils;
 import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.pmd.ComplexityAnalysis;
 import com.samsungsds.analyst.code.roslyn.codemetrics.result.ComplexityAction;
@@ -46,9 +47,9 @@ public class CodeAnalysisLauncher implements ComplexityAnalysis {
     public void run(String instanceKey) {
         checkPlatform();
 
-        String executable = installCodeAnalysisAndGetPath();
+        String executable = installCodeAnalysisAndGetPath(instanceKey);
         String solutionFilePath = getSolutionFilePath();
-        File result = getResultFile();
+        File result = getResultFile(instanceKey);
 
         executeRoslynCodeAnalysis(executable, solutionFilePath, result);
 
@@ -105,7 +106,7 @@ public class CodeAnalysisLauncher implements ComplexityAnalysis {
         return solutionDirectory + File.separator + findSolutionFile(solutionDirectory);
     }
 
-    private File getResultFile() {
+    private File getResultFile(String instanceKey) {
         File result = null;
         try {
             result = File.createTempFile("roslyn", ".xml");
@@ -113,6 +114,7 @@ public class CodeAnalysisLauncher implements ComplexityAnalysis {
             throw new UncheckedIOException(ex);
         }
         result.deleteOnExit();
+        MeasuredResult.getInstance(instanceKey).addTempFileToBeDeleted(result);
 
         return result;
     }
@@ -123,19 +125,12 @@ public class CodeAnalysisLauncher implements ComplexityAnalysis {
         }
     }
 
-    private String installCodeAnalysisAndGetPath() {
-        try {
-            File zipFile = IOAndFileUtils.saveResourceFile(MS_CODE_ANALYSIS_METRICS, "roslyn", ".zip");
+    private String installCodeAnalysisAndGetPath(String instanceKey) {
+        File zipFile = IOAndFileUtils.saveResourceFile(MS_CODE_ANALYSIS_METRICS, "roslyn", ".zip");
 
-            File dir = Files.createTempDir();
-            ZipUtils.unzip(zipFile, dir);
+        File dir = CacheUtils.getUnzippedCacheDirectory(instanceKey, zipFile, "roslyn");
 
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> FileUtils.deleteQuietly(dir)));
-
-            return dir + File.separator + EXECUTABLE_PROGRAM;
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
+        return dir + File.separator + EXECUTABLE_PROGRAM;
     }
 
     private String findSolutionFile(String directory) {

@@ -235,12 +235,7 @@ public class AppForSonarAnalysisForCSharp extends AppForSonarAnalysis {
 
         File zipFile = IOAndFileUtils.saveResourceFile(targetFile,"scanner-msbuild", ".zip");
 
-        File dir = Files.createTempDir();
-        try {
-            ZipUtils.unzip(zipFile, dir);
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
+         File dir = CacheUtils.getUnzippedCacheDirectory(cli.getInstanceKey(), zipFile, "scanner-msbuild");
 
         return dir + File.separator;
     }
@@ -266,8 +261,11 @@ public class AppForSonarAnalysisForCSharp extends AppForSonarAnalysis {
     public void doing() {
         super.doing();
 
+        /*
+        // Cache 처리로 삭제 불필요
         if (scannerDirectory != null) {
             IOAndFileUtils.deleteDirectory(new File(scannerDirectory));
         }
+        */
     }
 }

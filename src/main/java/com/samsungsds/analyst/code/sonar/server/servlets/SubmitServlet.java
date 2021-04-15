@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.samsungsds.analyst.code.main.MeasuredResult;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -67,6 +68,7 @@ public class SubmitServlet extends HttpServlet {
 			for (FileItem fi : fileItems) {
 				File file = File.createTempFile("code_analyst_", ".zip");
 				file.deleteOnExit();
+                MeasuredResult.getInstance(instanceKey).addTempFileToBeDeleted(file);
 
 				LOGGER.info("File uploaded... file : {}", file);
 

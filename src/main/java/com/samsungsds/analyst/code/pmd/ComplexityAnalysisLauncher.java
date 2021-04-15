@@ -52,6 +52,7 @@ public class ComplexityAnalysisLauncher extends AbstractPmdAnalysis implements C
 		addOption("-showsuppressed", "");
 
 		File reportFile = createPmdReportFile();
+		MeasuredResult.getInstance(instanceKey).addTempFileToBeDeleted(reportFile);
 
 		addOption("-reportfile", reportFile.toString());
 

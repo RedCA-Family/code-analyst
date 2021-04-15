@@ -19,6 +19,7 @@ import com.google.common.io.Files;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.samsungsds.analyst.code.main.CacheUtils;
 import com.samsungsds.analyst.code.main.MeasuredResult;
 import com.samsungsds.analyst.code.pmd.ComplexityAnalysis;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
@@ -64,11 +65,11 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
     public void run(String instanceKey) {
         String python = checkPythonVersionAndGetPath();
 
-        File tmpDir = saveRadonPackageWheels();
+        File tmpDir = saveRadonPackageWheels(instanceKey);
 
         String virtualEnvDir = makeVirtualEnv(python, tmpDir);
 
-        installWheelPackages(tmpDir.getPath());
+        installWheelPackages(tmpDir.getPath(), instanceKey);
 
         installRadonPackages(tmpDir.getPath());
 
@@ -99,20 +100,12 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
         }
     }
 
-    private File saveRadonPackageWheels() {
+    private File saveRadonPackageWheels(String instanceKey) {
         LOGGER.info("Saving Radon packages for install");
 
         File zipFile = IOAndFileUtils.saveResourceFile(PYTHON_RADON_PACKAGES, "radon", ".zip");
 
-        File dir = Files.createTempDir();
-
-        try {
-            ZipUtils.unzip(zipFile, dir);
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-
-        return dir;
+        return CacheUtils.getUnzippedCacheDirectory(instanceKey, zipFile, "radon");
     }
 
     private String makeVirtualEnv(String python, File tmpDir) {
@@ -147,17 +140,12 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
         return radon.getPath();
     }
 
-    private void installWheelPackages(String virtualEnvDir) {
+    private void installWheelPackages(String virtualEnvDir, String instanceKey) {
         LOGGER.info("Install wheel package");
 
         File wheel = IOAndFileUtils.saveResourceFile(WHEEL_PACKAGES, "wheel", ".zip");
 
-        File wheelDir = Files.createTempDir();
-        try {
-            ZipUtils.unzip(wheel, wheelDir);
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
+        File wheelDir = CacheUtils.getUnzippedCacheDirectory(instanceKey, wheel, "wheel");
 
         String wheelFile = wheelDir + File.separator + "wheel-0.36.2-py2.py3-none-any.whl";
 

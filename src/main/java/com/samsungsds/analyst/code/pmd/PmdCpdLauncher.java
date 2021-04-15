@@ -77,6 +77,7 @@ public class PmdCpdLauncher implements PmdCpd {
     @Override
     public void run(String instanceKey) {
         File csvFile = createPmdCpdCSVFile();
+        MeasuredResult.getInstance(instanceKey).addTempFileToBeDeleted(csvFile);
 
         LOGGER.debug("Pmd CPD Result File : {}", csvFile.toString());
 

@@ -331,6 +331,8 @@ public class App {
         } else {
             LOGGER.info("Using --filelist option for CPD.");
             File fileList = PmdCpdLauncher.getFileListFile(instance.getProjectDirectory(), instance.getFilePathList());
+            instance.addTempFileToBeDeleted(fileList);
+
             cpd.addOption("--filelist", fileList.getAbsolutePath());
         }
 
@@ -658,6 +660,8 @@ public class App {
 		for (DelayWork work : delayWorkList) {
 			work.doing();
 		}
+
+        MeasuredResult.getInstance(instanceKey).cleanTempFiles();
 
 		observerManager.notifyObservers(ProgressEvent.FINAL_COMPLETE);
 

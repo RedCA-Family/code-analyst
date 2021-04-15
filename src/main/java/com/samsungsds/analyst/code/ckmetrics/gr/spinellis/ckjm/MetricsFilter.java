@@ -46,6 +46,8 @@ public class MetricsFilter {
     /** True if the reports should only include public classes */
     private static boolean onlyPublic = false;
 
+    private static ClassPath classPath;
+
     /** Return true if the measurements should include calls to the Java JDK into account */
     public static boolean isJdkIncluded() { return includeJdk; }
     /** Return true if the measurements should include all classes */
@@ -53,7 +55,8 @@ public class MetricsFilter {
 
     public static void setRepositoryClassPath(String path) {
 		// Set BCEL's repository class path.
-		SyntheticRepository rep = SyntheticRepository.getInstance(new ClassPath(path));
+        classPath = new ClassPath(path);
+        SyntheticRepository rep = SyntheticRepository.getInstance(classPath);
 
 		Repository.setRepository(rep);
 	}
@@ -140,4 +143,14 @@ public class MetricsFilter {
 		CkjmOutputHandler handler = new PrintPlainResults(System.out);
 		cm.printMetrics(handler);
 	}
+
+    public static void close() {
+        if (classPath != null) {
+            try {
+                classPath.close();
+            } catch (IOException ignore) {
+                // no-op
+            }
+        }
+    }
 }

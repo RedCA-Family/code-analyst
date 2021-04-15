@@ -61,6 +61,7 @@ public class CheckStyleAnalysisLauncher implements CheckStyleAnalysis {
             throw new IllegalStateException(ex);
         }
         reportFile.deleteOnExit();
+        MeasuredResult.getInstance(instanceKey).addTempFileToBeDeleted(reportFile);
 
         addOption("-o", reportFile.toString());
 

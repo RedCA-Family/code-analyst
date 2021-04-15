@@ -31,6 +31,7 @@ import com.samsungsds.analyst.code.api.Language;
 import com.samsungsds.analyst.code.checkstyle.CheckStyleResult;
 import com.samsungsds.analyst.code.ckmetrics.CkMetricsResult;
 import com.samsungsds.analyst.code.util.*;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.sonar.core.util.stream.MoreCollectors;
@@ -308,6 +309,8 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 
 	private String nodeExecutablePath;
 	private String nodeVersion;
+
+	private List<File> toBeDeletedFiles = new ArrayList<>();
 
 	public static MeasuredResult getInstance(String instanceKey) {
 		if (!instances.containsKey(instanceKey)) {
@@ -1562,6 +1565,21 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 		unusedCodeList = null;
 		checkStyleList = null;
 	}
+
+	public void addTempFileToBeDeleted(File tmp) {
+        toBeDeletedFiles.add(tmp);
+    }
+
+	public void cleanTempFiles() {
+	    if (!System.getProperty("deleteTempFiles", "true").equalsIgnoreCase("false")) {
+            for (File toBeDeletedFile : toBeDeletedFiles) {
+                LOGGER.info("Delete Temporary file : {}", toBeDeletedFile.getAbsolutePath());   // TODO
+                FileUtils.deleteQuietly(toBeDeletedFile);
+            }
+        }
+
+        toBeDeletedFiles.clear();
+    }
 
 	public static String getConvertedFilePath(String filePath, String projectDirectory) {
 		String path = filePath.replaceAll("\\\\", "/");
