@@ -15,6 +15,9 @@ limitations under the License.
  */
 package com.samsungsds.analyst.code.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.URL;
@@ -22,9 +25,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class IOAndFileUtils {
+    private static final Logger LOGGER = LogManager.getLogger(IOAndFileUtils.class);
+
 	private final static int BUFFER_SIZE = 8192;
 
 	public final static String CR_LF = System.getProperty("line.separator");
@@ -81,28 +87,28 @@ public class IOAndFileUtils {
 	}
 
 	public static File extractFileToTemp(String filename) {
+	    // SonarQube 자체적으로 Cache가 되기 때문에 명시적으로 Code Analyst Cache는 적용하지 않음
+        URL url = IOAndFileUtils.class.getResource(filename);
 
-		URL url = IOAndFileUtils.class.getResource(filename);
+        if (filename.lastIndexOf("/") > 0) {
+            filename = filename.substring(filename.lastIndexOf("/") + 1);
+        }
 
-		if (filename.lastIndexOf("/") > 0) {
-			filename = filename.substring(filename.lastIndexOf("/") + 1);
-		}
+        int lastIndex = filename.lastIndexOf(".");
+        String filenameWithoutType = lastIndex > 0 ? filename.substring(0, lastIndex) : filename;
+        String fileType = lastIndex > 0 ? filename.substring(lastIndex + 1) : "tmp";
 
-		int lastIndex = filename.lastIndexOf(".");
-		String filenameWithoutType = lastIndex > 0 ? filename.substring(0, lastIndex) : filename;
-		String fileType = lastIndex > 0 ? filename.substring(lastIndex + 1) : "tmp";
+        try {
+            Path copy = Files.createTempFile(filenameWithoutType, fileType);
+            try (InputStream in = url.openStream()) {
+                Files.copy(in, copy, StandardCopyOption.REPLACE_EXISTING);
+            }
 
-		try {
-			Path copy = Files.createTempFile(filenameWithoutType, fileType);
-			try (InputStream in = url.openStream()) {
-				Files.copy(in, copy, StandardCopyOption.REPLACE_EXISTING);
-			}
-
-			copy.toFile().deleteOnExit();
-			return copy.toFile();
-		} catch (Exception ex) {
-			throw new IllegalStateException("Fail to extract " + filename, ex);
-		}
+            copy.toFile().deleteOnExit();
+            return copy.toFile();
+        } catch (Exception ex) {
+            throw new IllegalStateException("Fail to extract " + filename, ex);
+        }
 	}
 
 	public static boolean deleteDirectory(File path) {
@@ -115,38 +121,103 @@ public class IOAndFileUtils {
 		}
 
 		File[] files = path.listFiles();
-		for (File file : files) {
-			if (file.isDirectory()) {
-				deleteDirectory(file);
-			} else {
-				file.delete();
-			}
-		}
+		if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteDirectory(file);
+                } else {
+                    file.delete();
+                }
+            }
+        }
 		return path.delete();
 	}
 
+	public static File getSystemTempDir() {
+	    return new File(System.getProperty("java.io.tmpdir"));
+    }
+
+    public static File getUserHomeDir() {
+	    return new File(System.getProperty("user.home"));
+    }
+
 	public static File saveResourceFile(String resource, String prefix, String suffix) {
+        File file;
+        if (System.getProperty("noCache", "false").equalsIgnoreCase("true")) {
+            LOGGER.info("No Cache for resource file");
+            try {
+                file = File.createTempFile(prefix, suffix);
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+            file.deleteOnExit();
 
-		File file;
-		try {
-			file = File.createTempFile(prefix, suffix);
-		} catch (IOException ex) {
-			throw new IllegalStateException(ex);
-		}
-		file.deleteOnExit();
+            try (OutputStream outStream = new BufferedOutputStream(new FileOutputStream(file))) {
+                IOAndFileUtils.write(outStream, resource);
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+        } else {
+            File cacheDir = mkdirCacheDir();
 
-		try (OutputStream outStream = new BufferedOutputStream(new FileOutputStream(file))) {
-			IOAndFileUtils.write(outStream, resource);
-		} catch (FileNotFoundException ex) {
-			throw new IllegalStateException(ex);
-		} catch (IOException ex) {
-			throw new IllegalStateException(ex);
-		}
+            file = getCachedResourceFile(cacheDir, resource);
 
-		return file;
+            if (file.exists() && file.length() > 0) {
+                LOGGER.info("Cached {} file used.", file.toString());
+                return file;
+            }
+
+            try (FileLocker ignored = new FileLocker(file)) {
+                // Double check
+                if (file.exists() && file.length() > 0) {
+                    LOGGER.info("Cached {} file used.", file.toString());
+                    return file;
+                }
+
+                LOGGER.info("Cached {} file created.", file.toString());
+                try (OutputStream outStream = new BufferedOutputStream(new FileOutputStream(file))) {
+                    IOAndFileUtils.write(outStream, resource);
+                } catch (IOException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+        }
+
+        return file;
 	}
 
-	public static String getFilenameWithoutExt(File file) {
+    private static File mkdirCacheDir() {
+        File codeAnalystCache = new File(getUserHomeDir(), ".code-analyst-cache");
+
+        if (codeAnalystCache.exists()) {
+            return codeAnalystCache;
+        }
+
+        try (FileLocker ignored = new FileLocker(codeAnalystCache)) {
+            // Double check
+            if (!codeAnalystCache.exists()) {
+                codeAnalystCache.mkdir();
+
+                File readme = new File(codeAnalystCache, "_do_not_edit_files_just_delete_files.txt");
+                try {
+                    writeString(new FileOutputStream(readme), "Don't edit files. If you want to problem, the just delete files or delete this 'cache' directory.");
+                } catch (IOException ex) {
+                    throw new UncheckedIOException(ex);
+                }
+            }
+        }
+
+        return codeAnalystCache;
+    }
+
+    private static File getCachedResourceFile(File cacheDir, String resource) {
+        String[] paths = resource.replace("\\", "/").split(Pattern.quote("/"));
+        String fileName = paths[paths.length - 1];
+
+	    return new File(cacheDir, fileName);
+    }
+
+    public static String getFilenameWithoutExt(File file) {
 		String outputFile;
 		try {
 			outputFile = file.getCanonicalPath();
@@ -154,8 +225,7 @@ public class IOAndFileUtils {
 			throw new RuntimeException(ioe);
 		}
 
-		String csvFile = outputFile.substring(0, outputFile.lastIndexOf("."));
-		return csvFile;
+        return outputFile.substring(0, outputFile.lastIndexOf("."));
 	}
 
     public static int getFileCount(Path dir, String ext) {
