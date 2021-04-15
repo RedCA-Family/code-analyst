@@ -15,7 +15,6 @@ limitations under the License.
  */
 package com.samsungsds.analyst.code.python.radon;
 
-import com.google.common.io.Files;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
@@ -32,7 +31,6 @@ import com.samsungsds.analyst.code.util.FindFileUtils;
 import com.samsungsds.analyst.code.util.IOAndFileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.sonar.api.utils.ZipUtils;
 
 import java.io.*;
 import java.lang.reflect.Type;
