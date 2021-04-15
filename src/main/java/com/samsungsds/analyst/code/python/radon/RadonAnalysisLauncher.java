@@ -21,6 +21,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.samsungsds.analyst.code.main.CacheUtils;
 import com.samsungsds.analyst.code.main.MeasuredResult;
+import com.samsungsds.analyst.code.main.Version;
 import com.samsungsds.analyst.code.pmd.ComplexityAnalysis;
 import com.samsungsds.analyst.code.pmd.ComplexityResult;
 import com.samsungsds.analyst.code.python.PythonRuntime;
@@ -65,18 +66,46 @@ public class RadonAnalysisLauncher implements ComplexityAnalysis {
     public void run(String instanceKey) {
         String python = checkPythonVersionAndGetPath();
 
-        File tmpDir = saveRadonPackageWheels(instanceKey);
+        if (haveCachedRadon()) {
+            File virtualEnvDir = new File(IOAndFileUtils.mkdirCacheDir(), "radon-" + Version.CODE_ANALYST + File.separator + "radon");
+            LOGGER.info("Cached Radon Virtual Env. used : {}", virtualEnvDir.toString());
+            String resultJsonPath = runRadon(virtualEnvDir.getAbsolutePath());
 
-        String virtualEnvDir = makeVirtualEnv(python, tmpDir);
+            LOGGER.debug("radon result : {}", resultJsonPath);
+            processResult(resultJsonPath, instanceKey);
+        } else {
+            File tmpDir = saveRadonPackageWheels(instanceKey);
 
-        installWheelPackages(tmpDir.getPath(), instanceKey);
+            String virtualEnvDir = makeVirtualEnv(python, tmpDir);
 
-        installRadonPackages(tmpDir.getPath());
+            installWheelPackages(tmpDir.getPath(), instanceKey);
 
-        String resultJsonPath = runRadon(virtualEnvDir);
+            installRadonPackages(tmpDir.getPath());
 
-        LOGGER.debug("radon result : {}", resultJsonPath);
-        processResult(resultJsonPath, instanceKey);
+            String resultJsonPath = runRadon(virtualEnvDir);
+
+            LOGGER.debug("radon result : {}", resultJsonPath);
+            processResult(resultJsonPath, instanceKey);
+        }
+    }
+
+    private boolean haveCachedRadon() {
+        if (System.getProperty("noCache", "false").equalsIgnoreCase("true")) {
+            return false;
+        }
+
+        File cacheDir = IOAndFileUtils.mkdirCacheDir();
+
+        File radonExecuteFile;
+        if (PythonRuntime.IS_MACOS || PythonRuntime.IS_LINUX) {
+            radonExecuteFile = new File(cacheDir,
+                "radon-" + Version.CODE_ANALYST + File.separator + "radon" + File.separator + "bin" + File.separator + "radon");
+        } else {
+            radonExecuteFile = new File(cacheDir,
+                "radon-" + Version.CODE_ANALYST + File.separator + "radon" + File.separator + "Scripts" + File.separator + "radon.exe");
+        }
+
+        return radonExecuteFile.exists();
     }
 
     private String checkPythonVersionAndGetPath() {

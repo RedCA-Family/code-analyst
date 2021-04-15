@@ -1573,7 +1573,7 @@ public class MeasuredResult implements Serializable, FileSkipChecker {
 	public void cleanTempFiles() {
 	    if (!System.getProperty("deleteTempFiles", "true").equalsIgnoreCase("false")) {
             for (File toBeDeletedFile : toBeDeletedFiles) {
-                LOGGER.info("Delete Temporary file : {}", toBeDeletedFile.getAbsolutePath());   // TODO
+                LOGGER.info("Delete Temporary file : {}", toBeDeletedFile.getAbsolutePath());
                 FileUtils.deleteQuietly(toBeDeletedFile);
             }
         }
