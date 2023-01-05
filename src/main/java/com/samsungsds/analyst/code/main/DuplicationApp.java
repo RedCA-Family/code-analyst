@@ -56,6 +56,8 @@ public class DuplicationApp {
 			list = getDuplicationListFromIni();
 		} else if (type == Type.CSV) {
 			list = getDuplicationListFromCSV();
+		} else if (type == Type.CPD_CSV) {
+			list = getDuplicationListFromCPD();
 		} else {
 			list = getDuplicationListFromCPD();
 		}
