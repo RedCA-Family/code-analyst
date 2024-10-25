@@ -216,6 +216,10 @@ public class CliParseProcessorForPython extends AbstractCliParseProcessor {
 
             if (cmd.hasOption("r")) {
                 getOptionsFromOutFile(parsedValue, cmd.getOptionValue("r"));
+                if (!parsedValue.getLanguage().equalsIgnoreCase("python")) {
+                    System.out.println("Error: Language mismatch. Expected Python but found " + parsedValue.getLanguage());
+                    return false;
+                }
             }
 
             if (cmd.hasOption("catalog")) {

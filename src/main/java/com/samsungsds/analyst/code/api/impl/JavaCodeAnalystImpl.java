@@ -48,7 +48,7 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 			System.out.println(" - with seperated output option");
 		}
 
-		CliParser cli = new CliParser(arguments, Language.JAVA);
+		CliParser cli = new CliParser(arguments, argument.getMode().getLanguageType());
 
 		cli.setInstanceKey(getUniqueId());
 
@@ -361,4 +361,3 @@ public class JavaCodeAnalystImpl extends AbstractCodeAnalystImpl {
 
 		return parameter.toString();
 	}
-}

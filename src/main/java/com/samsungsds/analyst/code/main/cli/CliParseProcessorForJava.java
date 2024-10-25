@@ -248,6 +248,10 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
 
             if (cmd.hasOption("r")) {
                 getOptionsFromOutFile(parsedValue, cmd.getOptionValue("r"));
+                if (!parsedValue.getLanguage().equalsIgnoreCase("java")) {
+                    System.out.println("Error: Language mismatch. Expected Java but found " + parsedValue.getLanguage());
+                    return false;
+                }
             }
 
             if (cmd.hasOption("catalog")) {
@@ -278,6 +282,6 @@ public class CliParseProcessorForJava extends AbstractCliParseProcessor {
     @Override
     public String getModeErrorMessage() {
         return "'mode' option can only have 'code-size', 'duplication', 'complexity', 'sonarjava', 'pmd', 'findbugs', 'findsecbugs', " +
-            "'javascript'(sonarjs), 'css', 'html', 'dependency', 'unusedcode', 'ckmetrics', and 'checkstyle' (with or without '-')";
+            "'javascript'(sonarjs), 'css', 'html', 'dependency', 'unusedcode', 'ckmetrics, and 'checkstyle' (with or without '-')";
     }
 }
