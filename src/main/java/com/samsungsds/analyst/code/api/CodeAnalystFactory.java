@@ -32,8 +32,10 @@ public class CodeAnalystFactory {
 			return new JavaScriptCodeAnalystImpl();
 		} else if (language == Language.CSHARP) {
 		    return new CSharpCodeAnalystImpl();
-        } else {    // Python
+        } else if (language == Language.PYTHON) {
 		    return new PythonCodeAnalystImpl();
+        } else {
+            throw new IllegalArgumentException("Unsupported language: " + language);
         }
 	}
 }
