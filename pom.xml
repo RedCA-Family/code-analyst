@@ -61,7 +61,7 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.13.3</version>
+			<version>2.17.1</version>
 		</dependency>
 
 		<dependency>
@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>net.sourceforge.pmd</groupId>
 			<artifactId>pmd-java</artifactId>
-			<version>6.25.0</version>
+			<version>6.46.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-io</groupId>
@@ -107,7 +107,7 @@
 		<dependency>
 			<groupId>net.sourceforge.pmd</groupId>
 			<artifactId>pmd-javascript</artifactId>
-			<version>6.25.0</version>
+			<version>6.46.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-io</groupId>
@@ -153,7 +153,7 @@
 		<dependency>
 			<groupId>org.sonarsource.scanner.api</groupId>
 			<artifactId>sonar-scanner-api-batch</artifactId>
-			<version>2.15.0.2182</version>
+			<version>2.16.2.588</version>
 		</dependency>
 
 		<!-- Next dependencies will be replaced with sonar-scanner-engine-shaded -->
@@ -195,7 +195,7 @@
 		<dependency>
 			<groupId>org.sonarsource.sonarqube</groupId>
 			<artifactId>sonar-scanner-engine-shaded</artifactId>
-			<version>7.9.4</version>
+			<version>5.5</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/sonar-scanner-engine-shaded-7.9.4-all-modified.jar</systemPath>
 		</dependency>
@@ -203,19 +203,19 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>9.4.38.v20210224</version>
+			<version>9.4.57.v20241219</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
-			<version>9.4.38.v20210224</version>
+			<version>9.4.57.v20241219</version>
 		</dependency>
 
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-			<version>1.4</version>
+			<version>1.6.0</version>
 		</dependency>
 
 		<!--
@@ -254,7 +254,7 @@
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs</artifactId>
-			<version>4.0.6</version>
+			<version>4.8.0</version>
 		</dependency>
 
 		<dependency>
@@ -276,7 +276,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>5.2.8.RELEASE</version>
+			<version>5.2.19.RELEASE</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>commons-logging</artifactId>
@@ -288,12 +288,12 @@
 		<dependency>
 			<groupId>org.apache.bcel</groupId>
 			<artifactId>bcel</artifactId>
-			<version>6.5.0</version>
+			<version>6.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
-			<version>1.20</version>
+			<version>1.26.0</version>
 		</dependency>
 
 		<dependency>
@@ -334,7 +334,7 @@
 		<dependency>
 			<groupId>com.puppycrawl.tools</groupId>
 			<artifactId>checkstyle</artifactId>
-			<version>8.35</version>
+			<version>8.45.1</version>
 		</dependency>
 
 		<dependency>
